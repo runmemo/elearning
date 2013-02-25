@@ -1,0 +1,35 @@
+<?php
+
+/**
+ * @file
+ * Install file for the aup module
+ */
+ 
+/*
+ * Implement hook_install
+ */
+ 
+function aup_install() {
+
+  // get the userpoints vocabulary
+  $userpoints_vocab = NULL;
+  foreach (taxonomy_get_vocabularies() as $vocab) {
+    if ($vocab->machine_name == 'userpoints') { 
+      $userpoints_vocab = $vocab;
+    }
+  }
+
+  // create the AUP term and save it
+  if ($userpoints_vocab) {
+    $term_array = array(
+      'name' => 'Answers Reputation',
+      'vid' => $userpoints_vocab->vid,
+      'description' => 'Points used by the Answers module (and its supporting submodules, particularly Answers UserPoints)',
+    );
+    taxonomy_term_save((object) $term_array);
+  }
+  else {
+    drupal_set_message(t('AUP: Unable to locate userpoints vocabulary.'), 'error');
+  }
+  
+}

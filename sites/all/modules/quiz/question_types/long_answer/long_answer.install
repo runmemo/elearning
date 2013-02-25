@@ -1,0 +1,173 @@
+<?php
+
+/**
+ * Long answer questions.
+ * @file
+ */
+
+/**
+ * Implements hook_install().
+ */
+function long_answer_install() {
+  // TODO The drupal_(un)install_schema functions are called automatically in D7.
+  // drupal_install_schema('long_answer')
+  variable_set('node_options_long_answer', array('status'));
+  cache_clear_all('autoload:', 'cache');
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function long_answer_uninstall() {
+
+  // Delete tables
+  // TODO The drupal_(un)install_schema functions are called automatically in D7.
+  // drupal_uninstall_schema('long_answer')
+
+  // Delete data from other tables
+
+  // Clear the cache.
+  cache_clear_all('variables', 'cache');
+  drupal_set_message(t('The Long Answer module has been uninstalled and related data has been deleted.'));
+
+}
+
+/**
+ * Implements hook_schema().
+ */
+function long_answer_schema() {
+  // Properties for a question nodes go in here:
+  $schema['quiz_long_answer_node_properties'] = array(
+    'fields' => array(
+      'nid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'vid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'rubric' => array(
+        'type' => 'text',
+      ),
+    ),
+    'primary key' => array('nid', 'vid'),
+  );
+
+  // User answers go in here.
+  $schema['quiz_long_answer_user_answers'] = array(
+    'fields' => array(
+      'answer_id' => array(
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'question_nid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'question_vid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'result_id' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'score' => array(
+        'type' => 'float',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'is_evaluated' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'size' => 'tiny',
+        'default' => 0,
+        'not null' => TRUE,
+      ),
+      'answer' => array(
+        'type' => 'text'
+      ),
+    ),
+    'primary key' => array('answer_id'),
+    'unique keys' => array(
+      'ids' => array('result_id', 'question_nid', 'question_vid'),
+    ),
+  );
+
+  return $schema;
+}
+
+/**
+ * Implements hook_update_N().
+ *
+ * Use float instead of int on the score field. This is to better suit the use of max score...
+ */
+function long_answer_update_6400() {
+  $results = array();
+  $spec = array(
+    'type' => 'float',
+    'unsigned' => TRUE,
+    'not null' => TRUE,
+    'default' => 0,
+  );
+  db_change_field('quiz_long_answer_user_answers', 'score', 'score', $spec);
+  // hook_update_N() no longer returns a $ret array. Instead, return
+  // nothing or a translated string indicating the update ran successfully.
+  // See http://drupal.org/node/224333#update_sql.
+  return t('TODO Add a descriptive string here to show in the UI.') /* $results */;
+}
+
+/**
+ * Implementation of hook_update_N()
+ *
+ * Add a table for storing the rubric
+ *
+ * @return
+ */
+
+/**
+ * @todo Please document this function.
+ * @see http://drupal.org/node/1354
+ */
+function long_answer_update_6401() {
+  $results = array();
+  if (db_table_exists('quiz_long_answer_node_properties') && !db_field_exists('quiz_long_answer_node_properties', 'rubric')) {
+    db_add_field('quiz_long_answer_node_properties', 'rubric', array('type' => 'text'));
+  }
+  else {
+    db_create_table('quiz_long_answer_node_properties', array(
+      'fields' => array(
+        'nid' => array(
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+        ),
+        'vid' => array(
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+        ),
+        'rubric' => array(
+          'type' => 'text',
+        ),
+      ),
+      'primary key' => array('nid', 'vid'),
+    ));
+    $sql = "INSERT INTO {quiz_long_answer_node_properties} (nid, vid)
+            SELECT nid, vid FROM node WHERE `type` = 'long_answer'";
+    // TODO update_sql has been removed. Use the database API for any schema or data changes.
+    $results[] = array() /* update_sql($sql) */;
+  }
+  // hook_update_N() no longer returns a $ret array. Instead, return
+  // nothing or a translated string indicating the update ran successfully.
+  // See http://drupal.org/node/224333#update_sql.
+  return t('TODO Add a descriptive string here to show in the UI.') /* $results */;
+}
