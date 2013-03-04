@@ -1,0 +1,21 @@
+<?php
+
+include_once 'course.user_role.inc';
+include_once 'course.field.inc';
+
+function course_install() {
+
+    foreach (_course_user_default_roles as $role) {
+        $role = (object) $role;
+        if ($existing = user_role_load_by_name($role->name)) {
+          $role->rid = $existing->rid;
+        }
+        user_role_save($role);  
+    }
+    
+    // add all fields that are defined in sport_event.field.inc file
+    foreach (_course_field_default_fields() as $field) {
+      create_field($field);
+    } 
+  
+}

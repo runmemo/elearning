@@ -1,0 +1,16 @@
+name = Course
+description = Contains definitions for main objects of the course.
+core = 7.x
+package = Custom
+version = 7.x-1.0
+project = course
+dependencies[] = file
+dependencies[] = media
+dependencies[] = taxonomy
+dependencies[] = text
+dependencies[] = user_reference
+dependencies[] = views
+dependencies[] = views_column_class
+dependencies[] = date
+dependencies[] = entityreference
+files[] = views/course.views_default.inc
