@@ -1,0 +1,6 @@
+name = Common tools
+description = Contains functions that can be used by custom modules
+package = Custom
+core = 7.x
+
+files[] = common_tools.module
