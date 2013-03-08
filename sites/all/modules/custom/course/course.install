@@ -1,11 +1,11 @@
 <?php
 
-include_once 'course.user_role.inc';
-include_once 'course.field.inc';
+require_once drupal_get_path('module', 'course') . '/course.user_role.inc';
+require_once drupal_get_path('module', 'course') . '/course.field.inc';
 
 function course_install() {
 
-    foreach (_course_user_default_roles as $role) {
+    foreach (_course_user_default_roles() as $role) {
         $role = (object) $role;
         if ($existing = user_role_load_by_name($role->name)) {
           $role->rid = $existing->rid;

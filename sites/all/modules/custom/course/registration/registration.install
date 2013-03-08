@@ -1,0 +1,72 @@
+<?php
+
+/**
+ * @file
+ * Sets up the base table for registration entity and a table to store information about
+ * the entity types.
+ */
+
+
+/**
+ * Implements hook_schema().
+ */
+function registration_schema() {
+  $schema = array();
+
+  $schema['registration'] = array(
+    'description' => 'The base table for registration entities.',
+    'fields' => array(
+      'registration_id' => array(
+        'description' => 'Primary Key: Identifier for a registration.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'nid' => array(
+        'description' => 'Id of the node to which registration is related.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+       'uid' => array(
+        'description' => 'Id of the user who registered.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'created' => array(
+        'description' => 'The Unix timestamp when the registration was created.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'cancelled' => array(
+        'description' => 'The Unix timestamp when the registration was removed.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'completed' => array(
+        'description' => 'The Unix timestamp when the course was completed by user.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+        
+     ),
+    'primary key' => array('registration_id'),
+    'indexes' => array(
+      'type' => array('nid', 'uid'),
+    ),
+    'foreign keys' => array(
+      'node_id' => array (
+          'table' => 'node',
+          'columns' => array('nid' => 'nid'),
+      ),  
+    ),
+     
+  );
+
+
+  return $schema;
+}

@@ -13,4 +13,5 @@ dependencies[] = views
 dependencies[] = views_column_class
 dependencies[] = date
 dependencies[] = entityreference
+files[] = course.inc
 files[] = views/course.views_default.inc

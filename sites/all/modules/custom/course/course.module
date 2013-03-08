@@ -5,9 +5,6 @@
  * Code for the Course module.
  */
 
-include_once 'course.inc';
-
-
 /**
  * Implements hook_views_api().
  */
@@ -48,14 +45,110 @@ function course_node_info() {
       'title_label' => t('Title'),
       'help' => '',
     ),
-    'registration' => array(
-      'name' => t('Registration'),
-      'base' => 'node_content',
-      'description' => t('Represents user registration.'),
-      'has_title' => '1',
-      'title_label' => t('Title'),
-      'help' => '',
-    ),
   );
   return $items;
+}
+
+
+/**
+ *
+ * implements hook_block_info()
+ */
+function course_block_info() {
+  $blocks['registration_form'] = array('info' => t('Course registertion form'), );
+  return $blocks;
+}
+
+/**
+ *
+ * implements hook_block_view()
+ */
+function course_block_view($delta = '') {
+  // The $delta parameter tells us which block is being requested.
+  switch ($delta) {
+    case 'registration_form':
+      return registration_form_block();
+    
+  }
+}
+
+
+function registration_form_block() {
+
+
+  $block = array();
+  $block['subject'] = t('Course registration');
+  // add form to search products from same event
+
+  $block['content'][] = drupal_get_form('course_registration_form');
+
+  return $block;
+
+}
+
+
+
+/**
+ * Registration form
+ * @return array form for registration of user
+ */
+function course_registration_form($form, &$form_state) {
+    
+     // check whether user is already registered. 
+    global $user;   
+    $uid = $user->uid;
+    
+    // get node id
+    if (arg(0) == 'node' && is_numeric(arg(1))) {
+        $nid = arg(1);
+    }
+    else { // it is not a node profile page, so don't show the button
+        watchdog('Callback', 'Registration button is visible in a wrong place.', array($form), WATCHDOG_ERROR);
+        return;
+    }
+    
+    $rid = course_registration_id($uid, $nid);
+    if ($rid) { 
+      return; // no need to show the button for registered user
+    }
+    
+    $form = array();
+    // cache nid in the form as it will not be available in the callback overwise
+    $form['nid'] = array(
+      '#type' => 'hidden',
+      '#value' =>  $nid,   
+    );
+    
+    // @todo : get the node id or url of the first lesson    
+    
+    $form['submit'] = array(
+        '#type' => 'submit', 
+        '#value' => t('Enroll')
+    );
+    
+    return $form;
+    
+}
+
+/**
+ * Registration form submit hook
+ */
+function course_registration_form_submit($form, &$form_state) {
+    global $user;
+    $uid = $user->uid;
+    
+    if ($user->uid == 0) { //user is not logged in 
+        // @todo redirect to user registration form
+    }
+    
+    $nid = $form['nid']['#value'];
+     
+     // register user to the course
+    $rid = course_register($uid, $nid);
+    
+    // @todo: redirect to the first lesson
+    if($rid) {
+        
+    }
+    
 }

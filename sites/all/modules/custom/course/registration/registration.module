@@ -1,0 +1,377 @@
+<?php
+
+include_once 'registration.inc';
+
+/**
+ * Implement hook_entity_info().
+ *
+ * We define two entities here - the actual entity that will hold our domain
+ * specific information and an entity that holds information about the different
+ * types of entities. See here: http://drupal.org/node/977380 for a discussion on this
+ * choice.
+ */
+function registration_entity_info() {
+  $return['registration'] = array(
+    'label' => t('Registration'),
+    // The entity class and controller class extend the classes provided by the
+    // Entity API
+    'entity class' => 'Registration',
+    'controller class' => 'RegistrationController',
+    'base table' => 'registration',
+    'fieldable' => TRUE,
+    'entity keys' => array(
+        'id' => 'registration_id',    
+    ),
+    // Bundles are defined by the registration types below
+    'bundles' => array(
+        'Registration' => array(
+            'label' => 'Registration ',
+            'admin' => array(
+                'path' => 'admin/structure/registration/manage',
+                'access arguments' => array('administer postits'),
+            ),
+         ),
+    ),
+    'label callback' => 'entity_class_label',
+    'uri callback' => 'entity_class_uri',
+    'creation callback' => 'registration_create',
+    'access callback' => 'registration_access',
+    'module' => 'registration',
+    // The information below is used by the RegistrationUIController (which extends the EntityDefaultUIController)
+    'admin ui' => array(
+      'path' => 'admin/content/registrations',
+      'file' => 'registration.admin.inc',
+      'controller class' => 'RegistrationUIController',
+      'menu wildcard' => '%registration',
+    ),
+  );
+  return $return;
+}
+  
+
+
+/**
+ * Implements hook_permission().
+ */
+function registration_permission() {
+  // We set up permisssions to manage entity types, manage all entities and the
+  // permissions for each individual entity
+  $permissions = array(
+     'administer registrations' => array(
+      'title' => t('Administer registrations'),
+      'description' => t('Edit and delete all registrations'),
+    ),  
+  );
+  
+  
+  return $permissions;  
+}
+
+
+/**
+ * Determines whether the given user has access to a registration.
+ *
+ * @param $op
+ *   The operation being performed. One of 'view', 'update', 'create', 'delete'
+ *   or just 'edit' (being the same as 'create' or 'update').
+ * @param $registration
+ *   Optionally a registration or a registration type to check access for. If nothing is
+ *   given, access for all registrations is determined.
+ * @param $account
+ *   The user to check for. Leave it to NULL to check for the global user.
+ * @return boolean
+ *   Whether access is allowed or not.
+ */
+function registration_access($op, $registration = NULL, $account = NULL) {
+  if (user_access('administer registrations', $account)) {
+    return TRUE;
+  }
+  
+  return FALSE;
+}
+
+
+
+
+
+/**
+ * Fetch a registration object. Make sure that the wildcard you choose 
+ * in the registration entity definition fits the function name here.
+ *
+ * @param $registration_id
+ *   Integer specifying the registration id.
+ * @param $reset
+ *   A boolean indicating that the internal cache should be reset.
+ * @return
+ *   A fully-loaded $registration object or FALSE if it cannot be loaded.
+ *
+ * @see registration_load_multiple()
+ */
+function registration_load($registration_id, $reset = FALSE) {
+  $registrations = registration_load_multiple(array($registration_id), array(), $reset);
+  return reset($registrations);
+}
+
+
+/**
+ * Load multiple registrations based on certain conditions.
+ *
+ * @param $registration_ids
+ *   An array of registration IDs.
+ * @param $conditions
+ *   An array of conditions to match against the {registration} table.
+ * @param $reset
+ *   A boolean indicating that the internal cache should be reset.
+ * @return
+ *   An array of registration objects, indexed by registration_id.
+ *
+ * @see entity_load()
+ * @see registration_load()
+ */
+function registration_load_multiple($registration_ids = array(), $conditions = array(), $reset = FALSE) {
+  return entity_load('registration', $registration_ids, $conditions, $reset);
+}
+
+
+/**
+ * Deletes a registration.
+ */
+function registration_delete(Registration $registration) {
+  $registration->delete();
+}
+
+
+/**
+ * Delete multiple registrations.
+ *
+ * @param $registration_ids
+ *   An array of registration IDs.
+ */
+function registration_delete_multiple(array $registration_ids) {
+  entity_get_controller('registration')->delete($registration_ids);
+}
+
+
+/**
+ * Create a registration object.
+ */
+function registration_create($values = array()) {
+  return entity_get_controller('registration')->create($values);
+}
+
+
+/**
+ * Saves a registration to the database.
+ *
+ * @param $registration
+ *   The registration object.
+ */
+function registration_save(Registration $registration) {
+  return $registration->save();
+}
+
+
+/**
+ * Saves a registration type to the db.
+ */
+function registration_type_save(RegistrationType $type) {
+  $type->save();
+}
+
+
+/**
+ * Deletes a registration type from the db.
+ */
+function registration_type_delete(RegistrationType $type) {
+  $type->delete();
+}
+
+
+/**
+ * URI callback for registrations
+ */
+function registration_uri(Registration $registration){
+  return array(
+    'path' => 'registration/' . $registration->registration_id,
+  );
+}
+
+
+/**
+ * Menu title callback for showing individual entities
+ */
+function registration_page_title(Registration $registration){
+  return $registration->name;
+}
+
+
+/**
+ * Sets up content to show an individual registration
+ * @todo - get rid of drupal_set_title();
+ */
+function registration_page_view($registration, $view_mode = 'full') {    
+  $controller = entity_get_controller('registration');  
+  $content = $controller->view(array($registration->registration_id => $registration));
+  drupal_set_title($registration->name);
+  return $content;
+}
+
+
+/**
+ * Implements hook_views_api().
+ */
+function registration_views_api() {
+  return array(
+    'api' => 3,
+    'path' => drupal_get_path('module', 'registration') . '/views',
+  );
+}
+
+
+/**
+ * Implement hook_theme().
+ */
+function registration_theme() {
+  return array(
+    'registration_add_list' => array(
+      'variables' => array('content' => array()),
+      'file' => 'registration.admin.inc',
+    ),
+    'registration' => array(
+      'render element' => 'elements',
+      'template' => 'registration',
+    ),
+   'registration_sample_data' => array(
+      'variables' => array('registration_sample_data', 'registration' => NULL),
+      'template' => 'registration-sample-data',
+    ),
+
+
+  );
+}  
+
+
+/**
+ * Implements hook_menu_local_tasks_alter().
+ */
+function registration_menu_local_tasks_alter(&$data, $router_item, $root_path) {
+  // Add action link 'admin/structure/registrations/add' on 'admin/structure/registrations'.
+  if ($root_path == 'admin/content/registrations') {
+    $item = menu_get_item('admin/content/registrations/add');
+    if ($item['access']) {
+      $data['actions']['output'][] = array(
+        '#theme' => 'menu_local_action',
+        '#link' => $item,
+      );
+    }
+  }
+}
+
+
+/**
+* Implements hook_entity_property_info_alter().
+*/
+function registration_entity_property_info_alter(&$info) {
+  $properties = &$info['example_task']['properties'];
+  $properties['created'] = array(
+    'label' => t("Date created"),
+    'type' => 'date',
+    'description' => t("The date of registration."),
+    'schema field' => 'created',
+  );
+  $properties['cancelled'] = array(
+    'label' => t("Date cancelled"),
+    'type' => 'date',
+    'schema field' => 'cancelled',
+    'description' => t("The date the node was most recently updated."),
+  );
+  $properties['uid'] = array(
+    'label' => t("Student"),
+    'type' => 'user',
+    'description' => t("User registered to course."),
+    'setter callback' => 'entity_property_verbatim_set',
+    'setter permission' => 'administer example_task entities',
+    'required' => TRUE,
+    'schema field' => 'uid',
+  );
+}
+
+
+
+/**
+ * The class used for registration entities
+ */
+class Registration extends Entity {
+  
+  public function __construct($values = array()) {
+    parent::__construct($values, 'registration');
+  }
+
+  protected function defaultLabel() {
+    return $this->name;
+  }
+
+  protected function defaultUri() {
+    return array('path' => 'registration/' . $this->registration_id);
+  }
+  
+  
+}
+
+
+
+/**
+ * The Controller for Registration entities
+ */
+class RegistrationController extends EntityAPIController {
+  public function __construct($entityType) {
+    parent::__construct($entityType);
+  }
+
+
+  /**
+   * Create a registration - we first set up the values that are specific
+   * to our registration schema but then also go through the EntityAPIController
+   * function.
+   * 
+   * @param $type
+   *   The machine-readable type of the registration.
+   *
+   * @return
+   *   A registration object with all default fields initialized.
+   */
+  public function create(array $values = array()) {
+    // Add values that are specific to our Registration
+    $values += array( 
+      'registration_id' => '',
+      'is_new' => TRUE,
+      'title' => '',
+      'created' => '',
+      'changed' => '',
+      'data' => '',
+      // registration specific fields:
+      'nid' => $values['nid'],
+      'uid' => $values['uid'],
+    );
+    
+    $registration = parent::create($values);
+    return $registration;
+  }
+  
+  /**
+   * Overriding the buldContent function to add entity specific fields
+   */
+  public function buildContent($entity, $view_mode = 'full', $langcode = NULL, $content = array()) {
+    $content = parent::buildContent($entity, $view_mode, $langcode, $content);
+    $content['registration_sample_data'] =  array(
+      '#markup' => theme('registration_sample_data', array('registration_sample_data' => check_plain($entity->data['sample_data']), 'registration' => $entity)),
+    );
+
+    return $content;
+  }
+  
+  
+  
+}
+
+

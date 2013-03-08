@@ -1,0 +1,77 @@
+<?php
+
+/**
+ *
+ * @author Bulat Yapparov
+ *
+ */
+class CourseRegistrationTestCase extends DrupalWebTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Course Registration Test Case',
+      'description' => 'Tests that registration functions work correctly.',
+      'group' => 'Course',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('registration'); 
+
+    // Create test course
+    $node = new stdClass();
+    $node->type = 'course';
+    $node->status = 1;
+    $node->language = LANGUAGE_NONE;
+    $sumbitted_node = node_submit($node); // Prepare node for a submit
+    node_save($sumbitted_node);
+    // @todo
+    $this->testCourse = $sumbitted_node;
+    // Create test user
+    // @todo
+    $this->testUser = $this->drupalCreateUser(array());
+    
+  }
+
+  /**
+   * 
+   * Checks that registration is created for a user if it did not exist
+   */
+  function testRegistrationCreatedWhenNotExists() {
+      // Login as student
+      $this->drupalLogin($this->testUser);
+      
+      $uid = $this->loggedInUser->uid;
+      $nid = $this->testCourse->nid;
+      // Create registration with course_register_user for test course
+      $rid = course_register($uid, $nid);
+      // Check that only one open registration exists for specified course
+      debug($rid, 'Registration id');
+      $this->assertNotEqual($rid, FALSE, 'Registration id is not False.');
+      
+      $registration = registration_load($rid);
+    //  debug($registration, 'Registration');
+      $this->assertEqual($registration->uid, $uid, 'Current user is registration owner.');
+      
+      $course_id = $registration->nid;
+      $this->assertEqual($nid, $course_id, 'Registration course is correct.');
+      
+  }
+  
+  /**
+   * Checks that duplicate registration is not created
+   */
+  function testRegistrationNotCreatedWhenExists() {
+      $this->drupalLogin($this->testUser);
+      
+      $uid = $this->loggedInUser->uid;
+      $nid = $this->testCourse->nid;
+      
+      $rid_first = course_register($uid, $nid);
+      $rid_second = course_register($uid, $nid);
+      
+      $this->assertEqual($rid_first, $rid_second, 'Second registration is not created.');
+
+  }  
+
+}
