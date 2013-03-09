@@ -73,62 +73,7 @@ function course_block_view($delta = '') {
 }
 
 
-function registration_form_block() {
 
-
-  $block = array();
-  $block['subject'] = t('Course registration');
-  // add form to search products from same event
-
-  $block['content'][] = drupal_get_form('course_registration_form');
-
-  return $block;
-
-}
-
-
-
-/**
- * Registration form
- * @return array form for registration of user
- */
-function course_registration_form($form, &$form_state) {
-    
-     // check whether user is already registered. 
-    global $user;   
-    $uid = $user->uid;
-    
-    // get node id
-    if (arg(0) == 'node' && is_numeric(arg(1))) {
-        $nid = arg(1);
-    }
-    else { // it is not a node profile page, so don't show the button
-        watchdog('Callback', 'Registration button is visible in a wrong place.', array($form), WATCHDOG_ERROR);
-        return;
-    }
-    
-    $rid = course_registration_id($uid, $nid);
-    if ($rid) { 
-      return; // no need to show the button for registered user
-    }
-    
-    $form = array();
-    // cache nid in the form as it will not be available in the callback overwise
-    $form['nid'] = array(
-      '#type' => 'hidden',
-      '#value' =>  $nid,   
-    );
-    
-    // @todo : get the node id or url of the first lesson    
-    
-    $form['submit'] = array(
-        '#type' => 'submit', 
-        '#value' => t('Enroll')
-    );
-    
-    return $form;
-    
-}
 
 /**
  * Registration form submit hook
