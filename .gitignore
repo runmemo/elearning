@@ -40,3 +40,7 @@ xmlrpc.php
 /profiles
 /scripts
 /themes
+/sites/all/modules/coder/
+/sites/all/modules/devel/
+/sites/all/modules/examples/
+/sites/all/modules/model/
