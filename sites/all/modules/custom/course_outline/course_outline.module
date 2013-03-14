@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * Implements hook_init().
  *
@@ -13,16 +12,15 @@ function course_outline_init() {
   drupal_add_library('system', 'ui.accordion');
 }
 
-
 /**
  * Define the Book Outline Block/
  * Implementation of hook_block_info()
  */
 function course_outline_block_info() {
-  $block['book_outline'] = array (
+  $block['book_outline'] = array(
     'info' => 'Course Outline',
     'cache' => DRUPAL_CACHE_PER_PAGE,
-  );  
+  );
   return $block;
 }
 
@@ -36,30 +34,30 @@ function course_outline_block_info() {
  * Returns NULL if the current menu item is not part of a book heirarchy.
  */
 function course_outline_block_view() {
-    
-    $book = course_outline_is_book_node();
-            
-    if (!$book) { 
-        return NULL;
-    }
-  
-    $tree = menu_tree_all_data(book_menu_name($book['bid']));
 
-    // If the current node isn't part of a book, just return nothing.
-    if (!$tree) {
-      return NULL;
-    }
+  $book = course_outline_is_book_node();
 
-    $content = '';
-    $counter = new multi_counter();
-    $parent_tree = array_shift($tree); // there is only one item in next level
-    foreach($parent_tree['below'] as $unit_key => $unit) { 
-      // first level items of the tree will become headers
-      $header = $unit['link']['link_title']; 
-      $inner_tree = get_book_inner_tree($unit, $counter);
-      $content .= theme('item_list', array('items' => $inner_tree, 'title' => $header));
-    }
-  
+  if (!$book) {
+    return NULL;
+  }
+
+  $tree = menu_tree_all_data(book_menu_name($book['bid']));
+
+  // If the current node isn't part of a book, just return nothing.
+  if (!$tree) {
+    return NULL;
+  }
+
+  $content = '';
+  $counter = new multi_counter();
+  $parent_tree = array_shift($tree); // there is only one item in next level
+  foreach ($parent_tree['below'] as $unit_key => $unit) {
+    // first level items of the tree will become headers
+    $header = $unit['link']['link_title'];
+    $inner_tree = get_book_inner_tree($unit, $counter);
+    $content .= theme('item_list', array('items' => $inner_tree, 'title' => $header));
+  }
+
   // If we pass 1 as the second param, we just get the top level node in the
   // book. Since the key will be the top level mlid, we'll have to use 
   // ['p1'] in the $book array (which contains the top mlid) when we use it 
@@ -68,41 +66,40 @@ function course_outline_block_view() {
 
   // Build the block title and contents
   $block['subject'] = $book_name[$book['p1']];
-  
+
   $block['content'] = $content;
 
   // Return the block
   return $block;
 }
 
-
 function get_book_inner_tree($leaf, $counter = NULL) {
-    if(is_null($counter)  ) {
-        $counter = new multi_counter;
-    }
-     $inner_tree = array();
-      foreach($leaf['below'] as $lesson_key => $lesson) {
-        // @todo: check for performance issues
-        $node = menu_get_object('node', 1, $lesson['link']['link_path']); 
-        $counter->increment($node->type);      
+  if (is_null($counter)) {
+    $counter = new multi_counter;
+  }
+  $inner_tree = array();
+  foreach ($leaf['below'] as $lesson_key => $lesson) {
+    // @todo: check for performance issues
+    $node = menu_get_object('node', 1, $lesson['link']['link_path']);
+    $counter->increment($node->type);
 
-        switch($node->type) {
-          case 'lesson':
-            $i = $counter->current($node->type);
-            $title = "<span class='" . $node->type. "'>".t("Lesson @i.", array('@i' => $i)) .'</span>';
-            break;
-          case 'quiz': // @todo : add question mark icon.
-            $title = "<span class='" . $node->type. "'></span>";
-            break;
-          default:
-            $title = "<span class='" . $node->type. "'></span>";
-            break;  
-        }
-        $title = $title . $lesson['link']['link_title'];
-        
-        $inner_tree[] = l($title, $lesson['link']['link_path'], array('html' => TRUE));
-      } 
-     return $inner_tree;
+    switch ($node->type) {
+      case 'lesson':
+        $i = $counter->current($node->type);
+        $title = "<span class='" . $node->type . "'>" . t("Lesson @i.", array('@i' => $i)) . '</span>';
+        break;
+      case 'quiz': // @todo : add question mark icon.
+        $title = "<span class='" . $node->type . "'></span>";
+        break;
+      default:
+        $title = "<span class='" . $node->type . "'></span>";
+        break;
+    }
+    $title = $title . $lesson['link']['link_title'];
+
+    $inner_tree[] = l($title, $lesson['link']['link_path'], array('html' => TRUE));
+  }
+  return $inner_tree;
 }
 
 /**
@@ -110,46 +107,51 @@ function get_book_inner_tree($leaf, $counter = NULL) {
  * Returns book array if it is part of a book, FALSE is not.
  */
 function course_outline_is_book_node() {
- 
+
   $node = menu_get_object();
-    if ($node && isset($node->book)) {
+  if ($node && isset($node->book)) {
     return $node->book;
   }
   return FALSE;
 }
 
-
 /**
  * Helper counter class allows to keep several counts
  */
 class multi_counter {
-    private $counts;
-    public function __construct() {
-        $this->counts = array();
+
+  private $counts;
+
+  public function __construct() {
+    $this->counts = array();
+  }
+
+  /**
+   * Increments counter of specific type by one
+   * @param string $type
+   * @return integer
+   */
+  public function increment($type) {
+    if (!isset($this->counts[$type])) {
+      return $this->counts[$type] = 1;
     }
-    /**
-     * Increments counter of specific type by one
-     * @param string $type
-     * @return integer
-     */
-    public function increment($type) {
-        if(!isset($this->counts[$type])) {
-           return $this->counts[$type] = 1;              
-         }
-         else {
-           return ++$this->counts[$type]; 
-         }
+    else {
+      return++$this->counts[$type];
     }
-    /**
-     * Gets current value of counter
-     * @param string $type
-     * @return integer
-     */
-    public function current($type) {
-        if(!isset($this->counts[$type])) {
-            return 0;
-        } else {
-            return $this->counts[$type];
-        }
+  }
+
+  /**
+   * Gets current value of counter
+   * @param string $type
+   * @return integer
+   */
+  public function current($type) {
+    if (!isset($this->counts[$type])) {
+      return 0;
     }
+    else {
+      return $this->counts[$type];
+    }
+  }
+
 }
