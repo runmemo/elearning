@@ -12,6 +12,9 @@
       // if this node is in an iframe, show only the content
       jQuery('.block-course-outline').accordion({
         header: 'h3',
+        active: 1,
+        navigation: true,
+        autoHeight: false,
       });
     }
   }

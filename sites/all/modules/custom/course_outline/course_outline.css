@@ -10,3 +10,8 @@ root {
     display: block;
 }
 
+span.quiz {
+  background: url('images/quiz.png') no-repeat;
+  padding: 0 10px;
+}
+

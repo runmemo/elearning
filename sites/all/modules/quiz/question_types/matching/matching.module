@@ -56,7 +56,7 @@ function matching_config() {
     '#default_value' => variable_get('quiz_matching_shuffle_options', TRUE),
     '#description' => t('If checked matching questions will be shuffled'),
   );
-  $form['#validate'] = 'matching_config_validate';
+  $form['#validate'][] = 'matching_config_validate';
   return $form;
 }
 
@@ -67,16 +67,6 @@ function matching_config_validate($form, $form_state) {
   if (!_quiz_is_int($form_state['values']['quiz_matching_form_size'], 2, 50)) {
     form_set_error('quiz_matching_form_size', t('The number of questions must be between 2 and 50'));
   }
-}
-
-/**
- * Implements hook_autoload_info().
- */
-function matching_autoload_info() {
-  return array(
-    'MatchingQuestion' => array('file' => 'matching.classes.inc'),
-    'MatchingResponse' => array('file' => 'matching.classes.inc'),
-  );
 }
 
 /**
@@ -111,4 +101,20 @@ function matching_theme() {
     ),
 
   );
+}
+
+/**
+ * Implements hook_field_extra_fields().
+ */
+function matching_field_extra_fields() {
+  $extra['node']['matching'] = array(
+    'form' => array(
+      'match' => array(
+        'label' => t('Answer'),
+        'description' => t('The sets of matches for this question.'),
+        'weight' => -4,
+      ),
+    ),
+  );
+  return $extra;
 }

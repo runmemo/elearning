@@ -52,32 +52,22 @@ class ScaleQuestion extends QuizQuestion {
       $this->setPreset($answer_collection_id);
     }
     if ($is_new_node) {
-      $sql = 'INSERT INTO {quiz_scale_node_properties}
-        (nid, vid, answer_collection_id)
-        VALUES (%d, %d, %d)';
-      // TODO Please review the conversion of this statement to the D7 database API syntax.
-      /* db_query($sql, $this->node->nid, $this->node->vid, $answer_collection_id) */
       $id = db_insert('quiz_scale_node_properties')
-  ->fields(array(
-    'nid' => $this->node->nid,
-    'vid' => $this->node->vid,
-    'answer_collection_id' => $answer_collection_id,
-  ))
-  ->execute();
+        ->fields(array(
+          'nid' => $this->node->nid,
+          'vid' => $this->node->vid,
+          'answer_collection_id' => $answer_collection_id,
+        ))
+        ->execute();
     }
     else {
-      $sql = 'UPDATE {quiz_scale_node_properties}
-        SET answer_collection_id = %d
-        WHERE nid = %d AND vid = %d';
-      // TODO Please review the conversion of this statement to the D7 database API syntax.
-      /* db_query($sql, $answer_collection_id, $this->node->nid, $this->node->vid) */
       db_update('quiz_scale_node_properties')
-  ->fields(array(
-    'answer_collection_id' => $answer_collection_id,
-  ))
-  ->condition('nid', $this->node->nid)
-  ->condition('vid', $this->node->vid)
-  ->execute();
+        ->fields(array(
+          'answer_collection_id' => $answer_collection_id,
+        ))
+        ->condition('nid', $this->node->nid)
+        ->condition('vid', $this->node->vid)
+        ->execute();
     }
   }
 
@@ -87,13 +77,16 @@ class ScaleQuestion extends QuizQuestion {
    * @param $col_id - answer collection id of the collection this user wants to have as a preset
    */
   private function setPreset($col_id) {
-    global $user;
-    $sql = 'INSERT IGNORE INTO {quiz_scale_user}
-            (uid, answer_collection_id)
-            VALUES (%d, %d)';
-    // TODO Please convert this statement to the D7 database API syntax.
-    /* db_query($sql, $user->uid, $col_id) */
-    NULL;
+    db_merge('quiz_scale_user')
+      ->key(array(
+        'uid' => $GLOBALS['user']->uid,
+        'answer_collection_id' => $col_id
+      ))
+      ->fields(array(
+        'uid' => $GLOBALS['user']->uid,
+        'answer_collection_id' => $col_id
+      ))
+      ->execute();
   }
 
   /**
@@ -119,13 +112,13 @@ class ScaleQuestion extends QuizQuestion {
 
     $alternatives = array();
     for ($i = 0; $i < variable_get('scale_max_num_of_alts', 10); $i++) {
-      if (drupal_strlen($alt_input['alternative' . $i]) > 0) {
+      if (isset($alt_input['alternative' . $i]) && drupal_strlen($alt_input['alternative' . $i]) > 0) {
         $alternatives[] = $alt_input['alternative' . $i];
       }
     }
 
     // If an identical answer collection already exists
-    if ($answer_collection_id = $this->excistingCollection($alternatives)) {
+    if ($answer_collection_id = $this->existingCollection($alternatives)) {
       if ($preset == 1) {
         $this->setPreset($answer_collection_id);
       }
@@ -139,35 +132,25 @@ class ScaleQuestion extends QuizQuestion {
       return $answer_collection_id;
     }
     // Register a new answer collection
-    // TODO Please review the conversion of this statement to the D7 database API syntax.
-    /* db_query('INSERT INTO {quiz_scale_answer_collection} () VALUES ()') */
-    $id = db_insert('quiz_scale_answer_collection')
-  ->fields(array(
-    '' =>
-  ))
-  ->execute();
-    $answer_collection_id = db_last_insert_id('quiz_scale_answer_collection', 'id');
+    $answer_collection_id = db_insert('quiz_scale_answer_collection')
+      ->fields(array('for_all' => 1))
+      ->execute();
 
     // Save as preset if checkbox for preset has been checked
     if ($preset == 1) {
-      $sql = 'INSERT INTO {quiz_scale_user}
-              (uid, answer_collection_id)
-              VALUES (%d, %d)';
-      // TODO Please review the conversion of this statement to the D7 database API syntax.
-      /* db_query($sql, $user->uid, $answer_collection_id) */
       $id = db_insert('quiz_scale_user')
-  ->fields(array(
-    'uid' => $user->uid,
-    'answer_collection_id' => $answer_collection_id,
-  ))
-  ->execute();
+        ->fields(array(
+          'uid' => $user->uid,
+          'answer_collection_id' => $answer_collection_id,
+        ))
+        ->execute();
     }
     // Save the alternatives in the answer collection
-    db_lock_table('quiz_scale_answer');
+    //db_lock_table('quiz_scale_answer');
     for ($i = 0; $i < count($alternatives); $i++) {
       $this->saveAlternative($alternatives[$i], $answer_collection_id);
     }
-    db_unlock_tables();
+    //db_unlock_tables();
     return $answer_collection_id;
   }
 
@@ -178,17 +161,12 @@ class ScaleQuestion extends QuizQuestion {
    * @param $answer_collection_id - the id of the answer collection this alternative shall belong to.
    */
   private function saveAlternative($alternative, $answer_collection_id) {
-    $sql = 'INSERT INTO {quiz_scale_answer}
-    		(answer_collection_id, answer)
-    		VALUES (%d, \'%s\')';
-    // TODO Please review the conversion of this statement to the D7 database API syntax.
-    /* db_query($sql, $answer_collection_id, $alternative) */
     $id = db_insert('quiz_scale_answer')
-  ->fields(array(
-    'answer_collection_id' => $answer_collection_id,
-    'answer' => $alternative,
-  ))
-  ->execute();
+      ->fields(array(
+        'answer_collection_id' => $answer_collection_id,
+        'answer' => $alternative,
+      ))
+      ->execute();
   }
 
   /**
@@ -202,51 +180,29 @@ class ScaleQuestion extends QuizQuestion {
    */
   public function deleteCollectionIfNotUsed($answer_collection_id, $accept = 0) {
     // Check if the collection is someones preset. If it is we can't delete it.
-    $sql = 'SELECT COUNT(*)
-    		FROM {quiz_scale_user}
-    		WHERE answer_collection_id = %d';
-    $results = db_fetch_array(db_query('SELECT COUNT(*)
-    		FROM {quiz_scale_user}
-    		WHERE answer_collection_id = :answer_collection_id', array(':answer_collection_id' => $answer_collection_id)));
-    if ($results['COUNT(*)'] > 0) {
+    $count = db_query('SELECT COUNT(*) FROM {quiz_scale_user} WHERE answer_collection_id = :acid', array(':acid' => $answer_collection_id))->fetchField();
+    if ($count > 0) {
       return FALSE;
     }
 
     // Check if the collection is a global preset. If it is we can't delete it.
-    $sql = 'SELECT for_all
-    		FROM {quiz_scale_answer_collection}
-    		WHERE id = %d';
-    $results = db_fetch_object(db_query('SELECT for_all
-    		FROM {quiz_scale_answer_collection}
-    		WHERE id = :id', array(':id' => $answer_collection_id)));
-    if ($results->for_all == 1) {
+    $for_all = db_query('SELECT for_all FROM {quiz_scale_answer_collection} WHERE id = :id', array(':id' => $answer_collection_id))->fetchField();
+    if ($for_all == 1) {
       return FALSE;
     }
 
     // Check if the collection is used in an existing question. If it is we can't delete it.
-    $sql = 'SELECT COUNT(*)
-    		FROM {quiz_scale_node_properties}
-    		WHERE answer_collection_id = %d';
-    $results = db_fetch_array(db_query('SELECT COUNT(*)
-    		FROM {quiz_scale_node_properties}
-    		WHERE answer_collection_id = :answer_collection_id', array(':answer_collection_id' => $answer_collection_id)));
+    $count = db_query('SELECT COUNT(*) FROM {quiz_scale_node_properties} WHERE answer_collection_id = :acid', array(':acid' => $answer_collection_id))->fetchField();
 
     // We delete the answer collection if it isnt beeing used by enough questions
-    if ($results['COUNT(*)'] <= $accept) {
-      $sql = 'DELETE FROM {quiz_scale_answer_collection}
-      		  WHERE id = %d';
-      // TODO Please review the conversion of this statement to the D7 database API syntax.
-      /* db_query($sql, $answer_collection_id) */
+    if ($count <= $accept) {
       db_delete('quiz_scale_answer_collection')
-  ->condition('id', $answer_collection_id)
-  ->execute();
-      $sql = 'DELETE FROM {quiz_scale_answer}
-      		  WHERE answer_collection_id = %d';
-      // TODO Please review the conversion of this statement to the D7 database API syntax.
-      /* db_query($sql, $answer_collection_id) */
+        ->condition('id', $answer_collection_id)
+        ->execute();
+
       db_delete('quiz_scale_answer')
-  ->condition('answer_collection_id', $answer_collection_id)
-  ->execute();
+        ->condition('answer_collection_id', $answer_collection_id)
+        ->execute();
       return TRUE;
     }
     return FALSE;
@@ -264,23 +220,24 @@ class ScaleQuestion extends QuizQuestion {
    *  TRUE if the collection exists
    *  FALSE otherwise
    */
-  private function excistingCollection(array $alternatives, $answer_collection_id = NULL, $last_id = NULL) {
+  private function existingCollection(array $alternatives, $answer_collection_id = NULL, $last_id = NULL) {
     $my_alts = isset($answer_collection_id) ? $alternatives : array_reverse($alternatives);
 
     // Find all answers identical to the next answer in $alternatives
-    $sql = 'SELECT id, answer_collection_id
-    		FROM {quiz_scale_answer}
-    		WHERE answer = \'%s\'';
+    $sql = 'SELECT id, answer_collection_id FROM {quiz_scale_answer} WHERE answer = :answer';
+    $args[':answer'] = array_pop($my_alts);
     // Filter on collection id
     if (isset($answer_collection_id)) {
-      $sql .= ' AND answer_collection_id = %d';
+      $sql .= ' AND answer_collection_id = :acid';
+      $args[':acid'] = $answer_collection_id;
     }
     // Filter on alternative id(If we are investigating a specific collection, the alternatives needs to be in a correct order)
     if (isset($last_id)) {
-      $sql .= ' AND id = %d';
+      $sql .= ' AND id = :id';
+      $args[':id'] = $last_id + 1;
     }
-    $res = db_query($sql, array_pop($my_alts), $answer_collection_id, ($last_id + 1));
-    if (!$res_o = db_fetch_object($res)) {
+    $res = db_query($sql, $args);
+    if (!$res_o = $res->fetch()) {
       return FALSE;
     }
 
@@ -289,22 +246,19 @@ class ScaleQuestion extends QuizQuestion {
      * doesn't have more alternatives.
      */
     if (count($my_alts) == 0) {
-      $sql = 'SELECT * FROM {quiz_scale_answer}
-              WHERE answer_collection_id = %d
-              AND id = %d';
-      $res_o2 = db_fetch_object(db_query('SELECT * FROM {quiz_scale_answer}
+      $res_o2 = db_query('SELECT * FROM {quiz_scale_answer}
               WHERE answer_collection_id = :answer_collection_id
-              AND id = :id', array(':answer_collection_id' => $answer_collection_id, ':id' => ($last_id + 2))));
-      return ($res_o2 == FALSE) ? $answer_collection_id : FALSE;
+              AND id = :id', array(':answer_collection_id' => $answer_collection_id, ':id' => ($last_id + 2)))->fetch();
+      return ($res_o2) ? $answer_collection_id : FALSE;
     }
 
     // Do a recursive call to this function on all answer collection candidates
     do {
-      $col_id = $this->excistingCollection($my_alts, $res_o->answer_collection_id, $res_o->id);
+      $col_id = $this->existingCollection($my_alts, $res_o->answer_collection_id, $res_o->id);
       if ($col_id) {
         return $col_id;
       }
-    } while ($res_o = db_fetch_object($res));
+    } while ($res_o = $res->fetch());
     return FALSE;
   }
 
@@ -322,32 +276,25 @@ class ScaleQuestion extends QuizQuestion {
    */
   public function delete($only_this_version = FALSE) {
     parent::delete($only_this_version);
-
     if ($only_this_version) {
-      // TODO Please review the conversion of this statement to the D7 database API syntax.
-      /* db_query('DELETE FROM {quiz_scale_user_answers} WHERE question_nid = %d AND question_vid = %d', $this->node->nid, $this->node->vid) */
       db_delete('quiz_scale_user_answers')
-  ->condition('question_nid', $this->node->nid)
-  ->condition('question_vid', $this->node->vid)
-  ->execute();
-      // TODO Please review the conversion of this statement to the D7 database API syntax.
-      /* db_query('DELETE FROM {quiz_scale_node_properties} WHERE nid = %d AND vid = %d', $this->node->nid, $this->node->vid) */
+        ->condition('question_nid', $this->node->nid)
+        ->condition('question_vid', $this->node->vid)
+        ->execute();
+
       db_delete('quiz_scale_node_properties')
-  ->condition('nid', $this->node->nid)
-  ->condition('vid', $this->node->vid)
-  ->execute();
+        ->condition('nid', $this->node->nid)
+        ->condition('vid', $this->node->vid)
+        ->execute();
     }
     else {
-      // TODO Please review the conversion of this statement to the D7 database API syntax.
-      /* db_query('DELETE FROM {quiz_scale_user_answers} WHERE question_nid = %d', $this->node->nid) */
       db_delete('quiz_scale_user_answers')
-  ->condition('question_nid', $this->node->nid)
-  ->execute();
-      // TODO Please review the conversion of this statement to the D7 database API syntax.
-      /* db_query('DELETE FROM {quiz_scale_node_properties} WHERE nid = %d', $this->node->nid) */
+        ->condition('question_nid', $this->node->nid)
+        ->execute();
+
       db_delete('quiz_scale_node_properties')
-  ->condition('nid', $this->node->nid)
-  ->execute();
+        ->condition('nid', $this->node->nid)
+        ->execute();
     }
     $this->deleteCollectionIfNotUsed($this->node->{0}->answer_collection_id, 0);
   }
@@ -363,17 +310,12 @@ class ScaleQuestion extends QuizQuestion {
     }
     $props = parent::getNodeProperties();
 
-    $sql = 'SELECT id, answer, a.answer_collection_id
-            FROM {quiz_scale_node_properties} p
-            JOIN {quiz_scale_answer} a ON (p.answer_collection_id = a.answer_collection_id)
-            WHERE nid = %d AND vid = %d
-            ORDER BY a.id';
     $res = db_query('SELECT id, answer, a.answer_collection_id
             FROM {quiz_scale_node_properties} p
             JOIN {quiz_scale_answer} a ON (p.answer_collection_id = a.answer_collection_id)
             WHERE nid = :nid AND vid = :vid
             ORDER BY a.id', array(':nid' => $this->node->nid, ':vid' => $this->node->vid));
-    while ($res_o = db_fetch_object($res)) {
+    foreach ($res as $res_o) {
       $props[] = $res_o;
     }
     $this->nodeProperties = $props;
@@ -389,11 +331,14 @@ class ScaleQuestion extends QuizQuestion {
     $content = parent::getNodeView();
     $alternatives = array();
     for ($i = 0; $i < variable_get('scale_max_num_of_alts', 10); $i++) {
-      if (drupal_strlen($this->node->{$i}->answer) > 0) {
+      if (isset($this->node->{$i}->answer) && drupal_strlen($this->node->{$i}->answer) > 0) {
         $alternatives[] = check_plain($this->node->{$i}->answer);
       }
     }
-    $content['answer'] = array('#type' => 'markup', '#value' => theme('scale_answer_node_view', array('alternatives' => $alternatives)));
+    $content['answer'] = array(
+      '#markup' => theme('scale_answer_node_view', array('alternatives' => $alternatives)),
+      '#weight' => 2,
+    );
     return $content;
   }
 
@@ -404,10 +349,10 @@ class ScaleQuestion extends QuizQuestion {
    */
   public function getAnsweringForm(array $form_state = NULL, $rid) {
     $form = parent::getAnsweringForm($form_state, $rid);
-    $form['#theme'] = 'scale_answering_form';
+    //$form['#theme'] = 'scale_answering_form';
     $options = array();
     for ($i = 0; $i < variable_get('scale_max_num_of_alts', 10); $i++) {
-      if (drupal_strlen($this->node->{$i}->answer) > 0) {
+      if (isset($this->node->{$i}) && drupal_strlen($this->node->{$i}->answer) > 0) {
         $options[$this->node->{$i}->id] = check_plain($this->node->{$i}->answer);
       }
     }
@@ -429,7 +374,7 @@ class ScaleQuestion extends QuizQuestion {
    *
    * @see QuizQuestion#getCreationForm()
    */
-  public function getCreationForm(array $form_state = NULL) {
+  public function getCreationForm(array &$form_state = NULL) {
     $form = array();
     /*
      * Getting presets from the database
@@ -460,10 +405,8 @@ class ScaleQuestion extends QuizQuestion {
       '#attributes' => array('onchange' => 'refreshAlternatives(this)'),
     );
     $max_num_alts = variable_get('scale_max_num_of_alts', 10);
-    $form['jsArray'] = array(
-      '#type' => 'markup',
-      '#value' => "<script type='text/javascript'>$jsArray var scale_max_num_of_alts = $max_num_alts;</script>",
-    );
+    // TODO: use drupal_add_js($path, 'settings');
+    $form['jsArray'] = array('#markup' => "<script type='text/javascript'>$jsArray var scale_max_num_of_alts = $max_num_alts;</script>");
     $form['answer']['alternatives'] = array(
       '#type' => 'fieldset',
       '#title' => t('Alternatives'),
@@ -486,10 +429,7 @@ class ScaleQuestion extends QuizQuestion {
       '#description' => t('Current alternatives will be saved as a new preset'),
       '#default_value' => FALSE,
     );
-    $form['answer']['manage'] = array(
-      '#type' => 'markup',
-      '#value' => l(t('Manage presets'), 'scale/collection/manage'),
-    );
+    $form['answer']['manage'] = array('#markup' => l(t('Manage presets'), 'scale/collection/manage'));
     return $form;
   }
 
@@ -512,17 +452,17 @@ class ScaleQuestion extends QuizQuestion {
             FROM {quiz_scale_user} au
             JOIN {quiz_scale_answer_collection} ac ON(au.answer_collection_id = ac.id)
             JOIN {quiz_scale_answer} a ON(a.answer_collection_id = ac.id)
-            WHERE au.uid = %d';
+            WHERE au.uid = :uid';
     if ($with_defaults) {
       $sql .= ' OR ac.for_all = 1';
     }
     $sql .= ' ORDER BY au.answer_collection_id, a.id';
-    $res = db_query($sql, $user->uid);
+    $res = db_query($sql, array(':uid' => $user->uid));
     $col_id = NULL;
 
     // Populate the $collections array
     while (true) {
-      if (!($res_o = db_fetch_object($res)) || ($res_o->answer_collection_id != $col_id)) {
+      if (!($res_o = $res->fetch()) || ($res_o->answer_collection_id != $col_id)) {
         /*
          * We have gone through all elements for one answer collection,
          * and needs to store the answer collection name and id in the options array...
@@ -617,21 +557,10 @@ class ScaleResponse extends QuizQuestionResponse {
       $this->answer_id = intval($answer);
     }
     else {
-      $sql = 'SELECT answer_id
-              FROM {quiz_scale_user_answers}
-              WHERE result_id = %d AND question_nid = %d AND question_vid = %d';
-      $res = db_query('SELECT answer_id
-              FROM {quiz_scale_user_answers}
-              WHERE result_id = :result_id AND question_nid = :question_nid AND question_vid = :question_vid', array(':result_id' => $result_id, ':question_nid' => $this->question->nid, ':question_vid' => $this->question->vid));
-      $this->answer_id = $res->fetchField();
+      $this->answer_id = db_query('SELECT answer_id FROM {quiz_scale_user_answers} WHERE result_id = :rid AND question_nid = :qnid AND question_vid = :qvid', array(':rid' => $result_id, ':qnid' => $this->question->nid, ':qvid' => $this->question->vid))->fetchField();
     }
-    $sql = 'SELECT answer
-            FROM {quiz_scale_answer}
-            WHERE id = %d';
-    $res = db_query('SELECT answer
-            FROM {quiz_scale_answer}
-            WHERE id = :id', array(':id' => $this->answer_id));
-    $this->answer = check_plain($res->fetchField());
+    $answer = db_query('SELECT answer FROM {quiz_scale_answer} WHERE id = :id', array(':id' => $this->answer_id))->fetchField();
+    $this->answer = check_plain($answer);
   }
 
 
@@ -648,19 +577,14 @@ class ScaleResponse extends QuizQuestionResponse {
    * @see QuizQuestionResponse#save()
    */
   public function save() {
-    $sql = "INSERT INTO {quiz_scale_user_answers}
-      (answer_id, result_id, question_vid, question_nid)
-      VALUES (%d, %d, %d, %d)";
-    // TODO Please review the conversion of this statement to the D7 database API syntax.
-    /* db_query($sql, $this->answer_id, $this->rid, $this->question->vid, $this->question->nid) */
     $id = db_insert('quiz_scale_user_answers')
-  ->fields(array(
-    'answer_id' => $this->answer_id,
-    'result_id' => $this->rid,
-    'question_vid' => $this->question->vid,
-    'question_nid' => $this->question->nid,
-  ))
-  ->execute();
+      ->fields(array(
+        'answer_id' => $this->answer_id,
+        'result_id' => $this->rid,
+        'question_vid' => $this->question->vid,
+        'question_nid' => $this->question->nid,
+      ))
+      ->execute();
   }
 
   /**
@@ -669,15 +593,11 @@ class ScaleResponse extends QuizQuestionResponse {
    * @see QuizQuestionResponse#delete()
    */
   public function delete() {
-    $sql = 'DELETE FROM {quiz_scale_user_answers}
-    		WHERE result_id = %d AND question_nid = %d AND question_vid = %d';
-    // TODO Please review the conversion of this statement to the D7 database API syntax.
-    /* db_query($sql, $this->rid, $this->question->nid, $this->question->vid) */
     db_delete('quiz_scale_user_answers')
-  ->condition('result_id', $this->rid)
-  ->condition('question_nid', $this->question->nid)
-  ->condition('question_vid', $this->question->vid)
-  ->execute();
+      ->condition('result_id', $this->rid)
+      ->condition('question_nid', $this->question->nid)
+      ->condition('question_vid', $this->question->vid)
+      ->execute();
   }
 
 
@@ -707,10 +627,7 @@ class ScaleResponse extends QuizQuestionResponse {
   public function getReportFormResponse($showpoints = TRUE, $showfeedback = TRUE, $allow_scoring = FALSE) {
     $form = array();
     $form['#theme'] = 'scale_response_form';
-    $form['answer'] = array(
-      '#type' => 'markup',
-      '#value' => check_plain($this->answer),
-    );
+    $form['answer'] = array('#markup' => check_plain($this->answer));
     return $form;
   }
 }

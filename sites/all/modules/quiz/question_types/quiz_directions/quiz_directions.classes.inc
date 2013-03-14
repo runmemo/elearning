@@ -50,7 +50,6 @@ class QuizDirectionsQuestion extends QuizQuestion {
    */
   public function getAnsweringForm(array $form_state = NULL, $rid) {
     $form = parent::getAnsweringForm($form_state, $rid);
-    $form['#theme'] = 'quiz_directions_answering_form';
 
     $form['tries'] = array(
       '#type' => 'hidden',
@@ -77,7 +76,7 @@ class QuizDirectionsQuestion extends QuizQuestion {
    *
    * @see QuizQuestion#getCreationForm($form_state)
    */
-  public function getCreationForm(array $form_state = NULL) {
+  public function getCreationForm(array &$form_state = NULL) {
     return array();
   }
 
@@ -161,7 +160,7 @@ class QuizDirectionsResponse extends QuizQuestionResponse {
    *
    * @see QuizQuestionResponse#getReportForm($showpoints, $showfeedback, $allow_scoring)
    */
-  public function getReportForm($showpoints = TRUE, $showfeedback = TRUE) {
+  public function getReportForm($showpoints = TRUE, $showfeedback = TRUE, $allow_scoring = FALSE) {
     return array(
       '#no_report' => TRUE,
     );

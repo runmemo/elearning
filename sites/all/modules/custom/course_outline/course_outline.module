@@ -9,6 +9,7 @@
 function course_outline_init() {
   // @todo Probably don't want to add this to every page.
   drupal_add_js(drupal_get_path('module', 'course_outline') . '/course_outline.js');
+  drupal_add_css(drupal_get_path('module', 'course_outline') . '/course_outline.css');
   drupal_add_library('system', 'ui.accordion');
 }
 
@@ -40,14 +41,32 @@ function course_outline_block_view() {
     $accordian_tree = array();
     $content = '';
     $lesson_count = 1; 
+    $count = array();
     foreach($tree as $parent => $parent_tree) { 
       foreach($parent_tree['below'] as $unit_key => $unit_tree) {
         $header_title = $unit_tree['link']['link_title'];
         $inner_tree = array();
         foreach($unit_tree['below'] as $lesson_key => $lesson) {
-          $lesson_title = '<span>'.t("Lesson @lesson_count.", array('@lesson_count' => $lesson_count)).'</span>'.$lesson['link']['link_title'];
-          $inner_tree[] = l($lesson_title, $lesson['link']['link_path'], array('html' => TRUE));
-          $lesson_count++;
+          $path = explode('/', $lesson['link']['link_path']);
+          if($path[0] == 'node' && is_numeric($path['1'])) {
+            $node = node_load($path[1]); //Check for performance issues
+            if(!isset($count[$node->type])) {
+              $count[$node->type] = 1;              
+            }
+            else {
+              $count[$node->type]++; 
+            }
+          }
+
+          switch($node->type) {
+            case 'lesson':
+              $title = "<span class='$node->type'>".t("Lesson @count.", array('@count' => $count[$node->type])).'</span>'.$lesson['link']['link_title'];
+            break;
+            case 'quiz':
+              $title = "<span class='$node->type'></span>{$lesson['link']['link_title']}";
+            break;
+          }
+          $inner_tree[] = l($title, $lesson['link']['link_path'], array('html' => TRUE));
         } 
         $content .= theme('item_list', array('items' => $inner_tree, 'title' => $header_title));
       }

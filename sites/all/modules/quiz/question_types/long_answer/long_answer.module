@@ -31,7 +31,7 @@ function long_answer_menu() {
     'title' => 'Score long answer questions',
     'description' => 'Score the answers from quizzes that use long answer questions.',
     'page callback' => 'long_answer_view_unscored',
-    'access arguments' => array('score any quiz', 'score own quiz'),
+    'access arguments' => array('score any quiz', 'score own quiz', 'score taken quiz answer'),
     'access callback' => 'quiz_access_multi_or',
     'type' => MENU_NORMAL_ITEM,
     'file' => 'long_answer.admin.inc',
@@ -70,17 +70,23 @@ function long_answer_quiz_question_info() {
  * Implements hook_config().
  */
 function long_answer_config() {
-  return FALSE;
+  $form['long_answer_default_max_score'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Default max score'),
+    '#description' => t('Choose the default maximum score for a long answer question.'),
+    '#default_value' => variable_get('long_answer_default_max_score', 10),
+  );
+  $form['#validate'][] = 'long_answer_config_validate';
+  return $form;
 }
 
 /**
- * Implements hook_autoload_info().
+ * Validate the long_answer config form values
  */
-function long_answer_autoload_info() {
-  return array(
-    'LongAnswerQuestion' => array('file' => 'long_answer.classes.inc'),
-    'LongAnswerResponse' => array('file' => 'long_answer.classes.inc'),
-  );
+function long_answer_config_validate($form, $form_state) {
+  if ($form_state['values']['long_answer_default_max_score'] <= 0) {
+    form_set_error('long_answer_default_max_score', t('The default max score must be greater than 0'));
+  }
 }
 
 /**
@@ -129,7 +135,8 @@ function long_answer_theme() {
  * @return int
  *  Number of scores adjusted. If a change was made, this should be 1.
  */
-function long_answer_score_an_answer($quiz, $nid, $vid, $rid, $score, $update_total = TRUE) {
+function long_answer_score_an_answer($values, $update_total = TRUE) {
+  extract($values);
   // Quiz scoring information is spread out across three tables:
   // 1. The module should retain its own scoring information in any case where scoring is non-trivial.
   // 2. The Quiz moduleretains a limited amount of scoring information.
@@ -139,30 +146,20 @@ function long_answer_score_an_answer($quiz, $nid, $vid, $rid, $score, $update_to
   // We update all three.
 
   // First, we update the long answer table
-  // TODO Please review the conversion of this statement to the D7 database API syntax.
-  /* db_query("UPDATE {quiz_long_answer_user_answers}
-   SET score = %d * (
-   SELECT max_score
-   FROM {quiz_question_properties}
-   WHERE nid = %d
-   AND vid = %d
-   ) / (
-   SELECT max_score
-   FROM {quiz_node_relationship}
-   WHERE parent_vid = %d
-   AND child_vid = %d
-   ), is_evaluated = 1
-   WHERE question_nid = %d
-   AND question_vid = %d
-   AND result_id = %d", $score, $nid, $vid, $quiz->vid, $vid, $nid, $vid, $rid) */
-  db_update('quiz_long_answer_user_answers')
-  ->fields(array(
-    'score' => $score,
-  ))
-    ->where('nid = %d               AND vid = %d             ) / (               SELECT max_score               FROM {quiz_node_relationship}               WHERE parent_vid = %d               AND child_vid = %d             ), is_evaluated = 1             WHERE question_nid = %d             AND question_vid = %d             AND result_id = %d',  )
-  ->execute();
-  $changed = db_affected_rows();
+  $question_max_score = db_query('SELECT max_score FROM {quiz_question_properties} WHERE nid = :nid AND vid = :vid', array(':nid' => $nid, ':vid' => $vid))->FetchField();
 
+  $quiz_max_score = db_query('SELECT max_score FROM {quiz_node_relationship} WHERE parent_vid = :pvid AND child_vid = :cvid', array(':pvid' => $quiz->vid, ':cvid' => $vid))->fetchField();
+
+  $changed = db_update('quiz_long_answer_user_answers')
+    ->fields(array(
+      'score' => $score * $question_max_score / $quiz_max_score,
+      'is_evaluated' => 1,
+      'answer_feedback' => $answer_feedback
+    ))
+    ->condition('question_nid', $nid)
+    ->condition('question_vid', $vid)
+    ->condition('result_id', $rid)
+    ->execute();
   if ($changed > 0) {
     // Second, we update the main quiz answers table
 
@@ -178,19 +175,14 @@ function long_answer_score_an_answer($quiz, $nid, $vid, $rid, $score, $update_to
       $points_awarded = $score;
     }
 
-    $sql = 'UPDATE {quiz_node_results_answers}
-      SET points_awarded = %d, is_correct = %d
-      WHERE question_vid = %d AND result_id = %d';
-    // TODO Please review the conversion of this statement to the D7 database API syntax.
-    /* db_query($sql, $points_awarded, $is_correct, $vid, $rid) */
     db_update('quiz_node_results_answers')
-  ->fields(array(
-    'points_awarded' => $points_awarded,
-    'is_correct' => $is_correct,
-  ))
-  ->condition('question_vid', $vid)
-  ->condition('result_id', $rid)
-  ->execute();
+      ->fields(array(
+        'points_awarded' => $points_awarded,
+        'is_correct' => $is_correct,
+      ))
+      ->condition('question_vid', $vid)
+      ->condition('result_id', $rid)
+      ->execute();
 
     // Third, we update the main quiz results table
     if ($update_total) {
@@ -225,22 +217,11 @@ function long_answer_score_an_answer($quiz, $nid, $vid, $rid, $score, $update_to
  *  </code>
  */
 function long_answer_get_answer($question_nid, $question_vid, $result_id) {
-  $sql = "SELECT answer_id, answer, la.is_evaluated, la.score, question_vid, question_nid, la.result_id, rel.max_score AS rel_max_score
-    FROM {quiz_long_answer_user_answers} la
+  $result = db_query('SELECT answer_id, answer, la.is_evaluated, la.score, question_vid, question_nid, la.result_id, la.answer_feedback, rel.max_score AS rel_max_score FROM {quiz_long_answer_user_answers} la
     JOIN {quiz_node_results} qnr ON (la.result_id = qnr.result_id)
     JOIN {quiz_node_relationship} rel ON (qnr.vid = rel.parent_vid AND rel.child_vid = la.question_vid)
-    WHERE question_nid = %d AND question_vid = %d AND la.result_id = %d";
-  $results = db_query("SELECT answer_id, answer, la.is_evaluated, la.score, question_vid, question_nid, la.result_id, rel.max_score AS rel_max_score
-    FROM {quiz_long_answer_user_answers} la
-    JOIN {quiz_node_results} qnr ON (la.result_id = qnr.result_id)
-    JOIN {quiz_node_relationship} rel ON (qnr.vid = rel.parent_vid AND rel.child_vid = la.question_vid)
-    WHERE question_nid = :question_nid AND question_vid = :question_vid AND la.result_id = :la.result_id", array(':question_nid' => $question_nid, ':question_vid' => $question_vid, ':la.result_id' => $result_id));
-
-  if (!$results) {
-    return FALSE;
-  }
-
-  return db_fetch_array($results);
+    WHERE question_nid = :qnid AND question_vid = :qvid AND la.result_id = :rid', array(':qnid' => $question_nid, ':qvid' => $question_vid, ':rid' => $result_id))->fetchAssoc();
+  return $result ? $result : FALSE;
 }
 
 /**
@@ -259,12 +240,12 @@ function long_answer_get_answer($question_nid, $question_vid, $result_id) {
  *  Indexed array of result IDs that need to be scored.
  */
 function long_answer_get_unscored_answers_by_question($nid, $vid, $count = 50, $offset = 0) {
-  $results = db_query_range('SELECT result_id
-    FROM {quiz_long_answer_user_answers}
+  $results = db_query('SELECT result_id FROM {quiz_long_answer_user_answers}
     WHERE is_evaluated = :is_evaluated AND question_nid = :question_nid AND question_vid = :question_vid', array(':is_evaluated' => 0, ':question_nid' => $nid, ':question_vid' => $vid));
+
   $unscored = array();
-  foreach (db_fetch_object($results) as $row) {
-    $unscored[] = $row->result_id;
+  foreach ($results as $result) {
+    $unscored[] = $result->result_id;
   }
   return $unscored;
 }
@@ -282,26 +263,7 @@ function long_answer_get_unscored_answers_by_question($nid, $vid, $count = 50, $
  *  Array of objects describing unanswered questions. Each object will have result_id, question_nid, and question_vid.
  */
 function long_answer_get_all_unscored_answers($count = 50, $offset = 0) {
-  global $user;
-  $sql = 'SELECT a.result_id, a.question_nid, a.question_vid, r.title, qnr.time_end, qnr.time_start, qnr.uid
-    FROM {quiz_long_answer_user_answers} AS a
-    INNER JOIN {node_revisions} r ON a.question_vid = r.vid
-    INNER JOIN {quiz_node_results} qnr ON a.result_id = qnr.result_id
-    JOIN {node} n ON qnr.nid = n.nid
-    WHERE a.is_evaluated = 0';
-  if (!user_access('score any quiz')) {
-    $sql .= ' AND n.uid = %d';
-  }
-  // TODO Please convert this statement to the D7 database API syntax.
-  $results = db_query_range(db_rewrite_sql($sql), $user->uid);
-  $unscored = array();
-
-  if ($results) {
-    while ($row = db_fetch_object($results)) {
-      $unscored[] = $row;
-    }
-  }
-
+  $unscored = LongAnswerResponse::fetchAllUnscoredAnswers();
   return $unscored;
 }
 
@@ -313,10 +275,8 @@ function long_answer_get_all_unscored_answers($count = 50, $offset = 0) {
  */
 function long_answer_questions_list() {
   $questions = array();
-  $type = 'long_answer';
-  $sql = "SELECT nid, title FROM {node} WHERE type = '%s'";
-  $results = db_query("SELECT nid, title FROM {node} WHERE type = :type", array(':type' => $type));
-  while ($result = db_fetch_object($results)) {
+  $results = db_query('SELECT nid, title FROM {node} WHERE type = :type', array(':type' => 'long_answer'));
+  foreach ($results as $result) {
     $questions[$result->nid] = check_plain($result->title);
   }
   return $questions;
@@ -329,7 +289,7 @@ function long_answer_questions_list() {
  *   The FAPI $form_state['values']
  */
 function long_answer_report_submit($values) {
-  long_answer_score_an_answer($values['quiz'], $values['nid'], $values['vid'], $values['rid'], (int) $values['score'], FALSE);
+  long_answer_score_an_answer($values, FALSE);
 }
 
 /**
@@ -346,4 +306,20 @@ function long_answer_report_validate($values, $form_key) {
   if (!_quiz_is_int($values['score'], 0, $max)) {
     form_set_error($form_key . '][score', t('The score needs to be a number between @min and @max', array('@min' => 0, '@max' => $max)));
   }
+}
+
+/**
+ * Implements hook_field_extra_fields().
+ */
+function long_answer_field_extra_fields() {
+  $extra['node']['long_answer'] = array(
+    'form' => array(
+      'rubric' => array(
+        'label' => t('Rubric'),
+        'description' => t('Specify the criteria for grading the response'),
+        'weight' => -4,
+      ),
+    ),
+  );
+  return $extra;
 }
