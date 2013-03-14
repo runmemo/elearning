@@ -1,0 +1,12 @@
+/* 
+    Document   : bookoblock
+    Created on : Mar 1, 2013, 5:20:46 AM
+    Author     : quickstart
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+root { 
+    display: block;
+}
+
