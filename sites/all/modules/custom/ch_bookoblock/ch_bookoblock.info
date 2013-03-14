@@ -1,5 +1,0 @@
-name = CourseHub Book Outline Block
-description = "CourseHub - Provides a block containing an outline of the current book."
-package = Other 
-core = 7.x
-dependencies[] = book
