@@ -36,56 +36,73 @@ function course_outline_block_info() {
  * Returns NULL if the current menu item is not part of a book heirarchy.
  */
 function course_outline_block_view() {
-  if ($book = course_outline_is_book_node()) {
-    $tree = menu_tree_all_data(book_menu_name($book['bid']));
-    $accordian_tree = array();
-    $content = '';
-    $lesson_count = 1; 
-    $count = array();
-    foreach($tree as $parent => $parent_tree) { 
-      foreach($parent_tree['below'] as $unit_key => $unit_tree) {
-        $header_title = $unit_tree['link']['link_title'];
-        $inner_tree = array();
-        foreach($unit_tree['below'] as $lesson_key => $lesson) {
-          $path = explode('/', $lesson['link']['link_path']);
-          if($path[0] == 'node' && is_numeric($path['1'])) {
-            $node = node_load($path[1]); //Check for performance issues
-            if(!isset($count[$node->type])) {
-              $count[$node->type] = 1;              
-            }
-            else {
-              $count[$node->type]++; 
-            }
-          }
-
-          switch($node->type) {
-            case 'lesson':
-              $title = "<span class='$node->type'>".t("Lesson @count.", array('@count' => $count[$node->type])).'</span>'.$lesson['link']['link_title'];
-            break;
-            case 'quiz':
-              $title = "<span class='$node->type'></span>{$lesson['link']['link_title']}";
-            break;
-          }
-          $inner_tree[] = l($title, $lesson['link']['link_path'], array('html' => TRUE));
-        } 
-        $content .= theme('item_list', array('items' => $inner_tree, 'title' => $header_title));
-      }
+    
+    $book = course_outline_is_book_node();
+            
+    if (!$book) { 
+        return NULL;
     }
-    // If we pass 1 as the second param, we just get the top level node in the
-    // book. Since the key will be the top level mlid, we'll have to use 
-    // ['p1'] in the $book array (which contains the top mlid) when we use it 
-    // for the block title.
-    $book_name = (book_toc($book['bid'], 1));
+  
+    $tree = menu_tree_all_data(book_menu_name($book['bid']));
 
-    // Build the block title and contents
-    $block['subject'] = $book_name[$book['p1']];
-    $block['content'] = $content;
+    // If the current node isn't part of a book, just return nothing.
+    if (!$tree) {
+      return NULL;
+    }
 
-    // Return the block
-    return $block;
-  }
-  // If the current node isn't part of a book, just return nothing.
-  return NULL;
+    $content = '';
+    $counter = new multi_counter();
+    $parent_tree = array_shift($tree); // there is only one item in next level
+    foreach($parent_tree['below'] as $unit_key => $unit) { 
+      // first level items of the tree will become headers
+      $header = $unit['link']['link_title']; 
+      $inner_tree = get_book_inner_tree($unit, $counter);
+      $content .= theme('item_list', array('items' => $inner_tree, 'title' => $header));
+    }
+  
+  // If we pass 1 as the second param, we just get the top level node in the
+  // book. Since the key will be the top level mlid, we'll have to use 
+  // ['p1'] in the $book array (which contains the top mlid) when we use it 
+  // for the block title.
+  $book_name = (book_toc($book['bid'], 1));
+
+  // Build the block title and contents
+  $block['subject'] = $book_name[$book['p1']];
+  
+  $block['content'] = $content;
+
+  // Return the block
+  return $block;
+}
+
+
+function get_book_inner_tree($leaf, $counter = NULL) {
+    if(is_null($counter)  ) {
+        $counter = new multi_counter;
+    }
+     $inner_tree = array();
+      foreach($leaf['below'] as $lesson_key => $lesson) {
+        // @todo: check for performance issues
+        $node = menu_get_object('node', 1, $lesson['link']['link_path']); 
+        $counter->increment($node->type);      
+
+        switch($node->type) {
+          case 'lesson':
+            $i = $counter->current($node->type);
+            $title = "<span class='" . $node->type. "'>".t("Lesson @i.", array('@i' => $i)) .'</span>';
+            break;
+          case 'quiz': // @todo : add question mark icon.
+            $title = "<span class='" . $node->type. "'></span>";
+            break;
+          default:
+            $title = "<span class='" . $node->type. "'></span>";
+            break;  
+        }
+        $title = $title . $lesson['link']['link_title'];
+        
+        $inner_tree[] = l($title, $lesson['link']['link_path'], array('html' => TRUE));
+      } 
+     return $inner_tree;
 }
 
 /**
@@ -93,11 +110,46 @@ function course_outline_block_view() {
  * Returns book array if it is part of a book, FALSE is not.
  */
 function course_outline_is_book_node() {
-  if ((arg(0) == 'node') && (is_numeric(arg(1)))) {
-    $node = menu_get_object();
-    if (isset($node->book)) {
-      return $node->book;
-    }
+ 
+  $node = menu_get_object();
+    if ($node && isset($node->book)) {
+    return $node->book;
   }
   return FALSE;
+}
+
+
+/**
+ * Helper counter class allows to keep several counts
+ */
+class multi_counter {
+    private $counts;
+    public function __construct() {
+        $this->counts = array();
+    }
+    /**
+     * Increments counter of specific type by one
+     * @param string $type
+     * @return integer
+     */
+    public function increment($type) {
+        if(!isset($this->counts[$type])) {
+           return $this->counts[$type] = 1;              
+         }
+         else {
+           return ++$this->counts[$type]; 
+         }
+    }
+    /**
+     * Gets current value of counter
+     * @param string $type
+     * @return integer
+     */
+    public function current($type) {
+        if(!isset($this->counts[$type])) {
+            return 0;
+        } else {
+            return $this->counts[$type];
+        }
+    }
 }
