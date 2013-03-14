@@ -1,21 +1,17 @@
 /* 
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * @file conteins js for course outline navigation
  */
 
-
-
-
 (function ($) {
-  Drupal.behaviors.course_outline_accoridan = {
-    attach: function(context,settings) {
+  Drupal.behaviors.course_outline_accordion = {
+    attach: function(context, settings) {
       // if this node is in an iframe, show only the content
-      jQuery('.block-course-outline').accordion({
+     $('.block-course-outline').accordion({
         header: 'h3',
         active: 1,
         navigation: true,
-        autoHeight: false,
+        autoHeight: false
       });
     }
-  }
-})(jQuery)
+  };
+})(jQuery);
