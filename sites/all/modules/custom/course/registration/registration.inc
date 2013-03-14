@@ -26,7 +26,7 @@ function course_register($uid, $nid) {
     //$registration->field_create_date[LAGUAGE_NONE][0]['value'] = date('Y-m-d H:i:s');
     
     $registration->save();
-    return $registration->nid;
+    return $registration->registration_id;
 }
 
 /**
@@ -34,16 +34,19 @@ function course_register($uid, $nid) {
  * @param integer $uid user id
  * @param integer $nid course id
  */
-function course_registration_id($uid, $nid) {
+function course_registration_id($uid, $nid, $active = TRUE) {
     
     // get id of top 1 registration
     $query = new EntityFieldQuery();
 
     $query->entityCondition('entity_type', 'registration')
-    //  ->propertyCondition('status', 1)
       ->propertyCondition('uid', $uid)
-      ->propertyCondition('nid', $nid)
-      ->range(0, 1);
+      ->propertyCondition('nid', $nid);
+    if ($active) { // filter cancelled registrations
+        $query->propertyCondition('cancelled', 'NULL', '=');
+    }
+    
+    $query->range(0, 1);
     
     $result = $query->execute();
     
@@ -58,4 +61,26 @@ function course_registration_id($uid, $nid) {
     else { // registration for this course does not exist
         return FALSE;
     }
+}
+
+/**
+ * Cancels reigstration of specifed user for specified course
+ * @param integer $uid
+ * @param integer $nid
+ * @return boolean shows wether registration was cancelled or not.
+ */
+function registration_cancel($uid, $nid) {
+    
+    $rid = course_registration_id($uid, $nid);
+    if ($rid) { // active registration exists for this user
+        $registration = registration_load($rid);
+        $registration->cancelled  = time();
+        $registration->save();
+        
+        return TRUE;
+    } else { // registration does not exist or was cancelled   
+        return FALSE;
+    }
+    
+    return TRUE;
 }

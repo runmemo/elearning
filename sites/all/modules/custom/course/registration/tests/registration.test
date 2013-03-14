@@ -73,5 +73,29 @@ class CourseRegistrationTestCase extends DrupalWebTestCase {
       $this->assertEqual($rid_first, $rid_second, 'Second registration is not created.');
 
   }  
+  
+  function testRegistrationCancelled() {
+      $this->drupalLogin($this->testUser);
+      
+      $uid = $this->loggedInUser->uid;
+      $nid = $this->testCourse->nid;
+      
+      $rid = course_register($uid, $nid);
+      // cancel registration first time
+      $res = registration_cancel($uid, $nid);
+      $this->assertTrue($res, 'First time cancellation returns TRUE');
+      
+      // cancel registration second time
+      $res = registration_cancel($uid, $nid);
+      $this->assertFalse($res, 'Second time cancellation returns FALSE');
+      
+      $rid_cancelled = course_registration_id($uid, $nid, FALSE);
+      $this->assertEqual($rid_cancelled, $rid, 'Cancelled registration exists in DB');
+      
+      $rid_cancelled = course_registration_id($uid, $nid);
+      $this->assertEqual($rid_cancelled, FALSE, 'Cancelled registration is not active');
+      
+      
+  }
 
 }
