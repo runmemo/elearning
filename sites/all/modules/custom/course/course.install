@@ -19,3 +19,16 @@ function course_install() {
     } 
   
 }
+
+/**
+ * Adds fields to provider content type and entity reference
+ * from course to provider
+ */
+function course_update_7001() {
+  $fields = _course_field_default_fields();
+  create_field($fields['node-course-field-provider']);
+  create_field($fields['node-provider-field-logo']);
+  create_field($fields['node-provider-body']);
+  
+  
+}
