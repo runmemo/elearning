@@ -33,35 +33,17 @@ function course_outline_block_info() {
  *
  * Returns NULL if the current menu item is not part of a book heirarchy.
  */
-function course_outline_block_view() {
+function course_outline_block_view($delta = '') {
 
-  $book = course_outline_is_book_node();
-
+  $book = course_outline_node_book();
   if (!$book) {
     return NULL;
   }
 
-  $tree = menu_tree_all_data(book_menu_name($book['bid']));
+  $tree = menu_tree_all_data($book['menu_name'], NULL, 3);
+  course_outline_preprocess_tree($tree);
 
-  // If the current node isn't part of a book, just return nothing.
-  if (!$tree) {
-    return NULL;
-  }
-
-  $content = array();
-  $counter = new multi_counter();
-  $root = array_shift($tree); // there is only one item in next level
-  foreach ($root['below'] as $unit_key => $unit) {
-    // first level items of the tree will become headers
-    $header = $unit['link']['link_title'];
-    $content[$unit_key] = array (
-      '#theme' => 'item_list',
-      '#items' => course_outline_leaf_children($unit, $counter),
-      '#title' => $header,
-    );
-  }
-
-  // If we pass 1 as the second param, we just get the top level node in the
+// If we pass 1 as the second param, we just get the top level node in the
   // book. Since the key will be the top level mlid, we'll have to use 
   // ['p1'] in the $book array (which contains the top mlid) when we use it 
   // for the block title.
@@ -69,46 +51,56 @@ function course_outline_block_view() {
 
   // Build the block title and contents
   $block['subject'] = $book_name[$book['p1']];
-  $block['content'] = $content;
-
-  // Return the block
+  $block['content'] = menu_tree_output($tree);
   return $block;
 }
 
-function course_outline_leaf_children($leaf, $counter = NULL) {
-  if (is_null($counter)) {
-    $counter = new multi_counter;
-  }
-  $children = array();
-  foreach ($leaf['below'] as $lesson_key => $lesson) {
-    // @todo: check for performance issues
-    $node = menu_get_object('node', 1, $lesson['link']['link_path']);
-    $counter->increment($node->type);
-
-    switch ($node->type) {
-      case 'lesson':
-        $i = $counter->current($node->type);
-        $title = "<span class='" . $node->type . "'>" . t("Lesson @i.", array('@i' => $i)) . '</span>';
-        break;
-      case 'quiz': // @todo : add question mark icon.
-        $title = "<span class='" . $node->type . "'></span>";
-        break;
-      default:
-        $title = "<span class='" . $node->type . "'></span>";
-        break;
+/**
+ * Adds content type specific html to leafs of course menu
+ * @param array $tree represents menu tree
+ * @return boolean
+ */
+function course_outline_preprocess_tree(&$tree) {
+  $counter = new multi_counter;
+  $tree_key = key($tree);
+  foreach ($tree[$tree_key]['below'] as &$unit) {
+    foreach ($unit['below'] as &$lesson) {
+      // @todo: check for performance issues
+      $node = menu_get_object('node', 1, $lesson['link']['link_path']);
+      $node->order = $counter->increment($node->type);
+      $lesson['link']['localized_options']['html'] = TRUE;
+      $lesson['link']['title'] = course_outline_item_title($node);
+    
     }
-    $title = $title . $lesson['link']['link_title'];
-    $children[$lesson_key] = l($title, $lesson['link']['link_path'], array('html' => TRUE));
   }
-  return $children;
+  return TRUE;
+}
+/**
+ * Builds title for course outline menu item
+ * @param object $node
+ * @return string title for the course outline menu item
+ */
+function course_outline_item_title($node){
+  switch ($node->type) {
+        case 'lesson':
+          $title = "<span class='" . $node->type . "'>" . t('Lesson @i.', array('@i' => $node->order)) . '</span>';
+          break;
+        case 'quiz': // @todo : add question mark icon.
+          $title = "<span class='" . $node->type . "'></span>";
+          break;
+        default:
+          $title = "<span class='" . $node->type . "'></span>";
+          break;
+      }
+      $title = $title . $node->title;
+   return $title;
 }
 
 /**
  * Checks to see if current node is part of a book.
  * Returns book array if it is part of a book, FALSE is not.
  */
-function course_outline_is_book_node() {
-
+function course_outline_node_book() {
   $node = menu_get_object();
   if ($node && isset($node->book)) {
     return $node->book;
