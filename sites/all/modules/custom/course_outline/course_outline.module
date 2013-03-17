@@ -2,8 +2,6 @@
 
 /**
  * Implements hook_init().
- *
- * Add quiz-specific styling.
  */
 function course_outline_init() {
   // @todo Probably don't want to add this to every page.
@@ -13,8 +11,7 @@ function course_outline_init() {
 }
 
 /**
- * Define the Book Outline Block/
- * Implementation of hook_block_info()
+ * Implements hook_block_info()
  */
 function course_outline_block_info() {
   $block['book_outline'] = array(
@@ -23,6 +20,32 @@ function course_outline_block_info() {
   );
   return $block;
 }
+
+
+/**
+ * Implements hook_theme()
+ */
+function course_outline_theme() {
+  return array(
+        'menu_link__course_outline_unit' => array(
+           'render element' => 'element'        
+        )
+    );
+}
+
+/**
+ * Returns HTML for the unit level elements of the course outline
+ */
+function theme_menu_link__course_outline_unit(array $variables) {
+  $element = $variables['element'];
+  $sub_menu = '';
+  $output = '<h3>' . $element['#title'] . '</h3>';
+  if ($element['#below']) {
+    $sub_menu = drupal_render($element['#below']);
+  }   
+  return $output . $sub_menu . "\n";
+}
+
 
 /**
  * Define the contents and title of the block/
@@ -43,7 +66,7 @@ function course_outline_block_view($delta = '') {
   $tree = menu_tree_all_data($book['menu_name'], NULL, 3);
   course_outline_preprocess_tree($tree);
 
-// If we pass 1 as the second param, we just get the top level node in the
+  // If we pass 1 as the second param, we just get the top level node in the
   // book. Since the key will be the top level mlid, we'll have to use 
   // ['p1'] in the $book array (which contains the top mlid) when we use it 
   // for the block title.
@@ -69,10 +92,14 @@ function course_outline_preprocess_tree(&$tree) {
   $counter = new multi_counter;
   $tree_key = key($tree);
   if(isset($tree[$tree_key]['#below'])){
-    foreach ($tree[$tree_key]['#below'] as &$unit) {
+    $tree = $tree[$tree_key]['#below']; // remove the top level
+    foreach ($tree as &$unit) {
       if(!isset($unit['#below'])) { 
         continue;
       }
+      // change theme for unit level links
+      $unit['#theme'] = 'menu_link__course_outline_unit';
+      // for each lesson we add html to the title
       foreach ($unit['#below'] as &$lesson) {
         if(!isset($lesson['#below'])) { 
           continue;
@@ -85,9 +112,8 @@ function course_outline_preprocess_tree(&$tree) {
         $lesson['#localized_options']['html'] = TRUE;
         $lesson['#attributes']['class'][] = $node->type;
       }
-    }
-  }
-  return TRUE;
+    }  
+  }  
 }
 /**
  * Builds title for course outline menu item
