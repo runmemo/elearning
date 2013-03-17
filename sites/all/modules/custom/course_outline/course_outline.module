@@ -49,9 +49,14 @@ function course_outline_block_view($delta = '') {
   // for the block title.
   $book_name = book_toc($book['bid'], 1);
 
+  $tree_output = menu_tree_output($tree);
+  // alter titles and classes of the links in the tree
+  course_outline_preprocess_tree($tree_output);
+  
   // Build the block title and contents
   $block['subject'] = $book_name[$book['p1']];
-  $block['content'] = menu_tree_output($tree);
+  $block['content'] = $tree_output;
+  
   return $block;
 }
 
@@ -63,14 +68,23 @@ function course_outline_block_view($delta = '') {
 function course_outline_preprocess_tree(&$tree) {
   $counter = new multi_counter;
   $tree_key = key($tree);
-  foreach ($tree[$tree_key]['below'] as &$unit) {
-    foreach ($unit['below'] as &$lesson) {
-      // @todo: check for performance issues
-      $node = menu_get_object('node', 1, $lesson['link']['link_path']);
-      $node->order = $counter->increment($node->type);
-      $lesson['link']['localized_options']['html'] = TRUE;
-      $lesson['link']['title'] = course_outline_item_title($node);
-    
+  if(isset($tree[$tree_key]['#below'])){
+    foreach ($tree[$tree_key]['#below'] as &$unit) {
+      if(!isset($unit['#below'])) { 
+        continue;
+      }
+      foreach ($unit['#below'] as &$lesson) {
+        if(!isset($lesson['#below'])) { 
+          continue;
+        }
+        // @todo: check for performance issues
+        $node = menu_get_object('node', 1, $lesson['#original_link']['link_path']);
+        $node->order = $counter->increment($node->type);
+     
+        $lesson['#title'] = course_outline_item_title($node);
+        $lesson['#localized_options']['html'] = TRUE;
+        $lesson['#attributes']['class'][] = $node->type;
+      }
     }
   }
   return TRUE;
