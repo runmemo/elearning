@@ -8,7 +8,7 @@
     $.fn.togglepanels = function(){
 	return this.each(function(){
 	  $(this).addClass("ui-accordion ui-accordion-icons ui-widget ui-helper-reset")
-	  .find(".level-2 > a")
+	  .find('h3')
 	  .addClass("ui-accordion-header ui-helper-reset ui-state-default ui-corner-top ui-corner-bottom")
 	  .hover(function() { $(this).toggleClass("ui-state-hover"); })
 	  .prepend('<span class="ui-icon ui-icon-triangle-1-e"></span>')
