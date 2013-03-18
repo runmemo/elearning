@@ -229,16 +229,19 @@ function registration_views_api() {
 
 
 function registration_form_block() {
-
-
   $block = array();
   $block['subject'] = t('Course registration');
   // add form to search products from same event
 
   $block['content'][] = drupal_get_form('course_registration_form');
-
   return $block;
 
+}
+
+function goto_class_form_block() {
+  $block = array();
+  $block['subject'] = t('Go to class');
+  $block['content'][] = drupal_get_form('course_goto_class_form');
 }
 
 /**
@@ -260,17 +263,24 @@ function course_registration_form($form, &$form_state) {
         return;
     }
     
-    $rid = course_registration_id($uid, $nid);
-    if ($rid) { 
-      return; // no need to show the button for registered user
-    }
-    
     $form = array();
+  
     // cache nid in the form as it will not be available in the callback overwise
     $form['nid'] = array(
       '#type' => 'hidden',
       '#value' =>  $nid,   
     );
+    
+    $rid = course_registration_id($uid, $nid);
+    if ($rid) { 
+      // user already registered, so we give him goto class button
+      $form['submit'] = array(
+        '#type' => 'submit', 
+        '#submit' => array('course_goto_class_submit'),
+        '#value' => t('Go to class'),
+      );
+      return $form; // no need to show the button for registered user
+    }
     
     // @todo : get the node id or url of the first lesson    
     
@@ -283,7 +293,34 @@ function course_registration_form($form, &$form_state) {
     
 }
 
+/**
+ * Registration form submit hook
+ */
+function course_registration_form_submit($form, &$form_state) {
+    global $user;
+    $uid = $user->uid;
+    
+    if ($user->uid == 0) { //user is not logged in 
+        // @todo redirect to user registration form
+    }
+    
+    $nid = $form['nid']['#value'];
+     
+     // register user to the course
+    $rid = course_register($uid, $nid);
+    
+    // @todo: redirect to the first lesson
+    if($rid) {
+      $node = node_load($nid);
+      $form_state['redirect'] = course_first_node_href('lesson', $node->book);
+    }   
+}
 
+function course_goto_class_submit($form, &$form_state) {
+   $nid = $form['nid']['#value'];
+   $node = node_load($nid);
+   $form_state['redirect'] = course_first_node_href('lesson', $node->book);
+}
 
 /**
  * Implement hook_theme().
@@ -353,8 +390,6 @@ function registration_entity_property_info_alter(&$info) {
   );
 }
 
-
-
 /**
  * The class used for registration entities
  */
@@ -371,11 +406,7 @@ class Registration extends Entity {
   protected function defaultUri() {
     return array('path' => 'registration/' . $this->registration_id);
   }
-  
-  
 }
-
-
 
 /**
  * The Controller for Registration entities

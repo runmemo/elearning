@@ -59,7 +59,7 @@ function theme_menu_link__course_outline_unit(array $variables) {
  */
 function course_outline_block_view($delta = '') {
 
-  $book = course_outline_node_book();
+  $book = course_node_book();
   if (!$book) {
     return NULL;
   }
@@ -137,17 +137,6 @@ function course_outline_item_title($node){
    return $title;
 }
 
-/**
- * Checks to see if current node is part of a book.
- * Returns book array if it is part of a book, FALSE is not.
- */
-function course_outline_node_book() {
-  $node = menu_get_object();
-  if ($node && isset($node->book)) {
-    return $node->book;
-  }
-  return FALSE;
-}
 
 /**
  * Helper counter class allows to keep several counts
