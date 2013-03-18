@@ -18,13 +18,13 @@ function course_register($uid, $nid) {
         return $rid;
     }
     
+    $reg_array = array (
+      'uid' => $uid, 
+      'nid' => $nid,
+      'created' => time(),
+    );
     // create new registration node
-    $registration = entity_create('registration', array('uid' => $uid, 'nid' => $nid));
-   // $registration->title = 'none';
-   //$registration->uid = $uid;
-   // $registration->nid = $nid;
-    //$registration->field_create_date[LAGUAGE_NONE][0]['value'] = date('Y-m-d H:i:s');
-    
+    $registration = entity_create('registration', $reg_array);
     $registration->save();
     return $registration->registration_id;
 }
