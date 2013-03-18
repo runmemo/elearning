@@ -1,0 +1,36 @@
+<?php
+
+/**
+ * @file course_points.module
+ */
+
+/**
+ * Implements hook_block_info()
+ */
+function course_points_block_info() {
+  $blocks = array();
+  if(module_exists('userpoints')) {
+     $blocks['course_total_points'] = array(
+       'info' => t('User total points'), 
+       'region' => 'menu',
+     );
+  }
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view()
+ */
+function course_points_block_view($delta ='') {
+  $block = array();
+  switch($delta) {
+    case 'course_total_points':
+      $block['subject'] = t('User points');
+      $block['content'] = array(
+        '#type' => 'markup', // @todo: add html markup if needed
+        '#markup' => userpoints_get_current_points(), 
+      );
+      
+  }
+  return $block;
+}

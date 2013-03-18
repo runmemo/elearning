@@ -1,0 +1,6 @@
+name = Course points
+description = Contains course points functionality.
+core = 7.x
+package = Custom
+version = 7.x
+project = course_points
