@@ -19,5 +19,32 @@
   return $id;
 }
 
+function elearning_preprocess_node(&$variables, $hook) {
+  
+  $function = __FUNCTION__ . '_' . $variables['node']->type;
+  if (function_exists($function)) {
+    $function($variables, $hook);
+  } 
+}
+
+function elearning_preprocess_node_course(&$vars, $hook) {
+  
+  $node = $vars['node'];
+  // $provider_logo variable
+  $providers = field_get_items('node', $node, 'field_provider');
+  foreach($providers as $provider) {
+    $vars['provider_logo'] = render(field_view_field('node', $provider['entity'], 'field_logo'));
+    break; // there should be only one value
+  }
+  
+  // $teacher_avatar variable
+  $teachers = field_get_items('node', $node, 'field_teacher');
+  foreach ($teachers as $teacher) {     
+     $vars['teacher_avatar'] = theme('user_picture', array('account' => $teacher['user']));
+     break; // there should be only one value
+  }
+  
+}
+
 
 ?>

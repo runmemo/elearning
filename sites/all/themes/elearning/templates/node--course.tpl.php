@@ -1,41 +1,35 @@
-<div<?php print $attributes; ?>>
+<article<?php print $attributes; ?>>
+  <?php print $user_picture; ?>
+  <?php print render($title_prefix); ?>
+  <?php if (!$page && $title): ?>
+  <header>
+    <h2<?php print $title_attributes; ?>><a href="<?php print $node_url ?>" title="<?php print $title ?>"><?php print $title ?></a></h2>
+  </header>
+  <?php endif; ?>
+  <?php print render($title_suffix); ?>
+  <?php if ($display_submitted): ?>
+  <footer class="submitted"><?php print $date; ?> -- <?php print $name; ?></footer>
+  <?php endif; ?>  
+  
   <div<?php print $content_attributes; ?>>
+    <?php
+      // We hide the comments and links now so that we can render them later.
+      hide($content['comments']);
+      hide($content['links']);
+      hide($content['field_teacher']);
+      hide($content['field_provider']);
+      print_nice($content['book']);
+      print $provider_logo;
+      print $teacher_avatar;
+     // print render($content['field_teacher']);
+      print render($content);
+    ?>
   </div>
-</div>
-
-<?php
-  //print '<pre>';
-  //var_dump($content['field_provider']['#object']->field_teacher['und']['0']['user']->referencing_entity->field_provider['und']['0']['node']->title);
- //print '</pre>';
- //$content['field_provider']['#object']['title'] 
-?>
-
-<div id="first-row">
-	<div id="info-provider">
-		<div class="field-name-field-logotype">
-			<img id="imgplaceholder" src="<?php print image_style_url('logo-school', $content['field_provider']['#object']->field_teacher['und']['0']['user']->referencing_entity->field_provider['und']['0']['node']->field_logotype['und']['0']['uri']); ?>">
-		</div>
-	
-		<div id="info-school">
-			<div id="name-course">
-				<div class="title-node" id="course"><?php echo render($content['title_field']);?></div>
-			</div>
-			
-			<div class="title-node" id="provider"><?php print $content['field_provider']['#object']->field_teacher['und']['0']['user']->referencing_entity->field_provider['und']['0']['node']->title; ?>
-			</div>
-		</div>
-	</div>
-</div>
-
-<div id="second-row">
-	<div id="info-teacher">
-	<?php echo render($content['field_teacher']);?>
-	</div>
-	<div id="video-course">
-	<?php echo render($content['field_video']);?>
-	</div>
-</div>	
-
-<?php echo render($content['field_discipline']);?>
-
-<?php echo render($content['body']);?>
+  
+  <div class="clearfix">
+    <?php if (!empty($content['links'])): ?>
+      <nav class="links node-links clearfix"><?php print render($content['links']); ?></nav>
+    <?php endif; ?>      
+    <?php print render($content['comments']); ?>
+  </div>
+</article>
