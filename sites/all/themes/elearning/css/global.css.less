@@ -1,0 +1,219 @@
+/* This file will hold styles for the mobile version of your website (mobile first). */
+/* This also can include ANY global CSS that applies site-wide. Unless overwritten by a more specific style rule, CSS declarations in global.css will apply site-wide. */
+
+
+/****** Start Less ******/
+
+.gradient-orange {
+    background: #dc5128; /* Old browsers */
+	background: -moz-linear-gradient(top,  #dc5128 0%, #c94213 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#dc5128), color-stop(100%,#c94213)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  #dc5128 0%,#c94213 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  #dc5128 0%,#c94213 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  #dc5128 0%,#c94213 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  #dc5128 0%,#c94213 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#dc5128', endColorstr='#c94213',GradientType=0 ); /* IE6-9 */
+}
+
+.text-orange {
+    color: #ce4619;
+}
+
+.text-blue {
+    color: #435d7b;
+}
+
+.gris {
+    color: #b5b5b5;
+}
+
+.grid {
+    width: 960px;
+    margin: 0 auto;
+    float: none;
+}
+
+.menu-float {
+    float: left;
+    list-style: none;
+    margin: 0px;
+}
+
+.link {
+    text-decoration: none;
+}
+
+.reset-div {
+    margin: 0px;
+    padding: 0px;
+}
+.middle {
+    display: table-cell; 
+    vertical-align: middle; 
+    text-align: center; 
+}
+
+.border-dotted {
+    border-bottom: 1px dotted #aeaeae;
+}
+
+@border-1: solid 1px;
+
+.RoundedShape(@radius:@defaultRadius){
+    -webkit-border-radius:@radius;
+    -moz-border-radius:@radius;
+    border-radius:@radius; 
+}
+
+/****** End Less ******/
+
+#section-header {
+    .gradient-orange;
+    border-top: #9e2600 @border-1;
+	border-bottom: #9e2600 @border-1;
+    height: 45px;
+    .header-group {
+        .grid;
+        #zone-branding-wrapper,
+        #zone-branding, 
+        #region-branding {
+            float: left;
+            width: auto;
+            .reset-div;
+            #logo {
+                margin: 13px 0 0 10px;
+            }
+        }
+        #zone-menu {
+            width: 0px;
+            display: none;
+        }
+        #zone-menu-wrapper{
+            float: left;
+        }
+        #zone-header-wrapper {
+            float: right;
+        }
+    }
+}
+
+#messages .error {
+    visibility: hidden;
+}
+
+.block-menu-top-menu {
+    ul {
+        padding: 0px;
+        margin: 8px 0 0 0;
+        li {
+        .menu-float;
+        background: url(../images/line-main-menu.png) no-repeat right;
+        height: 30px;
+        a {
+            .link;
+            color: white;
+            padding: 8px 20px 0;
+            float: left;
+        }
+    }
+    }
+}
+
+#section-content {
+    .grid;
+}
+
+#section-footer {
+    background: #4c4c4c;
+    .gris;
+    height: 36px;
+    .region-footer-first {
+        .grid;
+        display: block;
+        .block-menu-footer-menu {
+            float: left;
+            li {
+                .menu-float;
+                a {
+                    .gris;
+                    .middle;
+                    height: 30px;
+                }
+            }
+        }
+        .block-2 {
+            float: right;
+            .content {
+                height: 36px;
+                display: table; 
+                p {
+                    .middle;
+                }
+            }
+        }
+    }
+}
+
+#zone-footer {
+    .grid
+    li {
+       .menu-float; 
+    }
+}
+
+#messages {
+    position: relative;
+    margin: 0px;
+    display:none;
+}
+
+.node-provider .statistics_counter {
+    display:none;
+}
+
+#info-provider {
+    float: left;
+    width: 870px;
+    padding: 0 0 50px 0;
+    margin-bottom: 20px;
+    .border-dotted;
+    .field-name-field-logotype {
+        float: left;
+        margin: 0 15px 0 0;
+    }
+    #info-school {
+        float: left;
+        padding-top: 15px;
+        #name-course {
+            .title-node {
+            font-size: 22px;
+            font-weight: bold;
+            margin: 0px 0 20px 0;
+            }
+        }
+        #provider {
+            .text-blue;
+            font-size: 14px;
+            font-weight: bold;
+        }
+    }
+}
+
+#region-content {
+    margin-top: 35px;
+}
+
+#second-row {
+    float: left;
+    width: 870px;
+    padding-bottom: 25px;
+    margin-bottom: 25px;
+    .border-dotted;
+    #info-teacher {
+        float: left;
+        width: 440px;
+    }
+    #video-course {
+        float: left;
+    }
+}

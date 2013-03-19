@@ -1,3 +1,3 @@
-<header<?php print $attributes; ?>>
+<header<?php print $attributes; ?>> 
   <?php print $content; ?>
 </header>
