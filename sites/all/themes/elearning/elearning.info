@@ -32,9 +32,10 @@ zones[branding] = 'Branding'
 zones[menu] = 'Menu'
 zones[preface] = 'Preface'
 zones[postscript] = 'Postscript'
-stylesheets[all][] = css/global.css.less
-css[global.css][name] = 'Your custom global styles'
-css[global.css][description] = 'This file holds all the globally active custom CSS of your theme.'
-settings[alpha_css][global.css] = 'global.css'
+
+css[global.css.less][name] = eLearning styles
+css[global.css.less][description] = LESS CSS stylesheet for eLearning.
+css[global.css.less][options][weight] = 10
+settings[alpha_css][global.css.less] = 'global.css.less'
 
 version = '1.x'
