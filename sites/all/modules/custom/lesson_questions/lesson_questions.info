@@ -1,0 +1,5 @@
+name = Questions Related to Lessons
+description = "Question related to lessons"
+package = Other 
+core = 7.x
+dependencies[] = relevant_answers
