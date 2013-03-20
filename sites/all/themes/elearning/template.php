@@ -27,6 +27,16 @@ function elearning_preprocess_node(&$variables, $hook) {
   } 
 }
 
+function elearning_preprocess_views_view(&$vars) {
+  if (isset($vars['view']->name)) {
+    $function = __FUNCTION__ . '_' . $vars['view']->name; 
+    if (function_exists($function)) {
+     $function($vars);
+    }
+  }
+}
+
+
 function elearning_preprocess_node_course(&$vars, $hook) {
   
   $node = $vars['node'];

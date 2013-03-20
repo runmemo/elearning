@@ -11,17 +11,18 @@ function lesson_questions_views_default_views() {
   $export = array();
 
   $view = new view();
-  $view->name = 'lessons_relevant_questions_page';
+  $view->name = 'relevant_questions_list';
   $view->description = 'Questions associated with the current path';
   $view->tag = 'Relevant Answers';
   $view->base_table = 'node';
-  $view->human_name = 'Lessons Relevant Questions Page';
+  $view->human_name = 'Relevant Questions List';
   $view->core = 7;
   $view->api_version = '3.0';
   $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
 
   /* Display: Master */
   $handler = $view->new_display('default', 'Master', 'default');
+  $handler->display->display_options['css_class'] = 'view-questions-list';
   $handler->display->display_options['use_more'] = TRUE;
   $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['use_more_text'] = 'More';
@@ -124,7 +125,7 @@ function lesson_questions_views_default_views() {
   );
 
   /* Display: Popular Relevant Questions Block */
-  $handler = $view->new_display('block', 'Popular Relevant Questions Block', 'popular_relevant_questions_block');
+  $handler = $view->new_display('block', 'Block', 'block');
   $handler->display->display_options['defaults']['title'] = FALSE;
   $handler->display->display_options['title'] = 'Popular Questions';
   $handler->display->display_options['defaults']['use_ajax'] = FALSE;
