@@ -217,3 +217,87 @@
         float: left;
     }
 }
+
+.view-lessons-relevant-questions-page .view-content .views-row {
+  clear: both;
+  font-weight: bold;
+  .border-dotted;
+  float: left;
+  width: 100%;
+  padding: 10px 0;
+  .right,
+  .left {
+    float: left;
+    text-align: center;
+  }
+  .left {
+    .text-orange;
+    width: 65px;
+  }
+  .right {
+    width: 90px;
+  }
+  .right,
+  .left.zero {
+    .gris;
+  }
+  
+  .middle {
+    width: 65%;
+    float: left;
+    text-align: left;
+    padding: 0 30px;
+    .views-field-title {
+      a {
+        .link;
+        .text-orange;
+      }      
+    }
+  }
+
+}
+
+#message-placeholder {
+  background: #c0e2fe;
+  .text-blue;
+  font-weight: bold;
+  .text {
+    padding: 5px 10px;
+    .close {
+      float: right;
+      .text-orange;
+      cursor: pointer;
+    }
+  }
+}
+
+#quick-question-wrapper fieldset {
+  margin-bottom: 0;
+
+  input,
+  textarea {
+    border: medium none;
+  }
+  .fieldset-wrapper {
+    background: #f7f7f7;
+    padding: 1px 10px;
+    input.form-text {
+      width: 100%;
+    }
+    .grippie {
+      display: none;
+    }
+    .form-submit {
+      font-size: 15px;
+      float: right;
+      left: -14px;
+      top: -50px;
+      position: relative;
+      .gradient-orange;
+      text-shadow: 0 0 transparent;
+      .RoundedShape(3px);
+      color: #fff;
+      padding: 5px 20px;
+    }
+  }
+}

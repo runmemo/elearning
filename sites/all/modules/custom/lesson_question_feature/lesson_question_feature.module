@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Lesson question feature feature.
+ */
+
+include_once 'lesson_question_feature.features.inc';

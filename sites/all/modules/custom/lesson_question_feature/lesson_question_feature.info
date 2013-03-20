@@ -1,0 +1,13 @@
+name = Lesson question feature
+description = Lesson question feature
+core = 7.x
+package = Features
+dependencies[] = lesson_questions
+dependencies[] = quicktabs
+dependencies[] = views
+features[ctools][] = quicktabs:quicktabs:1
+features[ctools][] = views:views_default:3.0
+features[features_api][] = api:1
+features[quicktabs][] = lesson_interaction
+features[views_view][] = lessons_relevant_questions_page
+features_exclude[dependencies][ctools] = ctools
