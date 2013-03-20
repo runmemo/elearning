@@ -7,7 +7,7 @@
 /**
  * Implements hook_views_default_views().
  */
-function lesson_question_feature_views_default_views() {
+function lesson_questions_views_default_views() {
   $export = array();
 
   $view = new view();

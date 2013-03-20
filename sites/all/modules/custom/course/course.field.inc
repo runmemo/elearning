@@ -300,13 +300,13 @@ function _course_field_default_fields() {
           'weight' => 0,
         ),
         'default' => array(
-          'label' => 'above',
+          'label' => 'hidden',
           'module' => 'file_entity',
           'settings' => array(
-            'file_view_mode' => 'default',
+            'file_view_mode' => 'media_small',
           ),
           'type' => 'file_rendered',
-          'weight' => '3',
+          'weight' => '4',
         ),
         'teaser' => array(
           'label' => 'above',
