@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Open Question feature.
+ */
+
+include_once 'open_question.features.inc';
