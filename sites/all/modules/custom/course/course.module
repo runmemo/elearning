@@ -5,56 +5,53 @@
  * Code for the Course module.
  */
 
+include_once 'course.features.inc';
+
 /**
- * Implements hook_views_api().
+ * Implements hook_init()
  */
-function course_views_api() {
-  return array(
-    'api' => '3.0', 
-    'path' =>  drupal_get_path('module', 'course') . '/views', 
-  );
+function course_init() {
+  
+  $node = menu_get_object('node');
+  
+  // Redirect to fist lesson from unit content type page
+  if ($node && $node->type === 'unit') {
+    $book_link = $node->book;
+    $next = book_next($book_link);
+    drupal_goto($next['link_path'], array(), 301);
+  }
 }
 
-
 /**
- * Implements hook_node_info().
+ * Gets node last visited by the user
+ * @todo test case
  */
-function course_node_info() {
-  $items = array(
-    'course' => array(
-      'name' => t('Course'),
-      'base' => 'node_content',
-      'description' => t('Represent the full course.'),
-      'has_title' => '1',
-      'title_label' => t('Title'),
-      'help' => '',
-    ),
-    'lesson' => array(
-      'name' => t('Lesson'),
-      'base' => 'node_content',
-      'description' => '',
-      'has_title' => '1',
-      'title_label' => t('Title'),
-      'help' => '',
-    ),
-    'unit' => array(
-      'name' => t('Unit'),
-      'base' => 'node_content',
-      'description' => t('Unit is a large section of course that consists of lessons, quizzes and other content. '),
-      'has_title' => '1',
-      'title_label' => t('Title'),
-      'help' => '',
-    ),
-    'provider' => array(
-      'name' => t('Provider'),
-      'base' => 'node_content',
-      'description' => t('Provider of course content, e.g. university or company.'),
-      'has_title' => '1',
-      'title_label' => t('Title'),
-      'help' => '',
-    ),
-  );
-  return $items;
+function course_last_visited_node($nid) {
+  global $user;
+  
+  if ($user->uid == 0) {
+    return $nid;
+  }
+  
+  $sql = 'SELECT h.nid AS nid 
+          FROM history h 
+          INNER JOIN book b ON h.nid = b.nid
+          INNER JOIN book c ON b.bid = c.bid
+          INNER JOIN menu_links ml ON ml.mlid = b.mlid
+          WHERE 
+            c.nid = :nid
+            AND h.uid = :uid
+            AND ml.plid != 0
+          ORDER BY h.timestamp DESC
+          LIMIT 1';
+  
+  $result = db_query($sql, array(':nid' => $nid, ':uid' => $user->uid));
+  
+  foreach ($result as $record) {
+    return $record->nid;
+  }
+  // user did not open any content this course
+  return FALSE;
 }
 
 /**
