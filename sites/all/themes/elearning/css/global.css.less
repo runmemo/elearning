@@ -59,6 +59,10 @@
 
 @border-1: solid 1px;
 
+.font-bold {
+  font-weight: bold;
+}
+
 .RoundedShape(@radius:@defaultRadius){
     -webkit-border-radius:@radius;
     -moz-border-radius:@radius;
@@ -298,6 +302,50 @@
       .RoundedShape(3px);
       color: #fff;
       padding: 5px 20px;
+    }
+  }
+}
+
+.block-course-outline {
+   ul.menu {
+     h3.ui-accordion-header {
+       .font-bold;
+       background: #f0f0f0;
+       border: medium none;
+       .RoundedShape(0px);
+       padding: 10px;
+       font-size: 16px;
+       .ui-icon {
+         float: right;
+         left: 0;
+         margin: auto;
+         top: 0;
+         position: relative;
+       }
+     }
+
+     ul.ui-accordion-content {
+       padding: 0;
+       border-radius: 0;
+       li {
+         .border-dotted;
+         padding: 10px;
+         margin: 0;
+       }
+       li.last {
+         border: medium none;
+       }
+       li.active {
+         background: #fff0d9;
+       }
+       a {
+         text-decoration: none;
+         .font-bold;
+         span.lesson {
+           .text-orange;
+           padding: 0 5px 0 0;
+         }
+      }
     }
   }
 }

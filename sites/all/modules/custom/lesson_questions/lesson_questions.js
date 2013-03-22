@@ -4,11 +4,13 @@
       $('span.close').click(function() {
         $(this).parent().hide('fast');
       });
-      $('.view-relevant-questions.view-id-relevant_questions .views-field-field-answer-count .field-content').each(function() {
+      $('.view-relevant-questions-list .views-field-field-answer-count .field-content').each(function() {
         if($(this).text() <= 0) {
           $(this).parent().parent().addClass('zero');
         }
       });
+
+        $('li a.active').parent().addClass('active');
     }
   };
 })(jQuery);
