@@ -190,7 +190,7 @@ function lesson_questions_views_default_views() {
   $handler->display->display_options['fields']['created']['field'] = 'created';
   $handler->display->display_options['fields']['created']['label'] = '';
   $handler->display->display_options['fields']['created']['alter']['alter_text'] = TRUE;
-  $handler->display->display_options['fields']['created']['alter']['text'] = '<div class="left grid-1">
+  $handler->display->display_options['fields']['created']['alter']['text'] = '<div class="left grid-1 omega">
     <div class="answer-count">
       [field_answer_count]
     </div>
@@ -205,7 +205,7 @@ function lesson_questions_views_default_views() {
     </div>
   </div>
 
-  <div class="right grid-2">
+  <div class="right grid-2 omega">
     <div class="name">
       [name]
     </div>
