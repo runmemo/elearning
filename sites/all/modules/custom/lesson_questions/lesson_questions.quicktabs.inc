@@ -34,16 +34,11 @@ function lesson_questions_quicktabs_default_quicktabs() {
       'type' => 'block',
     ),
   );
-  $quicktabs->renderer = 'quicktabs';
+  $quicktabs->renderer = 'ui_tabs';
   $quicktabs->style = 'nostyle';
-  $quicktabs->options = array();
-
-  // Translatables
-  // Included for use with string extractors like potx.
-  t('Lesson interaction');
-  t('Questions');
-  t('Search');
-
+  $quicktabs->options = array(
+    'history' => 0,
+  );
   $export['lesson_interaction'] = $quicktabs;
 
   return $export;

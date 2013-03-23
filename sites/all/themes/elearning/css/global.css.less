@@ -223,35 +223,28 @@
 }
 
 .view-relevant-questions-list .view-content .views-row {
-  clear: both;
   font-weight: bold;
   .border-dotted;
   float: left;
-  width: 100%;
   padding: 10px 0;
   .right,
   .left {
-    float: left;
     text-align: center;
   }
   .left {
     .text-orange;
-    width: 65px;
   }
   .right {
-    width: 90px;
+    width: 160px; /*Todo : Why omega grids breaking here */
   }
+
   .right,
-  .left.zero {
+  .zero {
     .gris;
   }
-  
-  .middle {
-    width: 65%;
-    float: left;
-    text-align: left;
-    padding: 0 30px;
-    .views-field-title {
+
+  .center {
+    .title {
       a {
         .link;
         .text-orange;
@@ -347,5 +340,36 @@
          }
       }
     }
+  }
+}
+
+.quicktabs-ui-wrapper.ui-tabs {
+  padding: 0;
+  border: 0;
+  ul.ui-tabs-nav {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    .border-dotted;
+    li {
+      margin-right: 10px;
+      .RoundedShape(0px);
+      width: 215px;
+      a {
+        font-weight: bold;
+        width: 100%;
+        padding: 0.5em 0em;
+        text-align: center;
+      }
+    }
+    li.ui-state-active,
+    li.ui-state-hover {
+      a {
+        .text-orange;
+      }
+    }
+  }
+  .ui-widget-content {
+    padding: 1em 0;
   }
 }
