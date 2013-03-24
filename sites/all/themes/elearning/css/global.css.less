@@ -33,6 +33,11 @@
     float: none;
 }
 
+
+.grid-3 {
+    width: 280px;
+}
+
 .menu-float {
     float: left;
     list-style: none;
@@ -231,9 +236,6 @@
   .left {
     .text-orange;
   }
-  .right {
-    /*width: 160px; Todo : Why omega grids breaking here */
-  }
 
   .right,
   .zero {
@@ -302,9 +304,11 @@
        .font-bold;
        margin-bottom: 0;
        background: #f0f0f0;
-       border: medium none;
+       border: 1px solid #aaa;
        padding: 10px;
        font-size: 16px;
+       cursor: pointer;
+       clear: both;
        .ui-icon {
          float: right;
          left: 0;
@@ -313,28 +317,41 @@
          position: relative;
        }
      }
+     h3:hover {
+       .text-orange; 
+     }
      ul {
        padding: 0;
        border-radius: 0;
        li {
          .border-dotted;
-         padding: 10px;
+         padding: 0;
          margin: 0;
          list-style-type:none;
          list-style-image: none;
+         float: left;
+         width: 100%;
        }
        li.last {
          border: medium none;
        }
-       li.active {
+       li:hover,
+       a.active {
          background: #fff0d9;
        }
        a {
          text-decoration: none;
+         float: left;
+         clear: both;
          .font-bold;
-         span.lesson {
-           .text-orange;
-           padding: 0 5px 0 0;
+         width: 100%;
+         color:#000000;
+         .title-wrapper {
+           padding: 10px;
+           span.lesson {
+             .text-orange;
+             padding: 0 5px 0 0;
+           }
          }
       }
     }
@@ -352,7 +369,7 @@
     li {
       margin-right: 10px;
       .RoundedShape(0px);
-      width: 215px;
+      .grid-3;
       a {
         font-weight: bold;
         width: 100%;

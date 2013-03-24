@@ -133,7 +133,7 @@ function course_outline_item_title($node){
           $title = "<span class='" . $node->type . "'></span>";
           break;
       }
-      $title = $title . $node->title;
+      $title = '<div class="title-wrapper">'.$title . $node->title.'</div>';
    return $title;
 }
 
