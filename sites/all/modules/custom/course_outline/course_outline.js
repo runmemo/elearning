@@ -8,8 +8,9 @@
       $('.block-course-outline h3').click(function () {
         $(this).next('ul').slideToggle();
       });
-	// @todo: open section with active page
-	//$('. .active').closest('ul').prev().click();    
+	// open section with active page
+        $('.block-course-outline .menu > ul').hide();
+	$('.block-course-outline .active').closest('ul').show();    
     }
   };
 })(jQuery);
