@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Class Context delta feature.
+ */
+
+include_once 'class_context_delta.features.inc';
