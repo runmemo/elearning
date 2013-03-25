@@ -38,6 +38,8 @@ function course_update_7001() {
  */
 function course_update_7002() {
   $fields = _course_field_default_fields();
+  create_field($fields['node-course-field-course-load']);
+  create_field($fields['node-course-field-duration']);
   create_field($fields['user-user-field-name']);
   create_field($fields['user-user-field-surname']);
 }
