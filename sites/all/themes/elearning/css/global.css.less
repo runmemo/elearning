@@ -33,6 +33,11 @@
     float: none;
 }
 
+
+.grid-3 {
+    width: 280px;
+}
+
 .menu-float {
     float: left;
     list-style: none;
@@ -58,6 +63,10 @@
 }
 
 @border-1: solid 1px;
+
+.font-bold {
+  font-weight: bold;
+}
 
 .RoundedShape(@radius:@defaultRadius){
     -webkit-border-radius:@radius;
@@ -119,9 +128,6 @@
     }
 }
 
-#section-content {
-    .grid;
-}
 
 #section-footer {
     background: #4c4c4c;
@@ -218,36 +224,26 @@
     }
 }
 
-.view-questions-list .view-content .views-row {
-  clear: both;
+.view-relevant-questions-list .view-content .views-row {
   font-weight: bold;
   .border-dotted;
   float: left;
-  width: 100%;
   padding: 10px 0;
   .right,
   .left {
-    float: left;
     text-align: center;
   }
   .left {
     .text-orange;
-    width: 65px;
   }
-  .right {
-    width: 90px;
-  }
+
   .right,
-  .left.zero {
+  .zero {
     .gris;
   }
-  
-  .middle {
-    width: 65%;
-    float: left;
-    text-align: left;
-    padding: 0 30px;
-    .views-field-title {
+
+  .center {
+    .title {
       a {
         .link;
         .text-orange;
@@ -299,5 +295,96 @@
       color: #fff;
       padding: 5px 20px;
     }
+  }
+}
+
+.block-course-outline {
+   ul.menu {
+     h3 {
+       .font-bold;
+       margin-bottom: 0;
+       background: #f0f0f0;
+       border: 1px solid #aaa;
+       padding: 10px;
+       font-size: 16px;
+       cursor: pointer;
+       clear: both;
+       .ui-icon {
+         float: right;
+         left: 0;
+         margin: auto;
+         top: 0;
+         position: relative;
+       }
+     }
+     h3:hover {
+       .text-orange; 
+     }
+     ul {
+       padding: 0;
+       border-radius: 0;
+       li {
+         .border-dotted;
+         padding: 0;
+         margin: 0;
+         list-style-type:none;
+         list-style-image: none;
+         float: left;
+         width: 100%;
+       }
+       li.last {
+         border: medium none;
+       }
+       li:hover,
+       a.active {
+         background: #fff0d9;
+       }
+       a {
+         text-decoration: none;
+         float: left;
+         clear: both;
+         .font-bold;
+         width: 100%;
+         color:#000000;
+         .title-wrapper {
+           padding: 10px;
+           span.lesson {
+             .text-orange;
+             padding: 0 5px 0 0;
+           }
+         }
+      }
+    }
+  }
+}
+
+.quicktabs-ui-wrapper.ui-tabs {
+  padding: 0;
+  border: 0;
+  ul.ui-tabs-nav {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    .border-dotted;
+    li {
+      margin-right: 10px;
+      .RoundedShape(0px);
+      .grid-3;
+      a {
+        font-weight: bold;
+        width: 100%;
+        padding: 0.5em 0em;
+        text-align: center;
+      }
+    }
+    li.ui-state-active,
+    li.ui-state-hover {
+      a {
+        .text-orange;
+      }
+    }
+  }
+  .ui-widget-content {
+    padding: 1em 0;
   }
 }

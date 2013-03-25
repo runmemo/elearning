@@ -104,7 +104,7 @@ function lesson_questions_views_default_views() {
   $handler->display->display_options['arguments']['field_question_path_value']['field'] = 'field_question_path_value';
   $handler->display->display_options['arguments']['field_question_path_value']['default_action'] = 'default';
   $handler->display->display_options['arguments']['field_question_path_value']['default_argument_type'] = 'php';
-  $handler->display->display_options['arguments']['field_question_path_value']['default_argument_options']['code'] = 'return relevant_answers_get_path();';
+  $handler->display->display_options['arguments']['field_question_path_value']['default_argument_options']['code'] =   'return relevant_answers_get_path();';
   $handler->display->display_options['arguments']['field_question_path_value']['summary']['number_of_records'] = '0';
   $handler->display->display_options['arguments']['field_question_path_value']['summary']['format'] = 'default_summary';
   $handler->display->display_options['arguments']['field_question_path_value']['summary_options']['items_per_page'] = '25';
@@ -124,7 +124,7 @@ function lesson_questions_views_default_views() {
     'question' => 'question',
   );
 
-  /* Display: Popular Relevant Questions Block */
+  /* Display: Block */ 
   $handler = $view->new_display('block', 'Block', 'block');
   $handler->display->display_options['defaults']['title'] = FALSE;
   $handler->display->display_options['title'] = 'Popular Questions';
@@ -151,27 +151,28 @@ function lesson_questions_views_default_views() {
   $handler->display->display_options['fields']['field_answer_count']['table'] = 'field_data_field_answer_count';
   $handler->display->display_options['fields']['field_answer_count']['field'] = 'field_answer_count';
   $handler->display->display_options['fields']['field_answer_count']['label'] = '';
+  $handler->display->display_options['fields']['field_answer_count']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_answer_count']['alter']['alter_text'] = TRUE;
+  $handler->display->display_options['fields']['field_answer_count']['alter']['text'] = '[field_answer_count] Answers';
   $handler->display->display_options['fields']['field_answer_count']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_answer_count']['empty'] = '<div class="zero">0 Answers</div>';
+  $handler->display->display_options['fields']['field_answer_count']['empty_zero'] = TRUE;
   $handler->display->display_options['fields']['field_answer_count']['type'] = 'nodereference_count_default';
-  /* Field: Global: Custom text */
-  $handler->display->display_options['fields']['nothing']['id'] = 'nothing';
-  $handler->display->display_options['fields']['nothing']['table'] = 'views';
-  $handler->display->display_options['fields']['nothing']['field'] = 'nothing';
-  $handler->display->display_options['fields']['nothing']['label'] = '';
-  $handler->display->display_options['fields']['nothing']['alter']['text'] = 'Answers';
-  $handler->display->display_options['fields']['nothing']['element_label_colon'] = FALSE;
   /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['label'] = '';
+  $handler->display->display_options['fields']['title']['exclude'] = TRUE;
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
+  $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
   /* Field: Content: Body */
   $handler->display->display_options['fields']['body']['id'] = 'body';
   $handler->display->display_options['fields']['body']['table'] = 'field_data_body';
   $handler->display->display_options['fields']['body']['field'] = 'body';
   $handler->display->display_options['fields']['body']['label'] = '';
+  $handler->display->display_options['fields']['body']['exclude'] = TRUE;
   $handler->display->display_options['fields']['body']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['body']['type'] = 'text_plain';
   /* Field: User: Name */
@@ -180,6 +181,7 @@ function lesson_questions_views_default_views() {
   $handler->display->display_options['fields']['name']['field'] = 'name';
   $handler->display->display_options['fields']['name']['relationship'] = 'uid';
   $handler->display->display_options['fields']['name']['label'] = '';
+  $handler->display->display_options['fields']['name']['exclude'] = TRUE;
   $handler->display->display_options['fields']['name']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['name']['link_to_user'] = FALSE;
   /* Field: Content: Post date */
@@ -187,7 +189,35 @@ function lesson_questions_views_default_views() {
   $handler->display->display_options['fields']['created']['table'] = 'node';
   $handler->display->display_options['fields']['created']['field'] = 'created';
   $handler->display->display_options['fields']['created']['label'] = '';
+  $handler->display->display_options['fields']['created']['alter']['alter_text'] = TRUE;
+  $handler->display->display_options['fields']['created']['alter']['text'] = '<div class="left grid-1 omega">
+    <div class="answer-count">
+      [field_answer_count]
+    </div>
+  </div>
+
+  <div class="center grid-6">
+    <div class="title">
+      [title]
+    </div>
+    <div class="body">
+      [body]
+    </div>
+  </div>
+
+  <div class="right grid-2 omega">
+    <div class="name">
+      [name]
+    </div>
+    <div class="created">
+      [created]
+    </div>
+  </div>
+  ';
+  $handler->display->display_options['fields']['created']['element_type'] = '0';
   $handler->display->display_options['fields']['created']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['created']['element_wrapper_type'] = '0';
+  $handler->display->display_options['fields']['created']['element_default_classes'] = FALSE;
   $handler->display->display_options['fields']['created']['date_format'] = 'custom';
   $handler->display->display_options['fields']['created']['custom_date_format'] = 'd.m.Y';
   $handler->display->display_options['defaults']['sorts'] = FALSE;

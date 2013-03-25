@@ -109,7 +109,7 @@ function quick_question($form, &$form_state) {
       'wrapper' => 'quick-question-wrapper',
       'progress' => array('message' => t('')),
     ),
-    '#value' => t('Submit'),
+    '#value' => t('Ask'),
   );
   return $form;
 }
