@@ -386,6 +386,9 @@ h2 {
   }
 
   .center {
+    div {
+      padding: 0 0 0 30px;
+    }
     .title {
       a {
         .link;
@@ -447,21 +450,34 @@ h2 {
        .font-bold;
        margin-bottom: 0;
        background: #f0f0f0;
-       border: 1px solid #aaa;
+       border-color: #e5e1e2;
+       border-width: 1px 1px 0px;
+       border-style: solid;
        padding: 10px;
        font-size: 16px;
        cursor: pointer;
        clear: both;
-       .ui-icon {
+       .icon {
+         background: url('../images/section_arrow_down.png') no-repeat scroll right center;
+         padding: 9px;
          float: right;
-         left: 0;
-         margin: auto;
-         top: 0;
-         position: relative;
        }
      }
      h3:hover {
-       .text-orange; 
+       .text-orange;
+       .icon {
+         background: url('../images/section_arrow_down.png') no-repeat scroll right center;
+       }
+     }
+     h3.last,
+     h3.active {
+       border-width: 1px;
+       box-shadow: 0px 1px 1px #EEEEEE;
+     }
+     h3.active {
+       .icon {
+         background: url('../images/section_arrow_up.png') no-repeat scroll right center;
+       }
      }
      ul {
        padding: 0;
@@ -494,6 +510,10 @@ h2 {
            span.lesson {
              .text-orange;
              padding: 0 5px 0 0;
+           }
+           span.quiz {
+             background: url('../images/question_mark.png') no-repeat;
+             padding: 0 8px;
            }
          }
       }
