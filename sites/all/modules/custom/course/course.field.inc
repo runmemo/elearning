@@ -6,9 +6,7 @@
  * course.field.inc
  */
 
-/**
- * Implements hook_field_default_fields().
- */
+
 function _course_field_default_fields() {
   $fields = array();
 
@@ -428,157 +426,7 @@ function _course_field_default_fields() {
     ),
   );
   
-    // Exported field: 'node-course-field_course_load'.
-  $fields['node-course-field_course_load'] = array(
-    'field_config' => array(
-      'active' => '1',
-      'cardinality' => '1',
-      'deleted' => '0',
-      'entity_types' => array(),
-      'field_name' => 'field_course_load',
-      'foreign keys' => array(
-        'format' => array(
-          'columns' => array(
-            'format' => 'format',
-          ),
-          'table' => 'filter_format',
-        ),
-      ),
-      'indexes' => array(
-        'format' => array(
-          0 => 'format',
-        ),
-      ),
-      'locked' => '0',
-      'module' => 'text',
-      'settings' => array(
-        'max_length' => '128',
-      ),
-      'translatable' => '0',
-      'type' => 'text',
-    ),
-    'field_instance' => array(
-      'bundle' => 'course',
-      'default_value' => NULL,
-      'deleted' => '0',
-      'description' => '',
-      'display' => array(
-        'default' => array(
-          'label' => 'above',
-          'module' => 'text',
-          'settings' => array(),
-          'type' => 'text_default',
-          'weight' => '7',
-        ),
-        'full' => array(
-          'label' => 'above',
-          'module' => 'text',
-          'settings' => array(),
-          'type' => 'text_default',
-          'weight' => '7',
-        ),
-        'teaser' => array(
-          'label' => 'above',
-          'settings' => array(),
-          'type' => 'hidden',
-          'weight' => 0,
-        ),
-      ),
-      'entity_type' => 'node',
-      'field_name' => 'field_course_load',
-      'label' => 'Course load',
-      'required' => FALSE,
-      'settings' => array(
-        'text_processing' => 0,
-        'user_register_form' => FALSE,
-      ),
-      'widget' => array(
-        'module' => 'text',
-        'settings' => array(
-          'size' => 60,
-        ),
-        'type' => 'text_textfield',
-        'weight' => '3',
-      ),
-    ),
-  );
-
-  // Exported field: 'node-course-field_duration'.
-  $fields['node-course-field_duration'] = array(
-    'field_config' => array(
-      'active' => '1',
-      'cardinality' => '1',
-      'deleted' => '0',
-      'entity_types' => array(),
-      'field_name' => 'field_duration',
-      'foreign keys' => array(
-        'format' => array(
-          'columns' => array(
-            'format' => 'format',
-          ),
-          'table' => 'filter_format',
-        ),
-      ),
-      'indexes' => array(
-        'format' => array(
-          0 => 'format',
-        ),
-      ),
-      'locked' => '0',
-      'module' => 'text',
-      'settings' => array(
-        'max_length' => '128',
-      ),
-      'translatable' => '0',
-      'type' => 'text',
-    ),
-    'field_instance' => array(
-      'bundle' => 'course',
-      'default_value' => NULL,
-      'deleted' => '0',
-      'description' => '',
-      'display' => array(
-        'default' => array(
-          'label' => 'above',
-          'module' => 'text',
-          'settings' => array(),
-          'type' => 'text_default',
-          'weight' => '8',
-        ),
-        'full' => array(
-          'label' => 'above',
-          'module' => 'text',
-          'settings' => array(),
-          'type' => 'text_default',
-          'weight' => '8',
-        ),
-        'teaser' => array(
-          'label' => 'above',
-          'settings' => array(),
-          'type' => 'hidden',
-          'weight' => 0,
-        ),
-      ),
-      'entity_type' => 'node',
-      'field_name' => 'field_duration',
-      'label' => 'Duration',
-      'required' => 0,
-      'settings' => array(
-        'text_processing' => '0',
-        'user_register_form' => FALSE,
-      ),
-      'widget' => array(
-        'active' => 1,
-        'module' => 'text',
-        'settings' => array(
-          'size' => '60',
-        ),
-        'type' => 'text_textfield',
-        'weight' => '4',
-      ),
-    ),
-  );
- 
+   
   // Exported field: 'node-lesson-field_video'.
   $fields['node-lesson-field-video'] = array(
     'field_config' => array(
@@ -832,80 +680,7 @@ function _course_field_default_fields() {
     ),
   );
   
-    // Exported field: 'node-course-field_course_content'.
-  $fields['node-course-field_course_content'] = array(
-    'field_config' => array(
-      'active' => '1',
-      'cardinality' => '1',
-      'deleted' => '0',
-      'entity_types' => array(),
-      'field_name' => 'field_course_content',
-      'foreign keys' => array(
-        'format' => array(
-          'columns' => array(
-            'format' => 'format',
-          ),
-          'table' => 'filter_format',
-        ),
-      ),
-      'indexes' => array(
-        'format' => array(
-          0 => 'format',
-        ),
-      ),
-      'locked' => '0',
-      'module' => 'text',
-      'settings' => array(),
-      'translatable' => '0',
-      'type' => 'text_long',
-    ),
-    'field_instance' => array(
-      'bundle' => 'course',
-      'default_value' => NULL,
-      'deleted' => '0',
-      'description' => '',
-      'display' => array(
-        'default' => array(
-          'label' => 'hidden',
-          'module' => 'text',
-          'settings' => array(),
-          'type' => 'text_default',
-          'weight' => '9',
-        ),
-        'full' => array(
-          'label' => 'above',
-          'module' => 'text',
-          'settings' => array(),
-          'type' => 'text_default',
-          'weight' => '8',
-        ),
-        'teaser' => array(
-          'label' => 'above',
-          'settings' => array(),
-          'type' => 'hidden',
-          'weight' => 0,
-        ),
-      ),
-      'entity_type' => 'node',
-      'field_name' => 'field_course_content',
-      'label' => 'Content',
-      'required' => 0,
-      'settings' => array(
-        'text_processing' => '1',
-        'user_register_form' => FALSE,
-      ),
-      'widget' => array(
-        'active' => 1,
-        'module' => 'text',
-        'settings' => array(
-          'rows' => '5',
-        ),
-        'type' => 'text_textarea',
-        'weight' => '5',
-      ),
-    ),
-  );
-
+ 
   // Exported field: 'node-provider-body'.
   $fields['node-provider-body'] = array(
     'field_config' => array(
@@ -1058,15 +833,15 @@ function _course_field_default_fields() {
       ),
     ),
   );
-  
-    // Exported field: 'user-user-field_full_name'.
-  $fields['user-user-field_full_name'] = array(
+ 
+      // Exported field: 'node-course-field_course_content'.
+  $fields['node-course-field-course-content'] = array(
     'field_config' => array(
       'active' => '1',
       'cardinality' => '1',
       'deleted' => '0',
       'entity_types' => array(),
-      'field_name' => 'field_full_name',
+      'field_name' => 'field_course_content',
       'foreign keys' => array(
         'format' => array(
           'columns' => array(
@@ -1082,48 +857,60 @@ function _course_field_default_fields() {
       ),
       'locked' => '0',
       'module' => 'text',
-      'settings' => array(
-        'max_length' => '255',
-      ),
+      'settings' => array(),
       'translatable' => '0',
-      'type' => 'text',
+      'type' => 'text_long',
     ),
     'field_instance' => array(
-      'bundle' => 'user',
+      'bundle' => 'course',
       'default_value' => NULL,
       'deleted' => '0',
       'description' => '',
       'display' => array(
         'default' => array(
+          'label' => 'hidden',
+          'module' => 'text',
+          'settings' => array(),
+          'type' => 'text_default',
+          'weight' => '9',
+        ),
+        'full' => array(
           'label' => 'above',
           'module' => 'text',
           'settings' => array(),
           'type' => 'text_default',
+          'weight' => '8',
+        ),
+        'teaser' => array(
+          'label' => 'above',
+          'settings' => array(),
+          'type' => 'hidden',
           'weight' => 0,
         ),
       ),
-      'entity_type' => 'user',
-      'field_name' => 'field_full_name',
-      'label' => 'Full name',
+      'entity_type' => 'node',
+      'field_name' => 'field_course_content',
+      'label' => 'Content',
       'required' => 0,
       'settings' => array(
-        'text_processing' => '0',
-        'user_register_form' => 0,
+        'text_processing' => '1',
+        'user_register_form' => FALSE,
       ),
       'widget' => array(
         'active' => 1,
         'module' => 'text',
         'settings' => array(
-          'size' => '60',
+          'rows' => '5',
         ),
-        'type' => 'text_textfield',
-        'weight' => '7',
+        'type' => 'text_textarea',
+        'weight' => '5',
       ),
     ),
   );
   
+    
     // Exported field: 'user-user-field_name'.
-  $fields['user-user-field_name'] = array(
+  $fields['user-user-field-name'] = array(
     'field_config' => array(
       'active' => '1',
       'cardinality' => '1',
@@ -1186,7 +973,7 @@ function _course_field_default_fields() {
   );
 
   // Exported field: 'user-user-field_surname'.
-  $fields['user-user-field_surname'] = array(
+  $fields['user-user-field-surname'] = array(
     'field_config' => array(
       'active' => '1',
       'cardinality' => '1',
@@ -1247,6 +1034,8 @@ function _course_field_default_fields() {
       ),
     ),
   );
+  return $fields;
+  
 
   // Translatables
   // Included for use with string extractors like potx.
@@ -1271,3 +1060,4 @@ function _course_field_default_fields() {
   
   return $fields;
 }
+

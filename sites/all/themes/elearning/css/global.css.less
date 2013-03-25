@@ -1,127 +1,8 @@
 /* This file will hold styles for the mobile version of your website (mobile first). */
 /* This also can include ANY global CSS that applies site-wide. Unless overwritten by a more specific style rule, CSS declarations in global.css will apply site-wide. */
 
+@import "mixins.less";
 
-/****** Start Less ******/
-
-.gradient-orange {
-    background: #dc5128; /* Old browsers */
-	background: -moz-linear-gradient(top,  #dc5128 0%, #c94213 100%); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#dc5128), color-stop(100%,#c94213)); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top,  #dc5128 0%,#c94213 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top,  #dc5128 0%,#c94213 100%); /* Opera 11.10+ */
-	background: -ms-linear-gradient(top,  #dc5128 0%,#c94213 100%); /* IE10+ */
-	background: linear-gradient(to bottom,  #dc5128 0%,#c94213 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#dc5128', endColorstr='#c94213',GradientType=0 ); /* IE6-9 */
-}
-
-.orange-button {
-      .gradient-orange;
-      text-shadow: 0 0 transparent;
-      .RoundedShape(3px);
-      color: #fff;
-      padding: 5px 20px;
-      font-weight: bold;
-      text-decoration: none;
-}
-
-.text-orange {
-    color: #ce4619;
-}
-
-.text-blue {
-    color: #435d7b;
-}
-
-.gris {
-    color: #b5b5b5;
-}
-
-
-.grid-3 {
-    width: 280px;
-}
-
-.menu-float {
-    float: left;
-    list-style: none;
-    margin: 0px;
-}
-
-.link {
-    text-decoration: none;
-}
-
-.reset-div {
-    margin: 0px;
-    padding: 0px;
-}
-.middle-cell {
-    display: table-cell; 
-    vertical-align: middle; 
-    text-align: center; 
-}
-
-.border-dotted {
-    border-bottom: 1px dotted #aeaeae;
-}
-
-@border-1: solid 1px;
-
-.font-bold {
-  font-weight: bold;
-}
-
-.RoundedShape(@radius:@defaultRadius){
-    -webkit-border-radius:@radius;
-    -moz-border-radius:@radius;
-    border-radius:@radius; 
-}
-
-.main-menu-border {
-  border: 3px solid transparent;
-  border-image: url(../images/line-main-menu.png) 0 3 stretch;
-  border-top: 0;
-  border-bottom: 0;
-  border-left: 0;
-  height: 17px;
-  padding: 8px 20px 6px 20px;
-  margin: 7px 0px 0px 0px;
-}
-
-.main-menu-link {
-  color: white;
-  text-decoration: none;
-}
-
-.font {
-  font-family: Arial;
-}
-.width-auto {
-  width: auto;
-}
-.right {
-  float: right;
-}
-.left {
-  float: left;
-}
-.table {
-  display: table;
-}
-.cell {
-  display: table-cell;
-}
-.bold-14 {
-  font: bold 14px Arial;
-}
-.box-shadow {
-  -moz-box-shadow: 0px 0px 1px 0px #888;
-  -webkit-box-shadow: 0px 0px 1px 0px #888;
-  box-shadow: 0px 0px 1px 0px #888;
-}
-
-/****** End Less ******/
 
 /****** Common properties Start ******/
 body {
@@ -146,6 +27,16 @@ h2 {
   moz-box-shadow: 0px 3px 10px 2px #888;
   -webkit-box-shadow: 0px 3px 10px 2px #888;
   box-shadow: 0px 3px 10px 2px #888;
+  @media @normal {
+    min-width: 1020px;
+    padding-left: 30px;
+    padding-right: 30px;
+  }
+  @media @narrow {
+    min-width: 780px;
+    padding-left: 30px;
+    padding-right: 30px;
+  }
 }
 
 /****** Common properties End ******/
@@ -224,7 +115,7 @@ h2 {
                           background: #fff4ee;
                         }
                         li.middle a.sf-depth-2 {
-                          .border-dotted;
+                          .border-bottom-dotted;
                         }
                     }
                 }
@@ -320,7 +211,7 @@ h2 {
     width: 870px;
     padding: 0 0 50px 0;
     margin-bottom: 20px;
-    .border-dotted;
+    .border-bottom-dotted;
     .field-name-field-logotype {
         float: left;
         margin: 0 15px 0 0;
@@ -352,7 +243,7 @@ h2 {
     width: 870px;
     padding-bottom: 25px;
     margin-bottom: 25px;
-    .border-dotted;
+    .border-bottom-dotted;
     #info-teacher {
         float: left;
         width: 440px;
@@ -363,31 +254,34 @@ h2 {
 }
 
 .view-relevant-questions-list .view-content .views-row {
+  .border-bottom-dotted;
+  float-:right;
   font-weight: bold;
-  .border-dotted;
   float: left;
   padding: 10px 0;
-  .right,
-  .left {
-    text-align: center;
-  }
   .left {
     .text-orange;
+    text-align: center;
+    div.title {clear:both;}
   }
-
-  .right,
+  .right {
+    .hide();
+    @media @normal { 
+        .show();
+        .gris();
+    }
+  }
   .zero {
     .gris;
   }
-
   .center {
     div {
       padding: 0 0 0 30px;
     }
     .title {
       a {
-        .link;
-        .text-orange;
+        .link();
+        .text-orange();
       }      
     }
   }
@@ -509,7 +403,7 @@ h2 {
        padding: 0;
        border-radius: 0;
        li {
-         .border-dotted;
+         .border-bottom-dotted;
          padding: 0;
          margin: 0;
          list-style-type:none;
@@ -554,7 +448,7 @@ h2 {
     padding: 0;
     border: 0;
     background: transparent;
-    .border-dotted;
+    .border-bottom-dotted;
     li {
       margin-right: 10px;
       .RoundedShape(0px);
@@ -592,7 +486,7 @@ body.node-type-course {
               .table;
               width: 100%;
               margin-bottom: 22px;
-              .border-dotted;
+              .border-bottom-dotted;
                 .node-course-header-left {
                   .cell;
                   .left;
@@ -678,7 +572,7 @@ body.node-type-course {
                   p {
                     padding-bottom: 38px;
                     margin-right: 50px;
-                    .border-dotted;
+                    .border-bottom-dotted;
                   }
                   .book-navigation {
                     ul {

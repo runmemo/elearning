@@ -322,7 +322,7 @@ function course_goto_class_submit($form, &$form_state) {
    if ($last_nid) { // user already visited some content of the course
      $path = 'node/' . $last_nid; 
    }
-   else { // user did not see the coures, we redirect him to fist child page
+   else { // user did not see the course, we redirect him to fist child page
      $node = node_load($nid);
      $next = book_next($node->book);
      $path = $next['link_path'];

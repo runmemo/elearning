@@ -153,9 +153,9 @@ function lesson_questions_views_default_views() {
   $handler->display->display_options['fields']['field_answer_count']['label'] = '';
   $handler->display->display_options['fields']['field_answer_count']['exclude'] = TRUE;
   $handler->display->display_options['fields']['field_answer_count']['alter']['alter_text'] = TRUE;
-  $handler->display->display_options['fields']['field_answer_count']['alter']['text'] = '[field_answer_count] Answers';
+  $handler->display->display_options['fields']['field_answer_count']['alter']['text'] = '[field_answer_count] <div class="title">' . t('Answers') . '</div>';
   $handler->display->display_options['fields']['field_answer_count']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['field_answer_count']['empty'] = '<div class="zero">0 Answers</div>';
+  $handler->display->display_options['fields']['field_answer_count']['empty'] = '<div class="zero">0<div class="title">'. t('Answers') . '</div></div>';
   $handler->display->display_options['fields']['field_answer_count']['empty_zero'] = TRUE;
   $handler->display->display_options['fields']['field_answer_count']['type'] = 'nodereference_count_default';
   /* Field: Content: Title */
@@ -190,13 +190,13 @@ function lesson_questions_views_default_views() {
   $handler->display->display_options['fields']['created']['field'] = 'created';
   $handler->display->display_options['fields']['created']['label'] = '';
   $handler->display->display_options['fields']['created']['alter']['alter_text'] = TRUE;
-  $handler->display->display_options['fields']['created']['alter']['text'] = '<div class="left grid-1 omega">
+  $handler->display->display_options['fields']['created']['alter']['text'] = '<div class="left grid-2 omega">
     <div class="answer-count">
       [field_answer_count]
     </div>
   </div>
 
-  <div class="center grid-6">
+  <div class="center grid-8">
     <div class="title">
       [title]
     </div>

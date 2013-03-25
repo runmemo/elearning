@@ -32,3 +32,12 @@ function course_update_7001() {
   
   
 }
+
+/**
+ * Adds surname and first name fields to user
+ */
+function course_update_7002() {
+  $fields = _course_field_default_fields();
+  create_field($fields['user-user-field-name']);
+  create_field($fields['user-user-field-surname']);
+}
