@@ -1,35 +1,53 @@
+<?php
+/**
+ * @file node-course.tpl.php
+ * Template for course nodes.
+ *
+ * All variables available in node.tpl.php
+ */
+?>
 <article<?php print $attributes; ?>>
-  <?php print $user_picture; ?>
-  <?php print render($title_prefix); ?>
-  <?php if (!$page && $title): ?>
-  <header>
-    <h2<?php print $title_attributes; ?>><a href="<?php print $node_url ?>" title="<?php print $title ?>"><?php print $title ?></a></h2>
-  </header>
-  <?php endif; ?>
-  <?php print render($title_suffix); ?>
-  <?php if ($display_submitted): ?>
-  <footer class="submitted"><?php print $date; ?> -- <?php print $name; ?></footer>
-  <?php endif; ?>  
-  
   <div<?php print $content_attributes; ?>>
-    <?php
-      // We hide the comments and links now so that we can render them later.
-      hide($content['comments']);
-      hide($content['links']);
-      hide($content['field_teacher']);
-      hide($content['field_provider']);
-      print_nice($content['book']);
-      print $provider_logo;
-      print $teacher_avatar;
-     // print render($content['field_teacher']);
-      print render($content);
-    ?>
+    <div class="node-course-header">
+      <div class="node-course-header-left">
+        <?php if (isset($provider_logo)) print $provider_logo; ?>
+        <div class ="node-course-provider-name">
+          <h1 class="title course-title" id="page-title"><?php print $node->title ?></h1>
+          <?php if (isset($provider_name)) : ?>
+            <div class="provider-name"><?php print $provider_name; ?></div>
+          <?php endif; ?>
+        </div>
+      </div>
+      <div class="social-stuff"><img src="<?php print $tmp_social_img ?>"></div>
+    </div>
+    <div class="node-course-basic-info">
+      <div class="node-course-teacher-parameters">
+        <?php if (isset($teacher_name)) print '<h2>' . $teacher_name . '</h2>' ?>
+        <div class="node-course-teacher-button">
+          <?php if (isset($teacher_avatar)) print $teacher_avatar ?>
+          <?php if (isset($form_class_participate)) print render($form_class_participate) ?>
+        </div>
+        <div class="node-course-paramenters"> 
+          <?php if (isset($content['field_duration'])) print render($content['field_duration']) ?>
+          <?php if (isset($content['field_course_load'])) print render($content['field_course_load']) ?>
+        </div>
+      </div>
+      <?php if (isset($content['field_video'])) print render($content['field_video']) ?>
+    </div>
+    <div class="node-course-description-students">
+      <div class="node-course-description">
+        <?php if (isset($content['body'])) print render($content['body']) ?>
+          <?php if (isset($content['book_navigation'])) print render($content['book_navigation']) ?>
+      </div>
+      <?php if (isset($students_view)) print $students_view ?>
+    </div>
+    
   </div>
-  
+
   <div class="clearfix">
-    <?php if (!empty($content['links'])): ?>
-      <nav class="links node-links clearfix"><?php print render($content['links']); ?></nav>
-    <?php endif; ?>      
+    <?php //if (!empty($content['links'])): ?>
+      <!--<nav class="links node-links clearfix"><?php // print render($content['links']);   ?></nav>-->
+    <?php //endif; ?>      
     <?php print render($content['comments']); ?>
   </div>
 </article>
