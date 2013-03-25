@@ -39,7 +39,7 @@
     <div class="node-course-description-students">
       <div class="node-course-description">
         <?php if (isset($content['body'])) print render($content['body']) ?>
-          <?php if (isset($content['book_navigation'])) print render($content['book_navigation']) ?>
+          <?php if (isset($content['field_course_content'])) print render($content['field_course_content']) ?>
       </div>
       <?php if (isset($students_view)) print $students_view ?>
     </div>
