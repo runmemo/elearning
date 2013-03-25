@@ -57,11 +57,13 @@ function elearning_preprocess_node_course(&$vars, $hook) {
   // teacher logo and name
   $teacher = field_get_items('node', $node, 'field_teacher');
   if (isset($teacher[0])) {
-    $field = field_view_field('user', $teacher[0]['user'], 'field_full_name', array('label' => 'hidden', 'image_style' => 'teacher_picture'));
+    $field_name = field_view_field('user', $teacher[0]['user'], 'field_name', array('label' => 'hidden'));
+    $field_surname = field_view_field('user', $teacher[0]['user'], 'field_surname', array('label' => 'hidden'));
     $vars['teacher_avatar'] = theme('user_picture', array('account' => $teacher[0]['user']));
-    $vars['teacher_name'] = render($field);
+    $vars['teacher_name'] = render($field_name);
+    $vars['teacher_surname'] = render($field_surname);
   }
-  // tmp image for social stuff
+  // tmp image for social icons
   $vars['tmp_social_img'] = $base_url . '/sites/all/themes/elearning/images/social-stuff.png';
   $vars['form_class_participate'] = drupal_get_form('course_registration_form');
    $vars['content']['field_video'][0]['file']['#options']['width'] = 440;

@@ -22,7 +22,9 @@
     </div>
     <div class="node-course-basic-info">
       <div class="node-course-teacher-parameters">
-        <?php if (isset($teacher_name)) print '<h2>' . $teacher_name . '</h2>' ?>
+        <?php if (isset($teacher_name) || isset($teacher_surname)) : ?>
+          <h2><?php print $teacher_name . $teacher_surname ?></h2>
+        <?php endif; ?>
         <div class="node-course-teacher-button">
           <?php if (isset($teacher_avatar)) print $teacher_avatar ?>
           <?php if (isset($form_class_participate)) print render($form_class_participate) ?>
