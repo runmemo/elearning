@@ -81,38 +81,3 @@ function elearning_preprocess_html(&$vars, $hook) {
   $vars['show_title'] = isset($vars['page']['content']['content']['content']['system_main']['nodes'][1]['title_field']) ? TRUE : FALSE;
 }
 
-/**
- * Preprocess for book navigation.
- * This is copy of template_preprocess_book_navigation() function.
- * We need this to alter book navigation list with lessons.
- */
-function elearning_preprocess_book_navigation(&$variables) {
-  $book_link = $variables['book_link'];
-  $flat = book_get_flat_menu($book_link);
-  $children = array();
-  if ($book_link['has_children']) {
-    // Walk through the array until we find the current page.
-    do {
-      $link = array_shift($flat);
-    }
-    while ($link && ($link['mlid'] != $book_link['mlid']));
-    // Continue though the array and collect the links whose parent is this page.
-    while (($link = array_shift($flat)) && $link['plid'] == $book_link['mlid']) {
-      $data['link'] = $link;
-      $data['below'] = '';
-      $children[] = $data;
-    }
-  }
-  if ($children) {
-    // add "Section" part to the lesson title.
-    $vars = array();
-    foreach ($children as $key => $link) {
-      $c = t('Section') . ' ' . ($key + 1) . '. ';
-      $vars['items'][] = '<span class="course-section-number">' . t('Section') . ' ' . ($key + 1) . '. </span>' . l($link['link']['title'], $link['link']['href']);
-    }
-    $list = theme('item_list', $vars);
-    if (!empty($list)) {
-      $variables['tree'] = $list;
-    }
-  }
-}

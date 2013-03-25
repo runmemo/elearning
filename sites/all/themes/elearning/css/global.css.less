@@ -132,6 +132,12 @@ h2 {
   color: #333333;
 }
 
+#zone-content {
+  moz-box-shadow: 0px 3px 10px 2px #888;
+  -webkit-box-shadow: 0px 3px 10px 2px #888;
+  box-shadow: 0px 3px 10px 2px #888;
+}
+
 /****** Common properties End ******/
 
 #section-header {
@@ -139,56 +145,49 @@ h2 {
     border-top: #9e2600 @border-1;
     border-bottom: #9e2600 @border-1;
     height: 45px;
-    .header-group {
-        #zone-branding-wrapper,
-        #zone-branding, 
+      .header-group { 
         #region-branding {
-          float: left;
-          .width-auto;
-            .reset-div;
+          .branding-data {
+            .left;
               #logo {
                 margin: 13px 0 0 10px;
               }
+          }
         }
-        #zone-menu {
-          width: 100%;
-            #region-menu {
-              width: 84%;
-              margin: 0;
-              #block-course-points-course-total-points {
-              .left;
-              width: 51px;
-              background-image: url(../images/userpoints-circle.png);
-              background-position: center;
+        #block-course-points-course-total-points {
+        .left;
+        width: 51px;
+        background-image: url(../images/userpoints-circle.png);
+        background-position: center;
+        background-repeat: no-repeat;
+        border: 3px solid transparent;
+        border-image: url(../images/line-main-menu.png) 0 3 stretch;
+        border-top: 0;
+        border-bottom: 0;
+        margin-left: 26px;
+        height: 45px;
+          .content {
+            .bold-14;
+            padding: 15px 9px 10px 10px;
+            text-align: center;
+            color: white;
+          }
+        }
+        .block-superfish {
+          .right;
+          .width-auto;
+            .content {
+              background-image: url(../images/superfish-menu-triangle-small.png);
               background-repeat: no-repeat;
-              border: 3px solid transparent;
-              border-image: url(../images/line-main-menu.png) 0 3 stretch;
-              border-top: 0;
-              border-bottom: 0;
-              margin-left: 26px;
-              height: 45px;
-                .content {
-                .bold-14;
-                padding: 15px 9px 10px 10px;
-                text-align: center;
-                color: white;
-                }
-              }
-              .block-superfish {
-                .right;
-                .width-auto;
-                .content {
-                  background-image: url(../images/superfish-menu-triangle-small.png);
-                  background-repeat: no-repeat;
-                  background-position: 50% 100%;
-                  ul.sf-menu {
-                    .width-auto;
+              background-position: 50% 100%;
+                ul.sf-menu {
+                  .width-auto;
                     li.menuparent {
                       .main-menu-border;
                       .width-auto;
                       background-image: url(../images/user-crown-tr.png);
                       background-repeat: no-repeat;
-                      background-position-x: right;
+                      background-position: top right;
                         a.menuparent:link, a.menuparent:visited {
                           .bold-14;
                           .main-menu-link;
@@ -203,48 +202,40 @@ h2 {
                       -webkit-box-shadow: 0px 1px 3px 0px #888;
                       box-shadow: 0px 1px 3px 0px #888;
                       border-top: none;
-                      li a.sf-depth-2:link {
-                        .bold-14;
-                        text-decoration: none;
-                        color: black !important;
-                        padding: 10px 0px 10px 10px;
-                        margin-left: 5px;
-                      }
-                      li a.sf-depth-2:hover {
-                        color: #d65b3a;
-                        background: #fff4ee;
-                      }
-                      li.middle a.sf-depth-2 {
-                        .border-dotted;
-                      }
-                    }
-                  }
-                 }
-               }
-              .block-main-menu {
-                .right;
-                .width-auto;
-                  .content {
-                    .bold-14;
-                    li {
-                      .left;
-                        list-style: none;
-                        .main-menu-border;
-                        a:link, a:visited {
-                          .main-menu-link;
+                        li a.sf-depth-2:link {
+                          .bold-14;
+                          text-decoration: none;
+                          color: black !important;
+                          padding: 10px 0px 10px 10px;
+                          margin-left: 5px;
                         }
-                        a:hover {
-                          text-decoration: underline;
+                        li a.sf-depth-2:hover {
+                          color: #d65b3a;
+                          background: #fff4ee;
+                        }
+                        li.middle a.sf-depth-2 {
+                          .border-dotted;
                         }
                     }
-                  }
-              }
-              #zone-menu-wrapper {
-                .left;
-              }
-              #zone-header-wrapper {
-                .right;
-              }
+                }
+            }
+        }
+        .block-main-menu {
+          .right;
+          .width-auto;
+            .content {
+              .bold-14;
+                li {
+                  .left;
+                  list-style: none;
+                  .main-menu-border;
+                    a:link, a:visited {
+                      .main-menu-link;
+                    }
+                    a:hover {
+                      text-decoration: underline;
+                    }
+                }
             }
         }
     }
@@ -535,15 +526,11 @@ h2 {
 /****** Node type "Course" Start ******/
 body.node-type-course {
   #section-content {
-  -moz-box-shadow: 0px 3px 10px 2px #888;
-  -webkit-box-shadow: 0px 3px 10px 2px #888;
-  box-shadow: 0px 3px 10px 2px #888;
   color: #333333;
     #region-content {
     margin: 37px 0px 0px 0px;
       #block-system-main {
         article {
-          width: 960px;
           .content {
             margin: 0px 48px 61px 51px;
             .node-course-header {
