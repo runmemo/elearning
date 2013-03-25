@@ -15,6 +15,16 @@
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#dc5128', endColorstr='#c94213',GradientType=0 ); /* IE6-9 */
 }
 
+.orange-button {
+      .gradient-orange;
+      text-shadow: 0 0 transparent;
+      .RoundedShape(3px);
+      color: #fff;
+      padding: 5px 20px;
+      font-weight: bold;
+      text-decoration: none;
+}
+
 .text-orange {
     color: #ce4619;
 }
@@ -420,14 +430,45 @@ h2 {
       left: -14px;
       top: -50px;
       position: relative;
-      .gradient-orange;
-      text-shadow: 0 0 transparent;
-      .RoundedShape(3px);
-      color: #fff;
-      padding: 5px 20px;
+      .orange-button;
     }
   }
 }
+
+  .book-navigation { 
+    .page-links {
+      border: 0;
+      padding: 10px 0;
+    }
+    .page-next,
+    .page-previous {
+      .orange-button;
+      width: 11%;
+      text-align: center;
+    }
+   .page-up {
+     width: 68%;
+     text-align: center;
+     margin: auto;
+     text-decoration: none;
+     font-weight: bold;
+     color: #333;
+     font-size: 14px;
+     cursor: default;
+     padding: 5px 0;
+     .title-wrapper {
+       .lesson {
+         color: #CE4619;
+       }
+      .quiz {
+        background: url("../images/question_mark.png") no-repeat scroll 0 0 transparent;
+        padding:0 10px;
+      }
+     }
+   }
+  }  
+
+
 
 .block-course-outline {
    ul.menu {
