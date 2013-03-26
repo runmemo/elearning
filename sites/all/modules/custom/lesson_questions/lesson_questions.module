@@ -24,6 +24,7 @@ function lesson_questions_views_api() {
  */
 function lesson_questions_init() {
   drupal_add_js(drupal_get_path('module', 'lesson_questions') . '/lesson_questions.js');
+  drupal_add_js(drupal_get_path('module', 'lesson_questions') . '/lesson_youtube_jsapi.js');
 }
 
 /**
