@@ -29,10 +29,28 @@ h2 {
   box-shadow: 0px 3px 10px 2px #888;
 }
 
+form .form-submit {
+  .orange-button();
+}
+
+input.form-text {
+  width: 100%;
+}
+
+
+.fieldset-wrapper {
+    background: #f7f7f7;
+    padding: 1px 10px;
+    .grippie {
+      display: none;
+    }
+}
+
+
 /****** Common properties End ******/
 
 #section-header {
-  .gradient-orange;
+  .gradient-orange();
     border-top: #9e2600 @border-1;
     border-bottom: #9e2600 @border-1;
     height: 45px;
@@ -157,7 +175,6 @@ h2 {
     height: 36px;
     margin-top: 20px;
     .region-footer-first {
-       
         display: block;
         .block-menu-footer-menu {
             .left();
@@ -302,27 +319,14 @@ h2 {
 
 #quick-question-wrapper fieldset {
   margin-bottom: 0;
-
   input,
   textarea {
     border: medium none;
   }
   .fieldset-wrapper {
-    background: #f7f7f7;
-    padding: 1px 10px;
-    input.form-text {
-      width: 100%;
-    }
-    .grippie {
-      display: none;
-    }
     .form-submit {
-      font-size: 15px;
-      float: right;
       left: -14px;
-      top: -50px;
-      position: relative;
-      .orange-button;
+      margin-top: -50px;
     }
   }
 }
