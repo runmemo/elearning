@@ -2,6 +2,7 @@
   Drupal.behaviors.lesson_questions = {
     attach: function(context, settings) {
 	//Code borrowed from : http://stackoverflow.com/questions/7988476/listening-for-youtube-event-in-javascript-or-jquery/7988536#7988536
+
 	function getFrameID(id){
 	    var elem = document.getElementById(id);
 	    if (elem) {
@@ -61,7 +62,7 @@
             // having to create a new class instance again.
 	// Add function to execute when the API is ready
 	YT_ready(function(){
-		var frameID = getFrameID("media-youtube-player");
+		var frameID = getFrameID($(".media-youtube-player").attr('id'));
 		if (frameID) { //If the frame exists
 		        player = new YT.Player(frameID, {
 		            events: {
