@@ -16,9 +16,12 @@
           <?php if (isset($provider_name)) : ?>
             <div class="provider-name"><?php print $provider_name; ?></div>
           <?php endif; ?>
+          <?php if (isset($provider_extra)) : ?>
+            <?php print $provider_extra; ?>
+          <?php endif; ?>
         </div>
       </div>
-      <div class="social-stuff"><img src="<?php print $tmp_social_img ?>"></div>
+      <div class="social-share"><img src="<?php print $tmp_social_img ?>"></div>
     </div>
     <div class="node-course-basic-info">
       <div class="node-course-teacher-parameters">
@@ -39,16 +42,16 @@
     <div class="node-course-description-students">
       <div class="node-course-description">
         <?php if (isset($content['body'])) print render($content['body']) ?>
-          <?php if (isset($content['field_course_content'])) print render($content['field_course_content']) ?>
+        <?php if (isset($content['field_course_content'])) print render($content['field_course_content']) ?>
       </div>
       <?php if (isset($students_view)) print $students_view ?>
     </div>
-    
+
   </div>
 
   <div class="clearfix">
     <?php //if (!empty($content['links'])): ?>
-      <!--<nav class="links node-links clearfix"><?php // print render($content['links']);   ?></nav>-->
+      <!--<nav class="links node-links clearfix"><?php // print render($content['links']);    ?></nav>-->
     <?php //endif; ?>      
     <?php print render($content['comments']); ?>
   </div>

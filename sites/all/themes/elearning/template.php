@@ -50,8 +50,10 @@ function elearning_preprocess_node_course(&$vars, $hook) {
   // provider logo and name
   $provider = field_get_items('node', $node, 'field_provider');
   if(isset($provider[0])) {
-    $field = field_view_field('node', $provider[0]['entity'], 'field_logo', array('label' => 'hidden', 'image_style' => 'provider_logo'));
-    $vars['provider_logo'] = render($field);
+    $field_logo = field_view_field('node', $provider[0]['entity'], 'field_logo', array('label' => 'hidden', 'image_style' => 'provider_logo'));
+    $field_extra = field_view_field('node', $provider[0]['entity'], 'field_provider_extra', array('label' => 'hidden'));
+    $vars['provider_logo'] = render($field_logo);
+    $vars['provider_extra'] = render($field_extra);
     $vars['provider_name'] = $provider[0]['entity']->title;
   }
   // teacher logo and name
@@ -66,8 +68,8 @@ function elearning_preprocess_node_course(&$vars, $hook) {
   // tmp image for social icons
   $vars['tmp_social_img'] = $base_url . '/sites/all/themes/elearning/images/social-stuff.png';
   $vars['form_class_participate'] = drupal_get_form('course_registration_form');
-   $vars['content']['field_video'][0]['file']['#options']['width'] = 440;
-   $vars['content']['field_video'][0]['file']['#options']['height'] = 250;
+   $vars['content']['field_video'][0]['file']['#options']['width'] = 448;
+   $vars['content']['field_video'][0]['file']['#options']['height'] = 243;
    // students view
    $view = views_get_view('course_students');
    $vars['students_view'] = $view->preview('block', array($node->nid));

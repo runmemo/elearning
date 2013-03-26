@@ -61,6 +61,10 @@ function course_last_visited_node($nid) {
 function course_block_info() {
   $blocks['registration_form'] = array(
     'info' => t('Course registertion form'), 
+  );
+  // Temporary block for displaying notifications count
+  $blocks['user_notifications_count'] = array(
+    'info' => t('User notifications count'), 
   ); 
   return $blocks;
 }
@@ -74,6 +78,14 @@ function course_block_view($delta = '') {
   switch ($delta) {
     case 'registration_form':
       return registration_form_block();
+    case 'user_notifications_count':
+      $block = array();
+      $block['subject'] = '';
+      $block['content'] = array(
+        '#type' => 'markup',
+        '#markup' => '17', 
+      );
+      return $block;
   }
 }
 
@@ -110,4 +122,27 @@ function course_node_book() {
     return $node->book;
   }
   return FALSE;
+}
+
+/**
+ * Implementation of hook_menu_alter().
+ * @param type $items
+ */
+function course_menu_alter(&$items) {
+  $items['user']['title callback'] = 'course_user_menu_title';
+}
+
+/**
+ * Custom menu title callback in order to show proper title for anonymous users.
+ * @global type $user
+ * @return string
+ */
+function course_user_menu_title() {
+  global $user;
+  $title = t('Login');
+  if ($user->uid > 0) {
+    $title = $user->name;
+    $title .= ' (' . token_replace('[site:current-user:points:all]', array('user' => $user)) . ')';
+  }
+  return $title;
 }

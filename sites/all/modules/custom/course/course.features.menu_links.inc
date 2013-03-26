@@ -46,7 +46,7 @@ function course_menu_default_menu_links() {
     'expanded' => '0',
     'weight' => '0',
   );
-  // Exported menu link: user-menu:<front>
+    // Exported menu link: user-menu:<front>
   $menu_links['user-menu:<front>'] = array(
     'menu_name' => 'user-menu',
     'link_path' => '<front>',
@@ -90,9 +90,9 @@ function course_menu_default_menu_links() {
       'alter' => TRUE,
     ),
     'module' => 'system',
-    'hidden' => '1',
+    'hidden' => '0',
     'external' => '0',
-    'has_children' => '0',
+    'has_children' => '1',
     'expanded' => '0',
     'weight' => '-50',
   );
