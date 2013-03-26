@@ -262,21 +262,36 @@ h2 {
   .left {
     .text-orange;
     text-align: center;
+    .hide();
+    @media @normal { 
+       .show();
+       .gris();
+    }
     div.title {clear:both;}
   }
   .right {
     .hide();
     @media @normal { 
-        .show();
-        .gris();
+       .show();
+       .gris();
     }
   }
   .zero {
     .gris;
   }
   .center {
-    div {
-      padding: 0 0 0 30px;
+    float:left;
+    @media @narrow {
+       .grid-narrow-12();
+    }
+    @media @normal {
+        .grid-normal-8();
+        div {
+            padding: 0 0 0 30px;
+        }
+    }
+    @media @wide {
+        .grid-wide-8();
     }
     .title {
       a {
@@ -452,7 +467,16 @@ h2 {
     li {
       margin-right: 10px;
       .RoundedShape(0px);
-      .grid-3;
+      width:100px;
+      @media @narrow {
+        .grid-narrow-3();
+      }
+      @media @normal {
+        .grid-normal-3();
+      }
+      @media @wide {
+        .grid-wide-3();
+      }
       a {
         font-weight: bold;
         width: 100%;
