@@ -393,25 +393,28 @@ h2 {
        cursor: pointer;
        clear: both;
        .icon {
-         background: url('../images/section_arrow_down.png') no-repeat scroll right center;
-         padding: 9px;
+         background: url('../images/arrow_down.png') no-repeat scroll right center;
+         padding: 12px 8px;
          float: right;
        }
      }
      h3:hover {
        .text-orange;
        .icon {
-         background: url('../images/section_arrow_down.png') no-repeat scroll right center;
+         background: url('../images/arrow_down_hover.png') no-repeat scroll right center;
        }
      }
      h3.last,
      h3.active {
        border-width: 1px;
        box-shadow: 0px 1px 1px #EEEEEE;
-     }
-     h3.active {
        .icon {
-         background: url('../images/section_arrow_up.png') no-repeat scroll right center;
+         background: url('../images/arrow_up.png') no-repeat scroll right center;
+       }
+     }
+     h3.active:hover {
+       .icon {
+         background: url('../images/arrow_up_hover.png') no-repeat scroll right center;
        }
      }
      ul {
