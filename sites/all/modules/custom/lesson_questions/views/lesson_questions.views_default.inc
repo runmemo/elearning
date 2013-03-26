@@ -196,7 +196,7 @@ function lesson_questions_views_default_views() {
     </div>
   </div>
 
-  <div class="center grid-8">
+  <div class="center">
     <div class="title">
       [title]
     </div>
