@@ -108,7 +108,6 @@ function quick_question($form, &$form_state) {
     '#ajax' => array(
       'callback' => 'quick_question_submit_callback',
       'wrapper' => 'quick-question-wrapper',
-      'progress' => array('message' => t('')),
     ),
     '#value' => t('Ask'),
   );

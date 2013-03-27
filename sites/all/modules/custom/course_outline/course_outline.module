@@ -78,7 +78,7 @@ function course_outline_block_view($delta = '') {
   course_outline_preprocess_tree($tree_output);
   
   // Build the block title and contents
-  $block['subject'] = $book_name[$book['p1']];
+  $block['subject'] = ''; //$book_name[$book['p1']];
   $block['content'] = $tree_output;
   
   return $block;

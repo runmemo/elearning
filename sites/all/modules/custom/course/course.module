@@ -63,11 +63,16 @@ function course_last_visited_node($nid) {
 function course_block_info() {
   $blocks['registration_form'] = array(
     'info' => t('Course registertion form'), 
+    'region' => 'preface_first',
   );
   // Temporary block for displaying notifications count
   $blocks['user_notifications_count'] = array(
     'info' => t('User notifications count'), 
-  ); 
+  );
+  // Block for displaying book header
+  $blocks['book_header'] = array(
+    'info' => t('Book Header'), 
+  );
   return $blocks;
 }
 
@@ -78,6 +83,8 @@ function course_block_info() {
 function course_block_view($delta = '') {
   // The $delta parameter tells us which block is being requested.
   switch ($delta) {
+    case 'book_header':
+      return book_header_block();
     case 'registration_form':
       return registration_form_block();
     case 'user_notifications_count':
@@ -148,3 +155,71 @@ function course_user_menu_title() {
   }
   return $title;
 }
+
+/**
+ * Implements hook_theme().
+ */
+function course_theme() {
+  return array(
+    'book_header' => array(
+      'variables' => array('book_link' => NULL),
+      'template' => 'book-header',
+    ),
+  );
+}
+
+/**
+ * Implements hook_node_view().
+ */
+function course_node_view($node, $view_mode) {
+  //unset Book Links
+  unset($node->content['links']['book']);
+}
+
+function book_header_block() {
+  $block = array(); 
+  $node = menu_get_object('node');
+ // Build the block title and contents
+  $block['subject'] = '';
+  $block['content'] = theme('book_header', array('book_link' => $node->book));
+  
+  return $block;
+}
+
+/**
+ * Processes variables for book-navigation.tpl.php.
+ *
+ * The $variables array contains the following elements:
+ * - book_link
+ *
+ * @see book-navigation.tpl.php
+ */
+function template_preprocess_book_header(&$vars) {
+  $book_link = $vars['book_link'];
+  $course_node = node_load($book_link['bid']);
+
+  // course title
+  $vars['course_title'] = $course_node->title;
+  // provider logo and name
+  $provider = field_get_items('node', $course_node, 'field_provider');
+  if(isset($provider[0])) {
+    $provider = node_load($provider[0]['target_id']);
+    if(!empty($provider->field_logo)) {
+      $filename = $provider->field_logo['und'][0]['filename'];
+      $image_uri = file_build_uri($filename);
+      $vars['provider_logo'] = theme('image_style', array('style_name' => 'provider_logo', 'path' => $image_uri));
+    }
+  }
+  // teacher logo and name
+  $teacher = field_get_items('node', $course_node, 'field_teacher');
+  if (isset($teacher[0])) {
+    $teacher = user_load($teacher[0]['uid']);
+    $name = field_get_items('user', $teacher, 'field_name');
+    $name = field_view_value('user', $teacher, 'field_name', $name[0]);
+    $surname = field_get_items('user', $teacher, 'field_surname');
+    $surname = field_view_value('user', $teacher, 'field_surname', $surname[0]);
+    $vars['teacher_name'] = render($name);
+    $vars['teacher_surname'] = render($surname);
+  }
+}
+
