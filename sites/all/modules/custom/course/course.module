@@ -63,7 +63,6 @@ function course_last_visited_node($nid) {
 function course_block_info() {
   $blocks['registration_form'] = array(
     'info' => t('Course registertion form'), 
-    'region' => 'preface_first',
   );
   // Temporary block for displaying notifications count
   $blocks['user_notifications_count'] = array(
@@ -72,6 +71,7 @@ function course_block_info() {
   // Block for displaying book header
   $blocks['book_header'] = array(
     'info' => t('Book Header'), 
+    'region' => 'preface_first',
   );
   return $blocks;
 }
