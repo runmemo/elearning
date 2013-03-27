@@ -26,8 +26,8 @@ function course_file_default_displays() {
   $file_display->weight = -49;
   $file_display->status = TRUE;
   $file_display->settings = array(
-    'width' => '100%',
-    'height' => '390',
+    'width' => '',
+    'height' => '',
     'theme' => 'dark',
     'color' => 'red',
     'autohide' => '2',

@@ -436,18 +436,33 @@ input.form-text {
    }
   }  
 
-.node-type-lesson {
-  .media-youtube-player {
-    @media @narrow {
-       .grid-narrow-12();
-    }
-    @media @normal {
-        .grid-normal-12();
-    }
-    @media @wide {
-        .grid-wide-12();
+.node-type-lesson .field-name-field-video .field-item {
+  @media @narrow {
+    .grid-narrow-12();
+  }
+  @media @normal {
+    .grid-normal-12();
+  }
+  @media @wide {
+    .grid-wide-12();
+  }
+  .media-youtube-video {
+    position: relative;
+    padding-bottom:56.25%;
+    padding-top:25px;
+    height:0;
+    .media-youtube-player {
+      position:absolute;
+      top:0;
+      left:0;
+      width: 100%;
+      height:100%;
     }
   }
+}
+
+* html .media-youtube-video {
+  margin-bottom: 45px;
 }
 
 .block-course-outline {
