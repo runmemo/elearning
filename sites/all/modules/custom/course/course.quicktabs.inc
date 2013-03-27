@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * test.quicktabs.inc
+ * course.quicktabs.inc
  */
 
 /**
  * Implements hook_quicktabs_default_quicktabs().
  */
-function test_quicktabs_default_quicktabs() {
+function course_quicktabs_default_quicktabs() {
   $export = array();
 
   $quicktabs = new stdClass();
