@@ -223,3 +223,45 @@ function template_preprocess_book_header(&$vars) {
   }
 }
 
+/**
+ * Custom function for checking, if the user browses own profile page.
+ * @global type $user
+ * @return boolean
+ */
+function course_check_user_owns_page(){
+  global $user;
+  if (($user->uid > 0) && ((arg(0) == 'user' && arg(1) == '') || (arg(0) == 'user' && is_numeric(arg(1)) && $user->uid == arg(1) && arg(2) == ''))) {
+    return TRUE;
+  } else {
+  return FALSE;
+  }
+}
+
+/**
+ * Implementation of hook_views_pre_render().
+ * @param type $view
+ */
+function course_views_pre_render(&$view) {
+  if ($view->name == 'user_courses') {
+    if (!empty($view->result)) {
+      foreach ($view->result as $id => $course) {
+        if (is_numeric($course->node_registration_nid)) {
+          // get path for the "Continue" link on Profile page
+          $last_nid = course_last_visited_node($course->node_registration_nid);
+          $path = '';
+          if ($last_nid) {
+            $path = 'node/' . $last_nid;
+          } else {
+            $node = node_load($course->node_registration_nid);
+            $next = book_next($node->book);
+            $path = $next['link_path'];
+          }
+          $view->result[$id]->continue_link = l(t('Continue'), $path, array('attributes' => array('class' => 'user-course-continue')));
+          // temporary put random percentage of course completeness
+          //  @todo: add real function or provide field.
+          $view->result[$id]->course_progress = rand(0, 100);
+        }
+      }
+    }
+  }
+}

@@ -1256,8 +1256,165 @@ function _course_field_default_fields() {
     ),
   );
   
-  return $fields;
-  
+  // Exported field: 'user-user-field_birthday'.
+  $fields['user-user-field-birthday'] = array(
+    'field_config' => array(
+      'active' => '1',
+      'cardinality' => '1',
+      'deleted' => '0',
+      'entity_types' => array(),
+      'field_name' => 'field_birthday',
+      'foreign keys' => array(),
+      'indexes' => array(),
+      'locked' => '0',
+      'module' => 'date',
+      'settings' => array(
+        'cache_count' => '4',
+        'cache_enabled' => 0,
+        'granularity' => array(
+          'day' => 'day',
+          'hour' => 0,
+          'minute' => 0,
+          'month' => 'month',
+          'second' => 0,
+          'year' => 'year',
+        ),
+        'timezone_db' => '',
+        'todate' => '',
+        'tz_handling' => 'none',
+      ),
+      'translatable' => '0',
+      'type' => 'datetime',
+    ),
+    'field_instance' => array(
+      'bundle' => 'user',
+      'deleted' => '0',
+      'description' => '',
+      'display' => array(
+        'default' => array(
+          'label' => 'above',
+          'module' => 'date',
+          'settings' => array(
+            'format_type' => 'medium_dot',
+            'fromto' => 'both',
+            'multiple_from' => '',
+            'multiple_number' => '',
+            'multiple_to' => '',
+          ),
+          'type' => 'date_default',
+          'weight' => '2',
+        ),
+        'full' => array(
+          'label' => 'above',
+          'module' => 'date',
+          'settings' => array(
+            'format_type' => 'medium_dot',
+            'fromto' => 'both',
+            'multiple_from' => '',
+            'multiple_number' => '',
+            'multiple_to' => '',
+          ),
+          'type' => 'date_default',
+          'weight' => '3',
+        ),
+      ),
+      'entity_type' => 'user',
+      'field_name' => 'field_birthday',
+      'label' => 'Date of birth',
+      'required' => 0,
+      'settings' => array(
+        'default_value' => 'now',
+        'default_value2' => 'same',
+        'default_value_code' => '',
+        'default_value_code2' => '',
+        'user_register_form' => 1,
+      ),
+      'widget' => array(
+        'active' => 1,
+        'module' => 'date',
+        'settings' => array(
+          'increment' => '15',
+          'input_format' => 'd.m.Y - H:i:s',
+          'input_format_custom' => '',
+          'label_position' => 'above',
+          'text_parts' => array(),
+          'year_range' => '-90:+0',
+        ),
+        'type' => 'date_popup',
+        'weight' => '9',
+      ),
+    ),
+  );
+
+  // Exported field: 'user-user-field_phone_number'.
+  $fields['user-user-field-phone-number'] = array(
+    'field_config' => array(
+      'active' => '1',
+      'cardinality' => '1',
+      'deleted' => '0',
+      'entity_types' => array(),
+      'field_name' => 'field_phone_number',
+      'foreign keys' => array(
+        'format' => array(
+          'columns' => array(
+            'format' => 'format',
+          ),
+          'table' => 'filter_format',
+        ),
+      ),
+      'indexes' => array(
+        'format' => array(
+          0 => 'format',
+        ),
+      ),
+      'locked' => '0',
+      'module' => 'text',
+      'settings' => array(
+        'max_length' => '128',
+      ),
+      'translatable' => '0',
+      'type' => 'text',
+    ),
+    'field_instance' => array(
+      'bundle' => 'user',
+      'default_value' => NULL,
+      'deleted' => '0',
+      'description' => '',
+      'display' => array(
+        'default' => array(
+          'label' => 'above',
+          'module' => 'text',
+          'settings' => array(),
+          'type' => 'text_default',
+          'weight' => '3',
+        ),
+        'full' => array(
+          'label' => 'above',
+          'module' => 'text',
+          'settings' => array(),
+          'type' => 'text_plain',
+          'weight' => '4',
+        ),
+      ),
+      'entity_type' => 'user',
+      'field_name' => 'field_phone_number',
+      'label' => 'Phone number',
+      'required' => 0,
+      'settings' => array(
+        'text_processing' => '0',
+        'user_register_form' => 1,
+      ),
+      'widget' => array(
+        'active' => 1,
+        'module' => 'text',
+        'settings' => array(
+          'size' => '60',
+        ),
+        'type' => 'text_textfield',
+        'weight' => '10',
+      ),
+    ),
+  );
 
   // Translatables
   // Included for use with string extractors like potx.
@@ -1279,6 +1436,8 @@ function _course_field_default_fields() {
   
   t('Name');
   t('Surname');
+  t('Date of birth');
+  t('Phone number');
   
   return $fields;
 }
