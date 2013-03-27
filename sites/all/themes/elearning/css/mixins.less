@@ -24,6 +24,17 @@
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#dc5128', endColorstr='#c94213',GradientType=0 ); /* IE6-9 */
 }
 
+.gradient-progressbar() {
+  background-color: #1E7A9A;
+  background-image: -webkit-gradient(linear, 0 0, 100% 100%, color-stop(.25, rgba(255, 255, 255, .2)), color-stop(.25, transparent), color-stop(.5, transparent), color-stop(.5, rgba(255, 255, 255, .2)), color-stop(.75, rgba(255, 255, 255, .2)), color-stop(.75, transparent), to(transparent));
+  background-image: -webkit-linear-gradient(-45deg, rgba(255, 255, 255, .2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, .2) 75%, transparent 75%, transparent);
+  background-image: -moz-linear-gradient(-45deg, rgba(255, 255, 255, .2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, .2) 75%, transparent 75%, transparent);
+  background-image: -ms-linear-gradient(-45deg, rgba(255, 255, 255, .2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, .2) 75%, transparent 75%, transparent);
+  background-image: -o-linear-gradient(-45deg, rgba(255, 255, 255, .2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, .2) 75%, transparent 75%, transparent);
+  background-image: linear-gradient(-45deg, rgba(255, 255, 255, .2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, .2) 75%, transparent 75%, transparent);
+  background-size: 26px 27px;
+}
+
 .button() {
       margin-top: 2px;
       padding: 5px 20px;
@@ -50,6 +61,14 @@
     color: #435d7b;
 }
 
+.text-grey() {
+  color: #565656;
+}
+
+.caption-orange() {
+  color: #cc3300 !important;
+}
+
 .gris() {
     color: #b5b5b5;
 }
@@ -74,6 +93,10 @@
     text-align: center; 
 }
 
+.margin-left-0() {
+  margin-left: 0;
+}
+
 .border-bottom-dotted() {
     border-bottom: 1px dotted #aeaeae;
 }
@@ -84,10 +107,10 @@
   font-weight: bold;
 }
 
-.RoundedShape(@radius:@defaultRadius){
+.RoundedShape(@radius:@defaultRadius) {
     -webkit-border-radius:@radius;
     -moz-border-radius:@radius;
-    border-radius:@radius; 
+    border-radius:@radius;
 }
 
 .main-menu-border() {
@@ -131,4 +154,13 @@
   -moz-box-shadow: 0px 0px 1px 0px #888;
   -webkit-box-shadow: 0px 0px 1px 0px #888;
   box-shadow: 0px 0px 1px 0px #888;
+}
+
+.view-block-header() {
+  height: 40px;
+  background-color: #f8f8f8;
+  .box-shadow();
+  margin-bottom: 8px;
+  .RoundedShape(1px);
+  .bold-14();
 }

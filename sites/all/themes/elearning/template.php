@@ -21,6 +21,8 @@
 
 /**
  * Preprocess for node view.
+ * @param array $variables
+ * @param string $hook
  */
 function elearning_preprocess_node(&$variables, $hook) {
   $function = __FUNCTION__ . '_' . $variables['node']->type;
@@ -31,6 +33,7 @@ function elearning_preprocess_node(&$variables, $hook) {
 
 /**
  * Preprocess for views view.
+ * @param array $vars
  */
 function elearning_preprocess_views_view(&$vars) {
   if (isset($vars['view']->name)) {
@@ -43,6 +46,8 @@ function elearning_preprocess_views_view(&$vars) {
 
 /**
  * Preprocess for node-type "Course" view.
+ * @param array $vars
+ * @param string $hook
  */
 function elearning_preprocess_node_course(&$vars, $hook) {
   global $base_url;
@@ -77,9 +82,40 @@ function elearning_preprocess_node_course(&$vars, $hook) {
 
 /**
  * Preprocess for HTML view.
+ * @param array $vars
+ * @param string $hook
  */
 function elearning_preprocess_html(&$vars, $hook) {
   // hide page title if we are on "Course" node.
   $vars['show_title'] = isset($vars['page']['content']['content']['content']['system_main']['nodes'][1]['title_field']) ? TRUE : FALSE;
 }
 
+/**
+ * Process variables for user-profile.tpl.php.
+ * @param array $variables
+ * @see user-profile.tpl.php
+ */
+function elearning_preprocess_user_profile(&$variables) {
+  global $base_root;
+  $variables['own_page'] = course_check_user_owns_page();
+  $account = $variables['elements']['#account'];
+  $variables['user_uid'] = $account->uid;
+  $variables['user_name'] = $account->name;
+  $variables['user_mail'] = $account->mail;
+  $variables['user_picture'] = theme('user_picture', array('account' => $account));
+  if (!isset($variables['user_picture']) || $variables['user_picture'] == '') {
+    $address = '' . base_path() . path_to_theme() .'/images/user-profile-default.png';
+    $variables['user_picture'] =  '<img class="user-profile-default-picture" src="' . $base_root . $address . '">';
+  }
+  $field_name = field_view_field('user', $account, 'field_name', array('label' => 'hidden'));
+  $field_surname = field_view_field('user', $account, 'field_surname', array('label' => 'hidden'));
+  $field_birthday  = field_view_field('user', $account, 'field_birthday', 'full');
+  $field_phone  = field_view_field('user', $account, 'field_phone_number');
+  $variables['field_name'] = render($field_name);
+  $variables['field_surname'] = render($field_surname);
+  $variables['field_birthday'] = render($field_birthday);
+  $variables['field_phone'] = render($field_phone);
+  $variables['userpoints_count'] = userpoints_get_current_points();
+  $view = views_get_view('user_courses');
+  $variables['user_courses_view'] = $view->preview('block', array($account->uid));
+}

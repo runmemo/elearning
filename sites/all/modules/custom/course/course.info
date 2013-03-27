@@ -29,6 +29,8 @@ features[field][] = node-course-field_course_load
 features[field][] = node-course-field_duration
 features[field][] = user-user-field_name
 features[field][] = user-user-field_surname
+features[field][] = user-user-field_birthday
+features[field][] = user-user-field_phone_number
 features[image][] = course_students
 features[image][] = provider_logo
 features[image][] = teacher_picture
@@ -37,3 +39,5 @@ features[ctools][] = strongarm:strongarm:1
 features[file_display][] = video__media_default__media_youtube_image
 features[file_display][] = video__media_default__media_youtube_video
 features[variable][] = node_submitted_lesson
+features[image][] = user_profile_picture
+
