@@ -25,6 +25,8 @@ function course_init() {
 /**
  * Gets node last visited by the user
  * @todo test case
+ * @param integer $nid id of the node in the book in which
+ *                     we will look for last visited node.
  */
 function course_last_visited_node($nid) {
   global $user;

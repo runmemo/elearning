@@ -1,7 +1,177 @@
 <?php
+
 /**
  * @file
  * Code for the Open Question feature.
  */
-
 include_once 'open_question.features.inc';
+
+/**
+ * Implements hook_block_info()
+ */
+function open_question_block_info() {
+    $blocks['oq_answer_form_block'] = array(
+        'info' => t('OQ Answer Form Block'),
+    );
+    $blocks['oq_other_answers_block'] = array(
+        'info' => t('OQ Answers Review List'),
+    );
+    return $blocks;
+}
+
+/**
+ * Implements hook_block_view
+ */
+function open_question_block_view($delta = '') {
+    $block = array();
+    switch ($delta) {
+        case 'oq_answer_form_block':
+            $block['subject'] = '';
+            $block['content'] = drupal_get_form('open_question_answer_form');
+            break;
+        case 'oq_other_answers_block':
+            $block['subject'] = '';
+            $block['content'] = ' TODO ';
+            break;
+    }
+    return $block;
+}
+
+/**
+ * Gets nid of answer by user to open question
+ * @global object $user current user
+ * @param integer $nid
+ * @param integer $uid
+ * @return integer nid of user's answer to open question
+ */
+function open_question_is_answered($nid, $uid = NULL) {
+    if (is_null($uid)) {
+        global $user;
+        $uid = $user->uid;
+    }
+    // count number of answers given by user
+    $query = new EntityFieldQuery();
+    $query->entityCondition('entity_type', 'node')
+            ->entityCondition('bundle', 'open_question_answer')
+            ->propertyCondition('status', 1)
+            ->propertyCondition('uid', $uid)
+            ->fieldCondition('field_open_question', 'target_id', $nid)
+            ->range(0, 1); // this is just to improve db performance
+
+    $result = $query->execute();
+
+    foreach ($result as $entity_type => $entities) {
+        foreach ($entities as $entity_id => $entity) {
+            return $entity_id;
+        }
+    }
+
+    return FALSE;
+}
+
+/**
+ * Form for providing an answer to an open question
+ */
+function open_question_answer_form($form, &$form_state) {
+    $form = array();
+    $form['#prefix'] = '<div id="oq-answer-form-wrapper">';
+    $form['#suffix'] = '</div>';
+   
+    $question = menu_get_object('node');
+    $nid = 0;
+    if ($question && $question->type === 'open_question') {
+        $nid = $question->nid;
+    } else { // this is not a page of open question
+        return $form;
+    }
+
+    $form['question_nid'] = array(
+        '#type' => 'hidden',
+        '#value' => $nid,
+    );
+    
+    $step = empty($form_state['storage']['step']) ? 'none' : $form_state['storage']['step'];
+    
+    if($step = 'none') {
+        $answered = open_question_is_answered($nid);
+        if($answered) {
+            $step = 'saved';
+        } else 
+        {
+            $step = 'new';
+        }
+    }
+    
+    
+    $form_state['storage']['step'] = $step;
+    switch($step) {
+        case 'new':
+             $form['container']['new_answer'] = array(
+                    '#type' => 'textarea',
+                );
+                $form['container']['button'] = array(
+                    '#type' => 'submit',
+                    '#value' => 'Save',
+                    '#ajax' => array(
+                        'callback' => 'open_question_answer_submit_js',
+                        'wrapper' => 'oq-answer-form-wrapper',
+                        'progress' => array('message' => t('')),
+                    ),
+              );
+            break;
+        case 'saved':
+            $answer = node_load($answered);
+            $form['container']['edit_link'] = array(
+                '#type' => 'button',
+                '#value' => t('Edit'),
+                '#ajax' => array(
+                    'callback' => 'open_question_answer_edit_js',
+                    'wrapper' => 'oq-answer-form-wrapper',
+                    'progress' => array('message' => t('')),
+                ),
+            );
+            $form['container']['answer'] = array(
+                '#type' => 'markup',
+                '#prefix' => '<div class = "oq_answer">',
+                '#suffix' => '</div>',
+                '#markup' => $answer->body[LANGUAGE_NONE][0]['value'],
+            );
+            break;       
+        case 'edit':
+            
+            break;
+    }
+
+    return $form;
+}
+
+/**
+ * Callback for open question answer submit
+ */
+function open_question_answer_submit_js($form, $form_state) {
+    global $user;
+    $nid = $form_state['values']['question_nid'];
+    if ($form_state['storage']['step'] === 'new') {
+        // its a new answer
+        $node = new stdClass();
+        $node->type = 'open_question_answer';
+        node_object_prepare($node);
+        $node->title = 'OQ anwer nid#' . $nid . '# uid#' . $user->uid;
+        $node->language = LANGUAGE_NONE;
+        $node->body[$node->language][0]['value'] = $form_state['values']['new_answer'];
+        $node->body[$node->language][0]['format'] = 'filtered_html';
+        $node->field_open_question[LANGUAGE_NONE][0]['target_id'] = $nid;
+
+        node_save($node);
+    } else { // user changed existing answer
+        $node = node_load($form_state['values']['answered']);
+        $node->body[$node->language][0]['value'] = $form_state['values']['new_answer'];
+        node_save($node);
+    }
+    
+    return $form;
+}
+
+function open_question_answer_edit_js($form, $form_state) {
+    // here we need to replace non
+}
