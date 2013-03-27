@@ -29,10 +29,28 @@ h2 {
   box-shadow: 0px 3px 10px 2px #888;
 }*/
 
+form .form-submit {
+  .orange-button();
+}
+
+input.form-text {
+  width: 100%;
+}
+
+
+.fieldset-wrapper {
+    background: #f7f7f7;
+    padding: 1px 10px;
+    .grippie {
+      display: none;
+    }
+}
+
+
 /****** Common properties End ******/
 
 #section-header {
-  .gradient-orange;
+  .gradient-orange();
     border-top: #9e2600 @border-1;
     border-bottom: #9e2600 @border-1;
     height: 45px;
@@ -157,7 +175,6 @@ h2 {
     height: 36px;
     margin-top: 20px;
     .region-footer-first {
-       
         display: block;
         .block-menu-footer-menu {
             .left();
@@ -323,45 +340,44 @@ h2 {
 #quick-question-wrapper {
   margin-bottom: 15px;
   fieldset {
-  margin-bottom: 0;
-  legend {
-    float: right;
-    .fieldset-legend {
-      background-image:url('../images/ask-question.png');
-      padding-left: 20px;
-      background-position: left center;
-      a.fieldset-title {
-        .text-orange();
-        .font-bold();
-        text-decoration: none;
-        border-bottom: 1px dotted;
+    margin-bottom: 0;
+    legend {
+      float: right;
+      .fieldset-legend {
+        background-image:url('../images/ask-question.png');
+        padding-left: 20px;
+        background-position: left center;
+        a.fieldset-title {
+          .text-orange();
+          .font-bold();
+          text-decoration: none;
+          border-bottom: 1px dotted;
+        }
       }
     }
-  }
-  input,
-  textarea {
-    border: medium none;
-  }
-  .fieldset-wrapper {
-    background: #f7f7f7;
-    padding: 1px 10px;
-    clear: both;
-    input.form-text {
-      width: 100%;
+    input,
+    textarea {
+      border: medium none;
     }
-    .grippie {
-      display: none;
+    .fieldset-wrapper {
+      background: #f7f7f7;
+      padding: 1px 10px;
+      clear: both;
+      input.form-text {
+        width: 100%;
+      }
+      .grippie {
+        display: none;
+      }
+      .form-submit {
+        left: -14px;
+        top: -50px;
+        position: relative;
+        .orange-button();
+        padding: 5px 20px;
+        margin-top: 0px;
+      }
     }
-    .form-submit {
-      font-size: 15px;
-      float: right;
-      left: -14px;
-      top: -50px;
-      position: relative;
-      .orange-button;
-      padding: 5px 20px;
-    }
-  }
   }
 }
 
@@ -372,7 +388,8 @@ h2 {
     }
     .page-next,
     .page-previous {
-      .orange-button;
+      .orange-button();
+      float: left;
       padding: 5px 0;
       text-align: center;
       @media @narrow {
@@ -384,6 +401,10 @@ h2 {
       @media @wide {
         .grid-wide-2();
       }
+    }
+
+   .page-next {
+      float: right;
     }
    .page-up {
       @media @narrow {
@@ -402,7 +423,7 @@ h2 {
      color: #333;
      font-size: 14px;
      cursor: default;
-     padding: 5px 0;
+     padding: 7px 0;
      .title-wrapper {
        .lesson {
          color: #CE4619;
