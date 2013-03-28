@@ -46,3 +46,11 @@ function course_update_7002() {
   create_field($fields['user-user-field-phone-number']);
   create_field($fields['user-user-field-birthday']);
 }
+
+/**
+ * Adds Lesson notes
+ */
+function course_update_7003() {
+  $fields = _course_field_default_fields();
+  create_field($fields['node-lesson-field_notes']);
+}

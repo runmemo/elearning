@@ -27,6 +27,7 @@ features[features_api][] = api:1
 features[field][] = node-course-field_course_content
 features[field][] = node-course-field_course_load
 features[field][] = node-course-field_duration
+features[field][] = node-lesson-field_notes
 features[field][] = user-user-field_name
 features[field][] = user-user-field_surname
 features[field][] = user-user-field_birthday
