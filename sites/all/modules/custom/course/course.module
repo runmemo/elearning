@@ -179,10 +179,11 @@ function course_node_view($node, $view_mode) {
 function book_header_block() {
   $block = array(); 
   $node = menu_get_object('node');
- // Build the block title and contents
-  $block['subject'] = '';
-  $block['content'] = theme('book_header', array('book_link' => $node->book));
-  
+  // Build the block title and contents
+  if(isset($node->book)) {
+    $block['subject'] = '';
+    $block['content'] = theme('book_header', array('book_link' => $node->book));
+  }
   return $block;
 }
 
