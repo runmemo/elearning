@@ -11,13 +11,6 @@
  * for more information on this topic.
  */
  
- function set_id_class($type){
-  $id='id="content-group"';
-  if ($type == 'course'){
-    $id='id="content-group-node"';
-  }
-  return $id;
-}
 
 /**
  * Preprocess for node view.
@@ -25,6 +18,10 @@
  * @param string $hook
  */
 function elearning_preprocess_node(&$variables, $hook) {
+  // global preprocessing of node
+  unset($variables['content']['links']['statistics']['#links']['statistics_counter']['title']);
+  
+  // call node specific preprocessors
   $function = __FUNCTION__ . '_' . $variables['node']->type;
   if (function_exists($function)) {
     $function($variables, $hook);
