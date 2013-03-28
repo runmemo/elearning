@@ -45,4 +45,6 @@ function course_update_7002() {
   create_field($fields['user-user-field-surname']);
   create_field($fields['user-user-field-phone-number']);
   create_field($fields['user-user-field-birthday']);
+  create_field($fields['node-course-field-course-dates']);
+  create_field($fields['node-course-field-image']);
 }

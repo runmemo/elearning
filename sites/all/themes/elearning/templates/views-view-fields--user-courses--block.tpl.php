@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Default simple view template to all the fields as a row.
+ * "User courses" view template to display "Continue" link and progress-bar.
  *
  * - $view: The view in use.
  * - $fields: an array of $field objects. Each one contains:
@@ -32,6 +32,6 @@
 </div>
 <div class="view-user-courses-progress-outer">
   <div class="view-user-courses-progress-inner" style="width: <?php print $row->course_progress . '%' ?>">
-    <p<?php if(isset($style)) print $style; ?>><?php print $row->course_progress . '%' ?></p>
+    <p<?php if (isset($style)) print $style; ?>><?php print $row->course_progress . '%' ?></p>
   </div>
 </div>
