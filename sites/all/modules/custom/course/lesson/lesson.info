@@ -6,8 +6,12 @@ version = 7.x-1.0
 project = lesson
 
 dependencies[] = features
+dependencies[] = quicktabs
 features[features_api][] = api:1
 
 features[field][] = node-lesson-body
 features[field][] = node-lesson-field-video
 features[field][] = node-lesson-field-notes
+
+features[ctools][] = quicktabs:quicktabs:1
+features[quicktabs][] = lesson_interaction

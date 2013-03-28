@@ -6,6 +6,17 @@
 
 include_once 'lesson.features.inc';
 
+
+/**
+ * Implements hook_init()
+ */
+function lesson_init() {
+    $node = menu_get_object('node');
+    if($node && $node->type === 'lesson') {
+         drupal_add_js(drupal_get_path('module', 'lesson') . '/lesson_youtube_jsapi.js');
+    }
+}
+
 /**
  * Implements hook_block_info()
  */
@@ -103,3 +114,5 @@ function lecturer_notes_submit_callback($form, &$form_state) {
   $commands[] = ajax_command_replace('#message-placeholder', _get_completion_text(t('Notes Saved')));
   return array('#type' => 'ajax', '#commands' => $commands);
 }
+
+

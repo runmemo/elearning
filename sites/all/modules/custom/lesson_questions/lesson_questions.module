@@ -1,14 +1,5 @@
 <?php
 
-/**
- * Implements hook_ctools_plugin_api().
- */
-function lesson_questions_ctools_plugin_api() {
-  list($module, $api) = func_get_args();
-  if ($module == "quicktabs" && $api == "quicktabs") {
-    return array("version" => "1");
-  }
-}
 
 /**
  * Implements hook_views_api().
@@ -24,7 +15,6 @@ function lesson_questions_views_api() {
  */
 function lesson_questions_init() {
   drupal_add_js(drupal_get_path('module', 'lesson_questions') . '/lesson_questions.js');
-  drupal_add_js(drupal_get_path('module', 'lesson_questions') . '/lesson_youtube_jsapi.js');
 }
 
 /**
