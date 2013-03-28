@@ -13,6 +13,9 @@ function course_ctools_plugin_api() {
   if ($module == "file_entity" && $api == "file_default_displays") {
     return array("version" => "1");
   }
+  if ($module == "quicktabs" && $api == "quicktabs") {
+    return array("version" => "1");
+  }
 }
 
 /**
