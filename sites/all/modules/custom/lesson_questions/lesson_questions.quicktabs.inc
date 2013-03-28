@@ -27,7 +27,7 @@ function lesson_questions_quicktabs_default_quicktabs() {
       'type' => 'block',
     ),
     1 => array(
-      'bid' => 'lesson_questions_delta_lesson_lecturer_notes',
+      'bid' => 'lesson_delta_lesson_lecturer_notes',
       'hide_title' => 1,
       'title' => 'Notes',
       'weight' => '-99',

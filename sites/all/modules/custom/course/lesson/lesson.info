@@ -1,0 +1,13 @@
+name = Course Lesson
+description = Module provides content type for presenting information units of the course
+core = 7.x
+package = Custom
+version = 7.x-1.0
+project = lesson
+
+dependencies[] = features
+features[features_api][] = api:1
+
+features[field][] = node-lesson-body
+features[field][] = node-lesson-field-video
+features[field][] = node-lesson-field-notes
