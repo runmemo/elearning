@@ -217,7 +217,7 @@ function template_preprocess_book_header(&$vars) {
     $teacher = user_load($teacher[0]['uid']);
     $name = field_get_items('user', $teacher, 'field_name');
     $name = field_view_value('user', $teacher, 'field_name', $name[0]);
-    $surname = field_get_items('user', $teacher, 'field_surname');
+    $surname = field_get_items('user', $teacher, 'field_surname');  
     $surname = field_view_value('user', $teacher, 'field_surname', $surname[0]);
     $vars['teacher_name'] = render($name);
     $vars['teacher_surname'] = render($surname);
@@ -230,6 +230,8 @@ function template_preprocess_book_header(&$vars) {
  * @return boolean
  */
 function course_check_user_owns_page(){
+  // @todo Ilya : please get rid of this for now.  
+    
   global $user;
   if (($user->uid > 0) && ((arg(0) == 'user' && arg(1) == '') || (arg(0) == 'user' && is_numeric(arg(1)) && $user->uid == arg(1) && arg(2) == ''))) {
     return TRUE;
