@@ -93,7 +93,7 @@ function lesson_questions_block_view($delta = '') {
 function lecturer_notes($form, &$form_state) {
   $lesson_node = $form_state['build_info']['args'][0]; 
   //check if its a lesson node and user has right to update(edit) it.
-  if(!($lesson_node->type == 'lesson' || node_access('update', $lesson_node))) { 
+  if(!($lesson_node->type == 'lesson' && node_access('update', $lesson_node))) { 
     return NULL;
   }
 
