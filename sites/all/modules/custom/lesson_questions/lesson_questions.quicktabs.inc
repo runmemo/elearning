@@ -27,9 +27,9 @@ function lesson_questions_quicktabs_default_quicktabs() {
       'type' => 'block',
     ),
     1 => array(
-      'bid' => 'search_delta_form',
+      'bid' => 'lesson_questions_delta_lesson_lecturer_notes',
       'hide_title' => 1,
-      'title' => 'Search',
+      'title' => 'Notes',
       'weight' => '-99',
       'type' => 'block',
     ),

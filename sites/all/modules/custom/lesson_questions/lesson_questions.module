@@ -35,6 +35,10 @@ function lesson_questions_block_info() {
     'info' => 'Lesson Questions',
     'cache' => DRUPAL_CACHE_PER_PAGE,
   );
+  $block['lesson_lecturer_notes'] = array(
+    'info' => 'Lesson Notes',
+    'cache' => DRUPAL_CACHE_PER_PAGE,
+  );
   return $block;
 }
 
@@ -44,26 +48,102 @@ function lesson_questions_block_info() {
 function lesson_questions_block_view($delta = '') {
   $content = array();
 
-  // Question form
-  $content['question_form'] = drupal_get_form('quick_question');
+  switch($delta) {
+    case 'lesson_questions':
+      // Question form
+      $content['question_form'] = drupal_get_form('quick_question');
+      //Placeholder for message. 
+      $content['message_placeholder'] = array(
+        '#type' => 'markup',
+        '#markup' => '<div id="message-placeholder"></div>',
+      );
+      // Embed view 
+      $content['questions_list'] = array(
+        '#type' => 'markup',
+        '#markup' => _get_relevant_questions_list(),
+      );
+      // Build the block title and contents
+      $block['subject'] = '';
+      $block['content'] = $content;
+      break;
+    case 'lesson_lecturer_notes':
+      //Lesson Node
+      $lesson_node = menu_get_object('node');
 
-  //Placeholder for message. 
-  $content['message_placeholder'] = array(
-    '#type' => 'markup',
-    '#markup' => '<div id="message-placeholder"></div>',
-  );
+      //Placeholder for message. 
+      $content['message_placeholder'] = array(
+        '#type' => 'markup',
+        '#markup' => '<div id="message-placeholder"></div>',
+      );
+      // Notes form
+      $content['lecturer_notes_form'] = drupal_get_form('lecturer_notes', $lesson_node);
 
-  // Embed view 
-  $content['questions_list'] = array(
-    '#type' => 'markup',
-    '#markup' => _get_relevant_questions_list(),
-  );
 
-  // Build the block title and contents
-  $block['subject'] = '';
-  $block['content'] = $content;
-
+      // Build the block title and contents
+      $block['subject'] = '';
+      $block['content'] = $content;
+      break;
+  }
   return $block;
+}
+
+/**
+ * Callback function : Defines form for lecturer notes for lesson page.
+ */
+function lecturer_notes($form, &$form_state) {
+  $lesson_node = $form_state['build_info']['args'][0]; 
+  //check if its a lesson node and user has right to update(edit) it.
+  if(!($lesson_node->type == 'lesson' || node_access('update', $lesson_node))) { 
+    return NULL;
+  }
+
+  $form['#prefix'] = '<div id="lecturer-notes-wrapper">';
+  $form['#suffix'] = '</div>';
+  
+  //Get default Values
+  $items = field_get_items('node', $lesson_node, 'field_notes');
+  $notes = field_view_value('node', $lesson_node, 'field_notes', $items[0]);
+  
+  $form['notes'] = array(
+    '#type' => 'text_format',
+    '#attributes' => array('placeholder' => t('Notes')),
+    '#rows' => 3,
+    '#cols' => 73,
+    '#required' => TRUE,
+    '#default_value' => render($notes),
+    '#format' => NULL, //Default format
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#ajax' => array(
+      'callback' => 'lecturer_notes_submit_callback',
+      'wrapper' => 'lecturer-notes-wrapper',
+    ),
+    '#value' => t('Save'),
+  );
+  return $form;
+}
+
+/**
+ * Callback function : Ajax callback function for quick_question form.
+ */
+function lecturer_notes_submit_callback($form, &$form_state) {
+  $lesson_node = $form_state['build_info']['args'][0]; 
+  
+  //validations
+  if (!$form_state['values']['notes']) {
+    $message = t('Notes field is required');
+    $commands[] = ajax_command_replace('#message-placeholder', _get_completion_text($message));
+    return array('#type' => 'ajax', '#commands' => $commands);
+  }
+
+  $lesson_node->field_notes[$lesson_node->language][0]['value'] = $form_state['values']['notes']['value'];
+  $lesson_node->field_notes[$lesson_node->language][0]['format'] = $form_state['values']['notes']['format'];
+  node_save($lesson_node);
+
+  $commands[] = ajax_command_replace('#message-placeholder', _get_completion_text(t('Notes Saved')));
+  return array('#type' => 'ajax', '#commands' => $commands);
 }
 
 /**
