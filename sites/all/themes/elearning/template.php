@@ -119,3 +119,19 @@ function elearning_preprocess_user_profile(&$variables) {
   $view = views_get_view('user_courses');
   $variables['user_courses_view'] = $view->preview('block', array($account->uid));
 }
+
+/**
+ * Preprocess for book-navigatoin.
+ * @param array $vars
+ */
+function elearning_preprocess_book_navigation(&$vars) {
+  $node = menu_get_object('node');
+  if ($node->type == 'lesson') {
+    $vars['prev_title']  = t('Prev');
+    $vars['next_title']  = t('Next');
+  }
+  else {
+    $vars['prev_title']  = t('‹ ') . $vars['prev_title'];
+    $vars['next_title']  = $vars['next_title'] . t(' ›');
+  }
+}
