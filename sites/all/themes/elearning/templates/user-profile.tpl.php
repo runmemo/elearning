@@ -33,8 +33,8 @@
  * @ingroup themeable
  */
 ?>
-<div class="profile grid-14 omega"<?php print $attributes; ?>>
-  <div class="user-profile-name-caption grid-14 omega">
+<div class="profile omega"<?php print $attributes; ?>>
+  <div class="user-profile-name-caption omega">
     <div class="user-name grid-7 omega">
       <h2><?php print $user_name; ?></h2>
     </div>
@@ -44,7 +44,7 @@
       </div>
     <?php endif; ?>
   </div>
-  <div class="user-profile-main-panel grid-14 omega">
+  <div class="user-profile-main-panel omega">
     <div class="user-profile-basic-info grid-5 omega">
       <div class="user-profile-picture-points grid-2 omega">
         <div class="user-profile-picture">
