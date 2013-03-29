@@ -77,7 +77,7 @@ input.form-text {
         margin-left: 26px;
         height: 45px;
           .content {
-            .bold-14();
+            .bold(14px);
             padding: 15px 9px 10px 10px;
             text-align: center;
             color: white;
@@ -99,7 +99,7 @@ input.form-text {
                       background-repeat: no-repeat;
                       background-position: top right;
                         a.menuparent:link, a.menuparent:visited {
-                          .bold-14();
+                          .bold(14px);
                           .main-menu-link();
                         }
                     }
@@ -113,7 +113,7 @@ input.form-text {
                       box-shadow: 0px 1px 3px 0px #888;
                       border-top: none;
                         li a.sf-depth-2:link {
-                          .bold-14();
+                          .bold(14px);
                           .link();
                           color: black !important;
                           padding: 10px 0px 10px 10px;
@@ -134,7 +134,7 @@ input.form-text {
           .right();
           .width-auto();
             .content {
-              .bold-14();
+              .bold(14px);
                 li {
                   .left();
                   list-style: none;
@@ -557,7 +557,7 @@ input.form-text {
     background: transparent;
     .border-bottom-dotted;
     li {
-      .bold-14();
+      .bold(14px);
       margin-right: 10px;
       .RoundedShape(0px);
       width:100px;
@@ -620,7 +620,7 @@ body.node-type-course {
                   margin-bottom: 8px;
                 }
                 .provider-name-extra {
-                  .bold-14();
+                  .bold(14px);
                   color: #435d7b;
                   margin-left: 0;
                   .provider-name {
@@ -659,7 +659,7 @@ body.node-type-course {
                         }
                         #course-registration-form #edit-submit {
                           background: url(../images/reg-form-submit.png) no-repeat right;
-                          .bold-14();
+                          .bold(14px);
                           color: white;
                           border-radius: 0;
                           border: none;
@@ -670,7 +670,7 @@ body.node-type-course {
                     }
                     .node-course-paramenters {
                       .cell();
-                      .bold-14();
+                      .bold(14px);
                       .left();
                         .field-name-field-duration {
                           margin: 4px 0px 20px 0px;
@@ -703,7 +703,7 @@ body.node-type-course {
                       li {
                         margin: 0px 0px 15px 0px;
                         span.course-section-number {
-                          .bold-14();
+                          .bold(14px);
                         }
                         a:link {
                           color: #333333;
@@ -792,7 +792,7 @@ body.node-type-course {
 /****** User Profile ******/
 body.page-user {
   .profile {
-    .bold-14();
+    .bold(14px);
     .text-grey();
     margin-top: 23px;
     a:link, a:visited {
@@ -867,7 +867,7 @@ body.page-user {
               }
             }
             .user-picture-edit {
-              font: bold 11px Arial;
+              .bold(11px);
               .link();
               color: #333333 !important;
               margin: 0px 0px 0px 18px;
@@ -954,7 +954,7 @@ body.page-user {
 #block-quicktabs-user-profile-tab {
   .view-user-questions-list {
     .view-content {
-      .bold-14();
+      .bold(14px);
       margin-top: 14px;
       .views-row {
         margin-bottom: 18px;
@@ -1002,6 +1002,22 @@ body.page-user {
 /****** User Profile End ******/
 
 /****** Front Page ******/
+body.not-logged-in {
+  #block-views-front-page-slider-block {
+    .views-slideshow-controls-top {
+      @media @narrow {
+        right: 25px;
+      }
+      @media @normal {
+        right: 64px;
+      }
+      @media @wide {
+        right: 75px;
+      }
+    }
+  }
+}
+
 .view-id-front_page_slider {
     margin: 45px 0px;
     .views-slideshow-controls-top {
@@ -1064,7 +1080,7 @@ body.page-user {
         right: 0px;
       }
         p {
-          font: bold 28px Arial;
+          .bold(28px);
           padding: 20px 30px 10px 17px;
         }
     }
@@ -1100,8 +1116,68 @@ body.page-user {
         .border-bottom-dotted();
         margin: 0;
         padding: 0;
-        
+        background-color: #ffffff;
+        .bold(12px);
+        .views-field-title .field-content {
+          position: absolute;
+          background: rgb(253, 253, 253);
+          background: rgba(255, 255, 255, .88);
+          .bold(18px);
+          padding: 10px 0px 10px 8px;
+          width: 400px;
+          background-image: url(../images/arrow-right-home.png);
+          background-repeat: no-repeat;
+          background-position: 97%;
+          a {
+            .link();
+            color: #000000;
+          }
+        }
+        .views-field-field-logo {
+          .left();
+          .field-content {
+            margin: 8px 9px 6px 2px;
+          }
+        }
+        .view-fields-teacher-provider {
+          .left();
+          margin-top: 8px;
+          .views-field-field-teacher .field-content a {
+            .link();
+            .text-orange();
+          }
+          .views-field-field-provider .field-content a {
+            .link();
+            color: #2e2422;
+          }
+        }
+        .views-field-field-course-dates {
+          .right();
+          .text-orange();
+          width: 56px;
+          margin-top: 8px;
+        }
       }
+      td.col-1 {
+        .left();
+      }
+      td.col-2 {
+        @media @narrow {
+          .left();
+          margin-top: 48px;
+        }
+        @media @normal {
+          .right();
+          margin-top: 0px;
+        }
+        @media @wide {
+          .right();
+          margin-top: 0px;
+        }
+      }
+    }
+    tr.row-2 td, tr.row-3 td {
+      margin-top: 48px;
     }
   }
 }

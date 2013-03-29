@@ -33,6 +33,7 @@ function coursehub_front_page_views_default_views() {
   $handler->display->display_options['pager']['options']['offset'] = '0';
   $handler->display->display_options['style_plugin'] = 'grid';
   $handler->display->display_options['style_options']['columns'] = '2';
+  $handler->display->display_options['style_options']['alignment'] = 'vertical';
   $handler->display->display_options['row_plugin'] = 'fields';
   $handler->display->display_options['row_options']['inline'] = array(
     'field_discipline' => 'field_discipline',
@@ -78,6 +79,10 @@ function coursehub_front_page_views_default_views() {
     'image_style' => 'provider_home_picture',
     'image_link' => '',
   );
+  /* Field: Content: Teacher */
+  $handler->display->display_options['fields']['field_teacher']['id'] = 'field_teacher';
+  $handler->display->display_options['fields']['field_teacher']['table'] = 'field_data_field_teacher';
+  $handler->display->display_options['fields']['field_teacher']['field'] = 'field_teacher';
   /* Field: Content: Provider */
   $handler->display->display_options['fields']['field_provider']['id'] = 'field_provider';
   $handler->display->display_options['fields']['field_provider']['table'] = 'field_data_field_provider';
@@ -87,10 +92,6 @@ function coursehub_front_page_views_default_views() {
   $handler->display->display_options['fields']['field_provider']['settings'] = array(
     'link' => 1,
   );
-  /* Field: Content: Teacher */
-  $handler->display->display_options['fields']['field_teacher']['id'] = 'field_teacher';
-  $handler->display->display_options['fields']['field_teacher']['table'] = 'field_data_field_teacher';
-  $handler->display->display_options['fields']['field_teacher']['field'] = 'field_teacher';
   /* Field: Content: Dates */
   $handler->display->display_options['fields']['field_course_dates']['id'] = 'field_course_dates';
   $handler->display->display_options['fields']['field_course_dates']['table'] = 'field_data_field_course_dates';

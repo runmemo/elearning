@@ -111,6 +111,25 @@ function course_menu_default_menu_links() {
     'weight' => '-48',
     'parent_path' => 'user',
   );
+  
+  // Exported menu link: main-menu:user/login
+  $menu_links['main-menu:user/login'] = array(
+    'menu_name' => 'main-menu',
+    'link_path' => 'user/login',
+    'router_path' => 'user/login',
+    'link_title' => 'Login',
+    'options' => array(
+      'attributes' => array(
+        'title' => '',
+      ),
+    ),
+    'module' => 'menu',
+    'hidden' => '0',
+    'external' => '0',
+    'has_children' => '0',
+    'expanded' => '0',
+    'weight' => '-48',
+  );
   // Translatables
   // Included for use with string extractors like potx.
   t('About');
@@ -119,7 +138,7 @@ function course_menu_default_menu_links() {
   t('Profile');
   t('User Agreement');
   t('User account');
-
+  t('Login');
 
   return $menu_links;
 }
