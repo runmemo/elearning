@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Default theme implementation to present all user profile data.
+ * Custom theme implementation to present all user profile data.
  *
  * This template is used when viewing a registered member's profile page,
  * e.g., example.com/user/123. 123 being the users ID.
