@@ -21,7 +21,7 @@ function coursehub_front_page_ctools_plugin_api() {
 /**
  * Implements hook_image_default_styles().
  */
-function course_image_default_styles() {
+function coursehub_front_page_image_default_styles() {
   $styles = array();
 
   // Exported image style: course_home_picture.
