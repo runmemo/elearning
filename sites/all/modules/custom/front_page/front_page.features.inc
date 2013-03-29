@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * coursehub_front_page.features.inc
+ * front_page.features.inc
  */
 
 /**
  * Implements hook_ctools_plugin_api().
  */
-function coursehub_front_page_ctools_plugin_api() {
+function front_page_ctools_plugin_api() {
   list($module, $api) = func_get_args();
   if ($module == "context" && $api == "context") {
     return array("version" => "3");
@@ -21,7 +21,7 @@ function coursehub_front_page_ctools_plugin_api() {
 /**
  * Implements hook_node_info().
  */
-function coursehub_front_page_node_info() {
+function front_page_node_info() {
   $items = array(
     'front_page_slide' => array(
       'name' => t('Front Page Slide'),
@@ -39,7 +39,7 @@ function coursehub_front_page_node_info() {
 /**
  * Implements hook_image_default_styles().
  */
-function coursehub_front_page_image_default_styles() {
+function front_page_image_default_styles() {
   $styles = array();
 
   // Exported image style: course_home_picture.

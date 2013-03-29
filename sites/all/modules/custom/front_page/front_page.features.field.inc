@@ -2,13 +2,13 @@
 
 /**
  * @file
- * coursehub_front_page.features.field.inc
+ * front_page.features.field.inc
  */
 
 /**
  * Implements hook_field_default_fields().
  */
-function coursehub_front_page_field_default_fields() {
+function front_page_field_default_fields() {
   $fields = array();
 
   // Exported field: 'node-front_page_slide-body'.

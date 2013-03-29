@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * coursehub_front_page.delta.inc
+ * front_page.delta.inc
  */
 
 /**
  * Implements hook_delta_default_templates().
  */
-function coursehub_front_page_delta_default_templates() {
+function front_page_delta_default_templates() {
   $export = array();
 
   $delta = new stdClass();

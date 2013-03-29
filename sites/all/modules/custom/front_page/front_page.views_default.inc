@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * coursehub_front_page.views_default.inc
+ * front_page.views_default.inc
  */
 
 /**
  * Implements hook_views_default_views().
  */
-function coursehub_front_page_views_default_views() {
+function front_page_views_default_views() {
   $export = array();
 
   $view = new view();

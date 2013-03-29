@@ -1,4 +1,4 @@
-name = CourseHub Front Page
+name = Custom Front Page
 description = Front page features: CT, views, context, image_styles and delta
 core = 7.x
 package = Custom
