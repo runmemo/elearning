@@ -225,22 +225,6 @@ function template_preprocess_book_header(&$vars) {
 }
 
 /**
- * Custom function for checking, if the user browses own profile page.
- * @global type $user
- * @return boolean
- */
-function course_check_user_owns_page(){
-  // @todo Ilya : please get rid of this for now.  
-    
-  global $user;
-  if (($user->uid > 0) && ((arg(0) == 'user' && arg(1) == '') || (arg(0) == 'user' && is_numeric(arg(1)) && $user->uid == arg(1) && arg(2) == ''))) {
-    return TRUE;
-  } else {
-  return FALSE;
-  }
-}
-
-/**
  * Implementation of hook_views_pre_render().
  * @param type $view
  */

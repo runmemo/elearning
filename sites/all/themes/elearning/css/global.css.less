@@ -111,6 +111,13 @@ input.form-text {
                           .bold(14px);
                           .main-menu-link();
                         }
+                        a.menuparent:hover {
+                          color: #ffffff;
+                          .link();
+                        }
+                        a.menuparent:active {
+                          .link();
+                        }
                     }
                     ul {
                       background: white;
@@ -136,11 +143,14 @@ input.form-text {
                         }
                         li a.sf-depth-2 {
                           .bold(14px);
-                          padding: 10px 0px 10px 10px;
-                          margin-left: 5px;
+                          padding: 5px 5px 10px 10px;
+                          margin: 0px 5px 5px 5px;
                         }
                         li.middle a.sf-depth-2 {
                           .border-bottom-dotted();
+                        }
+                        li.first a.sf-depth-2 {
+                          margin-top: 5px;
                         }
                     }
                 }
