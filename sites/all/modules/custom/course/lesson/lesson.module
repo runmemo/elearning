@@ -60,59 +60,109 @@ function lesson_block_view($delta = '') {
  * Callback function : Defines form for lecturer notes for lesson page.
  */
 function lecturer_notes($form, &$form_state) {
-  $lesson_node = $form_state['build_info']['args'][0]; 
-  //check if its a lesson node and user has right to update(edit) it.
-  if(!($lesson_node->type == 'lesson' && node_access('update', $lesson_node))) { 
-    return NULL;
-  }
-
-  $form['#prefix'] = '<div id="lecturer-notes-wrapper">';
-  $form['#suffix'] = '</div>';
+  $lesson_node = node_load($form_state['build_info']['args'][0]->nid); // To get rid off old values stored.
   
+  //check if its a lesson node and user has right to update(edit) it.
   //Get default Values
   $items = field_get_items('node', $lesson_node, 'field_notes');
   $notes = field_view_value('node', $lesson_node, 'field_notes', $items[0]);
-  
-  $form['notes'] = array(
-    '#type' => 'text_format',
-    '#attributes' => array('placeholder' => t('Notes')),
-    '#rows' => 3,
-    '#cols' => 73,
-    '#required' => TRUE,
-    '#default_value' => render($notes),
-    '#format' => NULL, //Default format
-  );
 
-  $form['submit'] = array(
-    '#type' => 'submit',
-    '#ajax' => array(
-      'callback' => 'lecturer_notes_submit_callback',
-      'wrapper' => 'lecturer-notes-wrapper',
-    ),
-    '#value' => t('Save'),
-  );
-  return $form;
+  $form['#prefix'] = '<div id="lecturer-notes-wrapper">';
+  $form['#suffix'] = '</div>';
+
+  if(!($lesson_node->type == 'lesson' && node_access('update', $lesson_node))) { 
+    $form['notes_markup'] = array(
+      '#type' => 'markup',
+      '#markup' => render($notes),
+      '#prefix' => '<div id="notes-markup">',
+      '#suffix' => '</div>'
+    );
+    return $form;
+  }
+
+  if(empty($form_state['step'])) {  // page is loaded
+    // check whether user already has left notes
+    if(empty($notes['#markup'])) {
+      $mode = 'edit';          
+    } 
+    else {
+      $mode = 'view';
+    }       
+    $form_state['step'] = $mode;
+  } 
+  else {
+    $mode = $form_state['step'];
+  }
+  
+  switch($mode) {
+    case 'edit':
+      $form['edit']['notes'] = array(
+        '#type' => 'text_format',
+        '#attributes' => array('placeholder' => t('Notes')),
+        '#rows' => 3,
+        '#cols' => 73,
+        '#required' => TRUE,
+        '#default_value' => render($notes),
+        '#format' => NULL, //Default format
+      );
+
+      $form['edit']['submit'] = array(
+        '#type' => 'submit',
+        '#submit' => array('lecturer_notes_submit'),
+        '#ajax' => array(
+          'callback' => 'lecturer_notes_submit_callback',
+          'wrapper' => 'lecturer-notes-wrapper',
+        ),
+        '#value' => t('Save'),
+      ); 
+      return $form;
+    case 'view':
+      $form['view']['notes_markup'] = array(
+        '#type' => 'markup',
+        '#markup' => render($notes),
+        '#prefix' => '<div id="notes-markup">',
+        '#suffix' => '</div>'
+      );
+      $form['view']['edit'] = array(
+        '#type' => 'submit',
+        '#ajax' => array(
+          'callback' => 'lecturer_notes_submit_callback',
+          'wrapper' => 'lecturer-notes-wrapper',
+        ),
+        '#value' => t('Edit'),
+      ); 
+      return $form;
+  }
 }
 
 /**
  * Callback function : Ajax callback function for quick_question form.
  */
-function lecturer_notes_submit_callback($form, &$form_state) {
+function lecturer_notes_submit($form, &$form_state) { 
   $lesson_node = $form_state['build_info']['args'][0]; 
-  
-  //validations
-  if (!$form_state['values']['notes']) {
-    $message = t('Notes field is required');
-    $commands[] = ajax_command_replace('#message-placeholder', _get_completion_text($message));
-    return array('#type' => 'ajax', '#commands' => $commands);
+  if ($form_state['triggering_element']['#value'] == t('Save')) {
+    //validations
+    if (!$form_state['values']['notes']) {
+      $message = t('Notes field is required');
+      $commands[] = ajax_command_replace('#message-placeholder', _get_completion_text($message));
+      return array('#type' => 'ajax', '#commands' => $commands);
+    }
+    $lesson_node->field_notes[$lesson_node->language][0]['value'] = $form_state['values']['notes']['value'];
+    $lesson_node->field_notes[$lesson_node->language][0]['format'] = $form_state['values']['notes']['format'];
+    node_save($lesson_node);
+    $form_state['step'] = 'view';
   }
-
-  $lesson_node->field_notes[$lesson_node->language][0]['value'] = $form_state['values']['notes']['value'];
-  $lesson_node->field_notes[$lesson_node->language][0]['format'] = $form_state['values']['notes']['format'];
-  node_save($lesson_node);
-
-  $commands[] = ajax_command_replace('#message-placeholder', _get_completion_text(t('Notes Saved')));
-  return array('#type' => 'ajax', '#commands' => $commands);
+  // User clicked Edit button in view mode.
+  if ($form_state['triggering_element']['#value'] == t('Edit')) {
+    $form_state['step'] = 'edit';
+  }
+   
+  $form_state['rebuild'] = TRUE;
 }
 
-
+/**
+ * Callback for open question answer submit
+ */
+function lecturer_notes_submit_callback($form, $form_state) {
+    return $form;
+}
