@@ -94,7 +94,6 @@ function elearning_preprocess_html(&$vars, $hook) {
  */
 function elearning_preprocess_user_profile(&$variables) {
   global $base_root;
-  $variables['own_page'] = course_check_user_owns_page();
   $account = $variables['elements']['#account'];
   $variables['user_uid'] = $account->uid;
   $variables['user_name'] = $account->name;

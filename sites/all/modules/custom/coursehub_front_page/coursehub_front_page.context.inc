@@ -19,6 +19,7 @@ function coursehub_front_page_context_default_contexts() {
   $context->conditions = array(
     'path' => array(
       'values' => array(
+        'user' => 'user',
         'user/*' => 'user/*',
         '<front>' => '<front>',
       ),

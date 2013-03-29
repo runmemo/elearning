@@ -38,11 +38,9 @@
     <div class="user-name grid-7 omega">
       <h2><?php print $user_name; ?></h2>
     </div>
-    <?php if ($own_page) : ?>
-      <div class="user-profile-edit-link grid-7 omega">
-        <h2><?php print l(t('Edit'), 'user/' . $user_uid . '/edit', array('attributes' => array('class' => 'profile-edit'))); ?></h2>
-      </div>
-    <?php endif; ?>
+    <div class="user-profile-edit-link grid-7 omega">
+      <h2><?php print l(t('Edit'), 'user/' . $user_uid . '/edit', array('attributes' => array('class' => 'profile-edit'))); ?></h2>
+    </div>
   </div>
   <div class="user-profile-main-panel omega">
     <div class="user-profile-basic-info grid-5 omega">
@@ -73,7 +71,7 @@
         <?php if (isset($field_phone)) print $field_phone; ?>
       </div>
     </div>
-    <?php if (isset($user_courses_view) && $own_page) print $user_courses_view; ?>
+    <?php if (isset($user_courses_view)) print $user_courses_view; ?>
   </div>
 </div>
 

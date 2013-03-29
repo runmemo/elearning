@@ -29,6 +29,15 @@ h2 {
   -webkit-box-shadow: 0px 3px 10px 2px #888;
   box-shadow: 0px 3px 10px 2px #888;
 }
+#zone-content-wrapper {
+  overflow-y: hidden;
+  padding-bottom: 9px;
+}
+
+#zone-preface-wrapper {
+  overflow-y: hidden;
+}
+
 
 form .form-submit {
   .orange-button();
@@ -112,16 +121,23 @@ input.form-text {
                       -webkit-box-shadow: 0px 1px 3px 0px #888;
                       box-shadow: 0px 1px 3px 0px #888;
                       border-top: none;
-                        li a.sf-depth-2:link {
-                          .bold(14px);
+                        a:link, a:visited {
+                          color: #383838 !important;
                           .link();
-                          color: black !important;
+                        }
+                        a:hover {
+                          .caption-orange();
+                          .link();
+                           background: #fff4ee;
+                        }
+                        a:active {
+                          .caption-orange();
+                          .link();
+                        }
+                        li a.sf-depth-2 {
+                          .bold(14px);
                           padding: 10px 0px 10px 10px;
                           margin-left: 5px;
-                        }
-                        li a.sf-depth-2:hover {
-                          color: #d65b3a;
-                          background: #fff4ee;
                         }
                         li.middle a.sf-depth-2 {
                           .border-bottom-dotted();
@@ -382,27 +398,27 @@ input.form-text {
   }
 }
 
-  .book-navigation { 
-    .page-links {
-      border: 0;
-      padding: 0.5em 0;
-    }
-    .page-next,
-    .page-previous {
-      .orange-button();
+.book-navigation {
+  .page-links {
+    border: 0;
+    padding: 0.5em 0;
+  }
+  .page-next,
+  .page-previous {
+    .orange-button();
       float: left;
-      padding: 5px 0;
-      text-align: center;
-      @media @narrow {
-        .grid-narrow-2();
-      }
-      @media @normal {
-        .grid-normal-2();
-      }
-      @media @wide {
-        .grid-wide-2();
-      }
+    padding: 5px 0;
+    text-align: center;
+    @media @narrow {
+      .grid-narrow-2();
     }
+    @media @normal {
+      .grid-normal-2();
+    }
+    @media @wide {
+      .grid-wide-2();
+    }
+  }
 
    .page-next {
       float: right;
@@ -427,7 +443,8 @@ input.form-text {
      padding: 7px 0;
      .title-wrapper {
        .lesson {
-         color: #CE4619;
+         .text-orange();
+         margin-right: 5px;
        }
       .quiz {
         background: url("../images/question_mark.png") no-repeat scroll 0 0 transparent;
@@ -435,7 +452,7 @@ input.form-text {
       }
      }
    }
-  }  
+}
 
 .node-type-lesson .field-name-field-video .field-item {
   @media @narrow {
@@ -469,16 +486,16 @@ input.form-text {
 .block-course-outline {
    ul.menu {
      h3 {
-       .font-bold;
+       .bold(16px);
        margin-bottom: 0;
        background: #f0f0f0;
        border-color: #e5e1e2;
        border-width: 1px 1px 0px;
        border-style: solid;
        padding: 10px;
-       font-size: 16px;
        cursor: pointer;
        clear: both;
+       color: #383838;
        .icon {
          background: url('../images/arrow_down.png') no-repeat scroll right center;
          padding: 12px 8px;
@@ -752,6 +769,13 @@ body.node-type-course {
                     img {
                       .box-shadow();
                     }
+                    .view-course-students-empty-field {
+                      width: 51px;
+                      height: 48px;
+                      .box-shadow();
+                      background-image: url(../images/small-avatar-default.jpg);
+                      background-repeat: no-repeat;
+                    }
                   }
                 }
               }
@@ -773,9 +797,11 @@ body.node-type-course {
   .provider-logo {
     float: left;
     padding-right: 20px;
+    margin-left: 20px;
   }
   .title-wrapper {
     float: left;
+    margin-top: 10px;
     .course-title {
       font-weight: bold;
       font-size: 20px;
@@ -870,7 +896,14 @@ body.page-user {
               .bold(11px);
               .link();
               color: #333333 !important;
-              margin: 0px 0px 0px 18px;
+              position: absolute;
+              bottom: 44px;
+              left: 6px;
+              background: rgba(255,255,255,0.66);
+              width: 107px;
+              text-align: center;
+              height: 18px;
+              padding-top: 5px;
             }
           }
       .user-profile-userpoints {
@@ -1187,3 +1220,12 @@ body.not-logged-in {
 #notes-markup {
   float: left;
 }
+
+/****** Node type "Lesson" ******/
+body.node-type-lesson {
+  footer.submitted, .user-picture {
+    .show(none);
+  }
+}
+/****** Node type "Lesson" End ******/
+

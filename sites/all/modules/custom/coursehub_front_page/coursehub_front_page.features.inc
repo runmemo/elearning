@@ -19,6 +19,24 @@ function coursehub_front_page_ctools_plugin_api() {
 }
 
 /**
+ * Implements hook_node_info().
+ */
+function coursehub_front_page_node_info() {
+  $items = array(
+    'front_page_slide' => array(
+      'name' => t('Front Page Slide'),
+      'base' => 'node_content',
+      'description' => t('Content type for slider on the home page.'),
+      'has_title' => '1',
+      'title_label' => t('Title'),
+      'help' => '',
+    ),
+  );
+  return $items;
+}
+
+
+/**
  * Implements hook_image_default_styles().
  */
 function coursehub_front_page_image_default_styles() {
