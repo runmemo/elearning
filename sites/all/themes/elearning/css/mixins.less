@@ -147,8 +147,8 @@
 .cell() {
   display: table-cell;
 }
-.bold-14() {
-  font: bold 14px Arial;
+.bold(@size: 14px) {
+  font: bold @size Arial;
 }
 .box-shadow() {
   -moz-box-shadow: 0px 0px 1px 0px #888;
@@ -162,5 +162,5 @@
   .box-shadow();
   margin-bottom: 8px;
   .RoundedShape(1px);
-  .bold-14();
+  .bold(14px);
 }
