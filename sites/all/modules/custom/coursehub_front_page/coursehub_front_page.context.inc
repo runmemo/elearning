@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * course.context.inc
+ * coursehub_front_page.context.inc
  */
 
 /**
  * Implements hook_context_default_contexts().
  */
-function course_context_default_contexts() {
+function coursehub_front_page_context_default_contexts() {
   $export = array();
 
   $context = new stdClass();

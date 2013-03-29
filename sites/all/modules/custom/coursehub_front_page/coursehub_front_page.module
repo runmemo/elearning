@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the CourseHub Front Page feature.
+ */
+
+include_once 'coursehub_front_page.features.inc';
