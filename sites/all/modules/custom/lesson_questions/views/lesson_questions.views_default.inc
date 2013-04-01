@@ -229,5 +229,77 @@ function lesson_questions_views_default_views() {
   $handler->display->display_options['block_description'] = 'Popular Relevant Questions';
   $export['lessons_relevant_questions_page'] = $view;
 
+  $view = new view();
+  $view->name = 'answers_to_a_question';
+  $view->description = 'Answers to the current question';
+  $view->tag = 'Answers';
+  $view->base_table = 'node';
+  $view->human_name = 'Answers to a Question';
+  $view->core = 7;
+  $view->api_version = '3.0';
+  $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
+
+  /* Display: Defaults */
+  $handler = $view->new_display('default', 'Defaults', 'default');
+  $handler->display->display_options['title'] = 'Answers';
+  $handler->display->display_options['use_more_always'] = FALSE;
+  $handler->display->display_options['access']['type'] = 'none';
+  $handler->display->display_options['cache']['type'] = 'none';
+  $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['query']['options']['query_comment'] = FALSE;
+  $handler->display->display_options['exposed_form']['type'] = 'basic';
+  $handler->display->display_options['pager']['type'] = 'full';
+  $handler->display->display_options['style_plugin'] = 'default';
+  $handler->display->display_options['row_plugin'] = 'node';
+  $handler->display->display_options['row_options']['view_mode'] = 'full';
+  /* No results behavior: Global: Text area */
+  $handler->display->display_options['empty']['area']['id'] = 'area';
+  $handler->display->display_options['empty']['area']['table'] = 'views';
+  $handler->display->display_options['empty']['area']['field'] = 'area';
+  $handler->display->display_options['empty']['area']['content'] = '<em>No answers yet</em>';
+  /* Sort criterion: Content: Post date */
+  $handler->display->display_options['sorts']['created']['id'] = 'created';
+  $handler->display->display_options['sorts']['created']['table'] = 'node';
+  $handler->display->display_options['sorts']['created']['field'] = 'created';
+  $handler->display->display_options['sorts']['created']['order'] = 'DESC';
+  /* Contextual filter: Content: Question (field_answer_question) */
+  $handler->display->display_options['arguments']['field_answer_question_nid']['id'] = 'field_answer_question_nid';
+  $handler->display->display_options['arguments']['field_answer_question_nid']['table'] = 'field_data_field_answer_question';
+  $handler->display->display_options['arguments']['field_answer_question_nid']['field'] = 'field_answer_question_nid';
+  $handler->display->display_options['arguments']['field_answer_question_nid']['default_action'] = 'default';
+  $handler->display->display_options['arguments']['field_answer_question_nid']['exception']['title_enable'] = TRUE;
+  $handler->display->display_options['arguments']['field_answer_question_nid']['default_argument_type'] = 'node';
+  $handler->display->display_options['arguments']['field_answer_question_nid']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['field_answer_question_nid']['specify_validation'] = TRUE;
+  $handler->display->display_options['arguments']['field_answer_question_nid']['validate']['type'] = 'node';
+  $handler->display->display_options['arguments']['field_answer_question_nid']['validate_options']['types'] = array(
+    'question' => 'question',
+  );
+  /* Filter criterion: Content: Published */
+  $handler->display->display_options['filters']['status']['id'] = 'status';
+  $handler->display->display_options['filters']['status']['table'] = 'node';
+  $handler->display->display_options['filters']['status']['field'] = 'status';
+  $handler->display->display_options['filters']['status']['value'] = '1';
+  /* Filter criterion: Content: Type */
+  $handler->display->display_options['filters']['type']['id'] = 'type';
+  $handler->display->display_options['filters']['type']['table'] = 'node';
+  $handler->display->display_options['filters']['type']['field'] = 'type';
+  $handler->display->display_options['filters']['type']['value'] = array(
+    'answer' => 'answer',
+  );
+
+  /* Display: Entity content */
+  $handler = $view->new_display('entity_view', 'Entity content', 'entity_view_1');
+  $handler->display->display_options['enabled'] = FALSE;
+  $handler->display->display_options['entity_type'] = 'node';
+  $handler->display->display_options['bundles'] = array(
+    0 => 'question',
+  );
+  $handler->display->display_options['show_title'] = 0;
+
+  /* Display: Block - Answers */
+  $handler = $view->new_display('block', 'Block - Answers', 'block_1');
+  $export['answers_to_a_question'] = $view;
+
   return $export;
 }
