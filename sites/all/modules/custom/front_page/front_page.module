@@ -5,3 +5,13 @@
  */
 
 include_once 'front_page.features.inc';
+
+
+/**
+ * Implements hook_views_api().
+ */
+function front_page_views_api() {
+  return array(
+    'api' => '3.0',
+    'path' => drupal_get_path('module', 'front_page') . '/views',);
+}
