@@ -8,7 +8,7 @@ function lesson_node_info() {
     'lesson' => array(
       'name' => t('Lesson'),
       'base' => 'node_content',
-      'description' => '',
+      'description' => 'Lesson with educational materials',
       'has_title' => '1',
       'title_label' => t('Title'),
       'help' => '',

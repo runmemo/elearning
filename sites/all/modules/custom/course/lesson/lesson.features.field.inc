@@ -322,7 +322,7 @@ function lesson_field_default_fields() {
   );
 
   // Exported field: 'node-notes-field_lesson'.
-  $fields['node-notes-field_lesson'] = array(
+  $fields['node-notes-field-lesson'] = array(
     'field_config' => array(
       'active' => '1',
       'cardinality' => '1',

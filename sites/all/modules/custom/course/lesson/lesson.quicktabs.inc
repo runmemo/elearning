@@ -7,7 +7,7 @@
 /**
  * Implements hook_quicktabs_default_quicktabs().
  */
-function lesson_questions_quicktabs_default_quicktabs() {
+function lesson_quicktabs_default_quicktabs() {
   $export = array();
 
   $quicktabs = new stdClass();

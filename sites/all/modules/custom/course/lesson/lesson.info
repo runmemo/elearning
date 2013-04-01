@@ -14,17 +14,19 @@ dependencies[] = features
 dependencies[] = quicktabs
 features[features_api][] = api:1
 
+features[node][] = notes
+
 features[field][] = node-lesson-body
 features[field][] = node-lesson-field-video
 features[field][] = node-lesson-field-notes
 features[field][] = node-notes-body
-features[field][] = node-notes-field_lesson
+features[field][] = node-notes-field-lesson
 
 features[ctools][] = strongarm:strongarm:1
 features[ctools][] = quicktabs:quicktabs:1
 features[quicktabs][] = lesson_interaction
 
-features[node][] = notes
+
 features[variable][] = comment_anonymous_notes
 features[variable][] = comment_default_mode_notes
 features[variable][] = comment_default_per_page_notes
