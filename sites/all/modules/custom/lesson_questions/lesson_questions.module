@@ -85,6 +85,11 @@ function quick_answer($form, &$form_state) {
   if (!user_access('create answer content')) {
     return;
   }
+
+  $question_node = menu_get_object('node');
+  if(!$question_node || $question_node->type <> 'question') {
+    return;
+  }
   
   $form['quick_answer'] = array(
     '#type' => 'fieldset',
@@ -99,8 +104,7 @@ function quick_answer($form, &$form_state) {
     $question_nid = $form_state['values']['question'];
   }
   else {
-    $question_nid = menu_get_object('node');
-    $question_nid = $question_nid->nid;
+    $question_nid = $question_node->nid;
   }
 
   $question = menu_get_object('node');

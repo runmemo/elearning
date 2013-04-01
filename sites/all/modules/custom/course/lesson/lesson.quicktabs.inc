@@ -34,6 +34,13 @@ function lesson_questions_quicktabs_default_quicktabs() {
         'type' => 'block',
     );
   }
+  $quicktabs->tabs[2] = array(
+    'bid' => 'lesson_delta_lesson_student_notes',
+    'hide_title' => 1,
+    'title' => 'Student Notes',
+    'weight' => '-98',
+    'type' => 'block',
+  );
   $quicktabs->renderer = 'ui_tabs';
   $quicktabs->style = 'nostyle';
   $quicktabs->options = array(

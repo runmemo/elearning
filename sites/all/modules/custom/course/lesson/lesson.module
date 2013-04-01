@@ -23,7 +23,11 @@ function lesson_init() {
 function lesson_block_info() {
  
   $block['lesson_lecturer_notes'] = array(
-    'info' => 'Lesson Notes',
+    'info' => 'Lesson Notes : Lecturer',
+    'cache' => DRUPAL_CACHE_PER_PAGE,
+  );
+  $block['lesson_student_notes'] = array(
+    'info' => 'Lesson Notes : Student',
     'cache' => DRUPAL_CACHE_PER_PAGE,
   );
   return $block;
@@ -52,9 +56,206 @@ function lesson_block_view($delta = '') {
       $block['subject'] = '';
       $block['content'] = $content;
       break;
+    case 'lesson_student_notes':
+      //Lesson Node
+      $lesson_node = menu_get_object('node');
+
+      //Placeholder for message. 
+      $content['message_placeholder'] = array(
+        '#type' => 'markup',
+        '#markup' => '<div id="message-placeholder"></div>',
+      );
+      // Notes form
+      $content['student_notes_form'] = drupal_get_form('student_notes', $lesson_node);
+
+
+      // Build the block title and contents
+      $block['subject'] = '';
+      $block['content'] = $content;
+      break;
   }
   return $block;
 }
+
+/**
+ * Gets nid of notes by user to lesson
+ * @global object $user current user
+ * @param integer $nid
+ * @param integer $uid
+ * @return integer nid of user's note to lesson
+ */
+function notes_created($nid, $uid = NULL) {
+    if (is_null($uid)) {
+        global $user;
+        $uid = $user->uid;
+    } 
+    // count number of answers given by user
+    $query = new EntityFieldQuery();
+    $query->entityCondition('entity_type', 'node')
+            ->entityCondition('bundle', 'notes')
+            ->propertyCondition('status', 1)
+            ->propertyCondition('uid', $uid)
+            ->fieldCondition('field_lesson', 'target_id', $nid)
+            ->range(0, 1); // this is just to improve db performance
+
+    $result = $query->execute();
+
+    foreach ($result as $entity_type => $entities) {
+        foreach ($entities as $entity_id => $entity) {
+            return $entity_id;
+        }
+    }
+
+    return FALSE;
+}
+
+/**
+ * Form for providing an answer to an open question
+ */
+function student_notes($form, &$form_state) { 
+    //debug($form_state['step']);
+    $form = array();
+    $form['#prefix'] = '<div id="student-notes-form-wrapper">';
+    $form['#suffix'] = '</div>';
+   
+    $nid = 0;
+    if(empty($form_state['step'])) {  // page is loaded
+      
+        $lesson = menu_get_object('node');       
+        if ($lesson && $lesson->type === 'lesson') {
+            $nid = $lesson->nid;
+            $form_state['lesson_nid'] = $nid;
+        } else { // this is not a page of open question
+            return $form;
+        }
+        
+        // check whether user already has an answer to this question
+        $note_nid = notes_created($nid);
+        $form_state['note_nid'] = $note_nid;
+        if($note_nid) {
+            $mode = 'view';          
+        } 
+        else {
+            $mode = 'edit';
+        }       
+        $form_state['step'] = $mode;
+    } 
+    else {
+        $answered = $form_state['note_nid'];
+        $mode = $form_state['step'];
+    }
+
+    // build form depending on it's current mode
+    switch($mode) {
+        case 'edit' :
+            // build form for editing
+            $form['edit']['new_note'] = array(
+                    '#type' => 'textarea',
+                    '#default_value' => empty($form_state['note_value']) ? '' : $form_state['note_value'],
+                );
+            $form['edit']['save'] = array(
+                '#type' => 'submit',
+                '#submit' => array('student_notes_submit'),
+                '#value' => t('Save'),
+                '#ajax' => array(
+                    'callback' => 'student_notes_submit_js',
+                    'wrapper' => 'student-notes-form-wrapper',
+                    'progress' => array('message' => t('')),
+                ),
+            );
+            if (!empty($form_state['note_value'])) {
+                // add cancellation button
+                // @todo
+            }
+            break;
+        case 'view':
+            if(!empty($form_state['note_value'])) {
+                $note_text =  $form_state['note_value'];
+            }
+            else {
+                $note = node_load($note_nid);
+                $note_text =  $note->body[LANGUAGE_NONE][0]['value'];
+                $form_state['note_value'] = $note_text;
+            }
+            // build form for viewing of saved answer
+            $form['view']['edit'] = array(
+                '#type' => 'submit',
+                '#value' => t('Edit'),
+                '#submit' => array('student_notes_submit'),
+                '#ajax' => array(
+                    'callback' => 'student_notes_submit_js',
+                    'wrapper' => 'student-notes-form-wrapper',
+                    'progress' => array('message' => t('')),
+                ),
+            );
+            $form['view']['note'] = array(
+                '#type' => 'markup',
+                '#prefix' => '<div class = "student_note">',
+                '#suffix' => '</div>',
+                '#markup' => $note_text,
+            );
+            
+            break;
+        default :
+            $form['bad_state'] = array(
+                '#type' => 'markup',
+                '#markup' =>  'State ' . $mode . ' is not supported by this form.',
+            );
+    }
+   
+    return $form;
+}
+
+/**
+ * 
+ */
+function student_notes_submit($form, &$form_state) {
+    
+   $nid = $form_state['lesson_nid'];
+   
+   
+   global $user;
+   // User clicked Save button in edit mode
+   if ($form_state['triggering_element']['#value'] == t('Save')) {
+    
+        if (empty($form_state['note_nid']) || !$form_state['note_nid']) {
+            // its a new answer
+            $node = new stdClass();
+            $node->type = 'notes';
+            node_object_prepare($node);
+            $node->title = 'Student note nid#' . $nid . '# uid#' . $user->uid;
+            $node->language = LANGUAGE_NONE;
+            $node->body[$node->language][0]['value'] = $form_state['values']['new_note'];
+            $node->body[$node->language][0]['format'] = 'filtered_html';
+            $node->field_lesson[LANGUAGE_NONE][0]['target_id'] = $nid;
+            
+            node_save($node);
+            $form_state['note_nid'] = $node->nid;
+        }
+        else { // user changed existing answer
+            $node = node_load($form_state['note_nid']);
+            $node->body[$node->language][0]['value'] = $form_state['values']['new_note'];
+            node_save($node);
+        }
+        $form_state['note_value']  = $form_state['values']['new_note'];
+        $form_state['step'] = 'view';
+ 
+   }
+   // User clicked Edit button in view mode.
+   if ($form_state['triggering_element']['#value'] == t('Edit')) {
+       $form_state['step'] = 'edit';
+   }
+   
+   $form_state['rebuild'] = TRUE;
+}
+
+/**
+ * Callback for open question answer submit
+ */
+function student_notes_submit_js($form, $form_state) {
+    return $form;
+}
+
 
 /**
  * Callback function : Defines form for lecturer notes for lesson page.
