@@ -23,22 +23,6 @@ h2 {
   color: #333333;
 }
 
-#zone-preface,
-#zone-content {
-  moz-box-shadow: 0px 3px 10px 2px #888;
-  -webkit-box-shadow: 0px 3px 10px 2px #888;
-  box-shadow: 0px 3px 10px 2px #888;
-}
-#zone-content-wrapper {
-  overflow-y: hidden;
-  padding-bottom: 9px;
-}
-
-#zone-preface-wrapper {
-  overflow-y: hidden;
-}
-
-
 form .form-submit {
   .orange-button();
 }
@@ -56,7 +40,27 @@ input.form-text {
     }
 }
 
+.section-content {
+    width: 100%px;
+    margin-left: auto;
+    margin-right: auto;
 
+    @media @narrow {
+        800px;
+    }
+    @media @normal {
+        width: 1000px;
+    }
+
+    @media @wide {
+        width: 1240px;
+    }
+    
+    moz-box-shadow: 0px 3px 10px 2px #888;
+    -webkit-box-shadow: 0px 3px 10px 2px #888;
+    box-shadow: 0px 3px 10px 2px #888;
+    
+}
 /****** Common properties End ******/
 
 #section-header {
