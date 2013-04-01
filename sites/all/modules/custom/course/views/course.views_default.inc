@@ -93,6 +93,7 @@ function course_views_default_views() {
   $handler->display->display_options['pager']['options']['offset'] = '0';
   $handler->display->display_options['style_plugin'] = 'grid';
   $handler->display->display_options['style_options']['row_class_special'] = FALSE;
+  $handler->display->display_options['style_options']['fill_single_line'] = FALSE;
   $handler->display->display_options['row_plugin'] = 'fields';
   /* Header: Global: Result summary */
   $handler->display->display_options['header']['result']['id'] = 'result';
@@ -114,6 +115,7 @@ function course_views_default_views() {
   $handler->display->display_options['fields']['picture']['relationship'] = 'uid';
   $handler->display->display_options['fields']['picture']['label'] = '';
   $handler->display->display_options['fields']['picture']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['picture']['empty'] = '<div class="view-course-students-empty-field"></div>';
   $handler->display->display_options['fields']['picture']['image_style'] = 'course_students';
   /* Contextual filter: Content: Nid */
   $handler->display->display_options['arguments']['nid']['id'] = 'nid';
