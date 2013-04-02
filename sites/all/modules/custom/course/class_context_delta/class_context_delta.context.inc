@@ -46,11 +46,12 @@ function class_context_delta_context_default_contexts() {
     ),
   );
   $context->condition_mode = 0;
-
+  
+  $export['class'] = $context;
   // Translatables
   // Included for use with string extractors like potx.
   t('theme class');
 
-
+  
   return $export;
 }
