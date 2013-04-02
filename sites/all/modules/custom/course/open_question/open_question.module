@@ -60,8 +60,14 @@ function open_question_block_view($delta = '') {
     switch ($delta) {
         case 'oq_answer_form_block':
             $block['subject'] = '';
-            $block['content'] = drupal_get_form('open_question_answer_form');
-                  // Embed view 
+          
+            if(user_access('answer open question')) {               
+                $block['content'] = drupal_get_form('open_question_answer_form');
+            }
+            else {
+                $block['content'] = t('You need to register to answer this question.');
+            }
+           // Embed view 
             $block['content']['questions_list'] = array(
               '#type' => 'markup',
               '#markup' => open_question_get_answer_feedbacks(),
