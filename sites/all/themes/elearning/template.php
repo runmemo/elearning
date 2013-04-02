@@ -93,15 +93,13 @@ function elearning_preprocess_html(&$vars, $hook) {
  * @see user-profile.tpl.php
  */
 function elearning_preprocess_user_profile(&$variables) {
-  global $base_root;
   $account = $variables['elements']['#account'];
   $variables['user_uid'] = $account->uid;
   $variables['user_name'] = $account->name;
   $variables['user_mail'] = $account->mail;
   $variables['user_picture'] = theme('user_picture', array('account' => $account));
   if (!isset($variables['user_picture']) || $variables['user_picture'] == '') {
-    $address = '' . base_path() . path_to_theme() .'/images/user-profile-default.png';
-    $variables['user_picture'] =  '<img class="user-profile-default-picture" src="' . $base_root . $address . '">';
+    $variables['user_picture'] = '<div class="user-profile-default-picture"></div>';
   }
   $field_name = field_view_field('user', $account, 'field_name', array('label' => 'hidden'));
   $field_surname = field_view_field('user', $account, 'field_surname', array('label' => 'hidden'));
