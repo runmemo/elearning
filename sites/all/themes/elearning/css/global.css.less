@@ -5,6 +5,19 @@
 @import "grid-16.less";
 
 /****** Common properties Start ******/
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+#page {
+  height: auto !important;
+  min-height: 100%;
+  height: 100%;
+  position: relative;
+}
+
 body {
   .font();
 }
@@ -44,7 +57,8 @@ input.form-text {
     width: 100%px;
     margin-left: auto;
     margin-right: auto;
-
+    position: relative;
+    min-height: 100%;
     @media @narrow {
         800px;
     }
@@ -205,6 +219,10 @@ input.form-text {
     .gris();
     height: 36px;
     margin-top: 20px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
     .region-footer-first {
         display: block;
         .block-menu-footer-menu {
