@@ -36,7 +36,7 @@ function class_context_delta_context_default_contexts() {
         'course_outline-book_outline' => array(
           'module' => 'course_outline',
           'delta' => 'book_outline',
-          'region' => 'preface_first',
+          'region' => 'sidebar_first',
           'weight' => '-10',
         ),
       ),
