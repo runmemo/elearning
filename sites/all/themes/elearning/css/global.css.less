@@ -658,7 +658,6 @@ body.node-type-course {
       #block-system-main {
         article {
           .content {
-            margin: 0px 46px 61px 65px;
             .node-course-header {
               .table();
               width: 100%;
@@ -1077,7 +1076,7 @@ body.page-user {
 
 /****** User Profile End ******/
 
-/****** Front Page ******/
+/****** Front Page Start ******/
 body.not-logged-in {
   #block-views-front-page-slider-block {
     .views-slideshow-controls-top {
@@ -1094,12 +1093,42 @@ body.not-logged-in {
   }
 }
 
+body.page-home {
+  .region-content-inner {
+    @media @narrow {
+      margin-left: 38px;
+    }
+    @media @normal {
+      margin-left: 38px;
+    }
+    @media @wide {
+      margin-left: 78px;
+    }    
+  }
+}
+
+#block-views-front-page-slider-block {
+  width: 864px;
+  @media @wide {
+    margin: 0 auto;
+  }  
+}
+
 .view-id-front_page_slider {
     margin: 45px 0px;
     .views-slideshow-controls-top {
       z-index: 100;
       position: absolute;
-      right: 0px;
+      right: 6px;
+      /*@media @narrow {
+        right: 40px;
+      }
+      @media @normal {
+        right: 40px;
+      }
+      @media @wide {
+        right: 73px;
+      }*/
       #widget_pager_top_front_page_slider-block {
         .left();
         border-right: @border-1 white;
@@ -1146,15 +1175,16 @@ body.not-logged-in {
       top: 123px;
       background: rgba(255, 255, 255, .5);
       width: 366px;
-      @media @narrow {
+      right: 0;
+      /*@media @narrow {
         right: 398px;
       }
       @media @normal {
-        right: 210px;
+        right: 166px;
       }
       @media @wide {
         right: 0px;
-      }
+      }*/
         p {
           .bold(28px);
           padding: 20px 30px 10px 17px;
@@ -1168,97 +1198,86 @@ body.not-logged-in {
         border-right: 0;
         border-left: 0;
         padding-bottom: 3px;
-        @media @narrow {
+        /*@media @narrow {
           width: 632px;
           height: 287px;
         }
         @media @normal {
-          width: 820px;
-          height: 372px;
+          width: 864px;
+          height: 394px;
         }
         @media @wide {
           width: 1030px;
           height: 470px;
-        }
+        }*/
       }
     }
   }
 
 .view-id-home_page_courses {
-  table {
-    border: 0;
-    tr {
-      td {
-        .border-bottom-dotted();
-        margin: 0;
-        padding: 0;
-        background-color: #ffffff;
-        .bold(12px);
-        .views-field-title .field-content {
-          position: absolute;
-          background: rgb(253, 253, 253);
-          background: rgba(255, 255, 255, .88);
-          .bold(18px);
-          padding: 10px 0px 10px 8px;
-          width: 400px;
-          background-image: url(../images/arrow-right-home.png);
-          background-repeat: no-repeat;
-          background-position: 97%;
-          a {
-            .link();
-            color: #000000;
-          }
-        }
-        .views-field-field-logo {
-          .left();
-          .field-content {
-            margin: 8px 9px 6px 2px;
-          }
-        }
-        .view-fields-teacher-provider {
-          .left();
-          margin-top: 8px;
-          .views-field-field-teacher .field-content a {
-            .link();
-            .text-orange();
-          }
-          .views-field-field-provider .field-content a {
-            .link();
-            color: #2e2422;
-          }
-        }
-        .views-field-field-course-dates {
-          .right();
-          .text-orange();
-          width: 56px;
-          margin-top: 8px;
-        }
-      }
-      td.col-1 {
-        .left();
-      }
-      td.col-2 {
-        @media @narrow {
-          .left();
-          margin-top: 48px;
-        }
-        @media @normal {
-          .right();
-          margin-top: 0px;
-        }
-        @media @wide {
-          .right();
-          margin-top: 0px;
-        }
+  @media @narrow {
+    width: 632px;
+  }
+  @media @normal {
+    width: 864px;
+  }
+  @media @wide {
+    width: 1030px;
+  }
+  .views-row {
+    .border-bottom-dotted();
+    margin-bottom: 48px;
+    list-style: none;
+    .bold(12px);
+    width: 408px;
+    .views-field-title .field-content {
+      position: absolute;
+      background: rgb(253, 253, 253);
+      background: rgba(255, 255, 255, .88);
+      .bold(18px);
+      padding: 10px 0px 10px 8px;
+      width: 400px;
+      background-image: url(../images/arrow-right-home.png);
+      background-repeat: no-repeat;
+      background-position: 97%;
+      a {
+        .link();
+        color: #000000;
       }
     }
-    tr.row-2 td, tr.row-3 td {
-      margin-top: 48px;
+    .views-field-field-logo {
+      .left();
+      .field-content {
+        margin: 8px 9px 6px 2px;
+      }
+   }
+    .view-fields-teacher-provider {
+      .left();
+      margin-top: 8px;
+      .views-field-field-teacher .field-content a {
+        .link();
+        .text-orange();
+      }
+      .views-field-field-provider .field-content a {
+        .link();
+        color: #2e2422;
+      }
+    }
+    .views-field-field-course-dates {
+      .right();
+      .text-orange();
+      width: 56px;
+      margin-top: 8px;
     }
   }
+  .column-1 {
+    .left();
+  }
+  .column-2 {
+    .right();
+  }
 }
-
-/****** Front Page ******/
+/****** Front Page End ******/
 
 #notes-markup {
   float: left;
