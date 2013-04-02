@@ -15,7 +15,7 @@ function open_question_context_default_contexts() {
   $context->api_version = 3;
   $context->name = 'open_question';
   $context->description = 'Open Question';
-  $context->tag = '';
+  $context->tag = 'Node';
   $context->conditions = array(
     'node' => array(
       'values' => array(

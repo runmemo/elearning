@@ -15,7 +15,7 @@ function front_page_context_default_contexts() {
   $context->api_version = 3;
   $context->name = 'profiles';
   $context->description = '';
-  $context->tag = 'theme';
+  $context->tag = 'Node';
   $context->conditions = array(
     'node' => array(
       'values' => array(
@@ -51,8 +51,8 @@ function front_page_context_default_contexts() {
   $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
   $context->api_version = 3;
   $context->name = 'front_page_context';
-  $context->description = '';
-  $context->tag = '';
+  $context->description = 'Context for front page of the website';
+  $context->tag = 'Page';
   $context->conditions = array(
     'path' => array(
       'values' => array(
