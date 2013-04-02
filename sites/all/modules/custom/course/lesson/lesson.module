@@ -122,7 +122,7 @@ function student_notes($form, &$form_state) {
     if(empty($form_state['step'])) {  // page is loaded
       
         $lesson = menu_get_object('node');       
-        if ($lesson && $lesson->type === 'lesson') {
+        if ($lesson && $lesson->type === 'lesson'  && node_access('create', 'notes') ) {
             $nid = $lesson->nid;
             $form_state['lesson_nid'] = $nid;
         } else { // this is not a page of open question
