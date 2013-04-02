@@ -20,6 +20,39 @@ function open_question_block_info() {
 }
 
 /**
+ * Implements hook_permission()
+ */
+function opent_question_permission() {
+    return array(
+      'answer open question' => array(
+        'title' => 'Answer open question',
+        'description' => 'Allows user to answer open questions.'
+      ),
+      'create open question' => array(
+         'title' => 'Create open question',
+         'description' => 'Allows user to create open questions.'
+      )
+    );
+}
+/**
+ * Implements hook_node_access()
+ */
+function open_question_node_access($node, $op, $account) {
+    $type = is_string($node) ? $node : $node->type;
+    // @todo : add logic to make open question nodes
+    // visible only to users who registered to the course.
+    if ($op == 'view' && $type == 'open_question') {
+        if (course_user_access($node, $account)) {
+            return NODE_ACCESS_ALLOW;
+        } 
+        else {
+            return NODE_ACCESS_DENY;
+        }
+    }
+    return NODE_ACCESS_IGNORE;
+}
+
+/**
  * Implements hook_block_view
  */
 function open_question_block_view($delta = '') {
@@ -27,7 +60,13 @@ function open_question_block_view($delta = '') {
     switch ($delta) {
         case 'oq_answer_form_block':
             $block['subject'] = '';
-            $block['content'] = drupal_get_form('open_question_answer_form');
+            if(user_access('answer open question')) {               
+                $block['content'] = drupal_get_form('open_question_answer_form');
+            }
+            else {
+                $block['content'] = t('You need to register to answer this question.');
+            }
+           
             break;
         case 'oq_other_answers_block':
             $block['subject'] = '';

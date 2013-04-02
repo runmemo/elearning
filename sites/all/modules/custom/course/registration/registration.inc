@@ -84,3 +84,31 @@ function registration_cancel($uid, $nid) {
     
     return TRUE;
 }
+
+/**
+ * Permissions helper function that checks whether user is registered for a course
+ * that contains page he is currently viewing.
+ * @global type $user
+ */
+function course_user_access($node, $account) {
+   
+    if (!user_is_logged_in()) {
+        return FALSE;
+    }
+    $book = $node->book;
+    if ($book) { // node is part of a book
+       $unit = book_link_load($book['plid']); // going one level up to units
+       $course = book_link_load($unit['plid']); // going second level up to course
+       $course_nid = $course['nid'];
+    
+       if(course_registration_id($account->uid, $course_nid, TRUE)){
+           return TRUE;
+       }
+       else { // user is not registered for a course
+           return FALSE;
+       }
+    } 
+    else { // this node is not part of a book
+        return TRUE;
+    } 
+}
