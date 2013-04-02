@@ -67,7 +67,7 @@ function front_page_context_default_contexts() {
           'module' => 'views',
           'delta' => 'front_page_slider-block',
           'region' => 'content',
-          'weight' => '-10',
+          'weight' => '-30',
         ),
       ),
     ),
