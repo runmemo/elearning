@@ -36,10 +36,10 @@ function course_last_visited_node($nid) {
   }
   
   $sql = 'SELECT h.nid AS nid 
-          FROM history h 
-          INNER JOIN book b ON h.nid = b.nid
-          INNER JOIN book c ON b.bid = c.bid
-          INNER JOIN menu_links ml ON ml.mlid = b.mlid
+          FROM {history} h 
+          INNER JOIN {book} b ON h.nid = b.nid
+          INNER JOIN {book} c ON b.bid = c.bid
+          INNER JOIN {menu_links} ml ON ml.mlid = b.mlid
           WHERE 
             c.nid = :nid
             AND h.uid = :uid
