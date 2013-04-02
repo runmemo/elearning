@@ -28,6 +28,11 @@ function open_question_block_view($delta = '') {
         case 'oq_answer_form_block':
             $block['subject'] = '';
             $block['content'] = drupal_get_form('open_question_answer_form');
+                  // Embed view 
+            $block['content']['questions_list'] = array(
+              '#type' => 'markup',
+              '#markup' => open_question_get_answer_feedbacks(),
+            );
             break;
         case 'oq_other_answers_block':
             $block['subject'] = '';
@@ -216,4 +221,53 @@ function open_question_answer_submit($form, &$form_state) {
  */
 function open_question_answer_submit_js($form, $form_state) {
     return $form;
+}
+
+/**
+* Returns embedded view on open question page.
+* @param type $oq_nid
+* @return string HTML for a view with feedbacks or an empty string.
+*/
+function open_question_get_answer_feedbacks($oq_nid = NULL) {
+  if (is_null($oq_nid)) {
+    $oq_nid = arg(1);
+  }
+  $oqa_nid = open_question_is_answered($oq_nid);
+  if ($oqa_nid) {
+    $view_obj = views_get_view('oqa_feedbacks');
+    $view = $view_obj->preview('block', array($oqa_nid));
+  } else {
+    $view = '';
+  }
+  return $view;
+}
+
+/**
+ * Implements of hook_views_pre_render().
+ * Adds rating widget and flag link to the feedback.
+ * @param type $view
+ */
+function open_question_views_pre_render(&$view) {
+  if ($view->name == 'oqa_feedbacks') {
+    if (!empty($view->result)) {
+      foreach ($view->result as $id => $feedback) {
+        if (is_numeric($feedback->nid)) {
+          // Adding rate widget form to the output
+          $widgets = rate_get_active_widgets('node', $feedback->node_type, 'teaser');
+          foreach ($widgets as $widget_id => $widget) {
+            $widget_name = 'rate_' . $widget->name;
+            _rate_check_widget($widget);
+            $display_mode =  $widget->teaser_display_mode;
+            $widget_code = array(
+              '#weight' => $widget->node_display == RATE_DISPLAY_ABOVE_CONTENT ? -50 : 50,
+              '#markup' => rate_generate_widget($widget_id, 'node', $feedback->nid, $display_mode),
+            );
+          }
+          $view->result[$id]->rate_widget = $widget_code['#markup'];
+          // Adding flag to the output
+          $view->result[$id]->flag_link = flag_create_link('oqaf_inappropriate', $feedback->nid);
+        }
+      }
+    }
+  }
 }
