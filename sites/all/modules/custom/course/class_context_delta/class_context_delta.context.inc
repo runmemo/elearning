@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * class_context_delta.context.inc
@@ -30,6 +31,16 @@ function class_context_delta_context_default_contexts() {
     ),
   );
   $context->reactions = array(
+    'block' => array(
+      'blocks' => array(
+        'course_outline-book_outline' => array(
+          'module' => 'course_outline',
+          'delta' => 'book_outline',
+          'region' => 'preface_first',
+          'weight' => '-10',
+        ),
+      ),
+    ),
     'delta' => array(
       'delta_template' => 'class',
     ),
@@ -39,7 +50,7 @@ function class_context_delta_context_default_contexts() {
   // Translatables
   // Included for use with string extractors like potx.
   t('theme class');
-  $export['class'] = $context;
+
 
   return $export;
 }
