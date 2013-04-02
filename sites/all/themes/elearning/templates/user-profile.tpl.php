@@ -43,8 +43,8 @@
     </div>
   </div>
   <div class="user-profile-main-panel omega">
-    <div class="user-profile-basic-info grid-5 omega">
-      <div class="user-profile-picture-points grid-2 omega">
+    <div class="user-profile-basic-info grid-6 omega">
+      <div class="user-profile-picture-points grid-3 omega">
         <div class="user-profile-picture">
           <?php if (isset($user_picture)) print $user_picture; ?>
           <?php print l(t('Choose photo'), 'user/' . $user_uid . '/edit', array('attributes' => array('class' => 'user-picture-edit'))); ?>

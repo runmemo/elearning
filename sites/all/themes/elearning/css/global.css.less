@@ -924,15 +924,20 @@ body.page-user {
           .user-profile-picture {
             width: 119px;
             height: 119px;
+            padding-top: 4px;
             .box-shadow();
             .user-profile-default-picture {
-              padding: 7px 6px;
+              margin-left: 6px;
+              background-image: url(../images/user-profile-default.png);
+              width: 107px;
+              height: 107px;
+              background-repeat: no-repeat;
             }
             .user-picture {
               float: none;
               margin: 0;
               img {
-                padding: 7px 6px;
+                padding: 4px 6px;
               }
             }
             .user-picture-edit {
@@ -1040,13 +1045,13 @@ body.page-user {
           .left();
             @media @normal { 
               .show();
-              .grid-normal-1();
+              .grid-normal-2();
             }
             @media @narrow {
-              .grid-narrow-1();
+              .grid-narrow-2();
             }
             @media @wide {
-              .grid-wide-1();
+              .grid-wide-2();
             }
           .field-content {
             color: #ce4619;
