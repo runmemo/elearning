@@ -230,11 +230,11 @@ function lesson_questions_views_default_views() {
   $export['lessons_relevant_questions_page'] = $view;
 
   $view = new view();
-  $view->name = 'answers_to_a_question';
+  $view->name = 'best_answers';
   $view->description = 'Answers to the current question';
   $view->tag = 'Answers';
   $view->base_table = 'node';
-  $view->human_name = 'Answers to a Question';
+  $view->human_name = 'Best Answers';
   $view->core = 7;
   $view->api_version = '3.0';
   $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
@@ -257,6 +257,11 @@ function lesson_questions_views_default_views() {
   $handler->display->display_options['empty']['area']['table'] = 'views';
   $handler->display->display_options['empty']['area']['field'] = 'area';
   $handler->display->display_options['empty']['area']['content'] = '<em>No answers yet</em>';
+  /* Sort criterion: Content: Best Answer (field_best_answer_p) */
+  $handler->display->display_options['sorts']['field_best_answer_p_value']['id'] = 'field_best_answer_p_value';
+  $handler->display->display_options['sorts']['field_best_answer_p_value']['table'] = 'field_data_field_best_answer_p';
+  $handler->display->display_options['sorts']['field_best_answer_p_value']['field'] = 'field_best_answer_p_value';
+  $handler->display->display_options['sorts']['field_best_answer_p_value']['order'] = 'DESC';
   /* Sort criterion: Content: Post date */
   $handler->display->display_options['sorts']['created']['id'] = 'created';
   $handler->display->display_options['sorts']['created']['table'] = 'node';
@@ -288,18 +293,9 @@ function lesson_questions_views_default_views() {
     'answer' => 'answer',
   );
 
-  /* Display: Entity content */
-  $handler = $view->new_display('entity_view', 'Entity content', 'entity_view_1');
-  $handler->display->display_options['enabled'] = FALSE;
-  $handler->display->display_options['entity_type'] = 'node';
-  $handler->display->display_options['bundles'] = array(
-    0 => 'question',
-  );
-  $handler->display->display_options['show_title'] = 0;
-
-  /* Display: Block - Answers */
-  $handler = $view->new_display('block', 'Block - Answers', 'block_1');
-  $export['answers_to_a_question'] = $view;
+  /* Display: Block */
+  $handler = $view->new_display('block', 'Block', 'block_1');
+  $export['best_answers'] = $view;
 
   return $export;
 }
