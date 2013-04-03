@@ -277,14 +277,12 @@ function course_get_progress($course_nid = 0, $account = NULL) {
       }
       // for each lesson we add html to the title
       foreach ($unit['below'] as &$lesson) { 
-        if(!isset($lesson['below'])) { 
-          continue;
-        }
         $lesson_items++; 
         // @todo: check for performance issues
         $node = menu_get_object('node', 1, $lesson['link']['link_path']); //@todo : Pass nid instead of Node.
-        if(flag_get_user_flags('node', $node->nid, $account->uid, 0)) {
-           $lesson_items_completed++;
+        $node_flags = flag_get_user_flags('node', $node->nid, $account->uid, 0);
+        if(array_key_exists('course_item_complete', $node_flags)) {
+          $lesson_items_completed++;
         }
       }
     }  
