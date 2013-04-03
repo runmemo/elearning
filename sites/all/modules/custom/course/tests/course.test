@@ -1,11 +1,28 @@
 <?php
 
+class CourseTestCase extends DrupalWebTestCase {
+  function setUp() {
+     parent::setUp('course'); 
+    
+     $settings = array(
+       'type' => 'course'
+     );
+     $this->course = $this->drupalCreateNode($settings);
+     $this->course->book['bid'] = $this->course->nid;
+     node_save($this->course);
+     
+     $this->course_author = $this->drupalCreateUser(array('create new books', 'create book content', 'edit own book content', 'add content to books'));
+    
+  }
+  
+}
+
 /**
  *
  * @author Bulat Yapparov
  *
  */
-class CourseNavigationTestCase extends DrupalWebTestCase {
+class CourseNavigationTestCase extends CourseTestCase {
 
   protected $course;
   protected $course_author;
@@ -19,20 +36,7 @@ class CourseNavigationTestCase extends DrupalWebTestCase {
     );
   }
   
-  function setUp() {
-    parent::setUp('course'); 
-    
-     $settings = array(
-       'type' => 'course'
-     );
-     $this->course = $this->drupalCreateNode($settings);
-     $this->course->book['bid'] = $this->course->nid;
-     node_save($this->course);
-     
-     $this->course_author = $this->drupalCreateUser(array('create new books', 'create book content', 'edit own book content', 'add content to books'));
-    
-  }
-  
+
   function book_append_child($node, $parent) {
      $node->book['bid']= $parent->book['nid'];
      $node->book['plid'] = $parent->book['mlid'];

@@ -1,5 +1,4 @@
 <?php
-
 /**
  *
  * @author Bulat Yapparov
@@ -16,19 +15,17 @@ class CourseRegistrationTestCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('registration'); 
-
-    // Create test course
-    $node = new stdClass();
-    $node->type = 'course';
-    $node->status = 1;
-    $node->language = LANGUAGE_NONE;
-    $sumbitted_node = node_submit($node); // Prepare node for a submit
-    node_save($sumbitted_node);
-    // @todo
-    $this->testCourse = $sumbitted_node;
-    // Create test user
-    // @todo
+    parent::setUp('views', 'registration');
+    
+   
+    
+    $settings = array(
+     'type' => 'course'
+    );
+    $this->course = $this->drupalCreateNode($settings);
+    $this->course->book['bid'] = $this->course->nid;
+    node_save($this->course);
+    
     $this->testUser = $this->drupalCreateUser(array());
     
   }
@@ -42,15 +39,13 @@ class CourseRegistrationTestCase extends DrupalWebTestCase {
       $this->drupalLogin($this->testUser);
       
       $uid = $this->loggedInUser->uid;
-      $nid = $this->testCourse->nid;
+      $nid = $this->course->nid;
       // Create registration with course_register_user for test course
       $rid = course_register($uid, $nid);
       // Check that only one open registration exists for specified course
-      debug($rid, 'Registration id');
       $this->assertNotEqual($rid, FALSE, 'Registration id is not False.');
       
       $registration = registration_load($rid);
-    //  debug($registration, 'Registration');
       $this->assertEqual($registration->uid, $uid, 'Current user is registration owner.');
       
       $course_id = $registration->nid;
@@ -65,7 +60,7 @@ class CourseRegistrationTestCase extends DrupalWebTestCase {
       $this->drupalLogin($this->testUser);
       
       $uid = $this->loggedInUser->uid;
-      $nid = $this->testCourse->nid;
+      $nid = $this->course->nid;
       
       $rid_first = course_register($uid, $nid);
       $rid_second = course_register($uid, $nid);
@@ -78,7 +73,7 @@ class CourseRegistrationTestCase extends DrupalWebTestCase {
       $this->drupalLogin($this->testUser);
       
       $uid = $this->loggedInUser->uid;
-      $nid = $this->testCourse->nid;
+      $nid = $this->course->nid;
       
       $rid = course_register($uid, $nid);
       // cancel registration first time
