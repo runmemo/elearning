@@ -17,14 +17,21 @@ function open_question_default_rules_configuration() {
         "REQUIRES" : [ "flag", "open_question" ],
         "ON" : [ "open_question_answered" ],
         "DO" : [
-          { "flag_flagnode" : {
-              "flag" : "course_item_complete",
-              "node" : [ "open-question" ],
-              "flagging_user" : [ "asnwered-by" ],
-              "permission_check" : 0
+            { "flag_unflagnode" : {
+                "flag" : "course_item_complete",
+                "node" : [ "open-question" ],
+                "flagging_user" : [ "answered-by" ],
+                "permission_check" : 0
+              }
+            },
+            { "flag_flagnode" : {
+                "flag" : "course_item_complete",
+                "node" : [ "open-question" ],
+                "flagging_user" : [ "answered-by" ],
+                "permission_check" : 0
+              }
             }
-          }
-        ]
+          ]
       }
     }');
   return $items;

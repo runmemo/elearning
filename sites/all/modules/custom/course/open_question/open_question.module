@@ -232,7 +232,7 @@ function open_question_answer_form($form, &$form_state) {
  */
 function open_question_answer_submit($form, &$form_state) {
 
-  $nid = $form_state['question_nid'];
+  $oq_nid = $form_state['question_nid'];
   
   global $user;
   // User clicked Save button in edit mode
@@ -243,15 +243,15 @@ function open_question_answer_submit($form, &$form_state) {
       $node = new stdClass();
       $node->type = 'open_question_answer';
       node_object_prepare($node);
-      $node->title = 'OQ anwer nid#' . $nid . '# uid#' . $user->uid;
+      $node->title = 'OQ anwer nid#' . $oq_nid . '# uid#' . $user->uid;
       $node->language = LANGUAGE_NONE;
       $node->body[$node->language][0]['value'] = $form_state['values']['new_answer'];
       $node->body[$node->language][0]['format'] = 'filtered_html';
-      $node->field_open_question[LANGUAGE_NONE][0]['target_id'] = $nid;
+      $node->field_open_question[LANGUAGE_NONE][0]['target_id'] = $oq_nid;
 
       node_save($node);
       $form_state['answer_nid'] = $node->nid;
-      $oq = node_load($nid);
+      $oq = node_load($oq_nid);
       // question is now answered by user:
       rules_invoke_event('open_question_answered', $user, $oq);
     }
