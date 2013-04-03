@@ -24,10 +24,6 @@ function open_question_block_info() {
  */
 function opent_question_permission() {
   return array(
-    'answer open question' => array(
-      'title' => 'Answer open question',
-      'description' => 'Allows user to answer open questions.'
-    ),
     'create open question' => array(
       'title' => 'Create open question',
       'description' => 'Allows user to create open questions.'
@@ -62,13 +58,15 @@ function open_question_block_view($delta = '') {
     case 'oq_answer_form_block':
       $block['subject'] = '';
 
-      if (user_access('answer open question')) {
-        $block['content'] = drupal_get_form('open_question_answer_form');
-      }
-      else {
+      if (!node_access('create', 'open_question_answer')) {
+        // user does not have rights to see the form
         $block['content'] = t('You need to register to answer this question.');
+        return $block;     
       }
-      // Embed view 
+      
+      // add answer form
+      $block['content']['answer_form']= drupal_get_form('open_question_answer_form');
+      // embed view 
       $block['content']['questions_list'] = array(
         '#type' => 'markup',
         '#markup' => open_question_get_answer_feedbacks(),
@@ -80,6 +78,23 @@ function open_question_block_view($delta = '') {
       break;
   }
   return $block;
+}
+
+/**
+ * Implementation of hook_rules_event_info()
+ */
+function open_question_rules_event_info() {
+  return array(
+    'open_question_answered' => array(
+      'label' => t('Open question complete'),
+      'module' => 'open_question',
+      'group' => 'Course' ,
+      'variables' => array(
+        'current_user' => array('type' => 'user', 'label' => t('The current logged in user.')),
+        'open_question' => array('type' => 'node', 'label' => t('The open question node.')),
+      ),
+    ),
+  );
 }
 
 /**
@@ -236,13 +251,16 @@ function open_question_answer_submit($form, &$form_state) {
 
       node_save($node);
       $form_state['answer_nid'] = $node->nid;
+      $oq = node_load($nid);
+      // question is now answered by user:
+      rules_invoke_event('open_question_answered', $user, $oq);
     }
     else { // user changed existing answer
       debug('Updating existing node' . $form_state['answer_nid']);
       $node = node_load($form_state['answer_nid']);
       $node->body[$node->language][0]['value'] = $form_state['values']['new_answer'];
       node_save($node);
-    }
+    }   
     $form_state['answer_value'] = $form_state['values']['new_answer'];
     $form_state['step'] = 'view';
   }

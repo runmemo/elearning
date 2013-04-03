@@ -203,7 +203,7 @@ function course_flag_default_flags() {
   // Exported flag: "course_item_complete".
   $flags['course_item_complete'] = array(
     'content_type' => 'node',
-    'title' => 'course_item_complete',
+    'title' => 'Course item complete',
     'global' => '0',
     'types' => array(
       0 => 'lesson',
