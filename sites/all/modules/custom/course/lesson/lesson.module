@@ -14,7 +14,10 @@ function lesson_init() {
     $node = menu_get_object('node');
     if($node && $node->type === 'lesson') {
          drupal_add_js(drupal_get_path('module', 'lesson') . '/lesson_youtube_jsapi.js');
+         drupal_add_js(array('lesson' => array('nid' => $node->nid)), 'setting');
     }
+  
+  drupal_add_library('system', 'drupal.ajax');
 }
 
 /**
@@ -366,4 +369,58 @@ function lecturer_notes_submit($form, &$form_state) {
  */
 function lecturer_notes_submit_callback($form, $form_state) {
     return $form;
+}
+
+/**
+ * Implementation of hook_rules_event_info()
+ */
+function lesson_rules_event_info() {
+  return array(
+    'video_complete_rule_event' => array(
+      'label' => t('Video Complete event'),
+      'module' => 'lesson',
+      'group' => 'Custom' ,
+      'variables' => array(
+        'current_user' => array('type' => 'user', 'label' => t('The current logged in user.')),
+        'lesson' => array('type' => 'node', 'label' => t('The lesson node.')),
+      ),
+    ),
+  );
+}
+
+/**
+ * Implements hook_menu().
+ */
+function lesson_menu() {
+  $items = array();
+ 
+  $items['lesson/video-complete'] = array(
+    'title' => 'AJAX callback - Lesson complete action',
+    'page callback' => 'lesson_complete',
+    'page arguments' => array(1),
+    'access arguments' => array('access content'),
+    'theme callback' => 'ajax_base_page_theme',
+    'type' => MENU_CALLBACK,
+  );
+ 
+  return $items;
+}
+
+
+
+/**
+ * Menu callback - Lesson complete action.
+ */
+function lesson_complete($action, $type) {
+  if ($type != 'ajax') { 
+    // This is js only.
+    return;
+  }
+  global $user;
+  $nid = arg(3);
+  $lesson = node_load($nid);
+  if($user->uid) {
+    rules_invoke_event('video_complete_rule_event', $user, $lesson);
+  }
+  exit; 
 }

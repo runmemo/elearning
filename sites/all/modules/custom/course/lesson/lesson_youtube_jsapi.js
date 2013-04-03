@@ -1,5 +1,5 @@
 (function($) {
-    Drupal.behaviors.lesson_questions = {
+    Drupal.behaviors.lesson_video_complete = {
         attach: function(context, settings) {
             //Code borrowed from : http://stackoverflow.com/questions/7988476/listening-for-youtube-event-in-javascript-or-jquery/7988536#7988536
 
@@ -78,9 +78,45 @@
 
             function stopCycle(event) {
                 if (event.data == YT.PlayerState.ENDED) {
-                    window.location = $('.page-next').attr('href');
+			var video_complete_action = {};
+			var base_path = settings.basePath;
+			var lesson_nid = settings.lesson.nid;
+			video_complete_action.url = base_path+'lesson/video-complete/ajax/'+lesson_nid;
+			video_complete_action.event = 'onload';
+			video_complete_action.keypress = false;
+			video_complete_action.prevent = false;
+			video_complete_action.success = function (data) {
+                          //Redirect user after succesfully 
+                          window.location = $('.page-next').attr('href');
+                        },
+			Drupal.ajax['video_complete_action'] = new Drupal.ajax(null, $(document.body), video_complete_action);
+			Drupal.ajax['video_complete_action'].specifiedResponse();
                 }
             }
         }
     };
+
+  /**
+   * Add an extra function to the Drupal ajax object
+   * which allows us to trigger an ajax response without
+   * an element that triggers it.
+   */
+  Drupal.ajax.prototype.specifiedResponse = function() {
+    var ajax = this;
+ 
+    // Do not perform another ajax command if one is already in progress.
+    if (ajax.ajaxing) {
+      return false;
+    }
+ 
+    try {
+      $.ajax(ajax.options);
+    }
+    catch (err) {
+      alert('An error occurred while attempting to process ' + ajax.options.url);
+      return false;
+    }
+ 
+    return false;
+  };
 })(jQuery);

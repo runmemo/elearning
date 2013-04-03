@@ -194,3 +194,50 @@ function course_image_default_styles() {
 
   return $styles;
 }
+
+/**
+ * Implements hook_flag_default_flags().
+ */
+function course_flag_default_flags() {
+  $flags = array();
+  // Exported flag: "course_item_complete".
+  $flags['course_item_complete'] = array(
+    'content_type' => 'node',
+    'title' => 'course_item_complete',
+    'global' => '0',
+    'types' => array(
+      0 => 'lesson',
+      1 => 'open_question',
+    ),
+    'flag_short' => 'completed',
+    'flag_long' => '',
+    'flag_message' => '',
+    'unflag_short' => 'not course_item_complete',
+    'unflag_long' => '',
+    'unflag_message' => '',
+    'unflag_denied_text' => '',
+    'link_type' => 'toggle',
+    'roles' => array(
+      'flag' => array(
+        0 => '2',
+      ),
+      'unflag' => array(
+        0 => '2',
+      ),
+    ),
+    'weight' => 0,
+    'show_on_form' => 0,
+    'access_author' => '',
+    'show_on_page' => 1,
+    'show_on_teaser' => 0,
+    'show_contextual_link' => 0,
+    'i18n' => 0,
+    'api_version' => 2,
+    'module' => 'asdf',
+    'locked' => array(
+      0 => 'name',
+    ),
+  );
+  return $flags;
+
+}
