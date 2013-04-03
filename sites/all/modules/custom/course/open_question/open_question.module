@@ -54,6 +54,9 @@ function open_question_node_access($node, $op, $account) {
  */
 function open_question_block_view($delta = '') {
   $block = array();
+  $question = menu_get_object('node');
+  
+  $answered = open_question_is_answered($question->nid);
   switch ($delta) {
     case 'oq_answer_form_block':
       $block['subject'] = '';
@@ -65,17 +68,39 @@ function open_question_block_view($delta = '') {
       }
       
       // add answer form
-      $block['content']['answer_form']= drupal_get_form('open_question_answer_form');
+      $block['content']['answer_form']= drupal_get_form('open_question_answer_form', $answered);
       // embed view 
-      $block['content']['questions_list'] = array(
-        '#type' => 'markup',
-        '#markup' => open_question_get_answer_feedbacks(),
-      );
+      if ($answered) {
+        $block['content']['questions_list'] = array(
+          '#type' => 'markup',
+          '#markup' => open_question_get_answer_feedbacks($answered),
+        );
+      }
+      
       break;
     case 'oq_other_answers_block':
       $block['subject'] = '';
-      $block['content'] = ' TODO ';
-      break;
+     
+      if ($answered) {
+         $block['content']['message'] = array(
+         '#type' => 'markup',
+         '#markup' => t('Please review and mark answers of other students.'),
+        );
+        // show answers of other students for review
+         $review_list_view = views_get_view('open_questions_review_list');
+         $block['content']['review_list'] = array(
+           '#type' => 'markup',
+           '#markup' => $review_list_view->preview(),
+         );
+        
+      } 
+      else {
+        $block['content']['message'] = array(
+         '#type' => 'markup',
+         '#markup' => t('You need to answer question before you can review answers of other students.'),
+        );
+      }
+    break;
   }
   return $block;
 }
@@ -132,7 +157,7 @@ function open_question_is_answered($nid, $uid = NULL) {
 /**
  * Form for providing an answer to an open question
  */
-function open_question_answer_form($form, &$form_state) {
+function open_question_answer_form($form, &$form_state, $answered) {
   //debug($form_state['step']);
   $form = array();
   $form['#prefix'] = '<div id="oq-answer-form-wrapper">';
@@ -150,7 +175,6 @@ function open_question_answer_form($form, &$form_state) {
     }
 
     // check whether user already has an answer to this question
-    $answered = open_question_is_answered($nid);
     $form_state['answer_nid'] = $answered;
     if ($answered) {
       $mode = 'view';
@@ -284,11 +308,8 @@ function open_question_answer_submit_js($form, $form_state) {
  * @param type $oq_nid
  * @return string HTML for a view with feedbacks or an empty string.
  */
-function open_question_get_answer_feedbacks($oq_nid = NULL) {
-  if (is_null($oq_nid)) {
-    $oq_nid = arg(1);
-  }
-  $oqa_nid = open_question_is_answered($oq_nid);
+function open_question_get_answer_feedbacks($oqa_nid = NULL) {
+
   if ($oqa_nid) {
     $view_obj = views_get_view('oqa_feedbacks');
     $view = $view_obj->preview('block', array($oqa_nid));
