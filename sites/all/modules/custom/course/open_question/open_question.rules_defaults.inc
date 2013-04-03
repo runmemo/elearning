@@ -20,7 +20,7 @@ function open_question_default_rules_configuration() {
           { "flag_flagnode" : {
               "flag" : "course_item_complete",
               "node" : [ "open-question" ],
-              "flagging_user" : [ "site:current-user" ],
+              "flagging_user" : [ "asnwered-by" ],
               "permission_check" : 0
             }
           }
