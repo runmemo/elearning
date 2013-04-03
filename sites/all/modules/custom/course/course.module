@@ -267,7 +267,7 @@ function course_get_progress($course_nid = 0, $account = NULL) {
   $tree = menu_tree_all_data($course->book['menu_name'], NULL, 3);
   $tree_key = key($tree);
   if(isset($tree[$tree_key]['below'])){
-    $tree = $tree[$tree_key]['below']; // remove the top level 
+    $tree = $tree[$tree_key]['below'];
     $lesson_items = 0;
     $lesson_items_completed = 0;
 
@@ -275,13 +275,12 @@ function course_get_progress($course_nid = 0, $account = NULL) {
       if(!isset($unit['below'])) { 
         continue;
       }
-      // for each lesson we add html to the title
       foreach ($unit['below'] as &$lesson) { 
         $lesson_items++; 
         // @todo: check for performance issues
         $node = menu_get_object('node', 1, $lesson['link']['link_path']); //@todo : Pass nid instead of Node.
-        $node_flags = flag_get_user_flags('node', $node->nid, $account->uid, 0);
-        if(array_key_exists('course_item_complete', $node_flags)) {
+        $flag = flag_get_flag('course_item_complete');
+        if($flag->is_flagged($node->nid, $account->uid)) {
           $lesson_items_completed++;
         }
       }
