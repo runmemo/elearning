@@ -1,6 +1,6 @@
 <?php
 
-require_once drupal_get_path('module', 'course') . '/open_question.features.field.inc';
+require_once drupal_get_path('module', 'open_question') . '/open_question.features.field.inc';
 
 function open_question_install() {
   foreach (open_question_field_default_fields() as $field) {

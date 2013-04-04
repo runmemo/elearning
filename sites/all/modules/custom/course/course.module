@@ -237,7 +237,7 @@ function template_preprocess_book_header(&$vars) {
     $vars['teacher_surname'] = render($surname);
   }
   if (isset($vars['question_page'])) {
-    $vars['lesson_link'] = l(t('Return to class'), $book_link['href'], array('attributes' => array('class' => 'node-question-return-link')));
+    $vars['lesson_link'] = l(t('Return to class'), $book_link['href'], array('attributes' => array('class' => array('node-question-return-link'))));
   }
   
 }
