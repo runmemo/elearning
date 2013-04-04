@@ -1290,3 +1290,171 @@ body.page-home {
 #notes-markup {
   float: left;
 }
+
+
+/****** Node type "Question" Start ******/
+body.node-type-question {
+  #block-course-book-header {
+    .book-header {
+      margin-bottom: 5px;
+      padding: 20px 0px 16px 0px;
+      .provider-logo {
+        margin-left: 10px;
+      }
+    }
+    .node-question-return-link {
+      .bold(13px);
+      .right();
+      .link();
+      color: #1f1f1f;
+      height: 16px;
+      border: 16px solid transparent;
+      border-image: url(../images/return_link.png) 0 16 stretch;
+      border-top: 0;
+      border-right: 0;
+      border-bottom: 0;
+      padding-left: 6px;
+      margin-top: 36px;
+    }
+  }
+  h1 {
+    margin-bottom: 10px;
+    padding-top: 4px;
+  }
+}
+
+.node-question-title-section {
+  .border-bottom-dotted();
+  .node-question-picture-points {
+    .left();
+    margin-right: 24px;
+    img {
+      .left();
+    }
+    .author-points {
+      .bold(12px);
+      color: #ffffff;
+      text-align: center;
+      position: absolute;
+      top: 31px;
+      left: 36px;
+      width: 17px;
+      height: 15px;
+      border-radius: 2px;
+      background-color: #e44300;
+    }
+  }
+}
+
+.node-question-body {
+  .bold(14px);
+  .text-dark-grey();
+  margin-top: 24px;
+  .border-bottom-dotted();
+  .vud-widget-elearning_widget {
+    margin: 0px 39px 0px 10px;
+  }
+  .field-name-body {
+    line-height: 17px;
+  }
+  .node-supplementary-wrapper {
+    margin-top: 22px;
+  }
+}
+
+.node-supplementary,
+.view-id-best_answers .views-field-created,
+.view-id-best_answers .views-field-name {
+  .left();
+  .bold(11px);
+  color: #435d7b;
+  border: 1px solid #e0e8ea;
+  background-color: #f4f7f7;
+  padding: 8px;
+  margin: 22px 6px 22px 0px;
+  .RoundedShape(2px);
+  em {
+    font-style: normal;
+  }
+}
+
+#block-lesson-questions-lesson-question-answers {
+  @media @narrow {
+   .grid-narrow-11();
+  }
+  @media @normal {
+    .grid-normal-11();
+  }
+  @media @wide {
+    .grid-wide-11();
+  }
+  #quick-answer {
+    legend {
+      .show(none);
+    }
+  }
+}
+
+.view-id-best_answers {
+  .views-row {
+    background: #ffffff;
+    margin: 0;
+    padding: 18px 0px 0px 0px;
+    .border-bottom-dotted();
+    box-shadow: none;
+    border-radius: 0;
+    .vud-widget-elearning_widget {
+      .bold(14px);
+      .text-dark-grey();
+      @media @narrow {
+        margin: 0px 33px 0px 10px;
+      }
+      @media @normal {
+        margin: 0px 38px 0px 10px;
+      }
+      @media @wide {
+        margin: 0px 38px 0px 10px;
+      }
+    }
+    .views-field-body {
+      color: #3d3d3d;
+      font: normal 14px Arial;
+      @media @narrow {
+        .grid-narrow-10();
+      }
+      @media @normal {
+        .grid-normal-10();
+      }
+      @media @wide {
+        .grid-wide-10();
+      }
+      p {
+        margin: 0;
+      }
+    }
+  }
+  .views-answer-body {
+    .show(inline-block);
+  }
+  .views-field-comment-count {
+    .right();
+      padding: 8px 0px 8px 22px;
+      margin-top: 30px;
+      background-image:url('../images/ask-question.png');
+      background-position: left center;
+      background-repeat: no-repeat;
+    .comment-click {
+      .show(none);
+    }
+    a.comment-link:link, a.comment-link:hover, a.comment-link:visited {
+      .text-orange();
+      .link();
+      .bold(12px);
+      border-bottom: 1px dotted #ce4619;
+      padding-right: 0;
+    }
+  }
+}
+
+
+/****** Node type "Question" End ******/

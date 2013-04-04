@@ -517,7 +517,196 @@ function open_question_field_default_fields() {
       ),
     ),
   );
+  
+  // Exported field: 'node-open_question_feedback-field_rating_widget'.
+  $fields['node-open_question_feedback-field_rating_widget'] = array(
+    'field_config' => array(
+      'active' => '1',
+      'cardinality' => '1',
+      'deleted' => '0',
+      'entity_types' => array(),
+      'field_name' => 'field_rating_widget',
+      'foreign keys' => array(),
+      'indexes' => array(),
+      'locked' => '0',
+      'module' => 'vud_field',
+      'settings' => array(
+        'votingapi_tag' => 'vote',
+        'vud_widget' => 'updown',
+      ),
+      'translatable' => '0',
+      'type' => 'vud_field',
+    ),
+    'field_instance' => array(
+      'bundle' => 'open_question_feedback',
+      'default_value' => array(
+        0 => array(
+          'vud_widget' => 'updown',
+          'votingapi_tag' => 'vote',
+        ),
+      ),
+      'deleted' => '0',
+      'description' => '',
+      'display' => array(
+        'default' => array(
+          'label' => 'hidden',
+          'module' => 'vud_field',
+          'settings' => array(),
+          'type' => 'default',
+          'weight' => '2',
+        ),
+        'teaser' => array(
+          'label' => 'above',
+          'settings' => array(),
+          'type' => 'hidden',
+          'weight' => 0,
+        ),
+      ),
+      'entity_type' => 'node',
+      'field_name' => 'field_rating_widget',
+      'label' => 'Rating Widget',
+      'required' => 0,
+      'settings' => array(
+        'user_register_form' => FALSE,
+        'votingapi_tag' => 'vote',
+        'vud_widget' => 'elearning_widget',
+      ),
+      'widget' => array(
+        'active' => 0,
+        'module' => 'vud_field',
+        'settings' => array(),
+        'type' => 'vud_field_default_widget',
+        'weight' => '-2',
+      ),
+    ),
+  );
+  
+  // Exported field: 'node-answer-field_rating_widget'.
+  $fields['node-answer-field_rating_widget'] = array(
+    'field_config' => array(
+      'active' => '1',
+      'cardinality' => '1',
+      'deleted' => '0',
+      'entity_types' => array(),
+      'field_name' => 'field_rating_widget',
+      'foreign keys' => array(),
+      'indexes' => array(),
+      'locked' => '0',
+      'module' => 'vud_field',
+      'settings' => array(
+        'votingapi_tag' => 'vote',
+        'vud_widget' => 'updown',
+      ),
+      'translatable' => '0',
+      'type' => 'vud_field',
+    ),
+    'field_instance' => array(
+      'bundle' => 'answer',
+      'default_value' => array(
+        0 => array(
+          'vud_widget' => 'updown',
+          'votingapi_tag' => 'vote',
+        ),
+      ),
+      'deleted' => '0',
+      'description' => '',
+      'display' => array(
+        'default' => array(
+          'label' => 'hidden',
+          'module' => 'vud_field',
+          'settings' => array(),
+          'type' => 'default',
+          'weight' => '3',
+        ),
+        'teaser' => array(
+          'label' => 'above',
+          'settings' => array(),
+          'type' => 'hidden',
+          'weight' => 0,
+        ),
+      ),
+      'entity_type' => 'node',
+      'field_name' => 'field_rating_widget',
+      'label' => 'Rating Widget',
+      'required' => 0,
+      'settings' => array(
+        'user_register_form' => FALSE,
+        'votingapi_tag' => 'vote',
+        'vud_widget' => 'elearning_widget',
+      ),
+      'widget' => array(
+        'active' => 0,
+        'module' => 'vud_field',
+        'settings' => array(),
+        'type' => 'vud_field_default_widget',
+        'weight' => '4',
+      ),
+    ),
+  );
 
+  // Exported field: 'node-question-field_rating_widget'.
+  $fields['node-question-field_rating_widget'] = array(
+    'field_config' => array(
+      'active' => '1',
+      'cardinality' => '1',
+      'deleted' => '0',
+      'entity_types' => array(),
+      'field_name' => 'field_rating_widget',
+      'foreign keys' => array(),
+      'indexes' => array(),
+      'locked' => '0',
+      'module' => 'vud_field',
+      'settings' => array(
+        'votingapi_tag' => 'vote',
+        'vud_widget' => 'updown',
+      ),
+      'translatable' => '0',
+      'type' => 'vud_field',
+    ),
+    'field_instance' => array(
+      'bundle' => 'question',
+      'default_value' => array(
+        0 => array(
+          'vud_widget' => 'updown',
+          'votingapi_tag' => 'vote',
+        ),
+      ),
+      'deleted' => '0',
+      'description' => '',
+      'display' => array(
+        'default' => array(
+          'label' => 'hidden',
+          'module' => 'vud_field',
+          'settings' => array(),
+          'type' => 'default',
+          'weight' => '5',
+        ),
+        'teaser' => array(
+          'label' => 'above',
+          'settings' => array(),
+          'type' => 'hidden',
+          'weight' => 0,
+        ),
+      ),
+      'entity_type' => 'node',
+      'field_name' => 'field_rating_widget',
+      'label' => 'Rating Widget',
+      'required' => 0,
+      'settings' => array(
+        'user_register_form' => FALSE,
+        'votingapi_tag' => 'vote',
+        'vud_widget' => 'elearning_widget',
+      ),
+      'widget' => array(
+        'active' => 0,
+        'module' => 'vud_field',
+        'settings' => array(),
+        'type' => 'vud_field_default_widget',
+        'weight' => '2',
+      ),
+    ),
+  );
+  
   // Translatables
   // Included for use with string extractors like potx.
   t('Answer');
@@ -527,6 +716,7 @@ function open_question_field_default_fields() {
   t('Proposed Answer');
   t('Question');
   t('Rating');
+  t('Rating Widget');
 
   return $fields;
 }

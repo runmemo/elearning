@@ -10,7 +10,6 @@
  * for your subtheme grows. Please read the README.txt in the /preprocess and /process subfolders
  * for more information on this topic.
  */
- 
 
 /**
  * Preprocess for node view.
@@ -20,12 +19,12 @@
 function elearning_preprocess_node(&$variables, $hook) {
   // global preprocessing of node
   unset($variables['content']['links']['statistics']['#links']['statistics_counter']['title']);
-  
+
   // call node specific preprocessors
   $function = __FUNCTION__ . '_' . $variables['node']->type;
   if (function_exists($function)) {
     $function($variables, $hook);
-  } 
+  }
 }
 
 /**
@@ -34,9 +33,9 @@ function elearning_preprocess_node(&$variables, $hook) {
  */
 function elearning_preprocess_views_view(&$vars) {
   if (isset($vars['view']->name)) {
-    $function = __FUNCTION__ . '_' . $vars['view']->name; 
+    $function = __FUNCTION__ . '_' . $vars['view']->name;
     if (function_exists($function)) {
-     $function($vars);
+      $function($vars);
     }
   }
 }
@@ -51,7 +50,7 @@ function elearning_preprocess_node_course(&$vars, $hook) {
   $node = $vars['node'];
   // provider logo and name
   $provider = field_get_items('node', $node, 'field_provider');
-  if(isset($provider[0])) {
+  if (isset($provider[0])) {
     $field_logo = field_view_field('node', $provider[0]['entity'], 'field_logo', array('label' => 'hidden', 'image_style' => 'provider_logo'));
     $field_extra = field_view_field('node', $provider[0]['entity'], 'field_provider_extra', array('label' => 'hidden'));
     $vars['provider_logo'] = render($field_logo);
@@ -70,11 +69,29 @@ function elearning_preprocess_node_course(&$vars, $hook) {
   // tmp image for social icons
   $vars['tmp_social_img'] = $base_url . '/sites/all/themes/elearning/images/social-stuff.png';
   $vars['form_class_participate'] = drupal_get_form('course_registration_form');
-   $vars['content']['field_video'][0]['file']['#options']['width'] = 448;
-   $vars['content']['field_video'][0]['file']['#options']['height'] = 243;
-   // students view
-   $view = views_get_view('course_students');
-   $vars['students_view'] = $view->preview('block', array($node->nid));
+  $vars['content']['field_video'][0]['file']['#options']['width'] = 448;
+  $vars['content']['field_video'][0]['file']['#options']['height'] = 243;
+  // students view
+  $view = views_get_view('course_students');
+  $vars['students_view'] = $view->preview('block', array($node->nid));
+}
+
+/**
+ * Preprocess for node-type "Question" view.
+ * @param array $vars
+ * @param string $hook
+ */
+function elearning_preprocess_node_question(&$vars, $hook) {
+  $author = user_load($vars['uid']);
+  $vars['userpoints_count'] = userpoints_get_current_points($author->uid);
+  if (is_numeric($author->picture)) {
+    $author->picture = file_load($author->picture);
+  }
+  if (!empty($author->picture->uri)) {
+    $filepath = $author->picture->uri;
+  }
+  $vars['user_picture'] = theme('image_style', array('style_name' => 'question_author', 'path' => $filepath));
+  $vars['created_formatted'] = t('%time ago', array('%time' => format_interval(REQUEST_TIME - $vars['created'], 1)));
 }
 
 /**
@@ -103,8 +120,8 @@ function elearning_preprocess_user_profile(&$variables) {
   }
   $field_name = field_view_field('user', $account, 'field_name', array('label' => 'hidden'));
   $field_surname = field_view_field('user', $account, 'field_surname', array('label' => 'hidden'));
-  $field_birthday  = field_view_field('user', $account, 'field_birthday', 'full');
-  $field_phone  = field_view_field('user', $account, 'field_phone_number');
+  $field_birthday = field_view_field('user', $account, 'field_birthday', 'full');
+  $field_phone = field_view_field('user', $account, 'field_phone_number');
   $variables['field_name'] = render($field_name);
   $variables['field_surname'] = render($field_surname);
   $variables['field_birthday'] = render($field_birthday);
@@ -121,11 +138,10 @@ function elearning_preprocess_user_profile(&$variables) {
 function elearning_preprocess_book_navigation(&$vars) {
   $node = menu_get_object('node');
   if ($node->type == 'lesson') {
-    $vars['prev_title']  = t('Prev');
-    $vars['next_title']  = t('Next');
-  }
-  else {
-    $vars['prev_title']  = t('‹ ') . $vars['prev_title'];
-    $vars['next_title']  = $vars['next_title'] . t(' ›');
+    $vars['prev_title'] = t('Prev');
+    $vars['next_title'] = t('Next');
+  } else {
+    $vars['prev_title'] = t('‹ ') . $vars['prev_title'];
+    $vars['next_title'] = $vars['next_title'] . t(' ›');
   }
 }

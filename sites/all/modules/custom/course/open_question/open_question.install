@@ -1,0 +1,20 @@
+<?php
+
+require_once drupal_get_path('module', 'course') . '/open_question.features.field.inc';
+
+function open_question_install() {
+  foreach (open_question_field_default_fields() as $field) {
+    create_field($field);
+  }
+}
+
+/**
+ * Adds fields to provider content type and entity reference
+ * from course to provider
+ */
+function open_question_update_7001() {
+  $fields = open_question_field_default_fields();
+  create_field($fields['node-question-field_rating_widget']);
+  create_field($fields['node-answer-field_rating_widget']);
+  create_field($fields['node-open_question_feedback-field_rating_widget']);
+}

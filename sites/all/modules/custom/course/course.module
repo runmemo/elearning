@@ -175,24 +175,39 @@ function course_node_view($node, $view_mode) {
   unset($node->content['links']['book']);
 }
 
+/**
+ * Gets corresponding book for a node.
+ * @return array An array, representing "Book Header" block.
+ */
 function book_header_block() {
   $block = array(); 
   $node = menu_get_object('node');
+  if (isset($node->field_question_path[$node->language][0]['value']) && !empty($node->field_question_path[$node->language][0]['value'])) {
+    $lesson_path = explode('/', $node->field_question_path[$node->language][0]['value']);
+    if (isset($lesson_path[1])) {
+      $lesson = node_load($lesson_path[1]);
+    }
+  }
+  if (isset($node->book)) {
+    $book = $node->book;
+  } elseif (isset($lesson->book)) {
+    $book = $lesson->book;
+  } else {
+    $book = FALSE;
+  }
   // Build the block title and contents
-  if(isset($node->book)) {
+  if ($book) {
     $block['subject'] = '';
-    $block['content'] = theme('book_header', array('book_link' => $node->book));
+    $block['content'] = theme('book_header', array('book_link' => $book, 'question_page' => TRUE));
   }
   return $block;
 }
 
 /**
- * Processes variables for book-navigation.tpl.php.
+ * Processes variables for book_header.
  *
  * The $variables array contains the following elements:
  * - book_link
- *
- * @see book-navigation.tpl.php
  */
 function template_preprocess_book_header(&$vars) {
   $book_link = $vars['book_link'];
@@ -221,6 +236,10 @@ function template_preprocess_book_header(&$vars) {
     $vars['teacher_name'] = render($name);
     $vars['teacher_surname'] = render($surname);
   }
+  if (isset($vars['question_page'])) {
+    $vars['lesson_link'] = l(t('Return to class'), $book_link['href'], array('attributes' => array('class' => 'node-question-return-link')));
+  }
+  
 }
 
 /**

@@ -36,6 +36,20 @@ function open_question_views_default_views() {
   $handler->display->display_options['relationships']['uid']['id'] = 'uid';
   $handler->display->display_options['relationships']['uid']['table'] = 'node';
   $handler->display->display_options['relationships']['uid']['field'] = 'uid';
+  /* Relationship: Flags: oqaf_inappropriate */
+  $handler->display->display_options['relationships']['flag_content_rel']['id'] = 'flag_content_rel';
+  $handler->display->display_options['relationships']['flag_content_rel']['table'] = 'node';
+  $handler->display->display_options['relationships']['flag_content_rel']['field'] = 'flag_content_rel';
+  $handler->display->display_options['relationships']['flag_content_rel']['required'] = 0;
+  $handler->display->display_options['relationships']['flag_content_rel']['flag'] = 'oqaf_inappropriate';
+  $handler->display->display_options['relationships']['flag_content_rel']['user_scope'] = 'any';
+  /* Field: Content: Rating Widget */
+  $handler->display->display_options['fields']['field_rating_widget']['id'] = 'field_rating_widget';
+  $handler->display->display_options['fields']['field_rating_widget']['table'] = 'field_data_field_rating_widget';
+  $handler->display->display_options['fields']['field_rating_widget']['field'] = 'field_rating_widget';
+  $handler->display->display_options['fields']['field_rating_widget']['label'] = '';
+  $handler->display->display_options['fields']['field_rating_widget']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_rating_widget']['click_sort_column'] = 'vud_widget';
   /* Field: User: Picture */
   $handler->display->display_options['fields']['picture']['id'] = 'picture';
   $handler->display->display_options['fields']['picture']['table'] = 'users';
@@ -68,6 +82,14 @@ function open_question_views_default_views() {
   $handler->display->display_options['fields']['comment_count']['field'] = 'comment_count';
   $handler->display->display_options['fields']['comment_count']['label'] = '';
   $handler->display->display_options['fields']['comment_count']['element_label_colon'] = FALSE;
+  /* Field: Flags: Flag link */
+  $handler->display->display_options['fields']['ops']['id'] = 'ops';
+  $handler->display->display_options['fields']['ops']['table'] = 'flag_content';
+  $handler->display->display_options['fields']['ops']['field'] = 'ops';
+  $handler->display->display_options['fields']['ops']['relationship'] = 'flag_content_rel';
+  $handler->display->display_options['fields']['ops']['label'] = '';
+  $handler->display->display_options['fields']['ops']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['ops']['link_type'] = 'toggle';
   /* Contextual filter: Content: Open Question Answer (field_open_question_answer) */
   $handler->display->display_options['arguments']['field_open_question_answer_target_id']['id'] = 'field_open_question_answer_target_id';
   $handler->display->display_options['arguments']['field_open_question_answer_target_id']['table'] = 'field_data_field_open_question_answer';

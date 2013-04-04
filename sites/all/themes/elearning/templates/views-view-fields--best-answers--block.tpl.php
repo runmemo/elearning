@@ -1,8 +1,7 @@
 <?php
-
 /**
  * @file
- * Custom template for 'oqa_feedbacks' view.
+ * Custom template for 'best_answers' view in order to compose elements.
  *
  * - $view: The view in use.
  * - $fields: an array of $field objects. Each one contains:
@@ -25,12 +24,21 @@
  */
 ?>
 <?php foreach ($fields as $id => $field): ?>
-  <?php if (!empty($field->separator)): ?>
-    <?php print $field->separator; ?>
-  <?php endif; ?>
+  <?php if ($id == 'body') : ?>
+    <div class="views-answer-body">
+    <?php elseif ($id == 'created') : ?>
+      <div class="node-supplementary-wrapper">
+      <?php endif; ?>
+      <?php if (!empty($field->separator)): ?>
+        <?php print $field->separator; ?>
+      <?php endif; ?>
 
-  <?php print $field->wrapper_prefix; ?>
-    <?php print $field->label_html; ?>
-    <?php print $field->content; ?>
-  <?php print $field->wrapper_suffix; ?>
+      <?php print $field->wrapper_prefix; ?>
+      <?php print $field->label_html; ?>
+      <?php print $field->content; ?>
+      <?php print $field->wrapper_suffix; ?>
+      <?php if ($id == 'comment_count' && isset($fields['body']) && isset($fields['created'])) : ?>
+      </div>
+    </div>
+  <?php endif; ?>
 <?php endforeach; ?>

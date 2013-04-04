@@ -38,6 +38,8 @@ css[global.css.less][description] = LESS CSS stylesheet for eLearning.
 css[global.css.less][options][weight] = 10
 settings[alpha_css][global.css.less] = 'global.css.less'
 
+plugins[vud][widgets] = widgets
+
 settings[toggle_logo] = '1'
 settings[toggle_name] = '0'
 settings[toggle_slogan] = '1'

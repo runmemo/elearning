@@ -70,17 +70,17 @@ function lesson_questions_block_view($delta = '') {
       $block['content'] = $content;
       break;
     case 'lesson_question_answers':
+      // Embed view 
+      $content['answers_list'] = array(
+        '#type' => 'markup',
+        '#markup' => _get_relevant_answers_list(),
+      );
       // Question form
       $content['answer_form'] = drupal_get_form('quick_answer');
       //Placeholder for message. 
       $content['message_placeholder'] = array(
         '#type' => 'markup',
         '#markup' => '<div id="message-placeholder"></div>',
-      );
-      // Embed view 
-      $content['answers_list'] = array(
-        '#type' => 'markup',
-        '#markup' => _get_relevant_answers_list(),
       );
       // Build the block title and contents
       $block['subject'] = '';

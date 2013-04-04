@@ -319,33 +319,3 @@ function open_question_get_answer_feedbacks($oqa_nid = NULL) {
   }
   return $view;
 }
-
-/**
- * Implements of hook_views_pre_render().
- * Adds rating widget and flag link to the feedback.
- * @param type $view
- */
-function open_question_views_pre_render(&$view) {
-  if ($view->name == 'oqa_feedbacks') {
-    if (!empty($view->result)) {
-      foreach ($view->result as $id => $feedback) {
-        if (is_numeric($feedback->nid)) {
-          // Adding rate widget form to the output
-          $widgets = rate_get_active_widgets('node', $feedback->node_type, 'teaser');
-          foreach ($widgets as $widget_id => $widget) {
-            $widget_name = 'rate_' . $widget->name;
-            _rate_check_widget($widget);
-            $display_mode = $widget->teaser_display_mode;
-            $widget_code = array(
-              '#weight' => $widget->node_display == RATE_DISPLAY_ABOVE_CONTENT ? -50 : 50,
-              '#markup' => rate_generate_widget($widget_id, 'node', $feedback->nid, $display_mode),
-            );
-          }
-          $view->result[$id]->rate_widget = $widget_code['#markup'];
-          // Adding flag to the output
-          $view->result[$id]->flag_link = flag_create_link('oqaf_inappropriate', $feedback->nid);
-        }
-      }
-    }
-  }
-}
