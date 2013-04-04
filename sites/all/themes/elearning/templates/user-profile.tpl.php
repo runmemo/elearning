@@ -34,7 +34,7 @@
  */
 ?>
 <div class="profile omega"<?php print $attributes; ?>>
-  <div class="user-profile-name-caption omega">
+  <div class="user-profile-name-caption alpha omega">
     <div class="user-name grid-7 omega">
       <h2><?php print $user_name; ?></h2>
     </div>
@@ -42,9 +42,9 @@
       <h2><?php print l(t('Edit'), 'user/' . $user_uid . '/edit', array('attributes' => array('class' => 'profile-edit'))); ?></h2>
     </div>
   </div>
-  <div class="user-profile-main-panel omega">
-    <div class="user-profile-basic-info grid-6 omega">
-      <div class="user-profile-picture-points grid-3 omega">
+  <div class="user-profile-main-panel alpha omega">
+    <div class="user-profile-basic-info grid-6 alpha omega">
+      <div class="user-profile-picture-points alpha">
         <div class="user-profile-picture">
           <?php if (isset($user_picture)) print $user_picture; ?>
           <?php print l(t('Choose photo'), 'user/' . $user_uid . '/edit', array('attributes' => array('class' => 'user-picture-edit'))); ?>

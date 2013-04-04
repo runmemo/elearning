@@ -609,6 +609,11 @@ input.form-text {
   }
 }
 
+.ui-tabs .ui-tabs-nav li {
+  background: #f8f8f8;
+  border: 0;
+}
+
 .quicktabs-ui-wrapper.ui-tabs {
   padding: 0;
   border: 0;
@@ -618,6 +623,7 @@ input.form-text {
     background: transparent;
     .border-bottom-dotted;
     li {
+      .quicktabs-border();
       .bold(14px);
       margin-right: 10px;
       .RoundedShape(0px);
@@ -640,6 +646,8 @@ input.form-text {
     }
     li.ui-state-active,
     li.ui-state-hover {
+      background: #ffffff;
+      .quicktabs-border();
       a {
         .text-orange;
       }
@@ -881,7 +889,6 @@ body.page-user {
 body.page-user {
   .user-profile-name-caption {
     .border-bottom-dotted();
-    .margin-left-0();
     .show(inline-block);
     width: 100%;
     .user-name {
@@ -894,19 +901,14 @@ body.page-user {
       .right();
       h2 {
        .right();
+        a.profile-edit {
+          .link-image-left(16px);
+        }
         a.profile-edit:link, a.profile-edit:visited {
-          border: 19px solid transparent;
-          border-image: url(../images/profile-edit-link.png) 0 19 stretch;
-          border-top: 0;
-          border-bottom: 0;
-          border-right: 0;
+          background-image: url(../images/profile-edit-link.png);
         }
         a.profile-edit:hover, a.profile-edit:active {
-          border: 19px solid transparent;
-          border-image: url(../images/profile-edit-hover.png) 0 19 stretch;
-          border-top: 0;
-          border-bottom: 0;
-          border-right: 0;
+          background-image: url(../images/profile-edit-hover.png);
         }
       }
     }
@@ -914,13 +916,19 @@ body.page-user {
 }
 body.page-user {
   .user-profile-main-panel {
-    .margin-left-0();
       margin-top: 26px;
       .user-profile-basic-info {
-        .margin-left-0();
         .user-profile-picture-points {
+          @media @narrow {
+            margin-right: 0px;
+          }
+          @media @normal {
+            margin-right: 20px;
+          }
+          @media @wide {
+            margin-right: 25px;
+          }
           .left();
-          .margin-left-0();
           .user-profile-picture {
             width: 119px;
             height: 119px;
@@ -945,28 +953,29 @@ body.page-user {
               .link();
               color: #333333 !important;
               position: absolute;
-              bottom: 44px;
+              bottom: 109px;
               left: 6px;
               background: rgba(255,255,255,0.66);
               width: 107px;
               text-align: center;
               height: 18px;
-              padding-top: 5px;
+              padding-top: 11px;
             }
           }
       .user-profile-userpoints {
+          height: 23px;
           margin: 23px 0px 0px 40px;
-          border: 26px solid transparent;
-          border-image: url(../images/profile-crown.png) 0 26 stretch;
-          border-top: 0;
-          border-bottom: 0;
-          border-right: 0;
+          padding: 6px 0px 0px 29px;
+          background-image: url(../images/profile-crown.png);
+          background-position: 0px 0px;
+          background-repeat: no-repeat;
         }
       }
     }
     .view-user-courses {
       .right();
       margin-bottom: 50px;
+      background: #fafafa;
       .view-header {
         .view-block-header();
         p {
@@ -987,6 +996,15 @@ body.page-user {
           }
           .views-field-link-continue {
             .right();
+            a.user-course-continue {
+              .link-image-left(20px);
+            }
+            a.user-course-continue:link, a.user-course-continue:visited {
+              background-image: url(../images/continue_link.png);
+            }
+            a.user-course-continue:hover, a.user-course-continue:active {
+              background-image: url(../images/continue_link_hover.png);
+            }
           }
         }
         .view-user-courses-progress-outer {
@@ -997,11 +1015,16 @@ body.page-user {
           width: 100%;
           .view-user-courses-progress-inner {
             height: 28px;
-            .gradient-progressbar();
-            p {
-              color: white;
-              padding: 6px 8px;
+            .striped-progressbar();
+            .view-user-courses-progress-gradient {
+              height: 28px;
+              .gradient-progressbar();
             }
+          }
+          p {
+            .left();
+            color: white;
+            padding: 6px 8px;
           }
         }
       }
@@ -1338,7 +1361,16 @@ body.node-type-question {
   .border-bottom-dotted();
   .node-question-picture-points {
     .left();
-    margin-right: 24px;
+    
+    @media @narrow {
+      margin-right: 15px;
+    }
+    @media @normal {
+      margin-right: 15px;
+    }
+    @media @wide {
+      margin-right: 24px;
+    }
     img {
       .left();
     }
@@ -1363,7 +1395,15 @@ body.node-type-question {
   margin-top: 24px;
   .border-bottom-dotted();
   .vud-widget-elearning_widget {
-    margin: 0px 39px 0px 10px;
+    @media @narrow {
+      margin: 0px 15px 0px 10px;
+    }
+    @media @normal {
+      margin: 0px 29px 0px 10px;
+    }
+    @media @wide {
+      margin: 0px 39px 0px 10px;
+    }
   }
   .field-name-body {
     line-height: 17px;
@@ -1418,10 +1458,10 @@ body.node-type-question {
       .bold(14px);
       .text-dark-grey();
       @media @narrow {
-        margin: 0px 33px 0px 10px;
+        margin: 0px 15px 0px 10px;
       }
       @media @normal {
-        margin: 0px 38px 0px 10px;
+        margin: 0px 29px 0px 10px;
       }
       @media @wide {
         margin: 0px 38px 0px 10px;

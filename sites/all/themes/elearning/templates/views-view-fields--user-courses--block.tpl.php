@@ -31,7 +31,8 @@
   </div>
 </div>
 <div class="view-user-courses-progress-outer">
+  <p<?php if (isset($style)) print $style; ?>><?php print $row->course_progress . '%' ?></p>
   <div class="view-user-courses-progress-inner" style="width: <?php print $row->course_progress . '%' ?>">
-    <p<?php if (isset($style)) print $style; ?>><?php print $row->course_progress . '%' ?></p>
+    <div class="view-user-courses-progress-gradient"></div>
   </div>
 </div>
