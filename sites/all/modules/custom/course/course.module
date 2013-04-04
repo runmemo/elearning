@@ -70,7 +70,7 @@ function course_block_info() {
   );
   // Block for displaying book header
   $blocks['book_header'] = array(
-    'info' => t('Book Header'), 
+    'info' => t('Course Header'), 
   );
   return $blocks;
 }
@@ -83,7 +83,7 @@ function course_block_view($delta = '') {
   // The $delta parameter tells us which block is being requested.
   switch ($delta) {
     case 'book_header':
-      return book_header_block();
+      return course_header_block();
     case 'registration_form':
       return registration_form_block();
     case 'user_notifications_count':
@@ -179,24 +179,38 @@ function course_node_view($node, $view_mode) {
  * Gets corresponding book for a node.
  * @return array An array, representing "Book Header" block.
  */
-function book_header_block() {
+function course_header_block() {
   $block = array(); 
   $node = menu_get_object('node');
+  if (!$node) {
+    watchdog('block header', t('Block with header of the course was shown in the wrong place.'), array(), WATCHDOG_WARNING);
+    return $block;
+  }
+  
   $question_page = FALSE;
-  if (isset($node->field_question_path[$node->language][0]['value']) && !empty($node->field_question_path[$node->language][0]['value'])) {
-    $question_page = TRUE;
-    $lesson_path = explode('/', $node->field_question_path[$node->language][0]['value']);
-    if (isset($lesson_path[1])) {
-      $lesson = node_load($lesson_path[1]);
+  $book = FALSE;
+  
+  if ($node->type === 'question') {
+    $question_paths = field_get_items('node', $node, 'field_question_path');
+    if ($question_paths) {
+      $item_nid = str_ireplace('node/', '', $question_paths[0]['value']);
+      $item = node_load($item_nid);
+      if ($item) {
+        $book = isset($item->book) ? $item->book : FALSE;
+        $question_page = TRUE;
+      }
+      else { // node notfound
+        return $block;
+      }
     }
+    else { // question is not related to any page
+      return $block;
+    }
+  } 
+  else { // other content types
+    $book = isset($node->book) ? $node->book : FALSE;  
   }
-  if (isset($node->book)) {
-    $book = $node->book;
-  } elseif (isset($lesson->book)) {
-    $book = $lesson->book;
-  } else {
-    $book = FALSE;
-  }
+
   // Build the block title and contents
   if ($book) {
     $block['subject'] = '';
@@ -276,7 +290,7 @@ function course_views_pre_render(&$view) {
 /**
  * Get course progress
  */
-function course_get_progress($course_nid = 0, $account = NULL) { 
+function course_get_progress($course_nid = FALSE, $account = FALSE) { 
   if(!$course_nid) {
     return; //Course needs to be passed.
   }
@@ -289,25 +303,22 @@ function course_get_progress($course_nid = 0, $account = NULL) {
   $tree_key = key($tree);
   if(isset($tree[$tree_key]['below'])){
     $tree = $tree[$tree_key]['below'];
-    $lesson_items = 0;
-    $lesson_items_completed = 0;
-
-    foreach ($tree as &$unit) { 
+    $counter = new multi_counter();
+    $flag = flag_get_flag('course_item_complete');
+    foreach ($tree as $unit) { 
       if(!isset($unit['below'])) { 
         continue;
       }
-      foreach ($unit['below'] as &$lesson) { 
-        $lesson_items++; 
-        // @todo: check for performance issues
-        $node = menu_get_object('node', 1, $lesson['link']['link_path']); //@todo : Pass nid instead of Node.
-        $flag = flag_get_flag('course_item_complete');
-        if($flag->is_flagged($node->nid, $account->uid)) {
-          $lesson_items_completed++;
+      foreach ($unit['below'] as $item) { 
+        $counter->increment('items'); 
+        $nid = str_ireplace('node/', '', $item['link']['link_path']);
+        if($flag->is_flagged($nid, $account->uid)) {
+          $counter->increment('completed');
         }
       }
     }  
-    if($lesson_items_completed > 0 && $lesson_items > 0) {
-      return round(($lesson_items_completed/$lesson_items) * 100) ;
+    if($counter->current('items') != 0) {
+      return round(($counter->current('completed')/$counter->current('items')) * 100) ;
     }
   }
   return 0;

@@ -101,17 +101,16 @@ function course_outline_preprocess_tree(&$tree) {
       // change theme for unit level links
       $unit['#theme'] = 'menu_link__course_outline_unit';
       // for each lesson we add html to the title
-      foreach ($unit['#below'] as &$lesson) {
-        if(!isset($lesson['#below'])) { 
+      foreach ($unit['#below'] as &$item) {
+        if(!isset($item['#below'])) {
           continue;
         }
-        // @todo: check for performance issues
-        $node = menu_get_object('node', 1, $lesson['#original_link']['link_path']);
+        $node = menu_get_object('node', 1, $item['#original_link']['link_path']);
         $node->order = $counter->increment($node->type);
      
-        $lesson['#title'] = course_outline_item_title($node);
-        $lesson['#localized_options']['html'] = TRUE;
-        $lesson['#attributes']['class'][] = $node->type;
+        $item['#title'] = course_outline_item_title($node);
+        $item['#localized_options']['html'] = TRUE;
+        $item['#attributes']['class'][] = $node->type;
       }
     }  
   }  
