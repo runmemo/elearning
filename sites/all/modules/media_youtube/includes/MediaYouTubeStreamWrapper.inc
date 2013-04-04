@@ -43,13 +43,13 @@ class MediaYouTubeStreamWrapper extends MediaReadOnlyStreamWrapper {
 
   function getLocalThumbnailPath() {
     $parts = $this->get_parameters();
-    $local_path = 'public://media-youtube/' . check_plain($parts['v']) . '.jpg';
+    $local_path = file_default_scheme() . '://media-youtube/' . check_plain($parts['v']) . '.jpg';
     if (!file_exists($local_path)) {
       $dirname = drupal_dirname($local_path);
       file_prepare_directory($dirname, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
       $response = drupal_http_request($this->getOriginalThumbnailPath());
       if (!isset($response->error)) {
-        file_save_data($response->data, $local_path, TRUE);
+        file_unmanaged_save_data($response->data, $local_path, TRUE);
       }
       else {
         @copy($this->getOriginalThumbnailPath(), $local_path);
