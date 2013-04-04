@@ -115,7 +115,7 @@ function course_views_default_views() {
   $handler->display->display_options['fields']['picture']['relationship'] = 'uid';
   $handler->display->display_options['fields']['picture']['label'] = '';
   $handler->display->display_options['fields']['picture']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['picture']['empty'] = '<div class="view-course-students-empty-field"></div>';
+  $handler->display->display_options['fields']['picture']['empty'] = '<div class="default-avatar"></div>';
   $handler->display->display_options['fields']['picture']['image_style'] = 'course_students';
   /* Contextual filter: Content: Nid */
   $handler->display->display_options['arguments']['nid']['id'] = 'nid';
