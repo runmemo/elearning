@@ -182,7 +182,9 @@ function course_node_view($node, $view_mode) {
 function book_header_block() {
   $block = array(); 
   $node = menu_get_object('node');
+  $question_page = FALSE;
   if (isset($node->field_question_path[$node->language][0]['value']) && !empty($node->field_question_path[$node->language][0]['value'])) {
+    $question_page = TRUE;
     $lesson_path = explode('/', $node->field_question_path[$node->language][0]['value']);
     if (isset($lesson_path[1])) {
       $lesson = node_load($lesson_path[1]);
@@ -198,7 +200,7 @@ function book_header_block() {
   // Build the block title and contents
   if ($book) {
     $block['subject'] = '';
-    $block['content'] = theme('book_header', array('book_link' => $book, 'question_page' => TRUE));
+    $block['content'] = theme('book_header', array('book_link' => $book, 'question_page' => $question_page));
   }
   return $block;
 }
@@ -236,7 +238,7 @@ function template_preprocess_book_header(&$vars) {
     $vars['teacher_name'] = render($name);
     $vars['teacher_surname'] = render($surname);
   }
-  if (isset($vars['question_page'])) {
+  if ($vars['question_page'] == TRUE) {
     $vars['lesson_link'] = l(t('Return to class'), $book_link['href'], array('attributes' => array('class' => array('node-question-return-link'))));
   }
   

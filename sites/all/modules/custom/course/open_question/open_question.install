@@ -9,8 +9,8 @@ function open_question_install() {
 }
 
 /**
- * Adds fields to provider content type and entity reference
- * from course to provider
+ * Adds rating widget field to question, answer and
+ * question feedback content types
  */
 function open_question_update_7001() {
   $fields = open_question_field_default_fields();

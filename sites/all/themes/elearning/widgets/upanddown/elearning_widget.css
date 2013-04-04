@@ -68,13 +68,6 @@
   background-position: -20px -66px;
 }
 
-.vud-widget-elearning_widget a.ctools-ajaxing,
-.vud-widget-elearning_widget a.ctools-ajaxing:hover {
-  padding-right: 0 !important;
-  background-image: url(../../images/status-active.gif);
-  background-position: center;
-}
-
 /**
  * Hide elements visually, but keep them available for screen-readers.
  *

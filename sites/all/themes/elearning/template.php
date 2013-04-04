@@ -87,10 +87,12 @@ function elearning_preprocess_node_question(&$vars, $hook) {
   if (is_numeric($author->picture)) {
     $author->picture = file_load($author->picture);
   }
-  if (!empty($author->picture->uri)) {
+  if (isset($author->picture->uri) && !empty($author->picture->uri)) {
     $filepath = $author->picture->uri;
+    $vars['user_picture'] = theme('image_style', array('style_name' => 'question_author', 'path' => $filepath));
+  } else {
+    $vars['user_picture'] = '<div class="node-question-default-picture"></div>';
   }
-  $vars['user_picture'] = theme('image_style', array('style_name' => 'question_author', 'path' => $filepath));
   $vars['created_formatted'] = t('%time ago', array('%time' => format_interval(REQUEST_TIME - $vars['created'], 1)));
 }
 
