@@ -30,6 +30,9 @@ function lesson_node_info() {
  */
 function lesson_ctools_plugin_api() {
   list($module, $api) = func_get_args();
+  if ($module == "context" && $api == "context") {
+    return array("version" => "3");
+  }
   if ($module == "quicktabs" && $api == "quicktabs") {
     return array("version" => "1");
   }

@@ -424,3 +424,55 @@ function lesson_complete($action, $type) {
   }
   exit; 
 }
+
+/**
+ * Implements hook_node_access()
+ */
+/*function lesson_node_access($node, $op, $account) {
+  $type = is_string($node) ? $node : $node->type;
+  // @todo : add logic to make open question nodes
+  // visible only to users who registered to the course.
+  if ($op == 'view' && $type == 'lesson') {
+    if (course_user_access($node, $account)) {
+      return NODE_ACCESS_ALLOW;
+    }
+    else {
+      return NODE_ACCESS_DENY;
+    }
+  }
+  return NODE_ACCESS_IGNORE;
+}*/
+
+
+//@Override NODE CONTENT if user hasn't enrolled for course
+function lesson_preprocess_node(&$vars, $hook) {
+  if($vars['type'] === 'lesson') {
+    if(!context_isset('course_item_access', $vars['nid'])) {
+      $vars['content'] = drupal_get_form('course_registration_form');
+    }
+  }
+}
+
+//@Override CONTEXT if user hasn't enrolled for course
+function lesson_context_load_alter(&$context) {
+  if($context->name === 'lesson') {
+    if(arg(0) == 'node') {
+      $nid = arg(1);
+      if(!context_isset('course_item_access', $nid)) {
+        unset($context->reactions['block']['blocks']['quicktabs-lesson_interaction']);
+      }
+    }
+  }
+}
+
+//Set access item context
+function lesson_node_load($nodes, $types) {
+  if (in_array("lesson", $types)) {
+    foreach($nodes as $nid => $node) {
+      global $user;
+      if (course_user_access($node, $user)) {
+        context_set('course_item_access', $nid, $nid); // If user have course access set context // Use
+      }
+    }
+  }
+}

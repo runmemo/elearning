@@ -97,10 +97,7 @@ function course_user_access($node, $account) {
     }
     $book = $node->book;
     if ($book) { // node is part of a book
-       $unit = book_link_load($book['plid']); // going one level up to units
-       $course = book_link_load($unit['plid']); // going second level up to course
-       $course_nid = $course['nid'];
-    
+       $course_nid = $book['bid'];
        if(course_registration_id($account->uid, $course_nid, TRUE)){
            return TRUE;
        }
