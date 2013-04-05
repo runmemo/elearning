@@ -92,9 +92,10 @@ function course_outline_block_view($delta = '') {
 function course_outline_preprocess_tree(&$tree) {
   global $user;
   $counter = new multi_counter;
-  $tree_key = key($tree);
+  $tree_key = key($tree);    
   if(isset($tree[$tree_key]['#below'])){
     $tree = $tree[$tree_key]['#below']; // remove the top level
+    $flag = flag_get_flag('course_item_complete');
     foreach ($tree as &$unit) {
       if(!isset($unit['#below'])) { 
         continue;
@@ -107,10 +108,9 @@ function course_outline_preprocess_tree(&$tree) {
           continue;
         }
         $node = menu_get_object('node', 1, $item['#original_link']['link_path']);
-        $flag = flag_get_flag('course_item_complete');
-        if (!empty($flag) && $node->type == 'lesson') {
-          $item['#attributes']['class'][] = $flag->is_flagged($node->nid, $user->uid) ? 'completed' : 'incompleted';
-        }
+     
+        $completed = $flag->is_flagged($node->nid, $user->uid);
+        $item['#attributes']['class'][] = $completed ? 'completed' : 'incompleted';
         if ($node->nid == arg(1)) {
           $item['#attributes']['class'][] = 'current';
         }
