@@ -34,7 +34,7 @@ function opent_question_permission() {
 /**
  * Implements hook_node_access()
  */
-function open_question_node_access($node, $op, $account) {
+/*function open_question_node_access($node, $op, $account) {
   $type = is_string($node) ? $node : $node->type;
   // @todo : add logic to make open question nodes
   // visible only to users who registered to the course.
@@ -47,7 +47,7 @@ function open_question_node_access($node, $op, $account) {
     }
   }
   return NODE_ACCESS_IGNORE;
-}
+}*/
 
 /**
  * Implements hook_block_view

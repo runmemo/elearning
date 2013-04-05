@@ -323,3 +323,57 @@ function course_get_progress($course_nid = FALSE, $account = FALSE) {
   }
   return 0;
 }
+
+//Set Course item access context -- Global function for all course items //lesson, open_questions, quiz
+function lesson_node_load($nodes, $types) {
+  $course_item_types = array('lesson', 'quiz', 'open_question');
+  if (count(array_intersect($course_item_types, $types)) > 0) {
+    global $user;
+    foreach($nodes as $nid => $node) {
+      if (course_user_access($node, $user)) { 
+        context_set('course_item_access', $nid, $nid); // If user have course access set context // Use
+      }
+    }
+  }
+}
+
+//@Override NODE CONTENT if user hasn't enrolled for course
+function lesson_preprocess_node(&$vars, $hook) {
+  $course_item_types = array('lesson', 'quiz', 'open_question');
+  if(in_array($vars['type'], $course_item_types)) {
+    if(!context_isset('course_item_access', $vars['nid'])) {
+      $vars['content'] = drupal_get_form('course_registration_form');
+    }
+  }
+}
+
+//@Override CONTEXT if user hasn't enrolled for course
+function lesson_context_load_alter(&$context) {
+  //Remove course outline for all course items
+  if($context->name === 'class') { 
+    if(arg(0) == 'node') { 
+      $nid = arg(1);
+      if(!context_isset('course_item_access', $nid)) { 
+        unset($context->reactions['block']['blocks']['course_outline-book_outline']); 
+      }
+    }
+  }
+  // From Lessons remove lesson_interaction blocks
+  if($context->name === 'lesson') { 
+    if(arg(0) == 'node') {
+      $nid = arg(1);
+      if(!context_isset('course_item_access', $nid)) {
+        unset($context->reactions['block']['blocks']['quicktabs-lesson_interaction']);
+      }
+    }
+  }
+  // From OpenQuestions remove open_question_tabs
+  if($context->name === 'open_question') { 
+    if(arg(0) == 'node') {
+      $nid = arg(1);
+      if(!context_isset('course_item_access', $nid)) {
+        unset($context->reactions['block']['blocks']['quicktabs-open_question_tabs']);
+      }
+    }
+  }
+}
