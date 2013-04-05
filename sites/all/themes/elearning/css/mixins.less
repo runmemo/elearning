@@ -194,3 +194,29 @@
   background-position:0 0, 100% 0;
   background-repeat: no-repeat;
 }
+.class-progress-parameters(@size-x: 1px, @size-y: 100%, @position-x-1: 97%, @position-y-1: 0%, @position-x-2: 100%, @position-y-2: 0%, @repeat: no-repeat) {
+  background-size: @size-x @size-y;
+  background-position: @position-x-1 @position-y-1, @position-x-2 @position-y-2;
+  background-repeat: @repeat;
+}
+
+.class-progress-image() {
+  background-image: linear-gradient(#b0c39c, #b0c39c), linear-gradient(#b0c39c, #b0c39c);
+  background-image: -webkit-linear-gradient(#b0c39c, #b0c39c), -webkit-linear-gradient(#b0c39c, #b0c39c);
+  background-image: -moz-linear-gradient(#b0c39c, #b0c39c), -moz-linear-gradient(#b0c39c, #b0c39c);
+  background-image: -o-linear-gradient(#b0c39c, #b0c39c), -o-linear-gradient(#b0c39c, #b0c39c);
+}
+
+.class-progress-comleted() {
+  background-image: linear-gradient(to right, #b0c39c, #b9d69d);
+  background-image: -webkit-linear-gradient(to right, #b0c39c, #b9d69d), -webkit-linear-gradient(to right, #b0c39c, #b9d69d);
+  background-image: -moz-linear-gradient(to right, #b0c39c, #b9d69d), -moz-linear-gradient(to right, #b0c39c, #b9d69d);
+  background-image: -o-linear-gradient(to right, #b0c39c, #b9d69d), -o-linear-gradient(to right, #b0c39c, #b9d69d);
+}
+
+.class-progress-current() {
+  background-image: -webkit-linear-gradient(-45deg, rgba(162, 192, 129, 0.8) 18%, transparent 18%, transparent 50%, rgba(162, 192, 129, 0.8) 50%, rgba(162, 192, 129, 0.8) 75%, transparent 75%, transparent);
+  background-image: -moz-linear-gradient(-45deg, rgba(162, 192, 129, 0.8) 23%, transparent 25%, transparent 50%, rgba(162, 192, 129, 0.8) 50%, rgba(162, 192, 129, 0.8) 75%, transparent 75%, transparent);
+  background-image: -ms-linear-gradient(-45deg, rgba(162, 192, 129, 0.8) 18%, transparent 18%, transparent 50%, rgba(162, 192, 129, 0.8) 50%, rgba(162, 192, 129, 0.8) 75%, transparent 75%, transparent);
+  background-image: -o-linear-gradient(-45deg, rgba(162, 192, 129, 0.8) 18%, transparent 18%, transparent 50%, rgba(162, 192, 129, 0.8) 50%, rgba(162, 192, 129, 0.8) 75%, transparent 75%, transparent);
+}

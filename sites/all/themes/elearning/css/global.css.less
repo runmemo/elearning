@@ -541,9 +541,10 @@ input.form-text {
 
 .block-course-outline {
    ul.menu {
+     width: 100%;
      h3 {
        .bold(16px);
-       margin-bottom: 0;
+       margin-bottom: 5px;
        background: #f0f0f0;
        border-color: #e5e1e2;
        border-width: 1px 1px 0px;
@@ -582,28 +583,45 @@ input.form-text {
      ul {
        padding: 0;
        border-radius: 0;
+       .class-progress-image();
+       .class-progress-parameters(1px, 100%, 97%, 0%, 100%, 0%, no-repeat);
        li {
-         .border-bottom-dotted;
          padding: 0;
          margin: 0;
-         list-style-type:none;
+         list-style-type: none;
          list-style-image: none;
          float: left;
          width: 100%;
        }
-       li.last {
-         border: medium none;
+       li.current {
+         .class-progress-current() !important;
+         .class-progress-parameters(9px, 9px, 100%, 65%, 100%, 0%, repeat-y) !important;
        }
-       li:hover,
+       li.completed {
+         .class-progress-comleted() !important;
+         .class-progress-parameters(9px, 100%, 100%, 0%, 100%, 0%, no-repeat) !important;
+       }
+       li.first {
+         .class-progress-image();
+         .class-progress-parameters(9px, 3%, 100%, 0%, 100%, 0%, no-repeat);
+       }
+       li.last {
+         .class-progress-image();
+         .class-progress-parameters(9px, 3%, 100%, 100%, 100%, 100%, no-repeat);
+         a {
+          border: medium none;
+         }
+       }
        a.active {
-         background: #fff0d9;
+         background: #fff0d9 !important;
        }
        a {
+         .border-bottom-dotted();
          text-decoration: none;
          float: left;
          clear: both;
          .font-bold;
-         width: 100%;
+         width: 95%;
          color:#000000;
          .title-wrapper {
            padding: 10px;
@@ -924,119 +942,119 @@ body.page-user {
     }
   }
 }
-body.page-user {
-  .user-profile-main-panel {
-      margin-top: 26px;
-      .user-profile-basic-info {
-        .user-profile-picture-points {
-          @media @narrow {
-            margin-right: 0px;
-          }
-          @media @normal {
-            margin-right: 20px;
-          }
-          @media @wide {
-            margin-right: 25px;
-          }
-          .left();
-          .user-profile-picture {
-            width: 119px;
-            height: 119px;
-            padding-top: 4px;
-            .box-shadow();
-            .user-profile-default-picture {
-              margin-left: 6px;
-              background-image: url(../images/user-profile-default.png);
-              width: 107px;
-              height: 107px;
-              background-repeat: no-repeat;
-            }
-            .user-picture {
-              float: none;
-              margin: 0;
-              img {
-                padding: 4px 6px;
-              }
-            }
-            .user-picture-edit {
-              .bold(11px);
-              .link();
-              color: #333333 !important;
-              position: absolute;
-              top: 82px;
-              left: 7px;
-              background: rgba(255,255,255,0.66);
-              width: 107px;
-              text-align: center;
-              height: 18px;
-              padding-top: 11px;
-            }
-          }
-      .user-profile-userpoints {
-          height: 23px;
-          margin: 23px 0px 0px 40px;
-          padding: 6px 0px 0px 29px;
-          background-image: url(../images/profile-crown.png);
-          background-position: 0px 0px;
-          background-repeat: no-repeat;
+
+.user-profile-main-panel {
+  margin-top: 26px;
+}
+
+.user-profile-basic-info {
+  .user-profile-picture-points {
+    @media @narrow {
+      margin-right: 0px;
+    }
+    @media @normal {
+      margin-right: 20px;
+    }
+    @media @wide {
+      margin-right: 25px;
+    }
+    .left();
+    .user-profile-picture {
+      width: 119px;
+      height: 119px;
+      padding-top: 4px;
+      .box-shadow();
+      .user-profile-default-picture {
+        margin-left: 6px;
+        background-image: url(../images/user-profile-default.png);
+        width: 107px;
+        height: 107px;
+        background-repeat: no-repeat;
+      }
+      .user-picture {
+        float: none;
+        margin: 0;
+        img {
+          padding: 4px 6px;
+        }
+      }
+      .user-picture-edit {
+        .bold(11px);
+        .link();
+        color: #333333 !important;
+        position: absolute;
+        top: 82px;
+        left: 7px;
+        background: rgba(255,255,255,0.66);
+        width: 107px;
+        text-align: center;
+        height: 18px;
+        padding-top: 11px;
+      }
+    }
+    .user-profile-userpoints {
+      height: 23px;
+      margin: 23px 0px 0px 40px;
+      padding: 6px 0px 0px 29px;
+      background-image: url(../images/profile-crown.png);
+      background-position: 0px 0px;
+      background-repeat: no-repeat;
+    }
+  }
+}
+.view-user-courses {
+  .right();
+  margin-bottom: 50px;
+  background: #fafafa;
+  .view-header {
+    .view-block-header();
+    p {
+      padding: 10px 0px 0px 11px;
+      font-size: 18px;
+    }
+  }
+  .view-content {
+    margin: 22px 24px;
+    .views-user-courses-links {
+      .show(table);
+      width: 100%;
+      .views-field-title {
+        .left();
+        a:hover {
+          color: #333333 !important;
+        }
+      }
+      .views-field-link-continue {
+        .right();
+        a.user-course-continue {
+          .link-image-left(20px);
+        }
+        a.user-course-continue:link, a.user-course-continue:visited {
+          background-image: url(../images/continue_link.png);
+        }
+        a.user-course-continue:hover, a.user-course-continue:active {
+          background-image: url(../images/continue_link_hover.png);
         }
       }
     }
-    .view-user-courses {
-      .right();
-      margin-bottom: 50px;
-      background: #fafafa;
-      .view-header {
-        .view-block-header();
-        p {
-          padding: 10px 0px 0px 11px;
-          font-size: 18px;
+    .view-user-courses-progress-outer {
+      height: 28px;
+      margin: 11px 0px 34px 0px;
+      .RoundedShape(3px);
+      border: #859aa1 @border-1;
+      width: 100%;
+      .view-user-courses-progress-inner {
+        height: 28px;
+        .striped-progressbar();
+        .view-user-courses-progress-gradient {
+          height: 28px;
+          .gradient-progressbar();
         }
       }
-      .view-content {
-        margin: 22px 24px;
-        .views-user-courses-links {
-          .show(table);
-          width: 100%;
-          .views-field-title {
-            .left();
-              a:hover {
-                color: #333333 !important;
-              }
-          }
-          .views-field-link-continue {
-            .right();
-            a.user-course-continue {
-              .link-image-left(20px);
-            }
-            a.user-course-continue:link, a.user-course-continue:visited {
-              background-image: url(../images/continue_link.png);
-            }
-            a.user-course-continue:hover, a.user-course-continue:active {
-              background-image: url(../images/continue_link_hover.png);
-            }
-          }
-        }
-        .view-user-courses-progress-outer {
-          height: 28px;
-          margin: 11px 0px 34px 0px;
-          .RoundedShape(3px);
-          border: #859aa1 @border-1;
-          width: 100%;
-          .view-user-courses-progress-inner {
-            height: 28px;
-            .striped-progressbar();
-            .view-user-courses-progress-gradient {
-              height: 28px;
-              .gradient-progressbar();
-            }
-          }
-          p {
-            .left();
-            color: white;
-            padding: 6px 8px;
-          }
-        }
+      p {
+        .left();
+        color: white;
+        padding: 6px 8px;
       }
     }
   }
@@ -1296,7 +1314,7 @@ body.page-home {
 
 
 /****** Node type "Question" Start ******/
-body.node-type-question {
+.node-type-question {
   #block-course-book-header {
     .book-header {
       margin-bottom: 5px;
