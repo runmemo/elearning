@@ -32,24 +32,6 @@ function opent_question_permission() {
 }
 
 /**
- * Implements hook_node_access()
- */
-/*function open_question_node_access($node, $op, $account) {
-  $type = is_string($node) ? $node : $node->type;
-  // @todo : add logic to make open question nodes
-  // visible only to users who registered to the course.
-  if ($op == 'view' && $type == 'open_question') {
-    if (course_user_access($node, $account)) {
-      return NODE_ACCESS_ALLOW;
-    }
-    else {
-      return NODE_ACCESS_DENY;
-    }
-  }
-  return NODE_ACCESS_IGNORE;
-}*/
-
-/**
  * Implements hook_block_view
  */
 function open_question_block_view($delta = '') {
@@ -57,6 +39,7 @@ function open_question_block_view($delta = '') {
   $question = menu_get_object('node');
   
   $answered = open_question_is_answered($question->nid);
+
   switch ($delta) {
     case 'oq_answer_form_block':
       $block['subject'] = '';
@@ -82,17 +65,7 @@ function open_question_block_view($delta = '') {
       $block['subject'] = '';
      
       if ($answered) {
-         $block['content']['message'] = array(
-         '#type' => 'markup',
-         '#markup' => t('Please review and mark answers of other students.'),
-        );
-        // show answers of other students for review
-         $review_list_view = views_get_view('open_questions_review_list');
-         $block['content']['review_list'] = array(
-           '#type' => 'markup',
-           '#markup' => $review_list_view->preview(),
-         );
-        
+        $block['content'] = open_question_answered_content();
       } 
       else {
         $block['content']['message'] = array(
@@ -103,6 +76,25 @@ function open_question_block_view($delta = '') {
     break;
   }
   return $block;
+}
+
+/*
+ * Get content for answered open question.
+ */
+
+function open_question_answered_content() {
+  $block_content = array();
+  $block_content['message'] = array(
+    '#type' => 'markup',
+    '#markup' => t('Please review and mark answers of other students.'),
+  );
+  // show answers of other students for review
+  $review_list_view = views_get_view('open_questions_review_list');
+  $block_content['review_list'] = array(
+    '#type' => 'markup',
+    '#markup' => $review_list_view->preview(),
+  );
+  return $block_content;
 }
 
 /**
@@ -300,7 +292,12 @@ function open_question_answer_submit($form, &$form_state) {
  * Callback for open question answer submit
  */
 function open_question_answer_submit_js($form, $form_state) {
-  return $form;
+  $commands[] = ajax_command_replace('#block-open-question-oq-other-answers-block', render(open_question_answered_content()));
+
+  $form_rebuilt = drupal_rebuild_form('open_question_answer_form', $form_state, array());
+
+  $commands[] = ajax_command_replace('#oq-answer-form-wrapper',  render($form_rebuilt));
+  return array('#type' => 'ajax', '#commands' => $commands);
 }
 
 /**
