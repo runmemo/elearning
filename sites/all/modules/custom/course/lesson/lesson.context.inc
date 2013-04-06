@@ -35,6 +35,12 @@ function lesson_context_default_contexts() {
           'region' => 'content',
           'weight' => '-10',
         ),
+        'course_outline-book_outline' => array(
+          'module' => 'course_outline',
+          'delta' => 'book_outline',
+          'region' => 'sidebar_first',
+          'weight' => '-10',
+        ),
       ),
     ),
   );
