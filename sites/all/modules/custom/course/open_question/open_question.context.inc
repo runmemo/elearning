@@ -17,6 +17,11 @@ function open_question_context_default_contexts() {
   $context->description = 'Open Question';
   $context->tag = 'Node';
   $context->conditions = array(
+    'course_access' => array(
+      'values' => array(
+        'registered' => 'registered',
+      ),
+    ),
     'node' => array(
       'values' => array(
         'open_question' => 'open_question',
@@ -44,7 +49,7 @@ function open_question_context_default_contexts() {
       ),
     ),
   );
-  $context->condition_mode = 0;
+  $context->condition_mode = 1;
 
   // Translatables
   // Included for use with string extractors like potx.

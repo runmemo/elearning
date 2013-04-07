@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * lesson.context.inc
@@ -17,6 +18,11 @@ function lesson_context_default_contexts() {
   $context->description = 'Lesson Node';
   $context->tag = 'Node';
   $context->conditions = array(
+    'course_access' => array(
+      'values' => array(
+        'registered' => 'registered',
+      ),
+    ),
     'node' => array(
       'values' => array(
         'lesson' => 'lesson',
@@ -44,10 +50,10 @@ function lesson_context_default_contexts() {
       ),
     ),
   );
-  $context->condition_mode = 0;
+  $context->condition_mode = 1;
 
-  // Translatables
-  // Included for use with string extractors like potx.
+// Translatables
+// Included for use with string extractors like potx.
   t('Lesson Node');
   t('Node');
   $export['lesson'] = $context;

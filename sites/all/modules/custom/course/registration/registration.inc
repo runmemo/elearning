@@ -35,7 +35,9 @@ function course_register($uid, $nid) {
  * @param integer $nid course id
  */
 function course_registration_id($uid, $nid, $active = TRUE) {
-    
+    if (! (bool) $uid) {
+      return FALSE;
+    }
     // get id of top 1 registration
     $query = new EntityFieldQuery();
 
@@ -92,13 +94,22 @@ function registration_cancel($uid, $nid) {
  */
 function course_user_access($node, $account) {
    
-    if (!user_is_logged_in()) {
-        return FALSE;
-    }
-    $book = $node->book;
-    if ($book) { // node is part of a book
+    if (isset($node->book)) { // node is part of a book
+      $book = $node->book;
+      
+      if($book['depth'] != 3) { 
+        // here we just check whether it's course item level
+        return NULL; 
+      }
+      
+      if (!(bool)($account->uid)) {
+        return FALSE; // anonymous account
+      }
+      
        $course_nid = $book['bid'];
-       if(course_registration_id($account->uid, $course_nid, TRUE)){
+       
+       $rid = course_registration_id($account->uid, $course_nid);
+       if ($rid) { // user is registered
            return TRUE;
        }
        else { // user is not registered for a course
@@ -106,6 +117,6 @@ function course_user_access($node, $account) {
        }
     } 
     else { // this node is not part of a book
-        return TRUE;
+        return NULL;
     } 
 }

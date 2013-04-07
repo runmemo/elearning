@@ -1,6 +1,7 @@
 <?php
 
 include_once 'registration.inc';
+include_once 'registration.features.inc';
 
 /**
  * Implement hook_entity_info().
@@ -89,9 +90,6 @@ function registration_access($op, $registration = NULL, $account = NULL) {
   
   return FALSE;
 }
-
-
-
 
 
 /**
@@ -237,6 +235,40 @@ function registration_form_block() {
   return $block;
 
 }
+ 
+/**
+ * Implements hook_context_plugins().
+ *
+ */
+function registration_context_plugins() {
+  $plugins = array();
+  $plugins['context_condition_registration_access'] = array(
+    'handler' => array(
+      'path' => drupal_get_path('module', 'registration') . '/plugins',
+      'file' => 'context_condition_registration_access.inc',
+      'class' => 'context_condition_registration_access',
+      'parent' => 'context_condition',
+    ),
+  );
+  return $plugins;
+}
+
+/**
+ * Implements hook_context_registry().
+ *
+ */
+function registration_context_registry() {
+  return array(
+    'conditions' => array(
+      'course_access' => array(
+        'title' => t('Course Access'),
+        'description' => t('Determins whether user has access to a course item.'),
+        'plugin' => 'context_condition_registration_access',
+      ),
+    ),
+  );
+}
+
 
 function goto_class_form_block() {
   $block = array();
