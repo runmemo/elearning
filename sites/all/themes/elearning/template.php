@@ -82,6 +82,8 @@ function elearning_preprocess_node_course(&$vars, $hook) {
  * @param string $hook
  */
 function elearning_preprocess_node_question(&$vars, $hook) {
+  // add custom js file for unselecting flagged nodes in a view.
+  drupal_add_js(drupal_get_path('module', 'open_question') . '/open_question.js');
   $author = user_load($vars['uid']);
   $vars['userpoints_count'] = userpoints_get_current_points($author->uid);
   if (is_numeric($author->picture)) {
