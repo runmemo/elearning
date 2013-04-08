@@ -139,11 +139,8 @@ function elearning_preprocess_user_profile(&$variables) {
  */
 function elearning_preprocess_book_navigation(&$vars) {
   $node = menu_get_object('node');
-  if ($node->type == 'lesson') {
-    $vars['prev_title'] = t('Prev');
+  if (in_array($node->type, array('lesson', 'open_question'))) {
+    $vars['prev_title'] = t('Previous');
     $vars['next_title'] = t('Next');
-  } else {
-    $vars['prev_title'] = t('‹ ') . $vars['prev_title'];
-    $vars['next_title'] = $vars['next_title'] . t(' ›');
-  }
+  } 
 }
