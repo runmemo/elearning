@@ -242,7 +242,6 @@ function lesson_questions_views_default_views() {
   /* Display: Defaults */
   $handler = $view->new_display('default', 'Defaults', 'default');
   $handler->display->display_options['title'] = 'Answers';
-  $handler->display->display_options['use_ajax'] = TRUE;
   $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['access']['type'] = 'none';
   $handler->display->display_options['cache']['type'] = 'none';
@@ -349,13 +348,6 @@ function lesson_questions_views_default_views() {
 
   /* Display: Block */
   $handler = $view->new_display('block', 'Block', 'block_1');
-  $handler->display->display_options['use_ajax_flags'] = array(
-    'best_answer' => 'best_answer',
-    'course_item_complete' => 0,
-    'oqaf_inappropriate' => 0,
-    'last_viewed' => 0,
-    'bookmarks' => 0,
-  );
   $export['best_answers'] = $view;
 
   return $export;

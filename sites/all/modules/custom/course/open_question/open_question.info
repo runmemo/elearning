@@ -17,7 +17,6 @@ dependencies[] = text
 dependencies[] = views
 dependencies[] = inline_comments
 dependencies[] = vud_field
-dependencies[] = views_flag_refresh
 files[] = open_question.rules.inc
 features[context][] = open_question
 features[ctools][] = context:context:3
