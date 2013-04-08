@@ -20,7 +20,7 @@ function registration_context_default_contexts() {
   $context->conditions = array(
     'course_access' => array(
       'values' => array(
-        'not_registered' => 'not_registered',
+        'false' => 'false',
       ),
     ),
   );

@@ -20,7 +20,7 @@ function lesson_context_default_contexts() {
   $context->conditions = array(
     'course_access' => array(
       'values' => array(
-        'registered' => 'registered',
+        'true' => 'true',
       ),
     ),
     'node' => array(

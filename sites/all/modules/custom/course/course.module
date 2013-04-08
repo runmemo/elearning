@@ -178,13 +178,27 @@ function course_node_view($node, $view_mode) {
     return;
   }
   
-  global $user;
   if ($view_mode == 'full' && node_is_page($node)) {
+    global $user;
+    // find whether user has permission to see this node.
+    $access = course_user_access($node, $user);
+    $context_access = 'none';
+    if (isset($access)) { // content is part of the course
+      if ($access) {
+        $context_access = 'true';
+      } 
+      else { // user does not have access to course item
+        hide($node->content);
+        $context_access = 'false';
+      }
+    } 
+    // set condition for course_access plugin
     if ($plugin = context_get_plugin('condition', 'course_access')) {
-      $plugin->execute($node, $user);    
+      $plugin->execute($context_access);    
     }
+   
   }
- 
+  
 }
 
 /**
