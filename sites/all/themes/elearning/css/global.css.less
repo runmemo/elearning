@@ -1453,17 +1453,38 @@ body.page-home {
     .border-bottom-dotted();
     box-shadow: none;
     border-radius: 0;
-    .vud-widget-elearning_widget {
-      .bold(14px);
-      .text-dark-grey();
-      @media @narrow {
-        margin: 0px 15px 0px 10px;
+    .views-answer-widgets {
+      .left();
+      .views-field-ops {
+        a {
+          .show(block);
+          .left();
+          overflow: hidden;
+          color: transparent;
+          width: 20px;
+          height: 21px;
+          background: url(../images/best_answer_button.png) no-repeat;
+          margin-left: 9px;
+        }
+        a.flag-action {
+          background-position: -20px 0px;
+        }
+        .flag-waiting .flag-throbber {
+          .show(none);
+        }
       }
-      @media @normal {
-        margin: 0px 29px 0px 10px;
-      }
-      @media @wide {
-        margin: 0px 38px 0px 10px;
+      .vud-widget-elearning_widget {
+        .bold(14px);
+        .text-dark-grey();
+        @media @narrow {
+          margin: 0px 15px 0px 10px;
+        }
+        @media @normal {
+          margin: 0px 29px 0px 10px;
+        }
+        @media @wide {
+          margin: 0px 38px 0px 10px;
+        }
       }
     }
     .views-field-body {

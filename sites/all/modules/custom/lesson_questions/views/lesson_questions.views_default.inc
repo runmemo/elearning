@@ -242,6 +242,7 @@ function lesson_questions_views_default_views() {
   /* Display: Defaults */
   $handler = $view->new_display('default', 'Defaults', 'default');
   $handler->display->display_options['title'] = 'Answers';
+  $handler->display->display_options['use_ajax'] = TRUE;
   $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['access']['type'] = 'none';
   $handler->display->display_options['cache']['type'] = 'none';
@@ -261,6 +262,12 @@ function lesson_questions_views_default_views() {
   $handler->display->display_options['relationships']['uid']['id'] = 'uid';
   $handler->display->display_options['relationships']['uid']['table'] = 'node';
   $handler->display->display_options['relationships']['uid']['field'] = 'uid';
+  /* Relationship: Flags: best_answer */
+  $handler->display->display_options['relationships']['flag_content_rel']['id'] = 'flag_content_rel';
+  $handler->display->display_options['relationships']['flag_content_rel']['table'] = 'node';
+  $handler->display->display_options['relationships']['flag_content_rel']['field'] = 'flag_content_rel';
+  $handler->display->display_options['relationships']['flag_content_rel']['required'] = 0;
+  $handler->display->display_options['relationships']['flag_content_rel']['flag'] = 'best_answer';
   /* Field: Content: Rating Widget */
   $handler->display->display_options['fields']['field_rating_widget']['id'] = 'field_rating_widget';
   $handler->display->display_options['fields']['field_rating_widget']['table'] = 'field_data_field_rating_widget';
@@ -268,6 +275,14 @@ function lesson_questions_views_default_views() {
   $handler->display->display_options['fields']['field_rating_widget']['label'] = '';
   $handler->display->display_options['fields']['field_rating_widget']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_rating_widget']['click_sort_column'] = 'vud_widget';
+  /* Field: Flags: Flag link */
+  $handler->display->display_options['fields']['ops']['id'] = 'ops';
+  $handler->display->display_options['fields']['ops']['table'] = 'flag_content';
+  $handler->display->display_options['fields']['ops']['field'] = 'ops';
+  $handler->display->display_options['fields']['ops']['relationship'] = 'flag_content_rel';
+  $handler->display->display_options['fields']['ops']['label'] = '';
+  $handler->display->display_options['fields']['ops']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['ops']['link_type'] = 'toggle';
   /* Field: Content: Body */
   $handler->display->display_options['fields']['body']['id'] = 'body';
   $handler->display->display_options['fields']['body']['table'] = 'field_data_body';
@@ -334,6 +349,13 @@ function lesson_questions_views_default_views() {
 
   /* Display: Block */
   $handler = $view->new_display('block', 'Block', 'block_1');
+  $handler->display->display_options['use_ajax_flags'] = array(
+    'best_answer' => 'best_answer',
+    'course_item_complete' => 0,
+    'oqaf_inappropriate' => 0,
+    'last_viewed' => 0,
+    'bookmarks' => 0,
+  );
   $export['best_answers'] = $view;
 
   return $export;

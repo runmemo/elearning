@@ -24,21 +24,25 @@
  */
 ?>
 <?php foreach ($fields as $id => $field): ?>
-  <?php if ($id == 'body') : ?>
-    <div class="views-answer-body">
-    <?php elseif ($id == 'created') : ?>
-      <div class="node-supplementary-wrapper">
-      <?php endif; ?>
-      <?php if (!empty($field->separator)): ?>
-        <?php print $field->separator; ?>
-      <?php endif; ?>
+  <?php if ($id == 'field_rating_widget') : ?>
+    <div class="views-answer-widgets">
+    <?php elseif ($id == 'body') : ?>
+      <div class="views-answer-body">
+      <?php elseif ($id == 'created') : ?>
+        <div class="node-supplementary-wrapper">
+        <?php endif; ?>
+        <?php if (!empty($field->separator)): ?>
+          <?php print $field->separator; ?>
+        <?php endif; ?>
 
-      <?php print $field->wrapper_prefix; ?>
-      <?php print $field->label_html; ?>
-      <?php print $field->content; ?>
-      <?php print $field->wrapper_suffix; ?>
-      <?php if ($id == 'comment_count' && isset($fields['body']) && isset($fields['created'])) : ?>
+        <?php print $field->wrapper_prefix; ?>
+        <?php print $field->label_html; ?>
+        <?php print $field->content; ?>
+        <?php print $field->wrapper_suffix; ?>
+        <?php if ($id == 'comment_count' && isset($fields['body']) && isset($fields['created'])) : ?>
+        </div>
       </div>
+    <?php elseif ($id == 'ops') : ?>
     </div>
   <?php endif; ?>
 <?php endforeach; ?>

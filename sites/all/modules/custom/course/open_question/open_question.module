@@ -316,3 +316,48 @@ function open_question_get_answer_feedbacks($oqa_nid = NULL) {
   }
   return $view;
 }
+
+
+/**
+ * Implements hook_flag_access_multiple().
+ */
+function open_question_flag_access_multiple($flag, $content_ids, $account) {
+  $access = array();
+  if ($flag->name == 'best_answer') {
+    $node = menu_get_object('node');
+    if ($node && $node->uid != $account->uid) {      
+      foreach ($content_ids as $id => $action) {
+        $access[$id] = FALSE;
+      }
+    }
+  }
+  return $access;
+}
+
+/**
+ * Helper function, that removes old value from the "field_best_answer" field.
+ * @param object $question
+ * @param int $unflagged_answer_nid
+ */
+function open_question_remove_best_answer($question, $unflagged_answer_nid) {
+  $lang = field_language('node', $question, 'field_best_answer');
+  if (isset($question->field_best_answer[$lang])) {
+    $old_answer = answers_field_get_node_reference($question, 'field_best_answer');
+    if ($old_answer) {
+      $lang = field_language('node', $old_answer, 'field_best_answer_p');
+      $old_answer->field_best_answer_p[$lang][0]['value'] = 0;
+      node_save($old_answer);
+      if ($old_answer->nid == $unflagged_answer_nid) {
+        $question->field_best_answer[$lang] = array();
+      }
+    } else {
+      $question->field_best_answer[$lang] = array();
+    }
+    node_save($question);
+    if (module_exists('rules')) {
+      if ($old_answer) {
+        rules_invoke_event('best_answer_unset', $question, $old_answer);
+      }
+    }
+  }
+}
