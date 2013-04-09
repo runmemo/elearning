@@ -293,10 +293,7 @@ function open_question_answer_submit($form, &$form_state) {
  */
 function open_question_answer_submit_js($form, $form_state) {
   $commands[] = ajax_command_replace('#block-open-question-oq-other-answers-block', render(open_question_answered_content()));
-
-  $form_rebuilt = drupal_rebuild_form('open_question_answer_form', $form_state, array());
-
-  $commands[] = ajax_command_replace('#oq-answer-form-wrapper',  render($form_rebuilt));
+  $commands[] = ajax_command_replace('#oq-answer-form-wrapper',  render($form));
   return array('#type' => 'ajax', '#commands' => $commands);
 }
 
@@ -380,49 +377,77 @@ function oq_review_form($form, &$form_state, $args) {
   global $user;
   $form = array();
   $nid = $args[0]; 
-
+  
   $form['#prefix'] = "<div id=oq-review-wrapper-{$nid}>";
   $form['#suffix'] = '</div>';
-
-  $is_reviewed = oqa_is_reviewed($nid, $user->uid);
-  if($is_reviewed) {
-    $review_node = node_load($is_reviewed);
-    $rating = array('rating' => $review_node->field_rating[LANGUAGE_NONE][0]['rating']);
-    drupal_add_css(drupal_get_path('module', 'fivestar') . '/css/fivestar.css');
-    $form['rating'] = array(
-      '#type' => 'item',
-      '#title' => 'Rating',
-      '#markup' => theme('fivestar_static', $rating), // $review_node->body[LANGUAGE_NONE][0]['value'],
-    );
-    $form['review'] = array(
-      '#type' => 'item',
-      '#title' => 'Review',
-      '#markup' => $review_node->body[LANGUAGE_NONE][0]['value'],
-    );
-  }
-  else {
-    $form['rating'] = array(
-      '#type' => 'fivestar',
-      '#title' => 'Rating',
-      '#required' => 'true',
-    );
-    $form['review'] = array(
-      '#type' => 'textarea',
-      '#title' => 'Review',
-      '#required' => 'true'
-    );
+  $form['#attached'] = array(
+        'css' => array(
+          'type' => 'file',
+          'data' => drupal_get_path('module', 'fivestar') . '/css/fivestar.css',),   
+  );
   
-    $form['submit_button'] = array(
-      '#type' => 'submit',
-      '#value' => 'OK',
-      '#ajax' => array(
-        'callback' => 'oq_review_form_submit',
-        'wrapper' => "oq-review-wrapper-{$nid}",
-      ),
-    );
+  if (empty($form_state['step'])) {  // page is loaded
+    $feedback_nid = oqa_is_reviewed($nid, $user->uid);
+    if($feedback_nid) {
+      $form_state['feedback_nid'] = $feedback_nid;
+      $form_state['step'] = 'view';
+    } 
+    else {
+      $form_state['step'] = 'edit';
+    }
+  } 
+  else {
+    $feedback_nid = $form_state['feedback_nid'];
   }
-
-
+  $step = $form_state['step'];
+  switch ($step) {
+    case 'view':
+      if (empty($form_state['storage'])) {
+        $review_node = node_load($feedback_nid);
+        $rating = $review_node->field_rating[LANGUAGE_NONE][0]['rating'];
+        $review_body = $review_node->body[LANGUAGE_NONE][0]['value'];
+      } 
+      else { // we know values from the submitted form already
+        $rating = $form_state['storage']['rating'];
+        $review_body = $form_state['storage']['body'];
+      }
+      $form['rating'] = array(
+        '#type' => 'item',
+        '#title' => 'Rating',
+        '#markup' => theme('fivestar_static', array('rating' => $rating)), // $review_node->body[LANGUAGE_NONE][0]['value'],
+      );
+      $form['review'] = array(
+        '#type' => 'item',
+        '#title' => 'Review',
+        '#markup' => $review_body,
+      );
+      break;
+    case 'edit':
+      $form['rating'] = array(
+        '#type' => 'fivestar',
+        '#title' => 'Rating',
+        '#required' => 'true',
+      );
+      $form['review'] = array(
+        '#type' => 'textarea',
+        '#title' => 'Review',
+        '#required' => 'true'
+      );
+      $form['submit_button'] = array(
+        '#type' => 'submit',
+        '#value' => 'OK',
+        '#ajax' => array(
+          'callback' => 'oq_review_form_js',
+          'wrapper' => "oq-review-wrapper-{$nid}",
+        ),
+      );
+      break;
+    default: // this should not happen ever
+      watchdog('open question', 'Step %step is not defined for open question feedback form.', 
+          array('%step' => $step), 
+          WATCHDOG_WARNING);
+      break;
+  }
   return $form;
 }
 
@@ -452,16 +477,26 @@ function oqa_is_reviewed($nid, $uid = NULL) {
 
 }
 
+
+/** 
+ * AJAX callback function for Open Question Review Form
+ */
+function oq_review_form_js($form, &$form_state) {
+  return $form;
+}
+
+/**
+ * Implements submit for Open Question Review Form
+ */
 function oq_review_form_submit($form, &$form_state) {
   // validate the form
   drupal_validate_form('oq_review_form', $form, $form_state);
-  // if there are errors, return the form to display the error messages
+ // if there are errors, return the form to display the error messages
   if (form_get_errors()) {
     $form_state['rebuild'] = TRUE;
     return $form;
   }
-
-
+ 
   global $user;
   $oq_nid = $form_state['build_info']['args'][0];
 
@@ -475,8 +510,12 @@ function oq_review_form_submit($form, &$form_state) {
   $node->field_open_question_answer[$node->language][0]['target_id'] = $oq_nid;
   $node->field_rating[$node->language][0]['rating'] = $form_state['values']['rating'];
   node_save($node);
-
-  $form_rebuilt = drupal_rebuild_form("oq_review_{$oq_nid}", $form_state, $form);
-  $commands[] = ajax_command_replace("#oq-review-wrapper-{$oq_nid}", render($form_rebuilt));
-  return array('#type' => 'ajax', '#commands' => $commands);
+  $form_state['feedback_nid'] = $node->nid;
+  $form_state['step'] = 'view';
+  // store values provided by user in the form
+  $form_state['storage']['body'] = $form_state['values']['review'];
+  $form_state['storage']['rating'] =  $form_state['values']['rating'];
+  // rebuild from after submit
+  $form_state['rebuild'] = TRUE;
+  
 }
