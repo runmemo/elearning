@@ -420,7 +420,7 @@ function lesson_complete($action, $type) {
   $nid = arg(3);
   $lesson = node_load($nid);
   if($user->uid) {
-    rules_invoke_event('video_complete_rule_event', $user, $lesson);
+    rules_invoke_event('lesson_complete', $user, $lesson);
   }
   exit; 
 }
