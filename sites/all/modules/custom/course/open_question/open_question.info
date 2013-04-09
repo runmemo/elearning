@@ -17,6 +17,8 @@ dependencies[] = text
 dependencies[] = views
 dependencies[] = inline_comments
 dependencies[] = vud_field
+dependencies[] = views_php
+
 files[] = open_question.rules.inc
 features[context][] = open_question
 features[ctools][] = context:context:3
