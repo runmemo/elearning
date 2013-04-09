@@ -13,43 +13,6 @@ function front_page_context_default_contexts() {
   $context = new stdClass();
   $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
   $context->api_version = 3;
-  $context->name = 'profiles';
-  $context->description = '';
-  $context->tag = 'Node';
-  $context->conditions = array(
-    'node' => array(
-      'values' => array(
-        'course' => 'course',
-      ),
-      'options' => array(
-        'node_form' => '1',
-      ),
-    ),
-    'user_page' => array(
-      'values' => array(
-        'form' => 'form',
-        'view' => 'view',
-      ),
-      'options' => array(
-        'mode' => 'all',
-      ),
-    ),
-  );
-  $context->reactions = array(
-    'delta' => array(
-      'delta_template' => 'one_grid_margin',
-    ),
-  );
-  $context->condition_mode = 0;
-
-  // Translatables
-  // Included for use with string extractors like potx.
-  t('theme');
-  $export['profiles'] = $context;
-  
-  $context = new stdClass();
-  $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
-  $context->api_version = 3;
   $context->name = 'front_page_context';
   $context->description = 'Context for front page of the website';
   $context->tag = 'Page';

@@ -55,7 +55,7 @@ function elearning_preprocess_node_course(&$vars, $hook) {
   // provider logo and name
   $provider = field_get_items('node', $node, 'field_provider');
   if (isset($provider[0])) {
-    $field_logo = field_view_field('node', $provider[0]['entity'], 'field_logo', array('label' => 'hidden', 'image_style' => 'provider_logo'));
+    $field_logo = field_view_field('node', $provider[0]['entity'], 'field_logo', array('label' => 'hidden', 'settings' => array('image_style' => 'provider_logo')));
     $field_extra = field_view_field('node', $provider[0]['entity'], 'field_provider_extra', array('label' => 'hidden'));
     $vars['provider_logo'] = render($field_logo);
     $vars['provider_extra'] = render($field_extra);
@@ -118,6 +118,7 @@ function elearning_preprocess_html(&$vars, $hook) {
  * @see user-profile.tpl.php
  */
 function elearning_preprocess_user_profile(&$variables) {
+  drupal_add_js(drupal_get_path('theme', 'elearning') . '/js/elearning.js');
   $account = $variables['elements']['#account'];
   $variables['user_uid'] = $account->uid;
   $variables['user_name'] = $account->name;
