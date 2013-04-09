@@ -119,7 +119,7 @@ function open_question_views_default_views() {
   $handler->display->display_options['block_description'] = 'Open Question Answer Feedbacks';
   $export['oqa_feedbacks'] = $view;
 
- $view = new view();
+  $view = new view();
   $view->name = 'open_questions_review_list';
   $view->description = '';
   $view->tag = 'default';
@@ -159,6 +159,28 @@ function open_question_views_default_views() {
   $handler->display->display_options['fields']['body']['field'] = 'body';
   $handler->display->display_options['fields']['body']['label'] = '';
   $handler->display->display_options['fields']['body']['element_label_colon'] = FALSE;
+  /* Field: Content: Nid */
+  $handler->display->display_options['fields']['nid']['id'] = 'nid';
+  $handler->display->display_options['fields']['nid']['table'] = 'node';
+  $handler->display->display_options['fields']['nid']['field'] = 'nid';
+  $handler->display->display_options['fields']['nid']['label'] = '';
+  $handler->display->display_options['fields']['nid']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['nid']['element_label_colon'] = FALSE;
+  /* Field: Global: PHP */
+  $handler->display->display_options['fields']['php']['id'] = 'php';
+  $handler->display->display_options['fields']['php']['table'] = 'views';
+  $handler->display->display_options['fields']['php']['field'] = 'php';
+  $handler->display->display_options['fields']['php']['label'] = '';
+  $handler->display->display_options['fields']['php']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['php']['use_php_setup'] = 1;
+  $handler->display->display_options['fields']['php']['php_setup'] = '\'require_once DRUPAL_ROOT . /sites/all/modules/  custom/course/open_question/open_question.module;\';';
+  $handler->display->display_options['fields']['php']['php_value'] = '\'require_once DRUPAL_ROOT . /sites/all/modules/custom/ course/open_question/open_question.module;\';';
+  $handler->display->display_options['fields']['php']['php_output'] = '<?php
+$form = drupal_get_form("oq_review_".$row->nid, $row->nid);
+print drupal_render($form);
+?>';
+  $handler->display->display_options['fields']['php']['use_php_click_sortable'] = '0';
+  $handler->display->display_options['fields']['php']['php_click_sortable'] = '';
   /* Sort criterion: Global: Random */
   $handler->display->display_options['sorts']['random']['id'] = 'random';
   $handler->display->display_options['sorts']['random']['table'] = 'views';
