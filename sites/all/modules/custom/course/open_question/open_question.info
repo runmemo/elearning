@@ -26,16 +26,6 @@ features[ctools][] = quicktabs:quicktabs:1
 features[ctools][] = strongarm:strongarm:1
 features[ctools][] = views:views_default:3.0
 features[features_api][] = api:1
-features[field][] = comment-comment_node_open_question_answer-field_rating
-features[field][] = node-open_question-field_proposed_answer
-features[field][] = node-open_question-field_question
-features[field][] = node-open_question_answer-body
-features[field][] = node-open_question_answer-field_open_question
-features[field][] = node-open_question_feedback-body
-features[field][] = node-open_question_feedback-field_open_question_answer
-features[field][] = node-answer-field_rating_widget
-features[field][] = node-open_question_feedback-field_rating_widget
-features[field][] = node-question-field_rating_widget
 
 features[field_base][] = body
 features[field_base][] = field_open_question
