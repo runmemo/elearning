@@ -22,6 +22,7 @@ function front_page_delta_default_templates() {
   $delta->settings = array(
     'theme_elearning_settings' => array(
       'alpha_layouts_alpha_default_narrow_responsive' => 0,
+      'alpha_layouts_alpha_default_wide_responsive' => 0,
       'alpha_css' => array(
         'alpha-reset.css' => 'alpha-reset.css',
         'alpha-mobile.css' => 'alpha-mobile.css',
