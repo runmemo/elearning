@@ -13,8 +13,5 @@ function open_question_install() {
  * question feedback content types
  */
 function open_question_update_7001() {
-  $fields = open_question_field_default_fields();
-  create_field($fields['node-question-field_rating_widget']);
-  create_field($fields['node-answer-field_rating_widget']);
-  create_field($fields['node-open_question_feedback-field_rating_widget']);
+  
 }
