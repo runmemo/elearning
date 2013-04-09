@@ -82,4 +82,5 @@ features[variable][] = node_preview_open_question_feedback
 features[variable][] = node_submitted_open_question
 features[variable][] = node_submitted_open_question_answer
 features[variable][] = node_submitted_open_question_feedback
+features[user_permission][] = use vote up/down
 features[views_view][] = oqa_feedbacks

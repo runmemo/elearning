@@ -585,19 +585,51 @@ input.form-text {
        }
        li.current {
          .class-progress-current() !important;
-         .class-progress-parameters(9px, 9px, 100%, 65%, 100%, 0%, repeat-y) !important;
+          @media @narrow {
+            .class-progress-parameters(6px, 9px, 100%, 65%, 100%, 0%, repeat-y) !important;
+          }
+          @media @normal {
+            .class-progress-parameters(7px, 9px, 100%, 65%, 100%, 0%, repeat-y) !important;
+          }
+          @media @wide {
+            .class-progress-parameters(9px, 9px, 100%, 65%, 100%, 0%, repeat-y) !important;
+          }
        }
        li.completed {
          .class-progress-comleted() !important;
-         .class-progress-parameters(9px, 100%, 100%, 0%, 100%, 0%, no-repeat) !important;
+         @media @narrow {
+           .class-progress-parameters(6px, 100%, 100%, 0%, 100%, 0%, no-repeat) !important;
+         }
+         @media @normal {
+           .class-progress-parameters(7px, 100%, 100%, 0%, 100%, 0%, no-repeat) !important;
+         }
+         @media @wide {
+           .class-progress-parameters(9px, 100%, 100%, 0%, 100%, 0%, no-repeat) !important;
+         }
        }
        li.first {
          .class-progress-image();
-         .class-progress-parameters(9px, 3%, 100%, 0%, 100%, 0%, no-repeat);
+         @media @narrow {
+           .class-progress-parameters(6px, 3%, 100%, 0%, 100%, 0%, no-repeat);
+         }
+         @media @normal {
+           .class-progress-parameters(7px, 3%, 100%, 0%, 100%, 0%, no-repeat);
+         }
+         @media @wide {
+           .class-progress-parameters(9px, 3%, 100%, 0%, 100%, 0%, no-repeat);
+         }
        }
        li.last {
          .class-progress-image();
-         .class-progress-parameters(9px, 3%, 100%, 100%, 100%, 100%, no-repeat);
+         @media @narrow {
+           .class-progress-parameters(6px, 3%, 100%, 100%, 100%, 100%, no-repeat);
+         }
+         @media @normal {
+           .class-progress-parameters(6px, 3%, 100%, 100%, 100%, 100%, no-repeat);
+         }
+         @media @wide {
+           .class-progress-parameters(9px, 3%, 100%, 100%, 100%, 100%, no-repeat);
+         }
          a {
           border: medium none;
          }
@@ -661,7 +693,7 @@ input.form-text {
       a {
         font-weight: bold;
         width: 100%;
-        padding: 0.5em 0em;
+        padding: 13px 0px;
         text-align: center;
       }
     }
@@ -684,7 +716,7 @@ input.form-text {
   #section-content {
     color: #333333;
     #region-content {
-      margin: 37px 0px 0px 0px;
+      margin: 37px 0px 0px 10px;
     }
   }
 }
@@ -772,11 +804,11 @@ input.form-text {
     .view-block-header();
     .header-left {
       .left();
-      margin: 12px 0px 12px 8px;
+      margin: 8px 0px 12px 8px;
     }
     .header-right {
       .right();
-      margin: 12px;
+      margin: 8px;
     }
   }
   table {
@@ -950,12 +982,10 @@ body.page-user {
     }
     .left();
     .user-profile-picture {
-      width: 119px;
-      height: 119px;
-      padding-top: 4px;
       .box-shadow();
       .user-profile-default-picture {
-        margin-left: 6px;
+        .show(inline-block);
+        margin: 5px 6px 3px 6px;
         background-image: url(../images/user-profile-default.png);
         width: 107px;
         height: 107px;
@@ -965,7 +995,7 @@ body.page-user {
         float: none;
         margin: 0;
         img {
-          padding: 4px 6px;
+          padding: 6px;
         }
       }
       .user-picture-edit {
@@ -973,18 +1003,19 @@ body.page-user {
         .link();
         color: #333333 !important;
         position: absolute;
-        top: 82px;
-        left: 7px;
+        top: 84px;
+        left: 6px;
         background: rgba(255,255,255,0.66);
         width: 107px;
         text-align: center;
         height: 18px;
         padding-top: 11px;
+        .show(none);
       }
     }
     .user-profile-userpoints {
       height: 23px;
-      margin: 23px 0px 0px 40px;
+      margin: 15px 0px 115px 40px;
       padding: 6px 0px 0px 29px;
       background-image: url(../images/profile-crown.png);
       background-position: 0px 0px;
@@ -992,14 +1023,17 @@ body.page-user {
     }
   }
 }
-.view-user-courses {
+
+.page-user .view-user-courses {
   .right();
-  margin-bottom: 50px;
+}
+
+.view-user-courses {
   background: #fafafa;
   .view-header {
     .view-block-header();
     p {
-      padding: 10px 0px 0px 11px;
+      padding: 7px 0px 0px 11px;
       font-size: 18px;
     }
   }
@@ -1033,11 +1067,14 @@ body.page-user {
       .RoundedShape(3px);
       border: #859aa1 @border-1;
       width: 100%;
-      .view-user-courses-progress-inner {
+      .view-user-courses-progress-inner, .view-user-courses-progress-gradient {
         height: 28px;
+        border-bottom-left-radius: 2px;
+        border-top-left-radius: 2px;
+      }
+      .view-user-courses-progress-inner {
         .striped-progressbar();
         .view-user-courses-progress-gradient {
-          height: 28px;
           .gradient-progressbar();
         }
       }
@@ -1080,6 +1117,7 @@ body.page-user {
       margin-top: 14px;
       .views-row {
         margin-bottom: 18px;
+        padding-bottom: 15px;
         .border-bottom-dotted();
         .views-field-field-answer-count {
           margin: 13px 15px 8px 0px;
@@ -1113,7 +1151,9 @@ body.page-user {
           .show(table);
           .empty-body {
             .show(inline-block);
-            margin-bottom: 30px;
+          }
+          p {
+            margin-bottom: 0px;
           }
         }
       }
@@ -1228,20 +1268,18 @@ body.page-home {
     list-style: none;
     .bold(12px);
     width: 408px;
-    .views-field-title .field-content {
+    .views-field-title .field-content a {
       position: absolute;
       background: rgb(253, 253, 253);
       background: rgba(255, 255, 255, .88);
       .bold(18px);
+      .link();
+      color: #000000;
       padding: 10px 0px 10px 8px;
       width: 400px;
       background-image: url(../images/arrow-right-home.png);
       background-repeat: no-repeat;
       background-position: 97%;
-      a {
-        .link();
-        color: #000000;
-      }
     }
     .views-field-field-logo {
       .left();
@@ -1256,7 +1294,7 @@ body.page-home {
         .link();
         .text-orange();
       }
-      .views-field-field-provider .field-content a {
+      .views-field-field-provider .field-content {
         .link();
         color: #2e2422;
       }
@@ -1431,13 +1469,13 @@ body.page-home {
           .left();
           overflow: hidden;
           color: transparent;
-          width: 20px;
-          height: 21px;
+          width: 19px;
+          height: 20px;
           background: url(../images/best_answer_button.png) no-repeat;
           margin-left: 9px;
         }
         a.flag-action {
-          background-position: -20px 0px;
+          background-position: -19px 0px;
         }
         .flag-waiting .flag-throbber {
           .show(none);
@@ -1496,6 +1534,5 @@ body.page-home {
     }
   }
 }
-
 
 /****** Node type "Question" End ******/
