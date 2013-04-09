@@ -361,3 +361,122 @@ function open_question_remove_best_answer($question, $unflagged_answer_nid) {
     }
   }
 }
+
+/**
+ * Implements hook_forms().
+ */
+function open_question_forms($form_id, $nid) {
+  $forms = array();
+  if (strpos($form_id, 'oq_review_') === 0) {
+    $forms[$form_id] = array(
+      'callback' => 'oq_review_form',
+      'callback arguments' => array($nid),
+    );
+  }
+  return $forms;
+}
+
+function oq_review_form($form, &$form_state, $args) {
+  global $user;
+  $form = array();
+  $nid = $args[0]; 
+
+  $form['#prefix'] = "<div id=oq-review-wrapper-{$nid}>";
+  $form['#suffix'] = '</div>';
+
+  $is_reviewed = oqa_is_reviewed($nid, $user->uid);
+  if($is_reviewed) {
+    $review_node = node_load($is_reviewed);
+    $rating = array('rating' => $review_node->field_rating[LANGUAGE_NONE][0]['rating']);
+    drupal_add_css(drupal_get_path('module', 'fivestar') . '/css/fivestar.css');
+    $form['rating'] = array(
+      '#type' => 'item',
+      '#title' => 'Rating',
+      '#markup' => theme('fivestar_static', $rating), // $review_node->body[LANGUAGE_NONE][0]['value'],
+    );
+    $form['review'] = array(
+      '#type' => 'item',
+      '#title' => 'Review',
+      '#markup' => $review_node->body[LANGUAGE_NONE][0]['value'],
+    );
+  }
+  else {
+    $form['rating'] = array(
+      '#type' => 'fivestar',
+      '#title' => 'Rating',
+      '#required' => 'true',
+    );
+    $form['review'] = array(
+      '#type' => 'textarea',
+      '#title' => 'Review',
+      '#required' => 'true'
+    );
+  
+    $form['submit_button'] = array(
+      '#type' => 'submit',
+      '#value' => 'OK',
+      '#ajax' => array(
+        'callback' => 'oq_review_form_submit',
+        'wrapper' => "oq-review-wrapper-{$nid}",
+      ),
+    );
+  }
+
+
+  return $form;
+}
+
+function oqa_is_reviewed($nid, $uid = NULL) {
+  if (is_null($uid)) {
+    global $user;
+    $uid = $user->uid;
+  }
+  // count number of answers given by user
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node')
+      ->entityCondition('bundle', 'open_question_feedback')
+      ->propertyCondition('status', 1)
+      ->propertyCondition('uid', $uid)
+      ->fieldCondition('field_open_question_answer', 'target_id', $nid)
+      ->range(0, 1); // this is just to improve db performance
+
+  $result = $query->execute();
+
+  foreach ($result as $entity_type => $entities) {
+    foreach ($entities as $entity_id => $entity) {
+      return $entity_id;
+    }
+  }
+
+  return FALSE; 
+
+}
+
+function oq_review_form_submit($form, &$form_state) {
+  // validate the form
+  drupal_validate_form('oq_review_form', $form, $form_state);
+  // if there are errors, return the form to display the error messages
+  if (form_get_errors()) {
+    $form_state['rebuild'] = TRUE;
+    return $form;
+  }
+
+
+  global $user;
+  $oq_nid = $form_state['build_info']['args'][0];
+
+  $node = new stdClass();
+  $node->type = 'open_question_feedback';
+  node_object_prepare($node);
+  $node->title = 'OQ feedback nid#' . $oq_nid . '# uid#' . $user->uid;
+  $node->language = LANGUAGE_NONE;
+  $node->body[$node->language][0]['value'] = $form_state['values']['review'];
+  $node->body[$node->language][0]['format'] = 'filtered_html';
+  $node->field_open_question_answer[$node->language][0]['target_id'] = $oq_nid;
+  $node->field_rating[$node->language][0]['rating'] = $form_state['values']['rating'];
+  node_save($node);
+
+  $form_rebuilt = drupal_rebuild_form("oq_review_{$oq_nid}", $form_state, $form);
+  $commands[] = ajax_command_replace("#oq-review-wrapper-{$oq_nid}", render($form_rebuilt));
+  return array('#type' => 'ajax', '#commands' => $commands);
+}
