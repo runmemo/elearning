@@ -34,6 +34,23 @@ features[field][] = node-open_question_feedback-field_open_question_answer
 features[field][] = node-answer-field_rating_widget
 features[field][] = node-open_question_feedback-field_rating_widget
 features[field][] = node-question-field_rating_widget
+
+features[field_base][] = body
+features[field_base][] = field_open_question
+features[field_base][] = field_open_question_answer
+features[field_base][] = field_proposed_answer
+features[field_base][] = field_question
+features[field_base][] = field_rating
+features[field_base][] = field_rating_widget
+features[field_instance][] = node-open_question-field_proposed_answer
+features[field_instance][] = node-open_question-field_question
+features[field_instance][] = node-open_question_answer-body
+features[field_instance][] = node-open_question_answer-field_open_question
+features[field_instance][] = node-open_question_feedback-body
+features[field_instance][] = node-open_question_feedback-field_open_question_answer
+features[field_instance][] = node-open_question_feedback-field_rating
+features[field_instance][] = node-open_question_feedback-field_rating_widget
+
 features[image][] = question_author
 features[flag][] = oqaf_inappropriate
 features[flag][] = best_answer
