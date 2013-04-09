@@ -38,6 +38,18 @@ css[global.css.less][description] = LESS CSS stylesheet for eLearning.
 css[global.css.less][options][weight] = 10
 settings[alpha_css][global.css.less] = 'global.css.less'
 
+css[elearning-alpha-default-wide.css][name] = elearning wide styles
+css[elearning-alpha-default-wide.css][description] = LESS CSS wide stylesheet.
+css[elearning-alpha-default-wide.css][options][weight] = 10
+
+css[elearning-alpha-default-normal.css][name] = eLearning normal styles
+css[elearning-alpha-default-normal.css][description] = LESS CSS normal stylesheet.
+css[elearning-alpha-default-normal.css][options][weight] = 10
+
+css[elearning-alpha-default-narrow.css][name] = eLearning narrow styles
+css[elearning-alpha-default-narrow.css][description] = LESS CSS narrow stylesheet.
+css[elearning-alpha-default-narrow.css][options][weight] = 10
+
 plugins[vud][widgets] = widgets
 
 settings[toggle_logo] = '1'

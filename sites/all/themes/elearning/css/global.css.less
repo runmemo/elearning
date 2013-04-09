@@ -60,17 +60,6 @@ input.form-text {
     margin-right: auto;
     position: relative;
     min-height: 100%;
-    @media @narrow {
-        800px;
-    }
-    @media @normal {
-        width: 1000px;
-    }
-
-    @media @wide {
-        width: 1240px;
-    }
-    
     moz-box-shadow: 0px 3px 10px 2px #888;
     -webkit-box-shadow: 0px 3px 10px 2px #888;
     box-shadow: 0px 3px 10px 2px #888;
@@ -1153,23 +1142,12 @@ body.not-logged-in {
 
 body.page-home {
   .region-content-inner {
-    @media @narrow {
       margin-left: 38px;
-    }
-    @media @normal {
-      margin-left: 38px;
-    }
-    @media @wide {
-      margin-left: 78px;
-    }    
-  }
+  } 
 }
 
 #block-views-front-page-slider-block {
   width: 864px;
-  @media @wide {
-    margin: 0 auto;
-  }  
 }
 
 .view-id-front_page_slider {
@@ -1242,16 +1220,8 @@ body.page-home {
     }
   }
 
-.view-id-home_page_courses {
-  @media @narrow {
-    width: 632px;
-  }
-  @media @normal {
-    width: 864px;
-  }
-  @media @wide {
-    width: 1030px;
-  }
+.view-home-page-courses {
+  width: 100%;
   .views-row {
     .border-bottom-dotted();
     margin-bottom: 48px;
