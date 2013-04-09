@@ -33,11 +33,15 @@ function elearning_preprocess_node(&$variables, $hook) {
  */
 function elearning_preprocess_views_view(&$vars) {
   if (isset($vars['view']->name)) {
-    $function = __FUNCTION__ . '_' . $vars['view']->name;
+    $function = __FUNCTION__ . '__' . $vars['view']->name;
     if (function_exists($function)) {
       $function($vars);
     }
   }
+}
+
+function elearning_preprocess_views_view__course_students(&$vars) {
+  $vars['attributes_array']['class'][] = 'grid-4'; 
 }
 
 /**
@@ -145,4 +149,48 @@ function elearning_preprocess_book_navigation(&$vars) {
     $vars['prev_title'] = t('Previous');
     $vars['next_title'] = t('Next');
   } 
+}
+
+/**
+ * Implements hook preprocess_field
+ * 
+ * redirects preprocessing to function constracted from bundle and field names.
+ * @see elearning_preprocess_field__lesson_field_video
+ * @param type $vars
+ */
+function elearning_preprocess_field(&$vars) {
+  $function = 'theme_preprocess_field__' . $vars['element']['#bundle'] . '_' . $vars['element']['#field_name'];
+  if(function_exists($function)) {
+    $function($vars);
+  }
+}
+
+/**
+ * Preprocessing of field_video on lesson node.
+ */
+function elearning_preprocess_field__lesson_field_video(&$vars) {
+  $vars['classes_array'][] = 'grid-9';
+}
+
+/**
+ * Implements hook_preprocess_block
+ * Function redirects processing to functions that are buld of hook plus block id.
+ * @see elearning_preprocess_block__lesson_questions_lesson_question_answers
+ */
+function elearning_preprocess_block(&$vars) {
+  if (isset($vars['elements'])) {
+    $function = __FUNCTION__ . '__' . $vars['elements']['#block']->module . '_' . $vars['elements']['#block']->delta;
+    // uncomment line bellow if you want to see the full id of needed block:
+    // dvm ($vars['elements']['#block']->module . '_' . $vars['elements']['#block']->delta);
+    if (function_exists($function)) {
+      $function($vars);
+    }
+  }
+}
+
+/**
+ * Preprocessing for block Lesson Questions / Lesson Question Answers
+ */
+function elearning_preprocess_block__lesson_questions_lesson_question_answers(&$vars) {
+   $vars['attributes_array']['class'][] = 'grid-11';
 }

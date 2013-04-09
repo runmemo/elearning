@@ -498,28 +498,17 @@ input.form-text {
   footer.submitted, .user-picture {
     .show(none);
   }
-  .field-name-field-video .field-item {
-    @media @narrow {
-      .grid-narrow-12();
-    }
-    @media @normal {
-      .grid-normal-12();
-    }
-    @media @wide {
-      .grid-wide-12();
-    }
-    .media-youtube-video {
-      position: relative;
-      padding-bottom:56.25%;
-      padding-top:25px;
-      height:0;
-      .media-youtube-player {
-        position:absolute;
-        top:0;
-        left:0;
-        width: 100%;
-        height:100%;
-      }
+  .media-youtube-video {
+    position: relative;
+    padding-bottom:56.25%;
+    padding-top:25px;
+    height:0;
+    .media-youtube-player {
+      position:absolute;
+      top:0;
+      left:0;
+      width: 100%;
+      height:100%;
     }
   }
 }
@@ -759,15 +748,6 @@ input.form-text {
 }
 .view-course-students {
   .right();
-  @media @narrow {
-    .grid-narrow-4();
-  }
-  @media @normal {
-    .grid-normal-4();
-  }
-  @media @wide {
-    .grid-wide-4();
-  }
   .view-header {
     .view-block-header();
     .header-left {
@@ -1399,15 +1379,6 @@ body.page-home {
 }
 
 #block-lesson-questions-lesson-question-answers {
-  @media @narrow {
-   .grid-narrow-11();
-  }
-  @media @normal {
-    .grid-normal-11();
-  }
-  @media @wide {
-    .grid-wide-11();
-  }
   #quick-answer {
     legend {
       .show(none);
