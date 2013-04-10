@@ -12,6 +12,10 @@ dependencies[] = strongarm
 dependencies[] = text
 dependencies[] = features
 dependencies[] = quicktabs
+dependencies[] = flag
+dependencies[] = rules
+dependencies[] = userpoints_rules
+
 features[features_api][] = api:1
 
 features[context][] = lesson
@@ -42,3 +46,6 @@ features[variable][] = menu_parent_notes
 features[variable][] = node_options_notes
 features[variable][] = node_preview_notes
 features[variable][] = node_submitted_notes
+
+features[rules_config][] = rules_lesson_item_complete_flagged
+features[rules_config][] = rules_lesson_item_complete_unflagged
