@@ -170,7 +170,7 @@ function quick_answer_submit_callback($form, &$form_state) {
   node_object_prepare($node);
   $node->title = $form_state['values']['title'];
   $node->language = LANGUAGE_NONE;
-  $node->body[$node->language][0]['value'] = $form_state['values']['answer'];
+  $node->body[$node->language][0]['value'] = $form_state['values']['answer']['value'];
   $node->body[$node->language][0]['format'] = 'filtered_html';
   $node->field_answer_question[$node->language][0]['nid'] = $form_state['values']['question'];
   node_save($node);
