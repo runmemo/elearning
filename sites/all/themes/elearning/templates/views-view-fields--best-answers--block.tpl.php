@@ -22,6 +22,9 @@
  *
  * @ingroup views_templates
  */
+if (is_null($row->flag_content_content_id)) {
+  $fields['ops']->content .= '<div id="' . $row->nid . '"></div>';
+}
 ?>
 <?php foreach ($fields as $id => $field): ?>
   <?php if ($id == 'field_rating_widget') : ?>

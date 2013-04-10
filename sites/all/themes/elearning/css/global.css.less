@@ -383,6 +383,7 @@ input.form-text {
   font-weight: bold;
   .text {
     padding: 5px 10px;
+    margin-bottom: 20px;
     .close {
       float: right;
       .text-orange;
@@ -1179,7 +1180,7 @@ body.page-home {
 }
 
 .view-id-front_page_slider {
-    margin: 45px 0px;
+    padding: 45px 0px;
     .views-slideshow-controls-top {
       z-index: 100;
       position: absolute;
@@ -1426,8 +1427,18 @@ body.page-home {
 
 #block-lesson-questions-lesson-question-answers {
   #quick-answer {
-    legend {
-      .show(none);
+    legend, #switch_edit-answer-value, #edit-answer-format {
+      .show(none) !important;
+    }
+    .fieldset-wrapper {
+      background: #ffffff;
+    }
+    .cke_top, .cke_bottom {
+      background-image: -webkit-linear-gradient(top,#fbfcfc,#e9edf1);
+    }
+    #edit-submit {
+      .edit-submit();
+      .gradient-light-orange();
     }
   }
 }
@@ -1443,7 +1454,7 @@ body.page-home {
     .views-answer-widgets {
       .left();
       .views-field-ops {
-        a {
+        a, .best-answer-others {
           .show(block);
           .left();
           overflow: hidden;
@@ -1455,6 +1466,9 @@ body.page-home {
         }
         a.flag-action {
           background-position: -19px 0px;
+        }
+        a.processing {
+          background: url(../images/progress_orange.gif) no-repeat;
         }
         .flag-waiting .flag-throbber {
           .show(none);
@@ -1490,6 +1504,9 @@ body.page-home {
         margin: 0;
       }
     }
+  }
+  .views-row-last {
+    border: 0;
   }
   .views-answer-body {
     .show(inline-block);

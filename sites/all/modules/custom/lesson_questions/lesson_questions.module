@@ -135,7 +135,8 @@ function quick_answer($form, &$form_state) {
   );
 
   $form['quick_answer']['answer'] = array(
-    '#type' => 'textarea',
+    '#type' => 'text_format',
+    '#format' => 'filtered_html',
     '#attributes' => array('placeholder' => t('Answer')),
     '#rows' => 3,
     '#cols' => 73,

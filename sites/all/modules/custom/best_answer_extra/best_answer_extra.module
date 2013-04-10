@@ -1,0 +1,27 @@
+<?php
+/**
+ * @file
+ * Additional functionality to Best Answer module.
+ */
+
+/**
+ * Implements hook_flag_access_multiple().
+ */
+function best_answer_extra_flag_access_multiple($flag, $content_ids, $account) {
+  // @todo Ilya: find a better way to show best answer to others
+  $access = array();
+  if ($flag->name == 'best_answer') {
+    $node = menu_get_object('node');
+    if ($node && $node->uid != $account->uid) {
+      $lang = field_language('node', $node, 'field_best_answer');
+      $best = isset($node->field_best_answer[$lang][0]['nid']) ? $node->field_best_answer[$lang][0]['nid'] : FALSE;
+      if ($best) {
+        drupal_add_js(array('best_answer' => array('nid' => $best)), 'setting');
+      }
+      foreach ($content_ids as $id => $action) {
+        $access[$id] = FALSE;
+      }
+    }
+  }
+  return $access;
+}
