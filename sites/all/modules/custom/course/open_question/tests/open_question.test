@@ -1,0 +1,109 @@
+<?php
+
+/**
+ * @file
+ * open_question.test contains test case for Open Question module
+ */
+
+class OpenQuestionTestCase extends DrupalWebTestCase {
+  function setUp() {
+    // create open quesiton node
+    
+    // create student A
+    
+    // create student B
+    
+  }
+  
+  
+  function testContextIsCorrect() {
+    // load open question page
+    
+    // check if context is correct
+    
+  }
+  
+  function testSubmitAnswer() {
+        
+    // login as Student A
+    // ----------------------------
+    
+    // load open question page
+    
+    // submit answer
+    
+    // check that one new answer was created
+    
+    // check that asnwer is shown correctly
+    
+    // edit answer
+    
+    // check that node is updated
+    
+    // check that edit is shown
+    
+    // reload page
+    
+    // check that answer is shown correctly
+    
+  }
+  
+  /**
+   * Tests whether review view is hidden before user answered the question
+   */
+  function testReviewListAccess() {
+    
+    // login as Student A
+    // ----------------------------
+    
+    // load open question page
+    
+    // submit answer
+    
+    // login as student B
+    // ----------------------------
+    
+    // open Review tab and check that it does not show the view
+    
+    // go back to first tab and submit the answer
+    
+    // open second tab and check that it's showing the view
+    
+    // check that view contains asnwer of student A once
+    
+    // check that view does not contain answer of student B
+    
+    // submit feedback to student's A answer
+    
+    // check that feedback is submitted and displayed
+    
+    // login as Student A
+    // ----------------------------
+    
+    // check that feedback is visible once in the view under my answer
+    
+    
+  }
+  
+
+  
+  /**
+   * Checks that points are assigned correctly on feedbacks
+   */
+  function testFeedbackPoints() {
+    // login as Student A
+    // ----------------------------
+    
+    // leave feedback with stars on student C answer
+    
+    // check that student C was attributed points
+    
+    // login as student C
+    // ----------------------------
+    
+    // upvote student A's feedback
+    
+    // check that student A got attributed points
+  }
+  
+}
