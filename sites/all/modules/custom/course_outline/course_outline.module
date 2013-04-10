@@ -50,14 +50,14 @@ function theme_menu_link__course_outline_unit(array $variables) {
  * Returns NULL if the current menu item is not part of a book heirarchy.
  */
 function course_outline_block_view($delta = '') {
-
-  drupal_add_js(drupal_get_path('module', 'course_outline') . '/course_outline.js');
-  drupal_add_css(drupal_get_path('module', 'course_outline') . '/course_outline.css');
-  drupal_add_library('system', 'ui.accordion');
   $book = course_node_book();
   if (!$book) {
     return NULL;
   }
+  
+  drupal_add_js(drupal_get_path('module', 'course_outline') . '/course_outline.js');
+  drupal_add_css(drupal_get_path('module', 'course_outline') . '/course_outline.css');
+  drupal_add_library('system', 'ui.accordion');
 
   $tree = menu_tree_all_data($book['menu_name'], NULL, 3);
   course_outline_preprocess_tree($tree);
