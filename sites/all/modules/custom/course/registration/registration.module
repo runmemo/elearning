@@ -315,7 +315,6 @@ function course_registration_form($form, &$form_state) {
     }
     
     // @todo : get the node id or url of the first lesson    
-    
     $form['submit'] = array(
         '#type' => 'submit', 
         '#value' => t('Enroll')

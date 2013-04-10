@@ -167,8 +167,7 @@ function student_notes($form, &$form_state) {
                 ),
             );
             if (!empty($form_state['note_value'])) {
-                // add cancellation button
-                // @todo
+                // @todo: add cancellation button               
             }
             break;
         case 'view':

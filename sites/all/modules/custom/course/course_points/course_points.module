@@ -27,7 +27,7 @@ function course_points_block_view($delta ='') {
     case 'course_total_points':
       $block['subject'] = t('User points');
       $block['content'] = array(
-        '#type' => 'markup', // @todo: add html markup if needed
+        '#type' => 'markup',
         '#markup' => userpoints_get_current_points(), 
       );
       

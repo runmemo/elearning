@@ -200,8 +200,7 @@ function open_question_answer_form($form, &$form_state, $answered) {
         ),
       );
       if (!empty($form_state['answer_value'])) {
-        // add cancellation button
-        // @todo
+        // @todo add cancellation button
       }
       break;
     case 'view':

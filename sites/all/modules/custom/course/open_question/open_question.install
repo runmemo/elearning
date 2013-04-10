@@ -1,11 +1,8 @@
 <?php
 
-require_once drupal_get_path('module', 'open_question') . '/open_question.features.field.inc';
 
 function open_question_install() {
-  foreach (open_question_field_default_fields() as $field) {
-    create_field($field);
-  }
+  // all fields should be installed by features module.
 }
 
 /**
@@ -13,5 +10,5 @@ function open_question_install() {
  * question feedback content types
  */
 function open_question_update_7001() {
-  
+  // all fields should be installed by features module.
 }

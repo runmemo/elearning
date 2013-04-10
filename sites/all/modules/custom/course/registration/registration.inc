@@ -11,8 +11,7 @@
  */
 function course_register($uid, $nid) {
     
-    // check whether registration already exists
-    // @todo
+    //  check whether registration already exists
     $rid = course_registration_id($uid, $nid);
     if ($rid) {
         return $rid;

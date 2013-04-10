@@ -305,7 +305,6 @@ function course_views_pre_render(&$view) {
           }
           $view->result[$id]->continue_link = l(t('Continue'), $path, array('attributes' => array('class' => 'user-course-continue')));
           // temporary put random percentage of course completeness
-          //  @todo: add real function or provide field.
           $view->result[$id]->course_progress = course_get_progress($course->node_registration_nid);
         }
       }
