@@ -520,7 +520,6 @@ input.form-text {
 .block-course-outline {
    ul.menu {
      width: 100%;
-     margin-top: 5px;
      h3 {
        .bold(16px);
        margin-bottom: 0;
@@ -561,6 +560,7 @@ input.form-text {
      }
      ul {
        padding: 0;
+       margin-top: 5px;
        border-radius: 0;
        .class-progress-image();
        .class-progress-parameters(1px, 100%, 97%, 0%, 100%, 0%, no-repeat);
@@ -674,7 +674,7 @@ input.form-text {
         .grid-narrow-4();
       }
       @media @normal {
-        .grid-normal-4();
+        width: 213px;
       }
       @media @wide {
         .grid-wide-4();
@@ -682,7 +682,7 @@ input.form-text {
       a {
         font-weight: bold;
         width: 100%;
-        padding: 13px 0px;
+        padding: 12px 0px;
         text-align: center;
       }
     }
@@ -896,7 +896,15 @@ input.form-text {
 /** Course Book Header **/
 
 /****** User Profile ******/
-body.page-user {
+.page-user {
+  #block-system-main, #block-quicktabs-user-profile-tab {
+    @media @normal {
+      margin: 0px 20px;
+    }
+    @media @wide {
+      margin: 0px 20px;
+    }
+  }
   .profile {
     .bold(14px);
     .text-grey();
