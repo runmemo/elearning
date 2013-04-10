@@ -292,8 +292,9 @@ function open_question_answer_submit($form, &$form_state) {
  * Callback for open question answer submit
  */
 function open_question_answer_submit_js($form, $form_state) {
-  $commands[] = ajax_command_replace('#block-open-question-oq-other-answers-block', render(open_question_answered_content()));
+  $commands[] = ajax_command_replace('#block-open-question-oq-other-answers-block .content', render(open_question_answered_content()));
   $commands[] = ajax_command_replace('#oq-answer-form-wrapper',  render($form));
+  drupal_add_css(drupal_get_path('module', 'inline_comments') . '/css/inline_comments_views.css');
   return array('#type' => 'ajax', '#commands' => $commands);
 }
 
