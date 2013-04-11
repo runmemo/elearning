@@ -8,8 +8,7 @@
 function course_outline_block_info() {
   $block['book_outline'] = array(
     'info' => 'Course Outline',
-    'cache' => DRUPAL_CACHE_PER_PAGE,
-    'region' => 'sidebar_first',
+  //  'cache' => DRUPAL_CACHE_PER_PAGE,
   );
   return $block;
 }
