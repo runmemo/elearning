@@ -7,7 +7,7 @@
 /**
  * Implements hook_field_default_field_instances().
  */
-function best_answer_extra_field_default_field_instances() {
+function answers_extra_field_default_field_instances() {
   $field_instances = array();
 
   // Exported field_instance: 'node-answer-field_rating_widget'
