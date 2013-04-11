@@ -71,61 +71,6 @@ function lesson_questions_block_view($delta = '') {
 
 
 /**
- * Callback function : Defines form for quick question for lesson page.
- */
-function quick_answer($form, &$form_state) {
-  if (!user_access('create answer content')) {
-    return;
-  }
-
-
-  
-  $form['quick_answer'] = array(
-    '#type' => 'fieldset',
-    '#collapsible' => TRUE,
-    '#collapsed' => FALSE,
-    '#prefix' => '<div id="quick-answer-wrapper">',
-    '#suffix' => '</div>',
-    '#title' => t('Give Answer')
-  );
-
-  if(isset($form_state['values']['question'])) {
-    $question_nid = $form_state['values']['question'];
-  }
-  else {
-    $question_node = menu_get_object('node');
-    if(!$question_node || $question_node->type <> 'question') {
-      return;
-    }
-    $question_nid = $question_node->nid;
-  }
-
-  $question = menu_get_object('node');
-  $form['quick_answer']['question'] = array(
-    '#type' => 'hidden',
-    '#value' => $question_nid
-  );
-
-  $form['quick_answer']['answer'] = array(
-    '#type' => 'text_format',
-    '#format' => 'filtered_html',
-    '#attributes' => array('placeholder' => t('Answer')),
-    '#rows' => 3,
-    '#cols' => 73,
-  );
-
-  $form['quick_answer']['submit'] = array(
-    '#type' => 'submit',
-    '#ajax' => array(
-      'callback' => 'quick_answer_submit_callback',
-      'wrapper' => 'quick-answer-wrapper',
-    ),
-    '#value' => t('Save'),
-  );
-  return $form;
-}
-
-/**
  * Helper Function : Returns status message to user after creating question.
  */
 function _get_completion_text($message = NULL) {
@@ -143,4 +88,86 @@ function _get_relevant_questions_list($path = NULL) {
     $path = implode('/', arg());
   }
   return views_embed_view('relevant_questions_list', 'block', $path);
+}
+
+/**
+ * Callback function : Defines form for quick question for lesson page.
+ */
+function quick_question($form, &$form_state) {
+  if (!user_access('create question content')) {
+    return;
+  }
+  
+  $form['quick_question'] = array(
+    '#type' => 'fieldset',
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+    '#prefix' => '<div id="quick-question-wrapper">',
+    '#suffix' => '</div>',
+    '#title' => t('Ask Question')
+  );
+  $original_path = implode('/', arg());
+  $compressed_path = relevant_answers_compress_string($original_path);
+  $form['quick_question']['compressed_path'] = array(
+    '#type' => 'hidden',
+    '#value' => $compressed_path
+  );
+
+  $form['quick_question']['question'] = array(
+    '#type' => 'textfield',
+    '#attributes' => array('placeholder' => t('Question *')),
+    '#required' => TRUE,
+    '#size' => 75
+  );
+
+  $form['quick_question']['description'] = array(
+    '#type' => 'textarea',
+    '#attributes' => array('placeholder' => t('Description')),
+    '#rows' => 3,
+    '#cols' => 73,
+  );
+
+  $form['quick_question']['submit'] = array(
+    '#type' => 'submit',
+    '#ajax' => array(
+      'callback' => 'quick_question_submit_callback',
+      'wrapper' => 'quick-question-wrapper',
+    ),
+    '#value' => t('Ask'),
+  );
+  return $form;
+}
+
+/**
+ * Callback function : Ajax callback function for quick_question form.
+ */
+function quick_question_submit_callback($form, &$form_state) {
+  global $user;
+  $original_path = relevant_answers_decompress_string($form_state['values']['compressed_path']);
+
+  //validations
+  if (!$form_state['values']['question']) {
+    $message = t('Question field is required');
+    $commands[] = ajax_command_replace('#message-placeholder', _get_completion_text($message));
+    return array('#type' => 'ajax', '#commands' => $commands);
+  }
+
+  $node = new stdClass();
+  $node->type = 'question';
+  node_object_prepare($node);
+  $node->title = $form_state['values']['question'];
+  $node->language = LANGUAGE_NONE;
+  $node->body[$node->language][0]['value'] = $form_state['values']['description'];
+  $node->body[$node->language][0]['format'] = 'filtered_html';
+  $node->field_question_path[$node->language][0]['value'] = $original_path;
+  node_save($node);
+
+  $form_rebuilt = drupal_rebuild_form('quick_question', $form_state, array());
+  unset($form_rebuilt['quick_question']['question']['#value']);
+  unset($form_rebuilt['quick_question']['description']['#value']);
+  //get related question its require to $original_path otherwise ajax call pass ajax/system path instead of current node.
+  $commands[] = ajax_command_replace('#message-placeholder', _get_completion_text());
+  $commands[] = ajax_command_replace('.view-questions-list', _get_relevant_questions_list($original_path));
+  $commands[] = ajax_command_replace('#quick-question-wrapper', render($form_rebuilt));
+  return array('#type' => 'ajax', '#commands' => $commands);
 }
