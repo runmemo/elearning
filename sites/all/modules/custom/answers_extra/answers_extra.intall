@@ -1,0 +1,11 @@
+<?php
+
+function answers_extra_install() {
+  // Disable the "old" 'answer_questions' view
+  $views_status = variable_get('views_defaults', array());
+  // answers view from answers module
+  $views_status['answers_to_a_question'] = TRUE; // True is disabled
+  // answers view from best_asnwers module
+  $views_status['question_answers_best_answers_'] = TRUE;
+  variable_set('views_defaults', $views_status);
+}

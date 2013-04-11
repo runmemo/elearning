@@ -1,6 +1,6 @@
 name = Best Answer Extra
 core = 7.x
-package = Features
+package = Answers
 files[] = best_answer_extra.rules.inc
 dependencies[] = features
 dependencies[] = filter

@@ -194,6 +194,6 @@ function elearning_preprocess_block(&$vars) {
 /**
  * Preprocessing for block Lesson Questions / Lesson Question Answers
  */
-function elearning_preprocess_block__lesson_questions_lesson_question_answers(&$vars) {
+function elearning_preprocess_block__answers_extra_question_answers(&$vars) {
    $vars['attributes_array']['class'][] = 'grid-11';
 }
