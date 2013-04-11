@@ -3,7 +3,7 @@
 /**
  * Implements hook_ctools_plugin_api().
  */
-function lesson_questions_ctools_plugin_api() {
+function relevant_answers_extra_ctools_plugin_api() {
   list($module, $api) = func_get_args();
   if ($module == "context" && $api == "context") {
     return array("version" => "3");
@@ -17,25 +17,25 @@ function lesson_questions_ctools_plugin_api() {
 /**
  * Implements hook_views_api().
  */
-function lesson_questions_views_api() {
+function relevant_answers_extra_views_api() {
   return array(
     'api' => '3.0',
-    'path' => drupal_get_path('module', 'lesson_questions') . '/views',);
+    'path' => drupal_get_path('module', 'relevant_answers_extra') . '/views',);
 }
 
 /**
  * Implements hook_init().
  */
-function lesson_questions_init() {
-  drupal_add_js(drupal_get_path('module', 'lesson_questions') . '/lesson_questions.js');
+function relevant_answers_extra_init() {
+  drupal_add_js(drupal_get_path('module', 'relevant_answers_extra') . '/relevant_answers_extra.js');
 }
 
 /**
  * Implements hook_block_info()
  */
-function lesson_questions_block_info() {
-  $block['lesson_questions'] = array(
-    'info' => 'Lesson Questions',
+function relevant_answers_extra_block_info() {
+  $block['relevant_questions_list'] = array(
+    'info' => 'Relevant Questions List',
     'cache' => DRUPAL_CACHE_PER_PAGE,
   );
   return $block;
@@ -44,10 +44,10 @@ function lesson_questions_block_info() {
 /**
  * Implementation of hook_block_view()
  */
-function lesson_questions_block_view($delta = '') {  
+function relevant_answers_extra_block_view($delta = '') {  
   $block = array();
   switch($delta) {
-    case 'lesson_questions':
+    case 'relevant_questions_list':
       $content = array();
       // Question form
       $content['question_form'] = drupal_get_form('quick_question');
@@ -81,7 +81,7 @@ function _get_completion_text($message = NULL) {
 }
 
 /**
-* Helper Function : Returns embeded view on lesson page.
+* Helper Function : Returns embeded view on node's page.
 */
 function _get_relevant_questions_list($path = NULL) {
   if(!$path) {
@@ -91,7 +91,7 @@ function _get_relevant_questions_list($path = NULL) {
 }
 
 /**
- * Callback function : Defines form for quick question for lesson page.
+ * Callback function : Defines form for quick question for node page.
  */
 function quick_question($form, &$form_state) {
   if (!user_access('create question content')) {

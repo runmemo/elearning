@@ -1,6 +1,6 @@
-name = Questions Related to Lessons
-description = "Question related to lessons"
-package = Custom 
+name = Relevant Answers Extra
+description = "Question related to nodes"
+package = Answers 
 core = 7.x
 
 dependencies[] = relevant_answers

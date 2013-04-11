@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * lesson_question.views_default.inc
+ * relevant_answers_extra.views_default.inc
  */
 
 /**
  * Implements hook_views_default_views().
  */
-function lesson_questions_views_default_views() {
+function relevant_answers_extra_views_default_views() {
   $export = array();
 
   $view = new view();
@@ -227,7 +227,7 @@ function lesson_questions_views_default_views() {
   $handler->display->display_options['sorts']['totalcount']['field'] = 'totalcount';
   $handler->display->display_options['sorts']['totalcount']['order'] = 'DESC';
   $handler->display->display_options['block_description'] = 'Popular Relevant Questions';
-  $export['lessons_relevant_questions_page'] = $view;
+  $export[$view->name] = $view;
 
   return $export;
 }

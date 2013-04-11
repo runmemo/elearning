@@ -178,7 +178,7 @@ function elearning_preprocess_field__lesson_field_video(&$vars) {
 /**
  * Implements hook_preprocess_block
  * Function redirects processing to functions that are buld of hook plus block id.
- * @see elearning_preprocess_block__lesson_questions_lesson_question_answers
+ * @see elearning_preprocess_block__answers_extra_question_answers
  */
 function elearning_preprocess_block(&$vars) {
   if (isset($vars['elements'])) {
