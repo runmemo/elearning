@@ -39,10 +39,13 @@ function elearning_widget_alter_template_vars($template_type, &$variables) {
   $variables['show_reset'] = FALSE;
   if (!$variables['show_up_as_link']) {
     $points = $positives;
+    $variables['current_class'] = 'current-default';
   } elseif (!$variables['show_down_as_link']) {
     $points = $negatives;
+    $variables['current_class'] = 'current-negative';
   } else {
     $points = 0;
+    $variables['current_class'] = 'current-default';
   }
   $variables['current_points'] = $points;
 }

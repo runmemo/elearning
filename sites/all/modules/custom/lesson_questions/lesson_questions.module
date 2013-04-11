@@ -127,13 +127,6 @@ function quick_answer($form, &$form_state) {
     '#value' => $question_nid
   );
 
-  $form['quick_answer']['title'] = array(
-    '#type' => 'textfield',
-    '#attributes' => array('placeholder' => t('Title *')),
-    '#required' => TRUE,
-    '#size' => 75
-  );
-
   $form['quick_answer']['answer'] = array(
     '#type' => 'text_format',
     '#format' => 'filtered_html',
@@ -159,8 +152,8 @@ function quick_answer($form, &$form_state) {
 function quick_answer_submit_callback($form, &$form_state) {
   global $user;
   //validations
-  if (!$form_state['values']['title']) {
-    $message = t('Title field is required');
+  if (!$form_state['values']['answer']['value']) {
+    $message = t('Text field is required');
     $commands[] = ajax_command_replace('#message-placeholder', _get_completion_text($message));
     return array('#type' => 'ajax', '#commands' => $commands);
   }
@@ -168,7 +161,7 @@ function quick_answer_submit_callback($form, &$form_state) {
   $node = new stdClass();
   $node->type = 'answer';
   node_object_prepare($node);
-  $node->title = $form_state['values']['title'];
+  $node->title = 'Answer of uid# ' . $user->uid . ' for question #nid ' . $form_state['values']['question'];
   $node->language = LANGUAGE_NONE;
   $node->body[$node->language][0]['value'] = $form_state['values']['answer']['value'];
   $node->body[$node->language][0]['format'] = 'filtered_html';
@@ -176,7 +169,6 @@ function quick_answer_submit_callback($form, &$form_state) {
   node_save($node);
 
   $form_rebuilt = drupal_rebuild_form('quick_answer', $form_state, array());
-  unset($form_rebuilt['quick_answer']['title']['#value']);
   unset($form_rebuilt['quick_answer']['answer']['#value']);
   //get related question its require to $original_path otherwise ajax call pass ajax/system path instead of current node.
   $commands[] = ajax_command_replace('#message-placeholder', _get_completion_text(t('Your answer added to the list below.')));
