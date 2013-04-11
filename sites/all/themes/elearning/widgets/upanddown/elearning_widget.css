@@ -5,11 +5,20 @@
   float: left;
 }
 
-.vud-widget-elearning_widget .current-points {
+.vud-widget-elearning_widget .current-default,
+.vud-widget-elearning_widget .current-negative {
   clear: both;
-  padding-left: 5px;
+  color: #555555;
+  font-size: 22px;
 }
 
+.vud-widget-elearning_widget .current-negative {
+  padding: 7px 3px;
+}
+
+.vud-widget-elearning_widget .current-default {
+  padding: 7px 7px;
+}
 .vud-widget-elearning_widget a.vud-link-up span,
 .vud-widget-elearning_widget a.vud-link-down span {
   text-decoration: none;
@@ -42,30 +51,30 @@
 .vud-widget-elearning_widget .down-active {
   float: left;
   display: block;
-  width: 20px;
-  height: 22px;
+  width: 26px;
+  height: 13px;
   font-weight: bold;
   text-align: center;
   background: url(../../images/arrows.png) 0 0 no-repeat;
 }
 
 .vud-widget-elearning_widget .up-active {
-  background-position: 0 -22px;
+  background-position: 0px -42px;
 }
 .vud-widget-elearning_widget .down-active {
-  background-position: -20px -22px;
+  background-position: 0px -14px;
 }
 .vud-widget-elearning_widget .up-inactive {
-  background-position: 0 -44px;
+  background-position: 0px -28px;
 }
 .vud-widget-elearning_widget .down-inactive {
-  background-position: -20px -44px;
+  background-position: 0px 0px;
 }
 .vud-widget-elearning_widget .up-inactive:hover {
-  background-position: 0 -66px;
+  background-position: 0px -42px;
 }
 .vud-widget-elearning_widget .down-inactive:hover {
-  background-position: -20px -66px;
+  background-position: 0px -14px;
 }
 
 /**
