@@ -1,0 +1,59 @@
+<?php
+
+
+
+/**
+ * Test case for best answer extra module that checks that 
+ * user points are assigned correctly and user have appropriate access
+ */
+class BestAnswerExtraTestCase extends DrupalWebTestCase {
+  function setUp() {
+    
+    // @todo ilya build test case based on comments provided bellow
+    
+    // create quesiton node
+    
+    // create student A
+    
+    // create question A as student A
+    
+    // create student B
+    
+    // create question B as student B
+    
+    // create answer to A as A
+    
+    // create answer 1 to A as B
+    
+    // create asnwer 2 to A as B
+   
+    
+  }
+  
+  function testUserPointsAuthorSetsBest() {
+    
+    // check that when user A checks his own answer on his question
+    // he gets 0 points
+    
+    // check that when user A un-selects his own answer on his questin
+    // he does not loose points (change = 0)
+    
+    // check that when user A selects B's answer 1 on A's question
+    // B gets Points > 0
+    
+    // check that B sees that answer 1 was selected as best
+    
+    // check that user A cannot select best answer on B's question
+   
+    // check that when user selects answer 2, answer 1 gets unselected
+    // and accumilated change of poings for user B is 0
+    
+    // check that user B cannot unselect answer 2 as best
+    
+    // check that when user A un-selects B's answer on A's question
+    // B looses Points > 0 
+   
+  }
+  
+
+}
