@@ -161,6 +161,7 @@ function quick_answer_submit($form, &$form_state) {
  */
 function quick_answer_submit_callback($form, &$form_state) {
   //get related question its require to $original_path otherwise ajax call pass ajax/system path instead of current node.
+  // @todo barinder the message says bellow while list is above. also message should be above the form I think.
   $commands[] = ajax_command_replace('#message-placeholder', _get_completion_text(t('Your answer added to the list below.')));
   $commands[] = ajax_command_replace('.view-question-answers', _get_relevant_answers_list($form_state['values']['question']));
   $commands[] = ajax_command_replace('#quick-answer-wrapper', render($form));
