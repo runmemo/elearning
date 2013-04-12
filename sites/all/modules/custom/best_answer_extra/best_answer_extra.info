@@ -9,7 +9,6 @@ features[ckeditor_profile][] = Advanced
 features[ckeditor_profile][] = CKEditor Global Profile
 features[ckeditor_profile][] = Full
 features[features_api][] = api:1
-features[rules_config][] = rules_user_selects_best_answer_extra
 features[rules_config][] = rules_user_unselects_best_answer_extra
 features[user_permission][] = use vote up/down
 features[filter][] = full_html

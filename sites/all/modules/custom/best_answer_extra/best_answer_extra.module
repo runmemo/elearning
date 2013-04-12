@@ -52,11 +52,12 @@ function best_answer_extra_node_view($node, $view_mode, $langcode) {
  */
 function best_answer_extra_flag($op, $flag, $content_id, $account, $fcid) {
   if ($flag->name == 'best_answer') {
-    $new_best_answer = node_load($content_id);
-    $question = answers_field_get_node_reference($new_best_answer, 'field_answer_question');
+    $answer_node = node_load($content_id);
+    $question = answers_field_get_node_reference($answer_node, 'field_answer_question');
     if ($op == 'flag') {
       _best_answer_update_best_answer($question, $content_id);
-    } elseif ($op == 'unflag') {
+    }
+    elseif ($op == 'unflag') {
       best_answer_extra_remove_best_answer($question, $content_id);
     }
   }
@@ -65,24 +66,42 @@ function best_answer_extra_flag($op, $flag, $content_id, $account, $fcid) {
 /**
  * Unsets best question on unflagging answer and makes empty
  * corresponding question field, if unselected answer was set as best answer.
- * @param type $question
- * @param type $answer_id
+ * @param object $question
+ * @param indteger $answer_nid
  */
-function best_answer_extra_remove_best_answer($question, $answer_id) {
+function best_answer_extra_remove_best_answer($question, $answer_nid) {
   $lang = field_language('node', $question, 'field_best_answer');
-  if (isset($question->field_best_answer[$lang])) {
-    if ($answer_id == $question->field_best_answer[$lang][0]['nid']) {
-      $old_answer = node_load($answer_id);
-      $lang = field_language('node', $old_answer, 'field_best_answer_p');
-      $old_answer->field_best_answer_p[$lang][0]['value'] = 0;
-      node_save($old_answer);
-      $question->field_best_answer = array();
-      node_save($question);
-      if (module_exists('rules')) {
-        if ($old_answer) {
-          rules_invoke_event('best_answer_unset', $question, $old_answer);
-        }
-      }
+  if (isset($question->field_best_answer[$lang]) 
+        && $answer_nid == $question->field_best_answer[$lang][0]['nid']) {
+
+    // clear the reference to best answer from question
+    unset($question->field_best_answer[$lang]);
+    node_save($question);
+    // reset the flag on the answer
+    best_answer_remove_flag($answer_nid);
+    // trigger rule event 
+    if (module_exists('rules')) {
+      rules_invoke_event('best_answer_unset', $question, $answer_node);
     }
+  }
+  else { // question does not have best answer or it has different answer selected as best
+    // reset the flag on the answer
+    best_answer_remove_flag($answer_nid);
+    watchdog('best answer', 
+        'Answer was with %answer_nid was not set as best on the question node with id %quesion_nid.', 
+        array('%answer_nid' => $answer_nid, '%question_nid' => $question->nid,));
+  }
+}
+
+/**
+ * Sets field_best_answer_p from best answers module to zero
+ * @param integer $answer_nid
+ */
+function best_answer_remove_flag($answer_nid) {
+  $answer = node_load($answer_nid);
+  if ($answer) {
+    $lang = field_language('node', $answer, 'field_best_answer_p');
+    $answer->field_best_answer_p[$lang][0]['value'] = 0;
+    node_save($answer);   
   }
 }
