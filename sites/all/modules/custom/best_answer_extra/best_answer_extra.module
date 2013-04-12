@@ -64,10 +64,9 @@ function best_answer_extra_flag($op, $flag, $content_id, $account, $fcid) {
 }
 
 /**
- * Unsets best question on unflagging answer and makes empty
- * corresponding question field, if unselected answer was set as best answer.
+ * Unsets best answer and emties referencing field on question node
  * @param object $question
- * @param indteger $answer_nid
+ * @param integer $answer_nid
  */
 function best_answer_extra_remove_best_answer($question, $answer_nid) {
   $lang = field_language('node', $question, 'field_best_answer');
