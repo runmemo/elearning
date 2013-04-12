@@ -50,6 +50,13 @@ function answers_extra_views_default_views() {
   $handler->display->display_options['relationships']['flag_content_rel']['field'] = 'flag_content_rel';
   $handler->display->display_options['relationships']['flag_content_rel']['required'] = 0;
   $handler->display->display_options['relationships']['flag_content_rel']['flag'] = 'best_answer';
+  /* Field: Content: Nid */
+  $handler->display->display_options['fields']['nid']['id'] = 'nid';
+  $handler->display->display_options['fields']['nid']['table'] = 'node';
+  $handler->display->display_options['fields']['nid']['field'] = 'nid';
+  $handler->display->display_options['fields']['nid']['label'] = '';
+  $handler->display->display_options['fields']['nid']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['nid']['element_label_colon'] = FALSE;
   /* Field: Content: Rating Widget */
   $handler->display->display_options['fields']['field_rating_widget']['id'] = 'field_rating_widget';
   $handler->display->display_options['fields']['field_rating_widget']['table'] = 'field_data_field_rating_widget';
@@ -66,6 +73,7 @@ function answers_extra_views_default_views() {
   $handler->display->display_options['fields']['ops']['label'] = '';
   $handler->display->display_options['fields']['ops']['exclude'] = TRUE;
   $handler->display->display_options['fields']['ops']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['ops']['empty'] = '<div id="[nid]"></div>';
   $handler->display->display_options['fields']['ops']['link_type'] = 'toggle';
   /* Field: Content: Body */
   $handler->display->display_options['fields']['body']['id'] = 'body';
@@ -107,17 +115,17 @@ function answers_extra_views_default_views() {
   $handler->display->display_options['fields']['nothing']['label'] = '';
   $handler->display->display_options['fields']['nothing']['alter']['text'] = 
     '<div class="views-answer-widgets">
-       <div class="views-field-field-rating-widget">[field_rating_widget]</div>
-       <div class="views-field-ops">[ops]</div>
-     </div>
-     <div class="views-answer-body">
-       <div class="views-field-body">[body]</div>
-       <div class="node-supplementary-wrapper"> 
-         <div class="views-field-created">[created]</div>
-         <div class="views-field-name">[name]</div>
-         <div class="views-field-comment-count">[comment_count]</div>
+         <div class="views-field-field-rating-widget">[field_rating_widget]</div>
+         <div class="views-field-ops">[ops]</div>
        </div>
-     </div>';
+       <div class="views-answer-body">
+         <div class="views-field-body">[body]</div>
+         <div class="node-supplementary-wrapper"> 
+           <div class="views-field-created">[created]</div>
+           <div class="views-field-name">[name]</div>
+           <div class="views-field-comment-count">[comment_count]</div>
+         </div>
+       </div>';
   $handler->display->display_options['fields']['nothing']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['nothing']['element_default_classes'] = FALSE;
   /* Sort criterion: Content: Best Answer (field_best_answer_p) */

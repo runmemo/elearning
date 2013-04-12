@@ -18,7 +18,10 @@ function best_answer_extra_ckeditor_profile_defaults() {
         'uicolor' => 'default',
         'uicolor_user' => '#D3D3D3',
         'toolbar' => '[
-    [\'Bold\',\'Italic\',\'-\',\'NumberedList\',\'BulletedList\',\'Outdent\',\'Indent\',\'Link\',\'Unlink\',\'About\']
+    [\'Bold\',\'Italic\'],
+    [\'NumberedList\',\'BulletedList\',\'-\',\'Outdent\',\'Indent\'],
+    [\'Link\',\'Unlink\'],
+    [\'About\']
 ]',
         'expand' => 't',
         'width' => '100%',
@@ -75,8 +78,8 @@ function best_answer_extra_ckeditor_profile_defaults() {
             'buttons' => FALSE,
             'default' => 't',
             'active' => 0,
-          ),
         ),
+      ),
       ),
       'input_formats' => array(
         'filtered_html' => 'Filtered HTML',
