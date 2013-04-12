@@ -77,7 +77,7 @@ function _get_relevant_answers_list($nid = NULL) {
 
 
 /**
- * @todo ilya proper write comment
+ * Build a form for answers on question page
  */
 function quick_answer($form, &$form_state) {
   if (!user_access('create answer content')) {
@@ -150,7 +150,7 @@ function quick_answer_submit($form, &$form_state) {
   $node->field_answer_question[$node->language][0]['nid'] = $form_state['values']['question'];
   node_save($node);
   
-  // @todo ilya clear the answer after form submition. 
+  // @todo barinder clear the answer after form submition. 
   // I tried few things, but nothing worked.
   unset($form_state['values']['answer']);
   $form_state['rebuild'] = TRUE;
