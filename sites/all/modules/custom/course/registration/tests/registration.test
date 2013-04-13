@@ -67,6 +67,11 @@ class CourseRegistrationTestCase extends DrupalWebTestCase {
       
       $this->assertEqual($rid_first, $rid_second, 'Second registration is not created.');
 
+      registration_cancel($uid, $nid);
+      $rid_reactivate = course_register($uid, $nid);
+      
+      $this->assertEqual($rid_first, $rid_reactivate, 'On re-activation same registration is used.');
+      
   }  
   
   /**

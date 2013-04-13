@@ -12,17 +12,22 @@
 function course_register($uid, $nid) {
     
     //  check whether registration already exists
-    $rid = course_registration_id($uid, $nid);
-    if ($rid) {
+    $rid = course_registration_id($uid, $nid, FALSE);
+    if ($rid) { // registration exists
+        $registration = registration_load($rid);
+        if ($registration->cancelled != 0) {
+          $registration->cancelled = 0; // unset cancellation timestamp
+          registration_save($registration);
+        }
         return $rid;
     }
     
+    // create new registration entity
     $reg_array = array (
       'uid' => $uid, 
       'nid' => $nid,
       'created' => time(),
     );
-    // create new registration node
     $registration = entity_create('registration', $reg_array);
     $registration->save();
     return $registration->registration_id;
