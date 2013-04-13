@@ -28,7 +28,7 @@ function course_register($uid, $nid) {
       'nid' => $nid,
       'created' => time(),
     );
-    $registration = entity_create('registration', $reg_array);
+    $registration = registration_create($reg_array);
     $registration->save();
     return $registration->registration_id;
 }
