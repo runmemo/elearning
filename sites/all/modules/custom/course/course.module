@@ -320,6 +320,9 @@ function course_views_pre_render(&$view) {
           $view->result[$id]->continue_link = l(t('Continue'), $path, array('attributes' => array('class' => 'user-course-continue')));
           //course-exit/%ctools_js/%/%
           $href = "course-exit/nojs/{$user->uid}/{$course->node_registration_nid}";
+          // @todo barinder
+          // lets add permission check so only student viewing his own account could see this.
+          // also let's separate continue_link from cancelation button.
           $modal = ctools_modal_text_button('<span></span>', $href, t('Exit Course'), 'ctools-modal-course-exit-style user-course-exit');
           $view->result[$id]->continue_link .= $modal; 
           // temporary put random percentage of course completeness
