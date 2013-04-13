@@ -261,7 +261,7 @@ function template_preprocess_book_header(&$vars) {
   // course title
   $vars['course_title'] = $course_node->title;
   // provider logo and name
-  $vars['provider_logo'] = '<div class="provider-logo-default"></div';
+  $vars['provider_logo'] = '<div class="provider-logo-default"></div>';
   $provider = field_get_items('node', $course_node, 'field_provider');
   if(isset($provider[0])) {
     $provider = node_load($provider[0]['target_id']);
