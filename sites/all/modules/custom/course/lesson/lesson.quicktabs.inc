@@ -18,27 +18,28 @@ function lesson_quicktabs_default_quicktabs() {
   $quicktabs->hide_empty_tabs = TRUE;
   $quicktabs->default_tab = 0;
   $quicktabs->title = 'Lesson interaction';
-  $quicktabs->tabs[0]  = array(
-      'bid' => 'lesson_delta_lesson_lecturer_notes',
-      'hide_title' => 1,
-      'title' => 'Notes',
-      'weight' => '-99',
-      'type' => 'block',
-  );
-  if(module_exists('lesson_questions')) {
-    $quicktabs->tabs[1] = array(
-        'bid' => 'lesson_questions_delta_lesson_questions',
+  if(module_exists('relevant_answers_extra')) {
+    $quicktabs->tabs[0] = array(
+        'bid' => 'relevant_answers_extra_delta_relevant_questions_list',
         'hide_title' => 1,
         'title' => 'Questions',
-        'weight' => '-100',
+        'weight' => '0',
         'type' => 'block',
     );
   }
+  $quicktabs->tabs[1]  = array(
+      'bid' => 'lesson_delta_lesson_lecturer_notes',
+      'hide_title' => 1,
+      'title' => 'Notes',
+      'weight' => '1',
+      'type' => 'block',
+  );
+  
   $quicktabs->tabs[2] = array(
     'bid' => 'lesson_delta_lesson_student_notes',
     'hide_title' => 1,
     'title' => 'Student Notes',
-    'weight' => '-98',
+    'weight' => '2',
     'type' => 'block',
   );
   $quicktabs->renderer = 'ui_tabs';

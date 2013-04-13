@@ -169,7 +169,7 @@ function course_image_default_styles() {
         'name' => 'image_scale',
         'data' => array(
           'width' => '107',
-          'height' => '82',
+          'height' => '107',
           'upscale' => 1,
         ),
         'weight' => '1',
@@ -185,7 +185,7 @@ function course_image_default_styles() {
         'name' => 'image_resize',
         'data' => array(
           'width' => '107',
-          'height' => '82',
+          'height' => '107',
         ),
         'weight' => '2',
       ),

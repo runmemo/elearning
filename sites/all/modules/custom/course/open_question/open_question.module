@@ -263,7 +263,7 @@ function open_question_answer_submit($form, &$form_state) {
       $node->body[$node->language][0]['value'] = $form_state['values']['new_answer'];
       $node->body[$node->language][0]['format'] = 'filtered_html';
       $node->field_open_question[LANGUAGE_NONE][0]['target_id'] = $oq_nid;
-
+   
       node_save($node);
       $form_state['answer_nid'] = $node->nid;
       $oq = node_load($oq_nid);

@@ -19,7 +19,7 @@
       <?php endif; ?>
     <?php endif; ?>
   </div>
-  <div class="current-points"><?php print $current_points; ?></div>
+  <div class="<?php print $current_class; ?>"><?php print $current_points; ?></div>
   <div class="down-score clear-block">
     <?php if ($show_links): ?>
       <?php if ($show_down_as_link): ?>

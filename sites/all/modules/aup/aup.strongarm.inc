@@ -56,6 +56,7 @@ function aup_strongarm() {
       'theme' => 'rate_template_number_up_down',
       'css' => 'sites/all/modules/rate/templates/number-up-down/number-up-down.css',
       'translate' => FALSE,
+      'use_source_translation' => TRUE,
     ),
   );
   $export['rate_widgets'] = $strongarm;

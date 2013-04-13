@@ -13,17 +13,14 @@
           }
         });
       }
-      var flagged = $('a.unflag-action');
-      $('a.flag-action').each(function() {
-        $(this).click(function() {
-          $('a.flag').addClass('processing');
-          setTimeout(function() {
-            $('a.flag').removeClass('processing');
-          }, 4000);
-          setTimeout(function (){
-            flagged.click();
-          }, 2000);
-        });
+      // bind event from flag module
+      $(document).bind('flagGlobalBeforeLinkUpdate', function(event, data) {
+        if (data.contentId > 0 && data.flagName === 'best_answer' && data.flagStatus === 'flagged') {
+          $('a.unflag-action').each(function() {
+            $(this).removeClass('unflag-action').addClass('flag-action');
+            this.href = this.href.replace('flag/unflag', 'flag/flag');
+          });
+        }
       });
     }
   };

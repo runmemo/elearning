@@ -86,9 +86,8 @@ function elearning_preprocess_node_course(&$vars, $hook) {
  * @param string $hook
  */
 function elearning_preprocess_node_question(&$vars, $hook) {
-  // add custom js file for unselecting flagged nodes in a view.
-  drupal_add_js(drupal_get_path('module', 'best_answer_extra') . '/best_answer_extra.js');
   $author = user_load($vars['uid']);
+  // @todo @bug : ilya : user points always show 0
   $vars['userpoints_count'] = userpoints_get_current_points($author->uid);
   if (is_numeric($author->picture)) {
     $author->picture = file_load($author->picture);
@@ -176,7 +175,7 @@ function elearning_preprocess_field__lesson_field_video(&$vars) {
 /**
  * Implements hook_preprocess_block
  * Function redirects processing to functions that are buld of hook plus block id.
- * @see elearning_preprocess_block__lesson_questions_lesson_question_answers
+ * @see elearning_preprocess_block__answers_extra_question_answers
  */
 function elearning_preprocess_block(&$vars) {
   if (isset($vars['elements'])) {
@@ -192,6 +191,6 @@ function elearning_preprocess_block(&$vars) {
 /**
  * Preprocessing for block Lesson Questions / Lesson Question Answers
  */
-function elearning_preprocess_block__lesson_questions_lesson_question_answers(&$vars) {
-   $vars['attributes_array']['class'][] = 'grid-11';
+function elearning_preprocess_block__answers_extra_question_answers(&$vars) {
+   $vars['attributes_array']['class'][] = 'grid-11 alpha omega';
 }

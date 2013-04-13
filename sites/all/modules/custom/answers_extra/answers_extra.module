@@ -1,0 +1,169 @@
+<?php
+
+/**
+ * @file 
+ * answers_extra.module
+ */
+
+
+/**
+ * Implements hook_ctools_plugin_api().
+ */
+function answers_extra_ctools_plugin_api() {
+  list($module, $api) = func_get_args();
+  if ($module == "context" && $api == "context") {
+    return array("version" => "3");
+  }
+}
+
+/**
+ * Implements hook_views_api().
+ */
+function answers_extra_views_api() {
+  return array(
+    'api' => '3.0',
+    'path' => drupal_get_path('module', 'answers_extra') . '/views',);
+}
+
+/**
+ * Implements hook_block_info()
+ */
+function answers_extra_block_info() {
+  $block['question_answers'] = array(
+    'info' => 'Answers for Lesson Questions',
+    'cache' => DRUPAL_CACHE_PER_PAGE,
+  );
+  return $block;
+}
+
+/**
+ * Implementation of hook_block_view()
+ */
+function answers_extra_block_view($delta = '') {
+  $content = array();
+  $block = array();
+  switch($delta) {
+    case 'question_answers':
+      // Embed view 
+      $content['answers_list'] = array(
+        '#type' => 'markup',
+        '#markup' => _get_relevant_answers_list(),
+      );
+      // Question form
+      $content['answer_form'] = drupal_get_form('quick_answer');
+      //Placeholder for message. 
+      $content['message_placeholder'] = array(
+        '#type' => 'markup',
+        '#markup' => '<div id="message-placeholder"></div>',
+      );
+      // Build the block title and contents
+      $block['subject'] = '';
+      $block['content'] = $content;
+      break;    
+  }
+  return $block;
+}
+
+/**
+* Helper Function : Returns embeded view on lesson page.
+*/
+function _get_relevant_answers_list($nid = NULL) {
+  if(!$nid) {
+    $nid = arg(1);
+  }
+  return views_embed_view('answers_to_a_question_extra', 'block_answers', $nid);
+}
+
+
+
+/**
+ * Build a form for answers on question page
+ */
+function quick_answer($form, &$form_state) {
+  if (!user_access('create answer content')) {
+    return;
+  }
+  
+  $form['fields'] = array(
+    '#type' => 'fieldset',
+    '#collapsible' => TRUE,
+    '#collapsed' => FALSE,
+    '#prefix' => '<div id="quick-answer-wrapper">',
+    '#suffix' => '</div>',
+    '#title' => t('Give Answer')
+  );
+
+  if(isset($form_state['values']['question'])) {
+    $question_nid = $form_state['values']['question'];
+  }
+  else {
+    $question_node = menu_get_object('node');
+    if(!$question_node || $question_node->type <> 'question') {
+      return;
+    }
+    $question_nid = $question_node->nid;
+  }
+
+  $form['fields']['question'] = array(
+    '#type' => 'hidden',
+    '#value' => $question_nid
+  );
+
+  $form['fields']['answer'] = array(
+    '#type' => 'text_format',
+    '#format' => 'filtered_html',
+    '#attributes' => array('placeholder' => t('Answer')),
+    '#rows' => 3,
+    '#cols' => 73,
+  );
+
+  $form['fields']['submit'] = array(
+    '#type' => 'submit',
+    '#ajax' => array(
+      'callback' => 'quick_answer_submit_callback',
+      'wrapper' => 'quick-answer-wrapper',
+    ),
+    '#value' => t('Save'),
+  );
+  return $form;
+}
+
+/**
+ * Submit function for quick answer form
+ */
+function quick_answer_submit($form, &$form_state) {
+   global $user;
+  //validations
+  if (!$form_state['values']['answer']['value']) {
+    $message = t('Text field is required');
+    $commands[] = ajax_command_replace('#message-placeholder', _get_completion_text($message));
+    return array('#type' => 'ajax', '#commands' => $commands);
+  }
+
+  $node = new stdClass();
+  $node->type = 'answer';
+  node_object_prepare($node);
+  $node->title = 'Answer of uid# ' . $user->uid . ' for question #nid ' . $form_state['values']['question'];
+  $node->language = LANGUAGE_NONE;
+  $node->body[$node->language][0]['value'] = $form_state['values']['answer']['value'];
+  $node->body[$node->language][0]['format'] = 'filtered_html';
+  $node->field_answer_question[$node->language][0]['nid'] = $form_state['values']['question'];
+  node_save($node);
+  
+  // @todo barinder clear the answer after form submition. 
+  // I tried few things, but nothing worked.
+  unset($form_state['values']['answer']);
+  $form_state['rebuild'] = TRUE;
+}
+
+/**
+ * Callback function : Ajax callback function for quick_answer form.
+ */
+function quick_answer_submit_callback($form, &$form_state) {
+  //get related question its require to $original_path otherwise ajax call pass ajax/system path instead of current node.
+  // @todo barinder the message says bellow while list is above. also message should be above the form I think.
+  $commands[] = ajax_command_replace('#message-placeholder', _get_completion_text(t('Your answer added to the list below.')));
+  $commands[] = ajax_command_replace('.view-question-answers', _get_relevant_answers_list($form_state['values']['question']));
+  $commands[] = ajax_command_replace('#quick-answer-wrapper', render($form));
+  return array('#type' => 'ajax', '#commands' => $commands);
+}

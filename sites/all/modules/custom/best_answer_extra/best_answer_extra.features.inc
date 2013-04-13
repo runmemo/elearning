@@ -42,7 +42,7 @@ function best_answer_extra_flag_default_flags() {
     'show_contextual_link' => 0,
     'i18n' => 0,
     'api_version' => 2,
-    'module' => 'test',
+    'module' => 'best_answer_extra',
     'locked' => array(
       0 => 'name',
     ),

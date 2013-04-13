@@ -377,7 +377,28 @@ function course_is_item_node($node) {
  * @return array
  */
 function course_item_node_types() {
-  return array ('lesson', 'quiz', 'open_question');
+  
+  $items = &drupal_static(__FUNCTION__);
+  
+  if (!isset($items)) {
+    // array that matches modules to content types that they add
+    $modules = array(
+      'lesson' => 'lesson', 
+      'quiz' => 'quiz', 
+      'open_question' => 'open_question',
+      'closedquestion' => 'closedquestion');
+    $items = array();
+    
+    // add content types provided by modules
+    foreach ($modules as $module => $bundle) {
+      if (module_exists($module)) {
+        $items[] = $bundle;
+      }
+    }
+    
+  }
+  
+  return $items;
 }
 
 /**

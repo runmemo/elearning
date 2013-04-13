@@ -1,0 +1,22 @@
+name = Relevant Answers Extra
+description = "Question related to nodes"
+package = Answers 
+core = 7.x
+
+dependencies[] = relevant_answers
+dependencies[] = views
+dependencies[] = answers
+dependencies[] = features
+dependencies[] = strongarm
+
+features[ctools][] = views:views_default:3.0
+features[features_api][] = api:1
+features[ctools][] = context:context:3
+features[ctools][] = strongarm:strongarm:1
+features[features_api][] = api:1
+
+features[variable][] = field_bundle_settings_node__question
+features[variable][] = menu_options_question
+features[variable][] = menu_parent_question
+features[variable][] = node_preview_question
+features[variable][] = node_submitted_question

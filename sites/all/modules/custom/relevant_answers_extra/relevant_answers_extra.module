@@ -1,0 +1,199 @@
+<?php
+
+/**
+ * Implements hook_ctools_plugin_api().
+ */
+function relevant_answers_extra_ctools_plugin_api() {
+  list($module, $api) = func_get_args();
+  if ($module == "context" && $api == "context") {
+    return array("version" => "3");
+  }
+  list($module, $api) = func_get_args();
+  if ($module == "strongarm" && $api == "strongarm") { 
+    return array("version" => "1");
+  }
+}
+
+/**
+ * Implements hook_views_api().
+ */
+function relevant_answers_extra_views_api() {
+  return array(
+    'api' => '3.0',
+    'path' => drupal_get_path('module', 'relevant_answers_extra') . '/views',);
+}
+
+/**
+ * Implements hook_init().
+ */
+function relevant_answers_extra_init() {
+  drupal_add_js(drupal_get_path('module', 'relevant_answers_extra') . '/relevant_answers_extra.js');
+}
+
+/**
+ * Implements hook_block_info()
+ */
+function relevant_answers_extra_block_info() {
+  $block['relevant_questions_list'] = array(
+    'info' => 'Relevant Questions List',
+    'cache' => DRUPAL_CACHE_PER_PAGE,
+  );
+  return $block;
+}
+
+/**
+ * Implementation of hook_block_view()
+ */
+function relevant_answers_extra_block_view($delta = '') {  
+  $block = array();
+  switch($delta) {
+    case 'relevant_questions_list':
+      $content = array();
+      // Question form
+      $content['question_form'] = drupal_get_form('quick_question_form');
+      //Placeholder for message. 
+      $content['message_placeholder'] = array(
+        '#type' => 'markup',
+        '#markup' => '<div id="message-placeholder"></div>',
+      );
+      // Embed view 
+      $content['questions_list'] = array(
+        '#type' => 'markup',
+        '#markup' => _get_relevant_questions_list(),
+      );
+      // Build the block title and contents
+      $block['subject'] = '';
+      $block['content'] = $content;
+      break;
+  }
+  return $block;
+}
+
+
+/**
+ * Helper Function : Returns status message to user after creating question.
+ */
+function _get_completion_text($message = NULL) {
+  if (!$message) {
+    $message = t('Your message was added to the list below.');
+  }
+  return '<div id="message-placeholder"><div class="text">' . $message . '<span class="close" title="close">X</span></div></div>';
+}
+
+/**
+* Helper Function : Returns embeded view on node's page.
+*/
+function _get_relevant_questions_list($path = NULL) {
+  if(!$path) {
+    $path = implode('/', arg());
+  }
+  return views_embed_view('relevant_questions_list', 'block', $path);
+}
+
+/**
+ * Form for submition of a relevant question on a page.
+ */
+function quick_question_form($form, &$form_state) {
+  if (!user_access('create question content')) {
+    return;
+  }
+  
+  $form['fields'] = array(
+    '#type' => 'fieldset',
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+    '#prefix' => '<div id="quick-question-wrapper">',
+    '#suffix' => '</div>',
+    '#title' => t('Ask Question')
+  );
+  $original_path = implode('/', arg());
+  
+  $form['original_path'] = array(
+    '#type' => 'hidden',
+    '#value' => $original_path,
+  );
+  
+  $form['fields']['question'] = array(
+    '#type' => 'textfield',
+    '#attributes' => array('placeholder' => t('Question *')),
+    '#required' => TRUE,
+    '#size' => 75,
+ //   '#title' => t('Question title'),
+  );
+
+  $form['fields']['description'] = array(
+    '#type' => 'textarea',
+    '#attributes' => array('placeholder' => t('Description')),
+    '#rows' => 3,
+    '#cols' => 73,
+ //   '#title' => t('Question body'),
+  );
+
+  $form['fields']['submit'] = array(
+    '#type' => 'submit',
+    '#ajax' => array(
+      'callback' => 'quick_question_submit_callback',
+      'wrapper' => 'quick-question-wrapper',
+    ),
+    '#value' => t('Ask'),
+  );
+  return $form;
+}
+
+
+/**
+ * Implements hook FORM_ID_validate for quick_question_form
+ */
+function quick_question_form_validate($form, &$form_state) {
+   //validations
+  if (!$form_state['values']['question']) {
+    $message = t('Question field is required');
+    form_set_error('question', $message);
+  }
+}
+/**
+ * Implements hook FORM_ID_submit for quick_question_form
+ */
+function quick_question_form_submit($form, &$form_state) {
+  global $user;
+  $original_path = $form_state['values']['original_path'];
+
+  $node = new stdClass();
+  $node->type = 'question';
+  node_object_prepare($node);
+  $node->title = $form_state['values']['question'];
+  $node->language = LANGUAGE_NONE;
+  $node->body[$node->language][0]['value'] = $form_state['values']['description'];
+  $node->body[$node->language][0]['format'] = 'filtered_html';
+  $node->field_question_path[$node->language][0]['value'] = $original_path;
+  node_save($node);
+  unset($form_state['values']['description']);
+  unset($form_state['values']['question']);
+  $form_state['rebuild'] = TRUE;
+}
+
+
+/**
+ * Callback function : Ajax callback function for quick_question form.
+ */
+function quick_question_submit_callback($form, &$form_state) {
+  // check if form has errors
+  if (form_get_errors()) {
+    return $form;   // @todo barinder, I have split functionality into validate / submit / callback
+                    // functions, but could not make it work as it supposed. 
+                    // Can you please have a look and fix it.
+    $commands[] = ajax_command_replace('#message-placeholder', _get_completion_text($message));
+    $commands[] = ajax_command_replace('#quick-question-wrapper', render($form));
+    return array('#type' => 'ajax', '#commands' => $commands);
+  }
+  // values were saved, we can clean the form
+  unset($form['fields']['question']['#value']);
+  unset($form['fields']['description']['#value']);
+  // @todo store it in $form_state
+  $original_path = $form_state['values']['original_path'];
+  //get related question its require to $original_path otherwise ajax call pass ajax/system path instead of current node.
+  $commands[] = ajax_command_replace('#message-placeholder', _get_completion_text());
+  $commands[] = ajax_command_replace('.view-questions-list', _get_relevant_questions_list($original_path));
+  $commands[] = ajax_command_replace('#quick-question-wrapper', render($form));
+  return array('#type' => 'ajax', '#commands' => $commands);
+}
