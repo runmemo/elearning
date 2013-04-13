@@ -164,6 +164,9 @@ function course_theme() {
       'variables' => array('book_link' => NULL),
       'template' => 'book-header',
     ),
+    'course_exit_modal' => array(
+      'variables' => array('vars' => NULL),
+    ),
   );
 }
 
@@ -291,6 +294,17 @@ function template_preprocess_book_header(&$vars) {
 function course_views_pre_render(&$view) {
   if ($view->name == 'user_courses') {
     if (!empty($view->result)) {
+      //@todo barinder instead of global $user get uid for current viewed profile.
+      global $user; 
+
+      // Course exit confirmation uses ctools modal.
+      // Include the CTools tools that we need.
+      ctools_include('ajax');
+      ctools_include('modal');
+      // Add CTools' javascript to the page.
+      ctools_modal_add_js();
+      //Add our own settings for styling exit modal.
+      course_exit_modal_style();
       foreach ($view->result as $id => $course) {
         if (is_numeric($course->node_registration_nid)) {
           // get path for the "Continue" link on Profile page
@@ -304,6 +318,10 @@ function course_views_pre_render(&$view) {
             $path = $next['link_path'];
           }
           $view->result[$id]->continue_link = l(t('Continue'), $path, array('attributes' => array('class' => 'user-course-continue')));
+          //course-exit/%ctools_js/%/%
+          $href = "course-exit/nojs/{$user->uid}/{$course->node_registration_nid}";
+          $modal = ctools_modal_text_button('<span></span>', $href, t('Exit Course'), 'ctools-modal-course-exit-style user-course-exit');
+          $view->result[$id]->continue_link .= $modal; 
           // temporary put random percentage of course completeness
           $view->result[$id]->course_progress = course_get_progress($course->node_registration_nid);
         }
@@ -362,3 +380,115 @@ function course_item_node_types() {
   return array ('lesson', 'quiz', 'open_question');
 }
 
+/**
+ *  Implements of hook_menu()
+ */
+function course_menu() {
+  $items['course-exit/%ctools_js/%/%node'] = array(
+      'title' => 'Exit Course',
+      'page arguments' => array(1, 2, 3),
+      'page callback' => 'course_exit_modal',
+      'access callback' => TRUE,
+      'type' => MENU_CALLBACK,
+  );
+  $items['course-exit-action/%ctools_js/%/%/%node'] = array(
+      'title' => 'Action',
+      'page arguments' => array(1, 2, 3, 4),
+      'page callback' => 'course_exit_action',
+      'access callback' => TRUE,
+      'type' => MENU_CALLBACK,
+  );
+  return $items;
+}
+
+function course_exit_action($js = NULL, $action = 'cancel', $uid = NULL, $course = NULL) {
+  if (!$js) {
+    // we should never be here out of ajax context
+    return MENU_NOT_FOUND;
+  }
+
+  ctools_include('ajax');
+  ctools_add_js('ajax-responder');
+  ctools_include('modal');
+  $commands = array();
+
+  switch ($action) {
+    case 'cancel':
+      $commands[] = ctools_modal_command_dismiss();
+      break;
+    case 'exit':
+      if(registration_cancel($uid, $course->nid)) {
+        drupal_set_message('Successful de-registered from course.');
+      }
+      else {
+        //@todo bulat : My courses block on user profile block showing wrong results, it shows cancelled course also. Please look into this view.
+        drupal_set_message('Error: No registration id found, look like my courses block on user profile page showing cancelled course also', 'error');
+      }
+      $commands[] = ctools_ajax_command_reload();
+    break;
+  }
+
+  print ajax_render($commands);
+  exit;
+}
+
+function course_exit_modal($js = NULL, $uid = NULL, $course = NULL) {
+  if ($course == NULL || $uid == NULL) {
+    return 'Error :: No course node or user uid.';
+  }
+  if (!$js) {
+    //@todo bulat : Do we need to support non-js calls also ?
+    return ;
+  } else {
+    // Required includes for ctools to work:
+    ctools_include('modal');
+    ctools_include('ajax');
+  }
+
+  return ctools_modal_render(t('Exit Course ???'),  theme('course_exit_modal', array('uid' => $uid, 'course' => $course))) ;
+}
+
+
+function theme_course_exit_modal($vars) {
+  $output = '';
+  $output .= '<div class="course-title">';
+  $output .= t('Are you sure you wants to EXIT course : @course_title ??', array('@course_title' => $vars['course']->title));
+  $output .= '</div>';
+  $output .= '<div class="course-actions">';
+  $output .= '<div class="course-exit-action">';
+  $output .= ctools_ajax_text_button(t('Yes'), "course-exit-action/nojs/exit/{$vars['uid']}/{$vars['course']->nid}", t('Yes'));
+  $output .= '</div>';
+  $output .= '<div class="course-cancel-action">';
+  $output .= ctools_ajax_text_button(t('No'), "course-exit-action/nojs/cancel/{$vars['uid']}/{$vars['course']->nid}", t('Cancel'));
+  $output .= '</div>';
+  $output .= '</div>';
+  return $output;
+}
+
+function course_exit_modal_style() {
+  // Create our own javascript that will be used to theme a modal.
+  $throbber = drupal_get_path('theme', 'elearning').'/images/throbber.gif';
+  $course_exit = array(
+    'course-exit-style' => array(
+      'modalSize' => array(
+        'type' => 'fixed',
+        'width' => 380,
+        'height' => 160,
+      ),
+      'modalOptions' => array(
+        'opacity' => .5,
+        'background-color' => '#000',
+      ),
+      'animation' => 'fadeIn',
+      'modalTheme' => 'CourseExit',
+      'closeText' => 'x',
+      'throbber' => theme('image', array('path' => $throbber, 'alt' => t('Loading...'), 'title' => t('Loading'))),
+    ),
+  );
+
+  // Add the settings array defined above to Drupal 7's JS settings:
+  drupal_add_js($course_exit, 'setting');
+  // The function below assumes the course_exit.modal.js file resides in [module_dir]/js
+  //@todo barinder : It adds // in the DOM may be use drupal_add_js
+  ctools_add_js('course_exit.modal', 'course', '');
+}
