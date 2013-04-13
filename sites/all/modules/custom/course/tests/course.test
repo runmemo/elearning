@@ -94,7 +94,7 @@ class CourseNavigationTestCase extends CourseTestCase {
     $this->assertRaw('node-type-lesson', 'User is redirected to a lesson of the unit.');  
   }
  
-  function testCouseProgress()  {
+  function testCourseProgress()  {
     // login as student
     
     // check that progress is 0
@@ -113,7 +113,20 @@ class CourseNavigationTestCase extends CourseTestCase {
     
   }
   
-  
+  function testCourseLastVisitedItem() {
+    // login as student 
+    
+   // go to item X of the course
+    
+    // go to some other page outside of the course
+    
+    // go to user's page
+    
+    // click on continue button in the list of courses
+    
+    // check that user is redirected to item X of the course
+    
+  }
   
   
 }

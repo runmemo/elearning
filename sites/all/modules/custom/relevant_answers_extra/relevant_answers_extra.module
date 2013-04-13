@@ -91,7 +91,7 @@ function _get_relevant_questions_list($path = NULL) {
 }
 
 /**
- * Form for submition of a relevant question on a page.
+ * Form for submission of a relevant question on a page.
  */
 function quick_question_form($form, &$form_state) {
   if (!user_access('create question content')) {

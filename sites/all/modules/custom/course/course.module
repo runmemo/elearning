@@ -439,11 +439,10 @@ function course_exit_action($js = NULL, $action = 'cancel', $uid = NULL, $course
       break;
     case 'exit':
       if(registration_cancel($uid, $course->nid)) {
-        drupal_set_message('Successful de-registered from course.');
+        drupal_set_message(t('Successful de-registered from course.'));
       }
       else {
-        //@todo bulat : My courses block on user profile block showing wrong results, it shows cancelled course also. Please look into this view.
-        drupal_set_message('Error: No registration id found, look like my courses block on user profile page showing cancelled course also', 'error');
+        drupal_set_message('No registration was found, looks like list of cousrse is wrong', 'error');
       }
       $commands[] = ctools_ajax_command_reload();
     break;
@@ -466,21 +465,21 @@ function course_exit_modal($js = NULL, $uid = NULL, $course = NULL) {
     ctools_include('ajax');
   }
 
-  return ctools_modal_render(t('Exit Course ???'),  theme('course_exit_modal', array('uid' => $uid, 'course' => $course))) ;
+  return ctools_modal_render(t('Confirmation'),  theme('course_exit_modal', array('uid' => $uid, 'course' => $course))) ;
 }
 
 
 function theme_course_exit_modal($vars) {
   $output = '';
   $output .= '<div class="course-title">';
-  $output .= t('Are you sure you wants to EXIT course : @course_title ??', array('@course_title' => $vars['course']->title));
+  $output .= t('Are you sure you wants to leave course : @course_title?', array('@course_title' => $vars['course']->title));
   $output .= '</div>';
   $output .= '<div class="course-actions">';
   $output .= '<div class="course-exit-action">';
-  $output .= ctools_ajax_text_button(t('Yes'), "course-exit-action/nojs/exit/{$vars['uid']}/{$vars['course']->nid}", t('Yes'));
+  $output .= ctools_ajax_text_button(t('Yes, leave'), "course-exit-action/nojs/exit/{$vars['uid']}/{$vars['course']->nid}", t('Yes'));
   $output .= '</div>';
   $output .= '<div class="course-cancel-action">';
-  $output .= ctools_ajax_text_button(t('No'), "course-exit-action/nojs/cancel/{$vars['uid']}/{$vars['course']->nid}", t('Cancel'));
+  $output .= ctools_ajax_text_button(t('Cancel'), "course-exit-action/nojs/cancel/{$vars['uid']}/{$vars['course']->nid}", t('Cancel'));
   $output .= '</div>';
   $output .= '</div>';
   return $output;
