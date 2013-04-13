@@ -196,7 +196,12 @@ function course_views_default_views() {
   $handler->display->display_options['arguments']['uid']['summary']['number_of_records'] = '0';
   $handler->display->display_options['arguments']['uid']['summary']['format'] = 'default_summary';
   $handler->display->display_options['arguments']['uid']['summary_options']['items_per_page'] = '25';
-
+  /* Filter criterion: Registration: Cancelled */
+  $handler->display->display_options['filters']['cancelled']['id'] = 'cancelled';
+  $handler->display->display_options['filters']['cancelled']['table'] = 'registration';
+  $handler->display->display_options['filters']['cancelled']['field'] = 'cancelled';
+  $handler->display->display_options['filters']['cancelled']['value']['value'] = '0';
+  
   /* Display: Block */
   $handler = $view->new_display('block', 'Block', 'block');
   $handler->display->display_options['block_description'] = 'User profile My courses block';
