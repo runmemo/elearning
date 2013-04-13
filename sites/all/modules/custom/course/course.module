@@ -261,6 +261,7 @@ function template_preprocess_book_header(&$vars) {
   // course title
   $vars['course_title'] = $course_node->title;
   // provider logo and name
+  $vars['provider_logo'] = '<div class="provider-logo-default"></div';
   $provider = field_get_items('node', $course_node, 'field_provider');
   if(isset($provider[0])) {
     $provider = node_load($provider[0]['target_id']);
@@ -281,8 +282,16 @@ function template_preprocess_book_header(&$vars) {
     $vars['teacher_name'] = render($name);
     $vars['teacher_surname'] = render($surname);
   }
+  else {
+    // provide default values for teacher name variables:
+    $vars['teacher_name'] = '';
+    $vars['teacher_surname'] = '';
+  }
   if ($vars['question_page'] == TRUE) {
     $vars['lesson_link'] = l(t('Return to class'), $book_link['href'], array('attributes' => array('class' => array('node-question-return-link'))));
+  }
+  else {
+    $vars['lesson_link'] = '';
   }
   
 }
