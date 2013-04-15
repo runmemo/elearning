@@ -523,7 +523,7 @@ function course_exit_modal_style() {
  *  Implements of hook_node_access()
  */
 function course_node_access($node, $op, $account) {
-  if($op == 'update' && course_is_item_node($node)) {
+  if(($op == 'update' || $op == 'delete') && course_is_item_node($node)) {
     global $user;
     if(course_is_teacher($node->book['bid'], $user->uid)) {
       return NODE_ACCESS_ALLOW;
