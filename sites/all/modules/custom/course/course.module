@@ -303,7 +303,6 @@ function template_preprocess_book_header(&$vars) {
 function course_views_pre_render(&$view) {
   if ($view->name == 'user_courses') {
     if (!empty($view->result)) {
-      //@todo barinder instead of global $user get uid for current viewed profile.
       global $user; 
 
       // Course exit confirmation uses ctools modal.
@@ -327,13 +326,10 @@ function course_views_pre_render(&$view) {
             $path = $next['link_path'];
           }
           $view->result[$id]->continue_link = l(t('Continue'), $path, array('attributes' => array('class' => 'user-course-continue')));
-          //course-exit/%ctools_js/%/%
-          $href = "course-exit/nojs/{$user->uid}/{$course->node_registration_nid}";
           // @todo barinder
           // lets add permission check so only student viewing his own account could see this.
           // also let's separate continue_link from cancelation button.
-          $modal = ctools_modal_text_button('<span></span>', $href, t('Exit Course'), 'ctools-modal-course-exit-style user-course-exit');
-          $view->result[$id]->continue_link .= $modal; 
+          $view->result[$id]->exit_link = ctools_modal_text_button('<span></span>', "course-exit/nojs/{$user->uid}/{$course->node_registration_nid}", t('Exit Course'), 'ctools-modal-course-exit-style user-course-exit');; 
           // temporary put random percentage of course completeness
           $view->result[$id]->course_progress = course_get_progress($course->node_registration_nid);
         }
@@ -417,24 +413,27 @@ function course_item_node_types() {
  *  Implements of hook_menu()
  */
 function course_menu() {
-  $items['course-exit/%ctools_js/%/%node'] = array(
+  $items['course-exit/%ctools_js/%user/%node'] = array(
       'title' => 'Exit Course',
       'page arguments' => array(1, 2, 3),
       'page callback' => 'course_exit_modal',
-      'access callback' => TRUE,
+      'access callback' => 'user_edit_access',
+      'access arguments' => array(2),
       'type' => MENU_CALLBACK,
   );
-  $items['course-exit-action/%ctools_js/%/%/%node'] = array(
+  $items['course-exit-action/%ctools_js/%/%user/%node'] = array(
       'title' => 'Action',
       'page arguments' => array(1, 2, 3, 4),
       'page callback' => 'course_exit_action',
+      'access callback' => 'user_edit_access',
+      'access arguments' => array(3),
       'access callback' => TRUE,
       'type' => MENU_CALLBACK,
   );
   return $items;
 }
 
-function course_exit_action($js = NULL, $action = 'cancel', $uid = NULL, $course = NULL) {
+function course_exit_action($js = NULL, $action = 'cancel', $user = NULL, $course = NULL) {
   if (!$js) {
     // we should never be here out of ajax context
     return MENU_NOT_FOUND;
@@ -450,7 +449,7 @@ function course_exit_action($js = NULL, $action = 'cancel', $uid = NULL, $course
       $commands[] = ctools_modal_command_dismiss();
       break;
     case 'exit':
-      if(registration_cancel($uid, $course->nid)) {
+      if(registration_cancel($user->uid, $course->nid)) {
         drupal_set_message(t('Successful de-registered from course.'));
       }
       else {
@@ -464,8 +463,8 @@ function course_exit_action($js = NULL, $action = 'cancel', $uid = NULL, $course
   exit;
 }
 
-function course_exit_modal($js = NULL, $uid = NULL, $course = NULL) {
-  if ($course == NULL || $uid == NULL) {
+function course_exit_modal($js = NULL, $user = NULL, $course = NULL) {
+  if ($course == NULL || $user == NULL) {
     return 'Error :: No course node or user uid.';
   }
   if (!$js) {
@@ -477,7 +476,7 @@ function course_exit_modal($js = NULL, $uid = NULL, $course = NULL) {
     ctools_include('ajax');
   }
 
-  return ctools_modal_render(t('Confirmation'),  theme('course_exit_modal', array('uid' => $uid, 'course' => $course))) ;
+  return ctools_modal_render(t('Confirmation'),  theme('course_exit_modal', array('uid' => $user->uid, 'course' => $course))) ;
 }
 
 
