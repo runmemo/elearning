@@ -180,7 +180,7 @@ function course_node_view($node, $view_mode) {
   if (!course_is_item_node($node)) {
     return;
   }
-  
+
   if ($view_mode == 'full' && node_is_page($node)) {
     global $user;
     // find whether user has permission to see this node.
@@ -517,4 +517,32 @@ function course_exit_modal_style() {
   drupal_add_js($course_exit, 'setting');
   // The function below assumes the course_exit.modal.js file resides in [module_dir]/js
   drupal_add_js(drupal_get_path('module', 'course').'/course_exit.modal');
+}
+
+/**
+ *  Implements of hook_node_access()
+ */
+function course_node_access($node, $op, $account) {
+  if($op == 'update' && course_is_item_node($node)) {
+    global $user;
+    if(course_is_teacher($node->book['bid'], $user->uid)) {
+      return NODE_ACCESS_ALLOW;
+    }
+    return NODE_ACCESS_DENY;
+  }
+}
+
+/**
+ * Checks if uid is course teacher
+ */
+
+function course_is_teacher($course_nid = NULL, $uid = NULL) {
+  if($course_nid && $uid) {
+    $course = node_load($course_nid);
+    $teacher = $course->field_teacher['und'][0]['uid'];
+    if($teacher == $uid) {
+      return TRUE;
+    }
+  }
+  return FALSE;
 }

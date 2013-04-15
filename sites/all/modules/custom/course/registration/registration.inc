@@ -111,6 +111,11 @@ function course_user_access($node, $account) {
       }
       
        $course_nid = $book['bid'];
+
+       //Check if user is teacher of this course
+       if(course_is_teacher($course_nid, $account->uid)) {
+         return TRUE;
+       }
        
        $rid = course_registration_id($account->uid, $course_nid);
        if ($rid) { // user is registered
