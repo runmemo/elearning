@@ -360,18 +360,27 @@ function oq_review_form($form, &$form_state, $args) {
     case 'view':
       if (empty($form_state['storage'])) {
         $review_node = node_load($feedback_nid);
-        $rating = $review_node->field_rating[LANGUAGE_NONE][0]['rating'];
-        $review_body = $review_node->body[LANGUAGE_NONE][0]['value'];
+        $rating_values = field_get_items('node', $review_node, 'field_rating');
+        if ($rating_values) {
+           $rating = $rating_values[0]['rating'];
+        }
+        else {
+          $rating = FALSE;
+        }
+        // @todo barinder get field values with field_get_items to check if value exists
+       $review_body = $review_node->body[LANGUAGE_NONE][0]['value'];
       } 
       else { // we know values from the submitted form already
         $rating = $form_state['storage']['rating'];
         $review_body = $form_state['storage']['body'];
       }
-      $form['rating'] = array(
+      if ($rating) {
+        $form['rating'] = array(
         '#type' => 'item',
         '#title' => 'Rating',
         '#markup' => theme('fivestar_static', array('rating' => $rating)), // $review_node->body[LANGUAGE_NONE][0]['value'],
-      );
+       );
+      }
       $form['review'] = array(
         '#type' => 'item',
         '#title' => 'Review',
