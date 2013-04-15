@@ -29,3 +29,17 @@ function best_answer_extra_default_rules_configuration() {
 }');
   return $items;
 }
+
+/**
+ * Implements hook_default_rules_configuration_alter().
+ */
+function best_answer_extra_default_rules_configuration_alter(&$configs) {
+  if (isset($configs['rules_user_selects_a_best_answer']) && isset($configs['rules_user_unselects_a_prior_best_answer'])) {
+    $configs['rules_user_selects_a_best_answer']->condition(rules_condition('data_is', array(
+        'data:select' => 'question:author:uid',
+        'value:select' => 'answer:author:uid'))->negate());
+    $configs['rules_user_unselects_a_prior_best_answer']->condition(rules_condition('data_is', array(
+        'data:select' => 'question:author:uid',
+        'value:select' => 'answer:author:uid'))->negate());
+  }
+}

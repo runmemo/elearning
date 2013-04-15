@@ -1000,6 +1000,7 @@ input.form-text {
         height: 18px;
         padding-top: 11px;
         .show(none);
+        cursor: pointer;
       }
     }
     .user-profile-userpoints {
@@ -1403,10 +1404,10 @@ body.page-home {
       position: absolute;
       top: 31px;
       left: 36px;
-      width: 17px;
       height: 15px;
       border-radius: 2px;
       background-color: #e44300;
+      padding: 0px 1px;
     }
   }
 }
@@ -1442,8 +1443,8 @@ body.page-home {
 
 .block-answers-extra {
   margin: 0;
-  #quick-answer {
-    legend, #switch_edit-answer-value, #edit-answer-format {
+  #quick-answer-wrapper {
+    legend, .ckeditor_links, .filter-wrapper {
       .show(none) !important;
     }
     .fieldset-wrapper {
@@ -1469,7 +1470,7 @@ body.page-home {
     .cke_toolbar_separator {
       background: #e2e8ed;
     }
-    #edit-submit {
+    .form-submit {
       .edit-submit();
       .gradient-light-orange();
     }
