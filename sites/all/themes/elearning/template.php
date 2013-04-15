@@ -40,8 +40,22 @@ function elearning_preprocess_views_view(&$vars) {
   }
 }
 
+/**
+ * Preprocess for "course_students" view.
+ * @param array $vars
+ */
 function elearning_preprocess_views_view__course_students(&$vars) {
-  $vars['attributes_array']['class'][] = 'grid-4'; 
+  $vars['classes_array'][] = 'grid-4';
+  $vars['classes_array'][] = 'omega';
+}
+
+/**
+ * Preprocess for "user_courses" view.
+ * @param array $vars
+ */
+function elearning_preprocess_views_view__user_courses(&$vars) {
+  $vars['classes_array'][] = 'grid-9';
+  $vars['classes_array'][] = 'omega';
 }
 
 /**
@@ -87,8 +101,7 @@ function elearning_preprocess_node_course(&$vars, $hook) {
  */
 function elearning_preprocess_node_question(&$vars, $hook) {
   $author = user_load($vars['uid']);
-  // @todo @bug : ilya : user points always show 0
-  $vars['userpoints_count'] = userpoints_get_current_points($author->uid);
+  $vars['userpoints_count'] = userpoints_get_current_points($author->uid, 'all');
   if (is_numeric($author->picture)) {
     $author->picture = file_load($author->picture);
   }
@@ -134,7 +147,7 @@ function elearning_preprocess_user_profile(&$variables) {
   $variables['field_surname'] = render($field_surname);
   $variables['field_birthday'] = render($field_birthday);
   $variables['field_phone'] = render($field_phone);
-  $variables['userpoints_count'] = userpoints_get_current_points();
+  $variables['userpoints_count'] = userpoints_get_current_points($account->uid, 'all');
   $view = views_get_view('user_courses');
   $variables['user_courses_view'] = $view->preview('block', array($account->uid));
 }
