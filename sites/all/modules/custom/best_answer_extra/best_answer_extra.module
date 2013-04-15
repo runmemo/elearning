@@ -80,6 +80,7 @@ function best_answer_extra_remove_best_answer($question, $answer_nid) {
     best_answer_remove_flag($answer_nid);
     // trigger rule event 
     if (module_exists('rules')) {
+      $answer_node = node_load($answer_nid);
       rules_invoke_event('best_answer_unset', $question, $answer_node);
     }
   }
