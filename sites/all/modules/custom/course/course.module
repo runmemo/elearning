@@ -516,6 +516,5 @@ function course_exit_modal_style() {
   // Add the settings array defined above to Drupal 7's JS settings:
   drupal_add_js($course_exit, 'setting');
   // The function below assumes the course_exit.modal.js file resides in [module_dir]/js
-  //@todo barinder : It adds // in the DOM may be use drupal_add_js
-  ctools_add_js('course_exit.modal', 'course', '');
+  drupal_add_js(drupal_get_path('module', 'course').'/course_exit.modal');
 }
