@@ -1,6 +1,18 @@
 <?php
-// @todo barinder
-// provide comments for the variables available in this tpl.php file.
+/**
+ * @file
+ * Theme implementation for course Header
+ *
+ * Presented above nodes that are a part of course outlines.
+ *
+ * Available variables:
+ * - $course_title: Course Title
+ * - $provider_logo: Logo of course provider
+ * - $teacher_name: Name of teacher for course
+ * - $teacher_surname: SurName of teacher for course
+ * - $lesson_link: Lesson link for question page.
+ *
+ */
 ?>
 <div class="book-header">
     <div class="provider-logo">
