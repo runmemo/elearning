@@ -72,6 +72,10 @@ function course_block_info() {
   $blocks['book_header'] = array(
     'info' => t('Course Header'), 
   );
+  // Block for displaying course item links
+  $blocks['course_item_links'] = array(
+    'info' => t('Course Links'), 
+  );
   return $blocks;
 }
 
@@ -82,6 +86,8 @@ function course_block_info() {
 function course_block_view($delta = '') {
   // The $delta parameter tells us which block is being requested.
   switch ($delta) {
+    case 'course_item_links':
+      return menu_local_tabs();
     case 'book_header':
       return course_header_block();
     case 'registration_form':
@@ -138,6 +144,11 @@ function course_node_book() {
  */
 function course_menu_alter(&$items) {
   $items['user']['title callback'] = 'course_user_menu_title';
+  $items['node/%node/outline']['access callback'] = '_course_outline_access';
+}
+
+function _course_outline_access($node) {
+  return node_access('update', $node);
 }
 
 /**
@@ -528,7 +539,7 @@ function course_node_access($node, $op, $account) {
     if(course_is_teacher($node->book['bid'], $user->uid)) {
       return NODE_ACCESS_ALLOW;
     }
-    return NODE_ACCESS_DENY;
+    return NODE_ACCESS_IGNORE;
   }
 }
 
