@@ -13,13 +13,13 @@ class BestAnswerExtraTestCase extends DrupalWebTestCase {
     
     // create quesiton node
     
-    // create student A
+    // create user A (permissions to create questions and answers)
     
-    // create question A as student A
+    // create question A as user A
     
-    // create student B
+    // create user B (permissions to create questions and answers)
     
-    // create question B as student B
+    // create question B as user B
     
     // create answer to A as A
     
@@ -31,6 +31,7 @@ class BestAnswerExtraTestCase extends DrupalWebTestCase {
   }
   
   function testUserPointsAuthorSetsBest() {
+    // see setup() function for existing nodes
     
     // check that when user A checks his own answer on his question
     // he gets 0 points
@@ -54,6 +55,27 @@ class BestAnswerExtraTestCase extends DrupalWebTestCase {
     // B looses Points > 0 
    
   }
+  // ******************************
+  // tests for best_answer module
+  // ******************************
+  /**
+   * Tests API functions to set / unset best answers
+   */
+  function testBestAnswerUpdateUnset() {
+    // see setup() function for existing nodes
+    
+    // set answer 1 as best
+    
+    // check that fields on asnwer and question have correct values
+    
+    // set answer 2 as best - call function _best_answer_update_best_answer
+    
+    // check that fields on answer and question have correct values
+    
+    // unset anwer 2 as best - call function best_answer_extra_remove_best_answer
+    
+    // check that fields on answer and question have correct values
+  }
   
-
+  
 }

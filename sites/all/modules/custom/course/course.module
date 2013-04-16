@@ -550,6 +550,7 @@ function course_node_access($node, $op, $account) {
 function course_is_teacher($course_nid = NULL, $uid = NULL) {
   if($course_nid && $uid) {
     $course = node_load($course_nid);
+    // @todo barinder user field_get_items() and check if value exists
     $teacher = $course->field_teacher['und'][0]['uid'];
     if($teacher == $uid) {
       return TRUE;
