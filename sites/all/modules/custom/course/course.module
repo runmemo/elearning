@@ -161,7 +161,6 @@ function course_theme() {
   return array(
     'book_header' => array(
       'variables' => array('book_link' => NULL),
-      'render element' => 'elements',
       'template' => 'book-header',
     ),
     'course_exit_modal' => array(
@@ -261,16 +260,11 @@ function template_preprocess_book_header(&$vars) {
   // provider logo and name
   $vars['provider_logo'] = '<div class="provider-logo-default"></div>';
 
-  // @todo bulat have a look at:
-  // field_attach_preprocess('node', $provider, $vars['elements'], $vars);
   $provider = field_get_items('node', $course_node, 'field_provider');
   if (isset($provider[0])) {
     $provider = node_load($provider[0]['target_id']);
-    if (!empty($provider->field_logo)) {
-      $filename = $provider->field_logo['und'][0]['filename'];
-      $image_uri = file_build_uri($filename);
-      $vars['provider_logo'] = theme('image_style', array('style_name' => 'provider_logo', 'path' => $image_uri));
-    }
+    $vars['provider_logo'] = field_view_field('node', $provider, 'field_logo', array('settings' =>
+       array('image_style' => 'provider_logo')));
   }
   // teacher logo and name
   $teacher = field_get_items('node', $course_node, 'field_teacher');
