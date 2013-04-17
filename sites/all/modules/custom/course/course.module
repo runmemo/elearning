@@ -282,10 +282,10 @@ function template_preprocess_book_header(&$vars) {
   // provider logo and name
   $vars['provider_logo'] = '<div class="provider-logo-default"></div>';
 
-  $provider = field_get_items('node', $course_node, 'field_provider');
+  $provider = field_get_items('node', $course_node, 'field_provider'); 
   if (isset($provider[0])) {
     $provider = node_load($provider[0]['target_id']);
-    $vars['provider_logo'] = field_view_field('node', $provider, 'field_logo', array('settings' =>
+    $vars['provider_logo'] = field_view_field('node', $provider, 'field_logo', array('label' => 'hidden','settings' =>
        array('image_style' => 'provider_logo')));
   }
   // teacher logo and name

@@ -16,7 +16,7 @@
 ?>
 <div class="book-header">
     <div class="provider-logo">
-      <?php print $provider_logo; ?>
+      <?php print render($provider_logo); ?>
     </div>  
    <div class="title-wrapper">
       <div class="course-title">
