@@ -56,7 +56,7 @@ function open_question_default_rules_configuration() {
             "description" : "Answer author marked feedback #[flagged-node:nid] as useful",
             "operation" : "Mark Useful",
             "reference" : "[flagged-node:field-open-question-answer]",
-            "display" : 1,
+            "display" : 0,
             "moderate" : "approved"
           }
         }
@@ -85,7 +85,7 @@ function open_question_default_rules_configuration() {
             "description" : "Answer author unmarked feedback #[flagged-node:nid] as useful",
             "operation" : "Unmark Useful",
             "reference" : "[flagged-node:field-open-question-answer]",
-            "display" : 1,
+            "display" : 0,
             "moderate" : "approved"
           }
         }
