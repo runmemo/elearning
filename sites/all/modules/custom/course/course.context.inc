@@ -50,11 +50,48 @@ function course_context_default_contexts() {
     ),
   );
   $context->condition_mode = 1;
-
-// Translatables
-// Included for use with string extractors like potx.
-  t('Node');
   $export['course_item'] = $context;
+
+
+  $context = new stdClass();
+  $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
+  $context->api_version = 3;
+  $context->name = 'teacher_course_items';
+  $context->description = 'When teacher is viewing course item';
+  $context->tag = 'Node';
+  $context->conditions = array(
+    'node' => array(
+      'values' => $node_values,
+      'options' => array(
+        'node_form' => '0',
+      ),
+    ),
+    'user' => array(
+      'values' => array(
+        'administrator' => 'administrator',
+        'teacher' => 'teacher',
+      ),
+    ),
+  );
+  $context->reactions = array(
+    'block' => array(
+      'blocks' => array(
+        'course-course_item_links' => array(
+          'module' => 'course',
+          'delta' => 'course_item_links',
+          'region' => 'content',
+          'weight' => '-33',
+        ),
+      ),
+    ),
+  );
+  $context->condition_mode = 1;
+  $export['teacher_course_items'] = $context;
+
+  // Translatables
+  // Included for use with string extractors like potx.
+  t('Node');
+  t('When teacher is viewing course item');
 
   return $export;
 }
