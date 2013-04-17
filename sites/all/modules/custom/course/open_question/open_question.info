@@ -43,8 +43,10 @@ features[field_instance][] = node-open_question_feedback-field_rating
 features[field_instance][] = node-open_question_feedback-field_rating_widget
 
 features[image][] = question_author
-features[flag][] = oqaf_inappropriate
+features[flag][] = opaf_useful
 features[rules_config][] = rules_open_question_answered
+features[rules_config][] = rules_feedback_marked_as_useful
+features[rules_config][] = rules_feedback_unmarked_as_useful
 features[node][] = open_question
 features[node][] = open_question_answer
 features[node][] = open_question_feedback
