@@ -63,13 +63,18 @@ function course_context_default_contexts() {
     'node' => array(
       'values' => $node_values,
       'options' => array(
-        'node_form' => '0',
+        'node_form' => '1',
       ),
     ),
     'user' => array(
       'values' => array(
         'administrator' => 'administrator',
         'teacher' => 'teacher',
+      ),
+    ),
+    'path' => array(
+      'values' => array(
+        'node/*/outline' => 'node/*/outline',
       ),
     ),
   );
@@ -85,7 +90,7 @@ function course_context_default_contexts() {
       ),
     ),
   );
-  $context->condition_mode = 1;
+  $context->condition_mode = 0;
   $export['teacher_course_items'] = $context;
 
   // Translatables

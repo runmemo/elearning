@@ -106,6 +106,13 @@ function course_block_view($delta = '') {
   * Return course item operation links
   */
 function course_item_links() {
+  global $user;
+  $node = menu_get_object('node');
+
+  if(!_course_outline_access($node)) {
+    return FALSE;
+  }
+  
   $block = array();
   $block['subject'] = '';
   $tabs =  menu_local_tasks(0);
