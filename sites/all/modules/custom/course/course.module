@@ -4,16 +4,15 @@
  * @file course.module
  * Code for the Course module.
  */
-
 include_once 'course.features.inc';
 
 /**
  * Implements hook_init()
  */
 function course_init() {
-  
+
   $node = menu_get_object('node');
-  
+
   // Redirect to fist lesson from unit content type page
   if ($node && $node->type === 'unit') {
     $book_link = $node->book;
@@ -30,11 +29,11 @@ function course_init() {
  */
 function course_last_visited_node($nid) {
   global $user;
-  
+
   if ($user->uid == 0) {
     return $nid;
   }
-  
+
   $sql = 'SELECT h.nid AS nid 
           FROM {history} h 
           INNER JOIN {book} b ON h.nid = b.nid
@@ -46,9 +45,9 @@ function course_last_visited_node($nid) {
             AND ml.plid != 0
           ORDER BY h.timestamp DESC
           LIMIT 1';
-  
+
   $result = db_query($sql, array(':nid' => $nid, ':uid' => $user->uid));
-  
+
   foreach ($result as $record) {
     return $record->nid;
   }
@@ -62,15 +61,15 @@ function course_last_visited_node($nid) {
  */
 function course_block_info() {
   $blocks['registration_form'] = array(
-    'info' => t('Course registertion form'), 
+    'info' => t('Course registertion form'),
   );
   // Temporary block for displaying notifications count
   $blocks['user_notifications_count'] = array(
-    'info' => t('User notifications count'), 
+    'info' => t('User notifications count'),
   );
   // Block for displaying book header
   $blocks['book_header'] = array(
-    'info' => t('Course Header'), 
+    'info' => t('Course Header'),
   );
   // Block for displaying course item links
   $blocks['course_item_links'] = array(
@@ -97,7 +96,7 @@ function course_block_view($delta = '') {
       $block['subject'] = '';
       $block['content'] = array(
         '#type' => 'markup',
-        '#markup' => '17', 
+        '#markup' => '17',
       );
       return $block;
   }
@@ -120,21 +119,21 @@ function course_item_links() {
  * @return href of the node
  */
 function course_first_node_href($node_type, $book = NULL) {
-   if(is_null($book)) {
-      $book = course_node_book();
-   }
-   if(!$book) {
-     return FALSE;
-   }
-   $item = $book;
-   do {
-     $node = menu_get_object('node', 1, $item['link_path']);
-     if($node->type === $node_type) {
-       return $item['href'];
-     }
-     $item = book_next($item);
-   } while($item);
-   return FALSE;
+  if (is_null($book)) {
+    $book = course_node_book();
+  }
+  if (!$book) {
+    return FALSE;
+  }
+  $item = $book;
+  do {
+    $node = menu_get_object('node', 1, $item['link_path']);
+    if ($node->type === $node_type) {
+      return $item['href'];
+    }
+    $item = book_next($item);
+  } while ($item);
+  return FALSE;
 }
 
 /**
@@ -196,9 +195,9 @@ function course_theme() {
  * Implements hook_node_view().
  */
 function course_node_view($node, $view_mode) {
-   //unset Book Links
+  //unset Book Links
   hide($node->content['links']['book']);
-  
+
   if (!course_is_item_node($node)) {
     return;
   }
@@ -211,19 +210,17 @@ function course_node_view($node, $view_mode) {
     if (isset($access)) { // content is part of the course
       if ($access) {
         $context_access = 'true';
-      } 
+      }
       else { // user does not have access to course item
         hide($node->content);
         $context_access = 'false';
       }
-    } 
+    }
     // set condition for course_access plugin
     if ($plugin = context_get_plugin('condition', 'course_access')) {
-      $plugin->execute($context_access);    
+      $plugin->execute($context_access);
     }
-   
   }
-  
 }
 
 /**
@@ -231,16 +228,16 @@ function course_node_view($node, $view_mode) {
  * @return array An array, representing "Book Header" block.
  */
 function course_header_block() {
-  $block = array(); 
+  $block = array();
   $node = menu_get_object('node');
   if (!$node) {
     watchdog('block header', t('Block with header of the course was shown in the wrong place.'), array(), WATCHDOG_WARNING);
     return $block;
   }
-  
+
   $question_page = FALSE;
   $book = FALSE;
-  
+
   if ($node->type === 'question') {
     $question_paths = field_get_items('node', $node, 'field_question_path');
     if ($question_paths) {
@@ -257,9 +254,9 @@ function course_header_block() {
     else { // question is not related to any page
       return $block;
     }
-  } 
+  }
   else { // other content types
-    $book = isset($node->book) ? $node->book : FALSE;  
+    $book = isset($node->book) ? $node->book : FALSE;
   }
 
   // Build the block title and contents
@@ -284,23 +281,21 @@ function template_preprocess_book_header(&$vars) {
   $vars['course_title'] = $course_node->title;
   // provider logo and name
   $vars['provider_logo'] = '<div class="provider-logo-default"></div>';
+
   $provider = field_get_items('node', $course_node, 'field_provider');
-  if(isset($provider[0])) {
+  if (isset($provider[0])) {
     $provider = node_load($provider[0]['target_id']);
-    if(!empty($provider->field_logo)) {
-      $filename = $provider->field_logo['und'][0]['filename'];
-      $image_uri = file_build_uri($filename);
-      $vars['provider_logo'] = theme('image_style', array('style_name' => 'provider_logo', 'path' => $image_uri));
-    }
+    $vars['provider_logo'] = field_view_field('node', $provider, 'field_logo', array('settings' =>
+       array('image_style' => 'provider_logo')));
   }
   // teacher logo and name
   $teacher = field_get_items('node', $course_node, 'field_teacher');
   if (isset($teacher[0])) {
     $teacher = user_load($teacher[0]['uid']);
-    $name = field_get_items('user', $teacher, 'field_name');
-    $name = field_view_value('user', $teacher, 'field_name', $name[0]);
-    $surname = field_get_items('user', $teacher, 'field_surname');  
-    $surname = field_view_value('user', $teacher, 'field_surname', $surname[0]);
+    // @todo barinder can you please do this with field_view_field instead of getting raw field values
+    // not big deal in this case but will be better to do it this way accross the project.
+    $name = field_view_field('user', $teacher, 'field_name', array('label' => 'hidden',));
+    $surname = field_view_field('user', $teacher, 'field_surname', array('label' => 'hidden'));
     $vars['teacher_name'] = render($name);
     $vars['teacher_surname'] = render($surname);
   }
@@ -315,7 +310,6 @@ function template_preprocess_book_header(&$vars) {
   else {
     $vars['lesson_link'] = '';
   }
-  
 }
 
 /**
@@ -323,76 +317,81 @@ function template_preprocess_book_header(&$vars) {
  * @param type $view
  */
 function course_views_pre_render(&$view) {
-  if ($view->name == 'user_courses') {
-    if (!empty($view->result)) {
-      global $user; 
+  if ($view->name != 'user_courses' || empty($view->result)) {
+    return NULL; // wrong view or view is empty;
+  }
 
-      // Course exit confirmation uses ctools modal.
-      // Include the CTools tools that we need.
-      ctools_include('ajax');
-      ctools_include('modal');
-      // Add CTools' javascript to the page.
-      ctools_modal_add_js();
-      //Add our own settings for styling exit modal.
-      course_exit_modal_style();
-      foreach ($view->result as $id => $course) {
-        if (is_numeric($course->node_registration_nid)) {
-          // get path for the "Continue" link on Profile page
-          $last_nid = course_last_visited_node($course->node_registration_nid);
-          $path = '';
-          if ($last_nid) {
-            $path = 'node/' . $last_nid;
-          } else {
-            $node = node_load($course->node_registration_nid);
-            $next = book_next($node->book);
-            $path = $next['link_path'];
-          }
-          $view->result[$id]->continue_link = l(t('Continue'), $path, array('attributes' => array('class' => 'user-course-continue')));
-          $view->result[$id]->exit_link = ctools_modal_text_button('<span></span>', "course-exit/nojs/{$user->uid}/{$course->node_registration_nid}", t('Exit Course'), 'ctools-modal-course-exit-style user-course-exit');; 
-          $view->result[$id]->course_progress = course_get_progress($course->node_registration_nid);
-        }
-      }
+  global $user;
+  // Course exit confirmation uses ctools modal.
+  // Include the CTools tools that we need.
+  ctools_include('ajax');
+  ctools_include('modal');
+  // Add CTools' javascript to the page.
+  ctools_modal_add_js();
+  //Add our own settings for styling exit modal.
+  course_exit_modal_style();
+  foreach ($view->result as $id => $course) {
+    if (!is_numeric($course->node_registration_nid)) {
+      continue;
     }
+    // get path for the "Continue" link on Profile page
+    $last_nid = course_last_visited_node($course->node_registration_nid);
+    $path = '';
+    if ($last_nid) {
+      $path = 'node/' . $last_nid;
+    }
+    else {
+      $node = node_load($course->node_registration_nid);
+      $next = book_next($node->book);
+      $path = $next['link_path'];
+    }
+    $view->result[$id]->continue_link = l(t('Continue'), $path, array('attributes' => array('class' => 'user-course-continue')));
+    $view->result[$id]->exit_link = ctools_modal_text_button('<span></span>', "course-exit/nojs/{$user->uid}/{$course->node_registration_nid}", t('Exit Course'), 'ctools-modal-course-exit-style user-course-exit');
+    $view->result[$id]->course_progress = course_get_progress($course->node_registration_nid);
   }
 }
 
 /**
  * Get course progress
+ * @param integer $course_nid nid of the course node
+ * @param object $account account of the user for who we check progress
+ * @return integer Progress of course completion in percents of total course items
  */
-function course_get_progress($course_nid = FALSE, $account = FALSE) { 
-  if(!$course_nid) {
+function course_get_progress($course_nid = FALSE, $account = FALSE) {
+  if (!$course_nid) {
     return; //Course needs to be passed.
   }
-  if(!$account) {
+  if (!$account) {
     global $user;
     $account = $user;
   }
   $course = node_load($course_nid);
   $tree = menu_tree_all_data($course->book['menu_name'], NULL, 3);
   $tree_key = key($tree);
-  if(isset($tree[$tree_key]['below'])){
-    $tree = $tree[$tree_key]['below'];
-    $counter = new multi_counter();
-    $flag = flag_get_flag('course_item_complete');
-    foreach ($tree as $unit) { 
-      if(!isset($unit['below'])) { 
-        continue;
+  if (isset($tree[$tree_key]['below'])) {
+    return 0;
+  }
+  $tree = $tree[$tree_key]['below'];
+  $counter = new multi_counter();
+  $flag = flag_get_flag('course_item_complete');
+  foreach ($tree as $unit) {
+    if (!isset($unit['below'])) {
+      continue;
+    }
+    foreach ($unit['below'] as $item) {
+      $counter->increment('items');
+      $nid = str_ireplace('node/', '', $item['link']['link_path']);
+      if ($flag->is_flagged($nid, $account->uid)) {
+        $counter->increment('completed');
       }
-      foreach ($unit['below'] as $item) { 
-        $counter->increment('items'); 
-        $nid = str_ireplace('node/', '', $item['link']['link_path']);
-        if($flag->is_flagged($nid, $account->uid)) {
-          $counter->increment('completed');
-        }
-      }
-    }  
-    if($counter->current('items') != 0) {
-      return round(($counter->current('completed')/$counter->current('items')) * 100) ;
     }
   }
+  if ($counter->current('items') != 0) {
+    return round(($counter->current('completed') / $counter->current('items')) * 100);
+  }
+
   return 0;
 }
-
 
 function course_is_item_node($node) {
   return in_array($node->type, course_item_node_types());
@@ -403,27 +402,26 @@ function course_is_item_node($node) {
  * @return array
  */
 function course_item_node_types() {
-  
+
   $items = &drupal_static(__FUNCTION__);
-  
+
   if (!isset($items)) {
     // array that matches modules to content types that they add
     $modules = array(
-      'lesson' => 'lesson', 
-      'quiz' => 'quiz', 
+      'lesson' => 'lesson',
+      'quiz' => 'quiz',
       'open_question' => 'open_question',
       'closedquestion' => 'closedquestion');
     $items = array();
-    
+
     // add content types provided by modules
     foreach ($modules as $module => $bundle) {
       if (module_exists($module)) {
         $items[] = $bundle;
       }
     }
-    
   }
-  
+
   return $items;
 }
 
@@ -432,21 +430,21 @@ function course_item_node_types() {
  */
 function course_menu() {
   $items['course-exit/%ctools_js/%user/%node'] = array(
-      'title' => 'Exit Course',
-      'page arguments' => array(1, 2, 3),
-      'page callback' => 'course_exit_modal',
-      'access callback' => 'user_edit_access',
-      'access arguments' => array(2),
-      'type' => MENU_CALLBACK,
+    'title' => 'Exit Course',
+    'page arguments' => array(1, 2, 3),
+    'page callback' => 'course_exit_modal',
+    'access callback' => 'user_edit_access',
+    'access arguments' => array(2),
+    'type' => MENU_CALLBACK,
   );
   $items['course-exit-action/%ctools_js/%/%user/%node'] = array(
-      'title' => 'Action',
-      'page arguments' => array(1, 2, 3, 4),
-      'page callback' => 'course_exit_action',
-      'access callback' => 'user_edit_access',
-      'access arguments' => array(3),
-      'access callback' => TRUE,
-      'type' => MENU_CALLBACK,
+    'title' => 'Action',
+    'page arguments' => array(1, 2, 3, 4),
+    'page callback' => 'course_exit_action',
+    'access callback' => 'user_edit_access',
+    'access arguments' => array(3),
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
   );
   return $items;
 }
@@ -467,14 +465,14 @@ function course_exit_action($js = NULL, $action = 'cancel', $user = NULL, $cours
       $commands[] = ctools_modal_command_dismiss();
       break;
     case 'exit':
-      if(registration_cancel($user->uid, $course->nid)) {
+      if (registration_cancel($user->uid, $course->nid)) {
         drupal_set_message(t('Successful de-registered from course.'));
       }
       else {
         drupal_set_message('No registration was found, looks like list of cousrse is wrong', 'error');
       }
       $commands[] = ctools_ajax_command_reload();
-    break;
+      break;
   }
 
   print ajax_render($commands);
@@ -487,16 +485,16 @@ function course_exit_modal($js = NULL, $user = NULL, $course = NULL) {
   }
   if (!$js) {
     //@todo bulat : Do we need to support non-js calls also ?
-    return ;
-  } else {
+    return;
+  }
+  else {
     // Required includes for ctools to work:
     ctools_include('modal');
     ctools_include('ajax');
   }
 
-  return ctools_modal_render(t('Confirmation'),  theme('course_exit_modal', array('uid' => $user->uid, 'course' => $course))) ;
+  return ctools_modal_render(t('Confirmation'), theme('course_exit_modal', array('uid' => $user->uid, 'course' => $course)));
 }
-
 
 function theme_course_exit_modal($vars) {
   $output = '';
@@ -516,7 +514,7 @@ function theme_course_exit_modal($vars) {
 
 function course_exit_modal_style() {
   // Create our own javascript that will be used to theme a modal.
-  $throbber = drupal_get_path('theme', 'elearning').'/images/throbber.gif';
+  $throbber = drupal_get_path('theme', 'elearning') . '/images/throbber.gif';
   $course_exit = array(
     'course-exit-style' => array(
       'modalSize' => array(
@@ -538,16 +536,16 @@ function course_exit_modal_style() {
   // Add the settings array defined above to Drupal 7's JS settings:
   drupal_add_js($course_exit, 'setting');
   // The function below assumes the course_exit.modal.js file resides in [module_dir]/js
-  drupal_add_js(drupal_get_path('module', 'course').'/course_exit.modal');
+  drupal_add_js(drupal_get_path('module', 'course') . '/course_exit.modal.js');
 }
 
 /**
  *  Implements of hook_node_access()
  */
 function course_node_access($node, $op, $account) {
-  if(($op == 'update' || $op == 'delete') && course_is_item_node($node)) {
+  if (($op == 'update' || $op == 'delete') && course_is_item_node($node)) {
     global $user;
-    if(course_is_teacher($node->book['bid'], $user->uid)) {
+    if (course_is_teacher($node->book['bid'], $user->uid)) {
       return NODE_ACCESS_ALLOW;
     }
     return NODE_ACCESS_IGNORE;
@@ -557,9 +555,12 @@ function course_node_access($node, $op, $account) {
 /**
  * Checks if uid is course teacher
  */
-
 function course_is_teacher($course_nid = NULL, $uid = NULL) {
-  if($course_nid && $uid) {
+  if(!$course_nid || !$uid) {
+    return FALSE;
+  }
+
+  if ($course_nid && $uid) {
     $course = node_load($course_nid);
     $teacher = field_get_items('node', $course, 'field_teacher');
     if(isset($teacher[0])) {
@@ -568,5 +569,6 @@ function course_is_teacher($course_nid = NULL, $uid = NULL) {
       }
     }
   }
+
   return FALSE;
 }

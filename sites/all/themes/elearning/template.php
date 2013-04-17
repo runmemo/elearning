@@ -67,11 +67,18 @@ function elearning_preprocess_node_course(&$vars, $hook) {
   global $base_url;
   $node = $vars['node'];
   // provider logo and name
+  
   $provider = field_get_items('node', $node, 'field_provider');
   if (isset($provider[0])) {
     $field_logo = field_view_field('node', $provider[0]['entity'], 'field_logo', array('label' => 'hidden', 'settings' => array('image_style' => 'provider_logo')));
-    $field_extra = field_view_field('node', $provider[0]['entity'], 'field_provider_extra', array('label' => 'hidden'));
-    $vars['provider_logo'] = render($field_logo);
+    if (empty($field_logo)) {
+      print_nice('field logo is null');
+      $vars['provider_logo'] = '<div class="provider-logo-default"></div>';
+    }
+    else {
+      $vars['provider_logo'] = render($field_logo);
+    }
+    $field_extra = field_view_field('node', $provider[0]['entity'], 'field_provider_extra', array('label' => 'hidden'));   
     $vars['provider_extra'] = render($field_extra);
     $vars['provider_name'] = $provider[0]['entity']->title;
   }
@@ -80,6 +87,12 @@ function elearning_preprocess_node_course(&$vars, $hook) {
   if (isset($teacher[0])) {
     $field_name = field_view_field('user', $teacher[0]['user'], 'field_name', array('label' => 'hidden'));
     $field_surname = field_view_field('user', $teacher[0]['user'], 'field_surname', array('label' => 'hidden'));
+    // @todo Ilya I have noticed that you are adding default div on different node types
+    // like this one: <div class="user-profile-default-picture"></div>
+    // but not here.
+    // 1. should we add it here also? 
+    // 2. is there more generic way to do this, so we don't have to repeat same logic 10 times?
+    //    at least we could take it out to separate function...
     $vars['teacher_avatar'] = theme('user_picture', array('account' => $teacher[0]['user']));
     $vars['teacher_name'] = render($field_name);
     $vars['teacher_surname'] = render($field_surname);
@@ -87,6 +100,12 @@ function elearning_preprocess_node_course(&$vars, $hook) {
   // tmp image for social icons
   $vars['tmp_social_img'] = $base_url . '/sites/all/themes/elearning/images/social-stuff.png';
   $vars['form_class_participate'] = drupal_get_form('course_registration_form');
+  // @todo Ilya this assignmed bellow is not a great one. If field_video does not exist,
+  // you create it in 'content' array. this should be done similar to the way it is done
+  // on the lessons page, e.g. via adding grid-x class. barinder found a way to adjust height
+  // of the video to keep correct ratio if you need, I will ask him about it.
+  // also in narrow and default (mobile) view modes video position is strange.
+  // can we make it behave somewhat similar to how it is done on the lesson's page.
   $vars['content']['field_video'][0]['file']['#options']['width'] = 448;
   $vars['content']['field_video'][0]['file']['#options']['height'] = 243;
   // students view
@@ -130,7 +149,6 @@ function elearning_preprocess_html(&$vars, $hook) {
  * @see user-profile.tpl.php
  */
 function elearning_preprocess_user_profile(&$variables) {
-  drupal_add_js(drupal_get_path('theme', 'elearning') . '/js/elearning.js');
   $account = $variables['elements']['#account'];
   $variables['user_uid'] = $account->uid;
   $variables['user_name'] = $account->name;

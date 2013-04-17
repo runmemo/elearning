@@ -4,18 +4,21 @@
  * Template for course nodes.
  *
  * All variables available in node.tpl.php
+ * @todo Ilya provide documentation for variables introduced in template.php
  */
 ?>
 <article<?php print $attributes; ?>>
   <div<?php print $content_attributes; ?>>
     <div class="node-course-header">
       <div class="node-course-header-left grid-10 omega">
-        <?php if (isset($provider_logo)) print $provider_logo; ?>
+        <?php print $provider_logo; ?>
         <div class ="node-course-provider-name">
           <h1 class="title course-title" id="page-title"><?php print $node->title; ?></h1>
           <?php if (isset($provider_name) || isset($provider_extra)) : ?>
             <div class="provider-name-extra grid-4 omega">
-              <div class="provider-name"><?php if (isset($provider_name)) print $provider_name; ?></div>
+              <div class="provider-name">
+                <?php if (isset($provider_name)) print $provider_name; ?>
+              </div>
               <?php if (isset($provider_extra)) print $provider_extra; ?>
             </div>
           <?php endif; ?>

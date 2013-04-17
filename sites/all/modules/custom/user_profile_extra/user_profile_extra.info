@@ -1,0 +1,27 @@
+name = User Profile Extra
+description = Provides additions to default user profile: a form for updating user picture, user tabs, fields.
+core = 7.x
+package = Custom 
+
+dependencies[] = context
+dependencies[] = course
+dependencies[] = ctools
+dependencies[] = date
+dependencies[] = features
+dependencies[] = image
+dependencies[] = quicktabs
+dependencies[] = text
+features[context][] = user_profile
+features[ctools][] = context:context:3
+features[ctools][] = quicktabs:quicktabs:1
+features[features_api][] = api:1
+features[field_base][] = field_birthday
+features[field_base][] = field_name
+features[field_base][] = field_phone_number
+features[field_base][] = field_surname
+features[field_instance][] = user-user-field_birthday
+features[field_instance][] = user-user-field_name
+features[field_instance][] = user-user-field_phone_number
+features[field_instance][] = user-user-field_surname
+features[quicktabs][] = user_profile_tab
+features[image][] = user_profile_picture

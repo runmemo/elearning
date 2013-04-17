@@ -41,10 +41,6 @@ function course_update_7002() {
   create_field($fields['node-course-field-course-load']);
   create_field($fields['node-course-field-duration']);
   create_field($fields['node-provider-field-provider-extra']);
-  create_field($fields['user-user-field-name']);
-  create_field($fields['user-user-field-surname']);
-  create_field($fields['user-user-field-phone-number']);
-  create_field($fields['user-user-field-birthday']);
   create_field($fields['node-course-field-course-dates']);
   create_field($fields['node-course-field-image']);
 }
