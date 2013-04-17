@@ -34,5 +34,63 @@ function open_question_default_rules_configuration() {
           ]
       }
     }');
+  $items['rules_feedback_marked_as_useful'] = entity_import('rules_config',
+    '{ "rules_feedback_marked_as_useful" : {
+      "LABEL" : "Feedback marked as useful",
+      "PLUGIN" : "reaction rule",
+      "REQUIRES" : [ "rules", "userpoints_rules", "flag" ],
+      "ON" : [ "flag_flagged_opaf_useful" ],
+      "IF" : [
+        { "node_is_of_type" : {
+            "node" : [ "flagged-node" ],
+            "type" : { "value" : { "open_question_feedback" : "open_question_feedback" } }
+          }
+        }
+      ],
+      "DO" : [
+        { "userpoints_action_grant_points" : {
+            "user" : [ "flagged-node:author" ],
+            "points" : "10",
+            "tid" : "1",
+            "entity" : [ "flagged-node:field-open-question-answer" ],
+            "description" : "Answer author marked feedback #[flagged-node:nid] as useful",
+            "operation" : "Mark Useful",
+            "reference" : "[flagged-node:field-open-question-answer]",
+            "display" : 1,
+            "moderate" : "approved"
+          }
+        }
+      ]
+    }
+  }');
+  $items['rules_feedback_unmarked_as_useful'] = entity_import('rules_config',
+    '{ "rules_feedback_unmarked_as_useful" : {
+      "LABEL" : "Feedback unmarked as useful",
+      "PLUGIN" : "reaction rule",
+      "REQUIRES" : [ "rules", "userpoints_rules", "flag" ],
+      "ON" : [ "flag_unflagged_opaf_useful" ],
+      "IF" : [
+        { "node_is_of_type" : {
+            "node" : [ "flagged-node" ],
+            "type" : { "value" : { "open_question_feedback" : "open_question_feedback" } }
+          }
+        }
+      ],
+      "DO" : [
+        { "userpoints_action_grant_points" : {
+            "user" : [ "flagged-node:author" ],
+            "points" : "-10",
+            "tid" : "1",
+            "entity" : [ "flagged-node:field-open-question-answer" ],
+            "description" : "Answer author unmarked feedback #[flagged-node:nid] as useful",
+            "operation" : "Unmark Useful",
+            "reference" : "[flagged-node:field-open-question-answer]",
+            "display" : 1,
+            "moderate" : "approved"
+          }
+        }
+      ]
+    }
+  }');
   return $items;
 }

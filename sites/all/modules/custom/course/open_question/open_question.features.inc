@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * open_question.features.inc
@@ -30,56 +31,19 @@ function open_question_views_api() {
     'api' => '3.0',
     'path' => drupal_get_path('module', 'open_question') . '/views',);
 }
+
 /**
  * Implements hook_flag_default_flags().
  */
 function open_question_flag_default_flags() {
   $flags = array();
-  // Exported flag: "Flag to mark feedback as inappropriate".
-  $flags['oqaf_inappropriate'] = array(
+  // Exported flag: "Flag to mark feedback as useful".
+  $flags['opaf_useful'] = array(
     'content_type' => 'node',
-    'title' => 'Flag to mark feedback as inappropriate',
-    'global' => '0',
-    'types' => array(
-      0 => 'open_question_feedback',
-    ),
-    'flag_short' => 'Mark as inappropriate',
-    'flag_long' => '',
-    'flag_message' => '',
-    'unflag_short' => 'Mark as appropriate',
-    'unflag_long' => '',
-    'unflag_message' => '',
-    'unflag_denied_text' => '',
-    'link_type' => 'toggle',
-    'roles' => array(
-      'flag' => array(
-        0 => '2',
-      ),
-      'unflag' => array(
-        0 => '2',
-      ),
-    ),
-    'weight' => 0,
-    'show_on_form' => 0,
-    'access_author' => '',
-    'show_on_page' => 0,
-    'show_on_teaser' => 0,
-    'show_contextual_link' => 0,
-    'i18n' => 0,
-    'api_version' => 2,
-    'module' => 'open_question',
-    'locked' => array(
-      0 => 'name',
-    ),
-  );
-  
-  // Exported flag: "Flag for selecting best answer to the question".
-  $flags['best_answer'] = array(
-    'content_type' => 'node',
-    'title' => 'Flag for selecting best answer to the question',
+    'title' => 'Flag to mark feedback as useful',
     'global' => 0,
     'types' => array(
-      0 => 'answer',
+      0 => 'open_question_feedback',
     ),
     'flag_short' => 'Select',
     'flag_long' => '',
@@ -99,7 +63,7 @@ function open_question_flag_default_flags() {
     ),
     'weight' => 0,
     'show_on_form' => 0,
-    'access_author' => '',
+    'access_author' => 'others',
     'show_on_page' => 0,
     'show_on_teaser' => 0,
     'show_contextual_link' => 0,
@@ -110,7 +74,7 @@ function open_question_flag_default_flags() {
       0 => 'name',
     ),
   );
-  
+
   return $flags;
 }
 
