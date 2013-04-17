@@ -106,17 +106,15 @@ function course_block_view($delta = '') {
   * Return course item operation links
   */
 function course_item_links() {
-  global $user;
   $node = menu_get_object('node');
-
   if(!_course_outline_access($node)) {
     return FALSE;
   }
   
   $block = array();
   $block['subject'] = '';
-  $tabs =  menu_local_tasks(0);
-  $block['content'] =  $tabs['tabs']['output'];
+  $tabs = menu_local_tasks(0);
+  $block['content'] = $tabs['tabs']['output'];
   return $block;
 }
 
@@ -292,15 +290,14 @@ function template_preprocess_book_header(&$vars) {
   $provider = field_get_items('node', $course_node, 'field_provider'); 
   if (isset($provider[0])) {
     $provider = node_load($provider[0]['target_id']);
-    $vars['provider_logo'] = field_view_field('node', $provider, 'field_logo', array('label' => 'hidden','settings' =>
+    $provider_logo = field_view_field('node', $provider, 'field_logo', array('label' => 'hidden','settings' =>
        array('image_style' => 'provider_logo')));
+    $vars['provider_logo'] = render($provider_logo);
   }
   // teacher logo and name
   $teacher = field_get_items('node', $course_node, 'field_teacher');
   if (isset($teacher[0])) {
     $teacher = user_load($teacher[0]['uid']);
-    // @todo barinder can you please do this with field_view_field instead of getting raw field values
-    // not big deal in this case but will be better to do it this way accross the project.
     $name = field_view_field('user', $teacher, 'field_name', array('label' => 'hidden',));
     $surname = field_view_field('user', $teacher, 'field_surname', array('label' => 'hidden'));
     $vars['teacher_name'] = render($name);
