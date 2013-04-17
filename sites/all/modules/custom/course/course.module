@@ -241,6 +241,7 @@ function course_header_block() {
   }
 
   $question_page = FALSE;
+  $open_question_page = FALSE;
   $book = FALSE;
 
   if ($node->type === 'question') {
@@ -260,6 +261,10 @@ function course_header_block() {
       return $block;
     }
   }
+  elseif($node->type === 'open_question') {
+    $open_question_page = TRUE;
+    $book = isset($node->book) ? $node->book : FALSE;
+  }
   else { // other content types
     $book = isset($node->book) ? $node->book : FALSE;
   }
@@ -267,7 +272,7 @@ function course_header_block() {
   // Build the block title and contents
   if ($book) {
     $block['subject'] = '';
-    $block['content'] = theme('book_header', array('book_link' => $book, 'question_page' => $question_page));
+    $block['content'] = theme('book_header', array('book_link' => $book, 'question_page' => $question_page, 'open_question_page' => $open_question_page));
   }
   return $block;
 }
@@ -313,6 +318,22 @@ function template_preprocess_book_header(&$vars) {
   }
   else {
     $vars['lesson_link'] = '';
+  }
+  if ($vars['open_question_page'] == TRUE) {
+    $items = array(
+      l(t('Blog'), 'blog', array('attributes' => array('class' => array('open-question-blog-link')))),
+      l(t('Forum'), 'forum', array('attributes' => array('class' => array('open-question-forum-link')))),
+    );
+    $variables = array(
+      'title' => t(''),
+      'items' => $items,
+      'type' => 'ul',
+      'attributes' => array('class' => array('open-question-links')),
+    );
+    $vars['open_question_links'] = theme_item_list($variables);
+  }
+  else {
+    $vars['open_question_links'] = '';
   }
 }
 

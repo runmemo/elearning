@@ -52,6 +52,7 @@ function profile_pic_update_form($form, &$form_state) {
 
   $form['file'] = array(
     '#type' => 'file',
+    '#size' => 23,
     '#prefix' => '<div class="upload-form-links-wrapper"><div class="upload-form-upload-wrapper"><a class="upload-link">' . t('Upload photo') . '</a>',
     '#suffix' => '</div>'
   );

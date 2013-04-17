@@ -27,4 +27,5 @@
       </div>
   </div>
   <?php print $lesson_link; ?>
+  <?php print $open_question_links; ?>
 </div>

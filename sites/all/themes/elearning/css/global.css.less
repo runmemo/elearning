@@ -893,6 +893,33 @@ input.form-text {
       margin-right: 5px;
     }
   }
+  .item-list {
+    .right();
+    margin-top: 14px;
+    ul li {
+      .left();
+        height: 50px;
+        .show(table);
+      a {
+        .bold(14px);
+        .link();
+        .show(table-cell);
+        vertical-align: bottom;
+      }
+      a:link, a:visited {
+        color: #444444;
+      }
+      a:hover, a:active {
+        .caption-orange();
+      }
+    }
+    li.first {
+      background: url(/coursehub.dev/sites/all/themes/elearning/images/blog-link.png) 80% 15% no-repeat;
+    }
+    li.last {
+      background: url(/coursehub.dev/sites/all/themes/elearning/images/forum-link.png) 50% 15% no-repeat;
+    }    
+  }
 }  
 /** Course Book Header **/
 
@@ -1085,12 +1112,13 @@ input.form-text {
   }
   .upload-form-links-wrapper {
     .left();
+    width: 237px;
     .form-item-files-file {
       margin: 0;
       opacity: 0;
       position: relative;
       top: -19px;
-      left: -94px;
+      left: -138px;
     }
     #edit-file {
       cursor: pointer;
@@ -1472,11 +1500,10 @@ body.page-home {
         margin-left: 10px;
       }
     }
-    .node-question-return-link {
+    a.node-question-return-link {
       .bold(13px);
       .right();
       .link();
-      color: #1f1f1f;
       height: 16px;
       border: 16px solid transparent;
       border-image: url(../images/return_link.png) 0 16 stretch;
@@ -1485,6 +1512,13 @@ body.page-home {
       border-bottom: 0;
       padding-left: 6px;
       margin-top: 36px;
+    }
+    a.node-question-return-link:link, a.node-question-return-link:visited {
+      color: #1f1f1f;
+    }
+    a.node-question-return-link:hover, a.node-question-return-link:active {
+     .caption-orange();
+     border-image: url(../images/left_square_arrow_hover.png) 0 16 stretch;
     }
   }
   h1 {
