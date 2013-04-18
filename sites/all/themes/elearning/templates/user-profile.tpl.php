@@ -38,9 +38,11 @@
     <div class="user-name grid-7 omega">
       <h2><?php print $user_name; ?></h2>
     </div>
+    <?php if ($access) : ?>
     <div class="user-profile-edit-link grid-7 omega">
       <h2><?php print l(t('Edit'), 'user/' . $user_uid . '/edit', array('attributes' => array('class' => 'profile-edit'))); ?></h2>
     </div>
+    <?php endif; ?>
   </div>
   <div class="user-profile-main-panel alpha omega">
     <div class="user-profile-basic-info grid-6 alpha omega">
@@ -49,7 +51,9 @@
           <div id="user-profile-picture">
             <?php if (isset($user_picture)) print $user_picture; ?>
           </div>
-          <a class="user-picture-edit"><?php print t('Choose photo'); ?></a>
+          <?php if ($access) : ?>
+            <a class="user-picture-edit"><?php print t('Choose photo'); ?></a>
+          <?php endif; ?>
         </div>
         <div class="user-profile-userpoints">
           <?php print $userpoints_count; ?>

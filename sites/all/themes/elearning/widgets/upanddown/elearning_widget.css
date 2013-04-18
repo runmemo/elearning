@@ -5,8 +5,7 @@
   float: left;
 }
 
-.vud-widget-elearning_widget .current-default,
-.vud-widget-elearning_widget .current-negative {
+.vud-widget-elearning_widget .current-points {
   clear: both;
   color: #555555;
   font-size: 22px;
@@ -14,6 +13,28 @@
 
 .vud-widget-elearning_widget .current-negative {
   padding: 7px 3px;
+}
+
+.vud-widget-elearning_widget .current-medium {
+  padding: 7px 0px;
+}
+
+.vud-widget-elearning_widget .current-wide,
+.vud-widget-elearning_widget .current-negative-wide {
+  font-size: 15px;
+}
+
+.vud-widget-elearning_widget .current-wide {
+  padding: 7px 0px;
+}
+
+.vud-widget-elearning_widget .current-negative-wide {
+  padding: 7px 1px;
+}
+
+.vud-widget-elearning_widget .current-small {
+  font-size: 11px;
+  padding: 7px 0px;
 }
 
 .vud-widget-elearning_widget .current-default {

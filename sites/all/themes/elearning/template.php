@@ -67,7 +67,6 @@ function elearning_preprocess_node_course(&$vars, $hook) {
   global $base_url;
   $node = $vars['node'];
   // provider logo and name
-  
   $provider = field_get_items('node', $node, 'field_provider');
   if (isset($provider[0])) {
     $field_logo = field_view_field('node', $provider[0]['entity'], 'field_logo', array('label' => 'hidden', 'settings' => array('image_style' => 'provider_logo')));
@@ -86,13 +85,7 @@ function elearning_preprocess_node_course(&$vars, $hook) {
   if (isset($teacher[0])) {
     $field_name = field_view_field('user', $teacher[0]['user'], 'field_name', array('label' => 'hidden'));
     $field_surname = field_view_field('user', $teacher[0]['user'], 'field_surname', array('label' => 'hidden'));
-    // @todo Ilya I have noticed that you are adding default div on different node types
-    // like this one: <div class="user-profile-default-picture"></div>
-    // but not here.
-    // 1. should we add it here also? 
-    // 2. is there more generic way to do this, so we don't have to repeat same logic 10 times?
-    //    at least we could take it out to separate function...
-    $vars['teacher_avatar'] = theme('user_picture', array('account' => $teacher[0]['user']));
+    $vars['teacher_avatar'] = elearning_get_user_picture($teacher[0]['user'], '', 'user-profile');
     $vars['teacher_name'] = render($field_name);
     $vars['teacher_surname'] = render($field_surname);
   }
@@ -118,18 +111,49 @@ function elearning_preprocess_node_course(&$vars, $hook) {
  * @param string $hook
  */
 function elearning_preprocess_node_question(&$vars, $hook) {
-  $author = user_load($vars['uid']);
-  $vars['userpoints_count'] = userpoints_get_current_points($author->uid, 'all');
-  if (is_numeric($author->picture)) {
-    $author->picture = file_load($author->picture);
-  }
-  if (isset($author->picture->uri) && !empty($author->picture->uri)) {
-    $filepath = $author->picture->uri;
-    $vars['user_picture'] = theme('image_style', array('style_name' => 'question_author', 'path' => $filepath));
-  } else {
-    $vars['user_picture'] = '<div class="node-question-default-picture"></div>';
-  }
+  $vars['userpoints_count'] = userpoints_get_current_points($vars['uid'], 'all');
+  $vars['user_picture'] = elearning_get_user_picture($vars['uid'], 'question_author', 'node-question');
   $vars['created_formatted'] = t('%time ago', array('%time' => format_interval(REQUEST_TIME - $vars['created'], 1)));
+}
+
+/**
+ * Preprocess for node-type "Open Question" view.
+ * @param array $vars
+ * @param string $hook
+ */
+function elearning_preprocess_node_open_question(&$vars, $hook) {
+  $vars['display_submitted'] = FALSE;
+  $vars['user_picture'] = elearning_get_user_picture($vars['uid'], 'question_author', 'node-question');
+}
+
+
+/**
+ * Helper function, that checks if there is picture for the user
+ * and generates HTML for it, otherwise it returns div with default class.
+ * @param object $user
+ * @param string $style_name
+ * @param type $type
+ * @return string HTML for the picture.
+ */
+function elearning_get_user_picture($user, $style_name, $type) {
+  $user_picture = '<div class="' . $type. '-default-picture"></div>';  
+  if (!is_object($user)) {
+    $user = user_load($user);
+  } else {
+    $user_picture_test = theme('user_picture', array('account' => $user));
+    return $user_picture_test == '' ? $user_picture : $user_picture_test;
+  }
+  if (!isset($user->picture->fid) || (!is_object($user->picture) && $user->picture = 0)) {
+    return $user_picture;
+  }
+  if (is_numeric($user->picture)) {
+    $user->picture = file_load($user->picture);
+  }
+  if (isset($user->picture->uri) && !empty($user->picture->uri)) {
+    $filepath = $user->picture->uri;
+    $user_picture = theme('image_style', array('style_name' => $style_name, 'path' => $filepath));
+    return $user_picture;
+  }
 }
 
 /**
@@ -149,13 +173,11 @@ function elearning_preprocess_html(&$vars, $hook) {
  */
 function elearning_preprocess_user_profile(&$variables) {
   $account = $variables['elements']['#account'];
+  $variables['access'] = user_edit_access($account);
   $variables['user_uid'] = $account->uid;
   $variables['user_name'] = $account->name;
   $variables['user_mail'] = $account->mail;
-  $variables['user_picture'] = theme('user_picture', array('account' => $account));
-  if (!isset($variables['user_picture']) || $variables['user_picture'] == '') {
-    $variables['user_picture'] = '<div class="user-profile-default-picture"></div>';
-  }
+  $variables['user_picture'] = elearning_get_user_picture($account, '', 'user-profile');
   $field_name = field_view_field('user', $account, 'field_name', array('label' => 'hidden'));
   $field_surname = field_view_field('user', $account, 'field_surname', array('label' => 'hidden'));
   $field_birthday = field_view_field('user', $account, 'field_birthday', 'full');

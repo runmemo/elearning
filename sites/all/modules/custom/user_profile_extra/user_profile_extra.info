@@ -25,3 +25,4 @@ features[field_instance][] = user-user-field_phone_number
 features[field_instance][] = user-user-field_surname
 features[quicktabs][] = user_profile_tab
 features[image][] = user_profile_picture
+features[user_permission][] = access user profiles

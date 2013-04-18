@@ -154,7 +154,7 @@ function open_question_answer_form($form, &$form_state, $answered) {
   $form = array();
   $form['#prefix'] = '<div id="oq-answer-form-wrapper">';
   $form['#suffix'] = '</div>';
-
+  
   $nid = 0;
   if (empty($form_state['step'])) {  // page is loaded
     $question = menu_get_object('node');
@@ -186,7 +186,8 @@ function open_question_answer_form($form, &$form_state, $answered) {
     case 'edit' :
       // build form for editing
       $form['edit']['new_answer'] = array(
-        '#type' => 'textarea',
+        '#type' => 'text_format',
+        '#format' => 'filtered_html',
         '#default_value' => empty($form_state['answer_value']) ? '' : $form_state['answer_value'],
       );
       $form['edit']['save'] = array(
@@ -198,6 +199,11 @@ function open_question_answer_form($form, &$form_state, $answered) {
           'wrapper' => 'oq-answer-form-wrapper',
           'progress' => array('message' => t('')),
         ),
+      );
+      $form['edit']['supplementary'] = array(
+        '#prefix' => '<div class="oq-answer-form-supplementary">',
+        '#suffix' => '</div>',
+        '#markup' => t('Please, answer the question, and other participants of the course will review your answer.'),
       );
       if (!empty($form_state['answer_value'])) {
         // @todo add cancellation button
@@ -226,11 +232,11 @@ function open_question_answer_form($form, &$form_state, $answered) {
       );
       $form['view']['answer'] = array(
         '#type' => 'markup',
-        '#prefix' => '<div class = "oq_answer">',
+        '#prefix' => '<div class="oq_answer">',
         '#suffix' => '</div>',
         '#markup' => $answer_text,
       );
-
+      
       break;
     default :
       $form['bad_state'] = array(
@@ -260,7 +266,7 @@ function open_question_answer_submit($form, &$form_state) {
       node_object_prepare($node);
       $node->title = 'OQ anwer nid#' . $oq_nid . '# uid#' . $user->uid;
       $node->language = LANGUAGE_NONE;
-      $node->body[$node->language][0]['value'] = $form_state['values']['new_answer'];
+      $node->body[$node->language][0]['value'] = $form_state['values']['new_answer']['value'];
       $node->body[$node->language][0]['format'] = 'filtered_html';
       $node->field_open_question[LANGUAGE_NONE][0]['target_id'] = $oq_nid;
    
@@ -273,10 +279,10 @@ function open_question_answer_submit($form, &$form_state) {
     else { // user changed existing answer
       debug('Updating existing node' . $form_state['answer_nid']);
       $node = node_load($form_state['answer_nid']);
-      $node->body[$node->language][0]['value'] = $form_state['values']['new_answer'];
+      $node->body[$node->language][0]['value'] = $form_state['values']['new_answer']['value'];
       node_save($node);
     }   
-    $form_state['answer_value'] = $form_state['values']['new_answer'];
+    $form_state['answer_value'] = $form_state['values']['new_answer']['value'];
     $form_state['step'] = 'view';
   }
   // User clicked Edit button in view mode.

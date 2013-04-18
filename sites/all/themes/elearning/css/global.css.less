@@ -825,21 +825,20 @@ input.form-text {
   .node-course-teacher-button {
     .left();
     margin-right: 20px;
-      .user-picture {
+      #user-profile-picture {
         border: 1px solid #cccccc;
-        padding: 6px 8px;
         border-radius: 2px;
         margin-bottom: 30px;
+        .user-picture {
+          padding: 6px;
+        }
       }
-      #course-registration-form #edit-submit {
-        background: url(../images/reg-form-submit.png) no-repeat right;
-        .bold(14px);
-        color: white;
-        border-radius: 0;
-        border: none;
-        text-shadow: none;
-        width: 120px;
-        height: 40px;
+      #course-registration-form .form-submit {
+        .light-orange-button();
+        float: none;
+        width: 100%;
+        padding: 10px 0px;
+        margin-top: 4px;
       }
   }
   .node-course-paramenters {
@@ -914,10 +913,10 @@ input.form-text {
       }
     }
     li.first {
-      background: url(/coursehub.dev/sites/all/themes/elearning/images/blog-link.png) 80% 15% no-repeat;
+      background: url(../images/blog-link.png) 80% 15% no-repeat;
     }
     li.last {
-      background: url(/coursehub.dev/sites/all/themes/elearning/images/forum-link.png) 50% 15% no-repeat;
+      background: url(../images/forum-link.png) 50% 15% no-repeat;
     }    
   }
 }  
@@ -927,10 +926,10 @@ input.form-text {
 .page-user {
   #block-system-main, #block-quicktabs-user-profile-tab {
     @media @normal {
-      margin: 0px 20px;
+      margin: 0px 20px 20px 20px;
     }
     @media @wide {
-      margin: 0px 20px;
+      margin: 0px 20px 20px 20px;
     }
   }
   .profile {
@@ -1332,21 +1331,6 @@ input.form-text {
 /****** User Profile End ******/
 
 /****** Front Page Start ******/
-body.not-logged-in {
-  #block-views-front-page-slider-block {
-    .views-slideshow-controls-top {
-      @media @narrow {
-        right: 25px;
-      }
-      @media @normal {
-        right: 64px;
-      }
-      @media @wide {
-        right: 75px;
-      }
-    }
-  }
-}
 
 body.page-home {
   .region-content-inner {
@@ -1356,6 +1340,7 @@ body.page-home {
 
 #block-views-front-page-slider-block {
   width: 864px;
+  position: relative;
 }
 
 .view-id-front_page_slider {
@@ -1610,38 +1595,42 @@ body.page-home {
   }
 }
 
+#quick-answer-wrapper, #oq-answer-form-wrapper {
+  legend, .ckeditor_links, .filter-wrapper {
+    .show(none) !important;
+  }
+  .fieldset-wrapper {
+      background: #ffffff;
+  }
+  .form-submit {
+    .edit-submit();
+    .gradient-light-orange();
+  }
+}
+
+
 .block-answers-extra {
   margin: 0;
   #quick-answer-wrapper {
-    legend, .ckeditor_links, .filter-wrapper {
-      .show(none) !important;
-    }
-    .fieldset-wrapper {
-      background: #ffffff;
-    }
     .cke_top, .cke_bottom {
-      .cke-main-panel();
+      .cke-main-panel-blue();
     }
-    #cke_edit-answer-value {
-      border: @border-cke;
+    .cke {
+      border: @border-cke-blue;
     }
     .cke_top {
-      border-bottom: @border-cke;
+      border-bottom: @border-cke-blue;
     }
     .cke_bottom {
-      border-top: @border-cke;
+      border-top: @border-cke-blue;
     }
     .cke_toolgroup {
-      border: @border-cke;
+      border: @border-cke-blue;
       border-bottom-color: #ccd6e0;
-      .cke-tools-panel();
+      .cke-tools-panel-blue();
     }
     .cke_toolbar_separator {
       background: #e2e8ed;
-    }
-    .form-submit {
-      .edit-submit();
-      .gradient-light-orange();
     }
   }
 }
@@ -1655,6 +1644,7 @@ body.page-home {
     .border-bottom-dotted();
     box-shadow: none;
     border-radius: 0;
+    width: 100%;
     .views-answer-widgets {
       .left();
       .views-field-ops {
@@ -1690,6 +1680,7 @@ body.page-home {
     .views-field-body {
       color: #3d3d3d;
       font: normal 14px Arial;
+      .show(table);
       @media @narrow {
         .grid-narrow-10();
       }
@@ -1708,7 +1699,7 @@ body.page-home {
     border: 0;
   }
   .views-answer-body {
-    .show(inline-block);
+    .show(table);
   }
   .views-field-comment-count {
     .right();
@@ -1729,6 +1720,63 @@ body.page-home {
     }
   }
 }
+
+/****** Node type "Question" End ******/
+
+/****** Node type "Open Question" Start ******/
+.node-open-question-picture {
+  .left();
+  margin-right: 17px;
+}
+
+.node-open-question-body {
+  .show(inline-block);
+  .field-name-field-question {
+    .bold(14px);
+    .text-light-grey();
+  }
+}
+
+.node-type-open-question #block-quicktabs-open-question-tabs {
+  margin-top: 13px;
+}
+
+#oq-answer-form-wrapper {
+  .cke_top, .cke_bottom {
+    .cke-main-panel-light-grey();
+  }
+  .cke {
+    border: @border-cke-light-grey;
+  }
+  .cke_top {
+    border-bottom: @border-cke-light-grey;
+  }
+  .cke_bottom {
+    border-top: @border-cke-light-grey;
+  }
+  .cke_toolgroup {
+    border: @border-cke-light-grey;
+    border-bottom-color: #ccd6e0;
+    .cke-tools-panel-light-grey();
+  }
+  .cke_toolbar_separator {
+    background: #e5e5e6;
+  }
+  .oq-answer-form-supplementary {
+    .bold(14px);
+    color: #525a61;
+    margin-top: 23px;
+    height: 17px;
+    border: 12px solid transparent;
+    border-image: url(../images/answer-suppl-text.png) 0 12 stretch;
+    border-top: 0;
+    border-right: 0;
+    border-bottom: 0;
+    padding-left: 4px;
+    margin-left: 4px;
+  }
+}
+
 
 /****** Node type "Question" End ******/
 
