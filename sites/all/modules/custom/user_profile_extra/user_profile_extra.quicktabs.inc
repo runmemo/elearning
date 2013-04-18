@@ -22,14 +22,14 @@ function user_profile_extra_quicktabs_default_quicktabs() {
     0 => array(
       'bid' => 'views_delta_user_questions_list-block',
       'hide_title' => 1,
-      'title' => 'My questions',
+      'title' => 'Questions',
       'weight' => '-100',
       'type' => 'block',
     ),
     1 => array(
       'bid' => 'search_delta_form',
       'hide_title' => 1,
-      'title' => 'My Answers',
+      'title' => 'Answers',
       'weight' => '-99',
       'type' => 'block',
     ),
@@ -50,8 +50,8 @@ function user_profile_extra_quicktabs_default_quicktabs() {
   // Translatables
   // Included for use with string extractors like potx.
   t('History');
-  t('My Answers');
-  t('My questions');
+  t('Answers');
+  t('Questions');
   t('User Profile Tab');
 
   $export['user_profile_tab'] = $quicktabs;
