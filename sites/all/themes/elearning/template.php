@@ -72,7 +72,6 @@ function elearning_preprocess_node_course(&$vars, $hook) {
   if (isset($provider[0])) {
     $field_logo = field_view_field('node', $provider[0]['entity'], 'field_logo', array('label' => 'hidden', 'settings' => array('image_style' => 'provider_logo')));
     if (empty($field_logo)) {
-      print_nice('field logo is null');
       $vars['provider_logo'] = '<div class="provider-logo-default"></div>';
     }
     else {
