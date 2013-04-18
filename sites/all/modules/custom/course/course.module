@@ -295,7 +295,7 @@ function template_preprocess_book_header(&$vars) {
   $provider = field_get_items('node', $course_node, 'field_provider');
   if ($provider) {
     $provider_node = node_load($provider[0]['target_id']);
-    $provider_logo = field_view_field('node', $provider_node, 'field_logo', array('settings' =>
+    $provider_logo = field_view_field('node', $provider_node, 'field_logo', array('label' => 'hidden', 'settings' =>
        array('image_style' => 'provider_logo')));
     $vars['provider_logo'] = render($provider_logo);
   }
