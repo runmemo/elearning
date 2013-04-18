@@ -148,7 +148,6 @@ function elearning_preprocess_html(&$vars, $hook) {
  * @see user-profile.tpl.php
  */
 function elearning_preprocess_user_profile(&$variables) {
-  drupal_add_js(drupal_get_path('theme', 'elearning') . '/js/elearning.js');
   $account = $variables['elements']['#account'];
   $variables['user_uid'] = $account->uid;
   $variables['user_name'] = $account->name;

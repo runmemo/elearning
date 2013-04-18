@@ -45,9 +45,11 @@
   <div class="user-profile-main-panel alpha omega">
     <div class="user-profile-basic-info grid-6 alpha omega">
       <div class="user-profile-picture-points alpha">
-        <div class="user-profile-picture">
-          <?php if (isset($user_picture)) print $user_picture; ?>
-          <?php print l(t('Choose photo'), 'user/' . $user_uid . '/edit', array('attributes' => array('class' => 'user-picture-edit'))); ?>
+        <div class="user-profile-picture-edit">
+          <div id="user-profile-picture">
+            <?php if (isset($user_picture)) print $user_picture; ?>
+          </div>
+          <a class="user-picture-edit"><?php print t('Choose photo'); ?></a>
         </div>
         <div class="user-profile-userpoints">
           <?php print $userpoints_count; ?>
@@ -74,4 +76,7 @@
     <?php if (isset($user_courses_view)) print $user_courses_view; ?>
   </div>
 </div>
-
+<div class="upload-form-background"></div>
+<div class="upload-form-container">
+  <?php if (isset($upload_form)) print render($upload_form); ?>
+</div>

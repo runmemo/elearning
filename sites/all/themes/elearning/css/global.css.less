@@ -881,16 +881,44 @@ input.form-text {
   }
   .title-wrapper {
     float: left;
-    margin-top: 10px;
     .course-title {
       font-weight: bold;
       font-size: 20px;
     }
-    .teacher-name {
+    .teacher-name .field {
       color:#435e7b;
       font-weight: bold;
       font-size: 16px;
+      float: left;
+      margin-right: 5px;
     }
+  }
+  .item-list {
+    .right();
+    margin-top: 14px;
+    ul li {
+      .left();
+        height: 50px;
+        .show(table);
+      a {
+        .bold(14px);
+        .link();
+        .show(table-cell);
+        vertical-align: bottom;
+      }
+      a:link, a:visited {
+        color: #444444;
+      }
+      a:hover, a:active {
+        .caption-orange();
+      }
+    }
+    li.first {
+      background: url(/coursehub.dev/sites/all/themes/elearning/images/blog-link.png) 80% 15% no-repeat;
+    }
+    li.last {
+      background: url(/coursehub.dev/sites/all/themes/elearning/images/forum-link.png) 50% 15% no-repeat;
+    }    
   }
 }  
 /** Course Book Header **/
@@ -969,16 +997,8 @@ input.form-text {
       margin-right: 25px;
     }
     .left();
-    .user-profile-picture {
+    .user-profile-picture-edit {
       .box-shadow();
-      .user-profile-default-picture {
-        .show(inline-block);
-        margin: 5px 6px 3px 6px;
-        background-image: url(../images/user-profile-default.png);
-        width: 107px;
-        height: 107px;
-        background-repeat: no-repeat;
-      }
       .user-picture {
         float: none;
         margin: 0;
@@ -1012,6 +1032,150 @@ input.form-text {
     }
   }
 }
+
+.user-profile-default-picture {
+  .show(inline-block);
+  margin: 5px 6px 3px 6px;
+  background-image: url(../images/user-profile-default.png);
+  width: 107px;
+  height: 107px;
+  background-repeat: no-repeat;
+}
+
+/* User profile picture update form styles */
+.upload-form-background {
+  .show(none);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  opacity: 0.5;
+}
+
+.upload-form-container {
+  .show(none);
+}
+
+#profile-pic-update-form,
+#user-picture-upload-wrapper,
+.upload-form-container {
+  position: fixed;
+  width: 387px;
+  top: 50%;
+  left: 50%;
+  margin-left: -193px;
+  margin-top: -113px;
+  background: #f8f8f8;
+  z-index: 1001;
+}
+
+#profile-pic-update-form {
+ .upload-header {
+    .show(inline-block);
+    width: 385px;
+    height: 33px;
+    border: 1px solid #e5e1e2;
+    .upload-form-header-caption {
+      .bold(14px);
+      .left();
+      color: #505050;
+      text-align: center;
+      width: 350px;
+      margin-top: 8px;
+    }
+    .upload-form-close {
+      .right();
+      width: 33px;
+      height: 31px;
+      margin-top: 1px;
+      border-left: 1px solid #d8d8d8;
+      background: url(../images/close.png) 50% 50% no-repeat;
+      cursor: pointer;
+    }
+  }
+  .upload-form-main-wrapper {
+    .show(inline-table);
+    margin-top: 5px;
+    margin-left: 10px;
+    .border-bottom-dotted();
+    #upload-form-picture {
+      .left();
+      .box-shadow();
+      margin: 0px 10px 10px 0px;
+    }
+    .user-picture {
+      padding: 6px;
+    }
+  }
+  .upload-form-links-wrapper {
+    .left();
+    width: 237px;
+    .form-item-files-file {
+      margin: 0;
+      opacity: 0;
+      position: relative;
+      top: -19px;
+      left: -138px;
+    }
+    #edit-file {
+      cursor: pointer;
+    }
+    #edit-delete {
+      opacity: 0;
+      margin: 0;
+      padding: 0;
+      .left();
+    }
+    a {
+      .text-dark-grey();
+      .bold(14px);
+      .border-bottom-dotted();
+    }
+    a.active {
+      color: #f64a00;
+      border-bottom: 1px dotted #f64a00;
+    }
+    a.remove-link {
+      position: absolute;
+      left: 139px;
+    }
+    .ajax-progress {
+      display: inline;
+    }
+    .throbber {
+      bottom: 94px;
+      left: 14px;
+      margin-bottom: -25px;
+    }
+    #message-placeholder {
+      clear: both;
+    }
+  }
+  .upload-form-main-submit {
+    .show(none);
+  }
+  .upload-form-submit-link {
+    .light-orange-button();
+    margin: 10px;
+    cursor: pointer;
+  }
+  .throbber {
+    position: absolute;
+    bottom: 70px;
+    left: 14px;
+    height: 109px;
+    width: 107px;
+    background-color: #f8f8f8;
+    background-image: url("../images/throbber.gif");
+    background-repeat: no-repeat;
+    background-position: center center;
+    margin-bottom: -2px;
+  }
+}
+/* User profile picture update form styles END */
 
 .page-user .view-user-courses {
   .right();
@@ -1336,11 +1500,10 @@ body.page-home {
         margin-left: 10px;
       }
     }
-    .node-question-return-link {
+    a.node-question-return-link {
       .bold(13px);
       .right();
       .link();
-      color: #1f1f1f;
       height: 16px;
       border: 16px solid transparent;
       border-image: url(../images/return_link.png) 0 16 stretch;
@@ -1349,6 +1512,13 @@ body.page-home {
       border-bottom: 0;
       padding-left: 6px;
       margin-top: 36px;
+    }
+    a.node-question-return-link:link, a.node-question-return-link:visited {
+      color: #1f1f1f;
+    }
+    a.node-question-return-link:hover, a.node-question-return-link:active {
+     .caption-orange();
+     border-image: url(../images/left_square_arrow_hover.png) 0 16 stretch;
     }
   }
   h1 {
@@ -1682,3 +1852,17 @@ div.ctools-exit-modal-content {
 }
 
 /** Ctools Modal CSS*/
+
+.block-course-course-item-links .content li{
+  .menu-float();
+  a {
+    .link();
+    .text-grey();
+    margin-right: 10px;
+    font-weight: bold;
+  }
+  a:hover,
+  a.active {
+    .text-orange()
+  }
+}

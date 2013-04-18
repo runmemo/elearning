@@ -1,0 +1,211 @@
+<?php
+
+/**
+ * @file
+ * Provides custom form for updating user's picture.
+ */
+
+include_once 'user_profile_extra.features.inc';
+
+/**
+ * Process variables for user-profile.tpl.php.
+ * @param array $variables
+ * @see user-profile.tpl.php
+ */
+function user_profile_extra_preprocess_user_profile(&$variables) {
+  drupal_add_js(drupal_get_path('module', 'user_profile_extra') . '/user_profile_extra.js');
+  $variables['upload_form'] = drupal_get_form('profile_pic_update_form');
+}
+
+/**
+ * Form for uploading or removing user's picture.
+ * @param type $form
+ * @param type $form_state
+ * @return array array with form elements
+ */
+function profile_pic_update_form($form, &$form_state) {
+  // store user's picture in $form_state along with user ID.
+  if (!isset($form_state['storage']['picture'])) {
+    global $user;
+    $user_picture = theme('user_picture', array('account' => $user));
+    if (!isset($user_picture) || $user_picture == '') {
+      $user_picture = '<div class="user-profile-default-picture"></div>';
+    }
+    $form_state['storage']['picture'] = $user_picture;
+    $form_state['storage']['user'] = $user->uid;
+  }
+  $form = array();
+  $form['#prefix'] = '<div id="user-picture-upload-wrapper">';
+  $form['#suffix'] = '</div>';
+  $form['header'] = array(
+    '#markup' => '<div class="upload-form-header-caption">' . t('Photo editing') . '</div>',
+    '#prefix' => '<div class="upload-header">'
+  );
+  $form['close'] = array(
+    '#markup' => '<span class="upload-form-close" title="' . t('Close') . '"></span>',
+    '#suffix' => '</div>'
+  );
+  $form['picture'] = array(
+    '#markup' => '<div id="upload-form-picture">' . $form_state['storage']['picture'] . '</div>',
+    '#prefix' => '<div class="upload-form-main-wrapper">',
+  );
+
+  $form['file'] = array(
+    '#type' => 'file',
+    '#size' => 23,
+    '#prefix' => '<div class="upload-form-links-wrapper"><div class="upload-form-upload-wrapper"><a class="upload-link">' . t('Upload photo') . '</a>',
+    '#suffix' => '</div>'
+  );
+  $form['delete'] = array(
+    '#type' => 'submit',
+    '#ajax' => array(
+      'callback' => 'user_pic_update_delete_callback',
+      'wrapper' => 'user-picture-upload-wrapper',
+      'progress' => array('type' => 'throbber'),
+    ),
+    '#value' => t('Remove photo'),
+    '#prefix' => '<div class="upload-form-remove-wrapper"><a class="remove-link">' . t('Remove photo') . '</a>',
+    '#suffix' => '</div>',
+  );
+  $form['message_placeholder'] = array(
+    '#markup' => '',
+    '#prefix' => '<div id="message-placeholder">',
+    '#suffix' => '</div></div></div>'
+  );
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#ajax' => array(
+      'callback' => 'user_pic_update_submit_callback',
+      'wrapper' => 'user-picture-upload-wrapper',
+      'progress' => array('type' => 'throbber'),
+    ),
+    '#value' => t('Submit'),
+    '#attributes' => array('class' => array('upload-form-main-submit')),
+  );
+
+  $form['done_link'] = array(
+    '#markup' => '<div class="upload-form-submit-link">' . t('Finish') . '</div>',
+  );
+
+  return $form;
+}
+
+/**
+ * Implements hook FORM_ID_validate for profile_pic_update_form().
+ */
+function profile_pic_update_form_validate($form, &$form_state) {
+  if ($form_state['triggering_element']['#id'] == 'edit-submit') {
+    // try to save uploaded file
+    $file = file_save_upload('file', array(
+      'file_validate_is_image' => array(),
+      'file_validate_extensions' => array('png gif jpg jpeg'),
+    ));
+    if ($file) {
+      if ($file = file_move($file, 'public://')) {
+        // if succes store file object in $form_state['values']
+        $form_state['values']['file'] = $file;
+      } else {
+        form_set_error('file', t('Failed to write the uploaded file the site\'s file folder.'));
+      }
+    } else {
+      form_set_error('file', t('No file was uploaded.'));
+    }
+  } elseif ($form_state['triggering_element']['#id'] == 'edit-delete') {
+    $user = user_load($form_state['storage']['user']);
+    // check if there is a photo to delete.
+    if (!isset($user->picture->fid) || (!is_object($user->picture) && $user->picture = 0)) {
+      form_set_error('file', t('No file to remove.'));
+    }
+  }
+}
+
+/**
+ * Implements hook FORM_ID_submit for profile_pic_update_form().
+ */
+function profile_pic_update_form_submit($form, &$form_state) {
+  $user = user_load($form_state['storage']['user']);
+  if ($form_state['triggering_element']['#id'] == 'edit-submit') {
+    // if new photo is submitted save user's account with new photo
+    // and update photo's representation in $form_state
+    $file = $form_state['values']['file'];
+    $file->status = FILE_STATUS_PERMANENT;
+    file_save($file);
+    $edit = array(
+      'picture' => $file,
+    );
+    $saved_user = user_save($user, $edit);
+    unset($form_state['values']['file']);
+    $form_state['rebuild'] = TRUE;
+    $form_state['storage']['picture'] = theme('user_picture', array('account' => $saved_user));
+  } elseif ($form_state['triggering_element']['#id'] == 'edit-delete') {
+    $edit = array(
+      'picture_delete' => TRUE,
+    );
+    user_save($user, $edit);
+    $form_state['rebuild'] = TRUE;
+    $form_state['storage']['picture'] = '<div class="user-profile-default-picture"></div>';
+  }
+}
+
+/**
+ * Callback function : Ajax callback function for submission new photo.
+ * @param type $form
+ * @param type $form_state
+ * @return type
+ */
+function user_pic_update_submit_callback($form, &$form_state) {
+  drupal_validate_form('profile_pic_update_form', $form, $form_state);
+  if (form_get_errors()) {
+    $form_state['rebuild'] = TRUE;
+    // collect error messages in order to output them inside the form
+    $form['message_placeholder']['#markup'] = user_profile_extra_collect_messages('error');
+    return $form;
+  }
+  unset($form['file']['#value']);
+  $commands[] = ajax_command_replace('#user-picture-upload-wrapper', render($form));
+  $commands[] = ajax_command_replace('#user-profile-picture', '<div id="user-profile-picture">' . $form_state['storage']['picture'] . '</div>');
+  return array('#type' => 'ajax', '#commands' => $commands);
+}
+
+/**
+ * Callback function : Ajax callback function for deletion old photo.
+ * @param type $form
+ * @param string $form_state
+ * @return type
+ */
+function user_pic_update_delete_callback($form, &$form_state) {
+  drupal_validate_form('profile_pic_update_form', $form, $form_state);
+  if (form_get_errors()) {
+    $form_state['rebuild'] = TRUE;
+    $form['message_placeholder']['#markup'] = user_profile_extra_collect_messages('error');
+    return $form;
+  }
+  unset($form['file']['#value']);
+  $commands[] = ajax_command_replace('#user-picture-upload-wrapper', render($form));
+  $commands[] = ajax_command_replace('#user-profile-picture', '<div id="user-profile-picture">' . $form_state['storage']['picture'] . '</div>');
+  return array('#type' => 'ajax', '#commands' => $commands);
+}
+
+
+/**
+ * Helper function for collecting messages of the given type
+ * and returning them as item list.
+ * @param string $type
+ * @return string HTML representation of messages.
+ */
+function user_profile_extra_collect_messages($type = 'error') {
+  $items = array();
+  $messages = drupal_get_messages($type);
+  if (isset($messages[$type]) && !empty($messages[$type])) {
+    foreach ($messages[$type] as $message) {
+      $items[] = $message;
+    }
+  }
+  $vars = array(
+    'title' => t(''),
+    'items' => $items,
+    'type' => 'ul',
+    'attributes' => array(),
+  );
+  return theme_item_list($vars);
+}
