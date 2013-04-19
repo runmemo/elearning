@@ -17,4 +17,4 @@ features[ctools][] = context:context:3
 features[context][] = question
 
 features[ctools][] = views:views_default:3.0
-features[views_view][] = best_answers
+features[views_view][] = answers_to_a_question_extra
