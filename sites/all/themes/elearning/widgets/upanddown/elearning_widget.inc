@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Up Down Widget.
+ * Elearning Up Down Widget.
  */
 /**
  * Plugin decleration.
@@ -17,6 +17,8 @@ $plugin = array(
  * Alter template variables.
  */
 function elearning_widget_alter_template_vars($template_type, &$variables) {
+  $variables['show_reset'] = FALSE;
+  // array with parameters to find all positive votes
   $criteria = array(
     'entity_type' => $variables['type'],
     'entity_id' => $variables['entity_id'],
@@ -25,27 +27,23 @@ function elearning_widget_alter_template_vars($template_type, &$variables) {
     'function' => 'positives'
   );
   $positives = (int) votingapi_select_single_result_value($criteria);
-  $variables['up_points'] = $positives;
-
-  $criteria = array(
-    'entity_type' => $variables['type'],
-    'entity_id' => $variables['entity_id'],
-    'value_type' => 'points',
-    'tag' => $variables['tag'],
-    'function' => 'negatives'
-  );
+  // change criteria to find all negative votes
+  $criteria['function'] = 'negatives';
   $negatives = (int) votingapi_select_single_result_value($criteria);
-  $variables['down_points'] = $negatives;
-  $variables['show_reset'] = FALSE;
-  if (!$variables['show_up_as_link']) {
-    $points = $positives;
-    $variables['current_class'] = 'current-default';
-  } elseif (!$variables['show_down_as_link']) {
-    $points = $negatives;
-    $variables['current_class'] = 'current-negative';
+  $points = $positives + $negatives;
+  if ($points >= 0 && $points < 10) {
+    $current_class = 'current-default';
+  } elseif ($points < 0 && $points > -10) {
+    $current_class = 'current-negative';
+  } elseif ($points >= 10 && $points < 100) {
+    $current_class = 'current-medium';
+  } elseif ($points >= 100 && $points < 1000) {
+    $current_class = 'current-wide';
+  } elseif($points <= -10 && $points > -100) {
+    $current_class = 'current-negative-wide';
   } else {
-    $points = 0;
-    $variables['current_class'] = 'current-default';
+    $current_class = 'current-small';
   }
+  $variables['current_class'] = $current_class;
   $variables['current_points'] = $points;
 }

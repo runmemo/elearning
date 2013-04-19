@@ -3,6 +3,18 @@
  * @file node-course.tpl.php
  * Template for course nodes.
  *
+ * Available variables:
+ * - $provider_logo: Provider's logo image
+ * - $provider_name: Name of the course provider
+ * - $provider_extra: Additional information about provider
+ * - $tmp_social_img: temporary image, representing social iframes
+ * - $teacher_name: Field "Name" of the user, who is the course teacher
+ * - $teacher_surname: Field "Surame" of the user, who is the course teacher
+ * - $teacher_avatar: HTML, representing teacher's picture
+ * - $form_class_participate: form for participating in the course
+ * - $students_view: embedded view with students, which are already participats
+ * - $content: node content
+ * 
  * All variables available in node.tpl.php
  * @todo Ilya provide documentation for variables introduced in template.php
  */
@@ -32,7 +44,9 @@
           <h2><?php print $teacher_name . $teacher_surname; ?></h2>
         <?php endif; ?>
         <div class="node-course-teacher-button">
-          <?php if (isset($teacher_avatar)) print $teacher_avatar; ?>
+          <div id="user-profile-picture">
+            <?php print $teacher_avatar; ?>
+          </div>
           <?php if (isset($form_class_participate)) print render($form_class_participate); ?>
         </div>
         <div class="node-course-paramenters">
@@ -50,10 +64,5 @@
       <?php if (isset($students_view)) print $students_view; ?>
     </div>
 
-  </div>
-  <div class="clearfix">
-    <?php //if (!empty($content['links'])): ?>
-      <!--<nav class="links node-links clearfix"><?php // print render($content['links']);    ?></nav>-->
-    <?php //endif; ?>
   </div>
 </article>

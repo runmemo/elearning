@@ -107,7 +107,7 @@ function course_block_view($delta = '') {
   */
 function course_item_links() {
   $node = menu_get_object('node');
-  if(!_course_outline_access($node)) {
+  if(!node_access('update', $node)) {
     return FALSE;
   }
   
@@ -159,11 +159,11 @@ function course_node_book() {
  */
 function course_menu_alter(&$items) {
   $items['user']['title callback'] = 'course_user_menu_title';
-  $items['node/%node/outline']['access callback'] = '_course_outline_access';
   $items['flag/confirm/%/%flag/%']['modal'] = TRUE;
+  $items['node/%node/outline']['access callback'] = '_course_update_access';
 }
 
-function _course_outline_access($node) {
+function _course_update_access($node) {
   return node_access('update', $node);
 }
 
@@ -293,19 +293,19 @@ function template_preprocess_book_header(&$vars) {
   // provider logo and name
   $vars['provider_logo'] = '<div class="provider-logo-default"></div>';
 
-  $provider = field_get_items('node', $course_node, 'field_provider'); 
-  if (isset($provider[0])) {
-    $provider = node_load($provider[0]['target_id']);
-    $provider_logo = field_view_field('node', $provider, 'field_logo', array('label' => 'hidden','settings' =>
+  $provider = field_get_items('node', $course_node, 'field_provider');
+  if ($provider) {
+    $provider_node = node_load($provider[0]['target_id']);
+    $provider_logo = field_view_field('node', $provider_node, 'field_logo', array('label' => 'hidden', 'settings' =>
        array('image_style' => 'provider_logo')));
     $vars['provider_logo'] = render($provider_logo);
   }
   // teacher logo and name
   $teacher = field_get_items('node', $course_node, 'field_teacher');
-  if (isset($teacher[0])) {
-    $teacher = user_load($teacher[0]['uid']);
-    $name = field_view_field('user', $teacher, 'field_name', array('label' => 'hidden',));
-    $surname = field_view_field('user', $teacher, 'field_surname', array('label' => 'hidden'));
+  if ($teacher) {
+    $teacher_account = user_load($teacher[0]['uid']);
+    $name = field_view_field('user', $teacher_account, 'field_name', array('label' => 'hidden',));
+    $surname = field_view_field('user', $teacher_account, 'field_surname', array('label' => 'hidden'));
     $vars['teacher_name'] = render($name);
     $vars['teacher_surname'] = render($surname);
   }
@@ -554,17 +554,24 @@ function course_node_access($node, $op, $account) {
  * Checks if uid is course teacher
  */
 function course_is_teacher($course_nid = NULL, $uid = NULL) {
-  if(!$course_nid || !$uid) {
+  if(is_null($course_nid)) {
     return FALSE;
   }
-
-  if ($course_nid && $uid) {
-    $course = node_load($course_nid);
-    $teacher = field_get_items('node', $course, 'field_teacher');
-    if(isset($teacher[0])) {
-      if($teacher[0]['uid'] == $uid) {
-        return TRUE;
-      }
+  
+  if(is_null($uid)) {
+    global $user;
+    $uid = $user->uid;
+  }
+  
+  $course = node_load($course_nid);
+  if (!$course) { // node does not exist
+    return FALSE;
+  }
+  
+  $teacher = field_get_items('node', $course, 'field_teacher');
+  if($teacher) {
+    if($teacher[0]['uid'] == $uid) {
+      return TRUE;
     }
   }
 
