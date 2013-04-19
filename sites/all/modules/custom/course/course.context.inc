@@ -72,11 +72,6 @@ function course_context_default_contexts() {
         'teacher' => 'teacher',
       ),
     ),
-    'path' => array(
-      'values' => array(
-        'node/*/outline' => 'node/*/outline',
-      ),
-    ),
   );
   $context->reactions = array(
     'block' => array(
@@ -90,7 +85,7 @@ function course_context_default_contexts() {
       ),
     ),
   );
-  $context->condition_mode = 0;
+  $context->condition_mode = 1;
   $export['teacher_course_items'] = $context;
 
   // Translatables
