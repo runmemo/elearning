@@ -5,15 +5,15 @@
  * Provides custom form for updating user's picture.
  */
 
-include_once 'user_profile_extra.features.inc';
+include_once 'user_extra.features.inc';
 
 /**
  * Process variables for user-profile.tpl.php.
  * @param array $variables
  * @see user-profile.tpl.php
  */
-function user_profile_extra_preprocess_user_profile(&$variables) {
-  drupal_add_js(drupal_get_path('module', 'user_profile_extra') . '/user_profile_extra.js');
+function user_extra_preprocess_user_profile(&$variables) {
+  drupal_add_js(drupal_get_path('module', 'user_extra') . '/user_extra.js');
   $variables['upload_form'] = drupal_get_form('profile_pic_update_form');
 }
 
@@ -158,7 +158,7 @@ function user_pic_update_submit_callback($form, &$form_state) {
   if (form_get_errors()) {
     $form_state['rebuild'] = TRUE;
     // collect error messages in order to output them inside the form
-    $form['message_placeholder']['#markup'] = user_profile_extra_collect_messages('error');
+    $form['message_placeholder']['#markup'] = user_extra_collect_messages('error');
     return $form;
   }
   unset($form['file']['#value']);
@@ -177,7 +177,7 @@ function user_pic_update_delete_callback($form, &$form_state) {
   drupal_validate_form('profile_pic_update_form', $form, $form_state);
   if (form_get_errors()) {
     $form_state['rebuild'] = TRUE;
-    $form['message_placeholder']['#markup'] = user_profile_extra_collect_messages('error');
+    $form['message_placeholder']['#markup'] = user_extra_collect_messages('error');
     return $form;
   }
   unset($form['file']['#value']);
@@ -193,7 +193,7 @@ function user_pic_update_delete_callback($form, &$form_state) {
  * @param string $type
  * @return string HTML representation of messages.
  */
-function user_profile_extra_collect_messages($type = 'error') {
+function user_extra_collect_messages($type = 'error') {
   $items = array();
   $messages = drupal_get_messages($type);
   if (isset($messages[$type]) && !empty($messages[$type])) {

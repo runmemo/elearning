@@ -2,13 +2,13 @@
 
 /**
  * @file
- * user_profile_extra.features.inc
+ * user_extra.features.inc
  */
 
 /**
  * Implements hook_ctools_plugin_api().
  */
-function user_profile_extra_ctools_plugin_api() {
+function user_extra_ctools_plugin_api() {
   list($module, $api) = func_get_args();
   if ($module == "context" && $api == "context") {
     return array("version" => "3");
@@ -22,7 +22,7 @@ function user_profile_extra_ctools_plugin_api() {
 /**
  * Implements hook_image_default_styles().
  */
-function user_profile_extra_image_default_styles() {
+function user_extra_image_default_styles() {
   $styles = array();
 
   // Exported image style: user_profile_picture.

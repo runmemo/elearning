@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * user_profile_extra.features.field_instance.inc
+ * user_extra.features.field_instance.inc
  */
 
 /**
  * Implements hook_field_default_field_instances().
  */
-function user_profile_extra_field_default_field_instances() {
+function user_extra_field_default_field_instances() {
   $field_instances = array();
 
   // Exported field_instance: 'user-user-field_birthday'

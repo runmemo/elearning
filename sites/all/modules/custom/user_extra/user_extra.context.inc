@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * user_profile_extra.context.inc
+ * user_extra.context.inc
  */
 
 /**
  * Implements hook_context_default_contexts().
  */
-function user_profile_extra_context_default_contexts() {
+function user_extra_context_default_contexts() {
   $export = array();
 
   $context = new stdClass();

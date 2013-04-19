@@ -1,4 +1,4 @@
-name = User Profile Extra
+name = User Extra
 description = Provides additions to default user profile: a form for updating user picture, user tabs, fields.
 core = 7.x
 package = Custom 
