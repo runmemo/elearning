@@ -17,6 +17,11 @@ function user_extra_context_default_contexts() {
   $context->description = 'user profile tabs';
   $context->tag = 'user';
   $context->conditions = array(
+    'path' => array(
+      'values' => array(
+        '~node/*' => '~node/*',
+      ),
+    ),
     'user_page' => array(
       'values' => array(
         'view' => 'view',
@@ -38,7 +43,7 @@ function user_extra_context_default_contexts() {
       ),
     ),
   );
-  $context->condition_mode = 0;
+  $context->condition_mode = 1;
 
   // Translatables
   // Included for use with string extractors like potx.
