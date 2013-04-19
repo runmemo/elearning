@@ -337,9 +337,10 @@ function oq_review_form($form, &$form_state, $args) {
   $form['#prefix'] = "<div id=oq-review-wrapper-{$nid}>";
   $form['#suffix'] = '</div>';
   $form['#attached'] = array(
-        'css' => array(
-          'type' => 'file',
-          'data' => drupal_get_path('module', 'fivestar') . '/css/fivestar.css',),   
+    'css' => array(
+      'type' => 'file',
+      'data' => drupal_get_path('module', 'fivestar') . '/css/fivestar.css'
+    ),   
   );
   
   if (empty($form_state['step'])) {  // page is loaded
@@ -356,6 +357,19 @@ function oq_review_form($form, &$form_state, $args) {
     $feedback_nid = $form_state['feedback_nid'];
   }
   $step = $form_state['step'];
+
+  //Ctools helper files.
+  ctools_include('modal');
+  ctools_include('ajax');
+  ctools_modal_add_js();
+
+ 
+  $flag = flag_get_flag('abuse_content');
+  $action = 'flag';
+  if($flag->is_flagged($nid, $user->uid)) {
+    $action = 'unflag';
+  } 
+
   switch ($step) {
     case 'view':
       if (empty($form_state['storage'])) {
@@ -389,6 +403,12 @@ function oq_review_form($form, &$form_state, $args) {
         '#title' => 'Review',
         '#markup' => $review_body,
       );
+
+      $form['flag'] = array(
+        '#prefix' => '<div class="abuse-flag">',
+        '#markup' => ctools_modal_text_button('<span class="icon"></span>', "flag/confirm/$action/abuse_content/{$nid}/nojs", t('Flag this'), 'ctools-modal-common-modal-style ctools-modal-abuse'),
+        '#suffix' => '</div>'
+      );
       break;
     case 'edit':
       $form['rating'] = array(
@@ -400,6 +420,12 @@ function oq_review_form($form, &$form_state, $args) {
         '#type' => 'textarea',
         '#title' => 'Review',
         '#required' => 'true'
+      );
+
+      $form['flag'] = array(
+        '#prefix' => '<div class="abuse-flag">',
+        '#markup' => ctools_modal_text_button('<span class="abuse-flag-icon"></span>', "flag/confirm/$action/abuse_content/{$nid}/nojs", t('Flag this'), 'ctools-modal-common-modal-style ctools-modal-abuse'),
+        '#suffix' => '</div>'
       );
       $form['submit_button'] = array(
         '#type' => 'submit',

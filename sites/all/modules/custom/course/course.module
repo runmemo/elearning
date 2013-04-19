@@ -160,6 +160,7 @@ function course_node_book() {
 function course_menu_alter(&$items) {
   $items['user']['title callback'] = 'course_user_menu_title';
   $items['node/%node/outline']['access callback'] = '_course_outline_access';
+  $items['flag/confirm/%/%flag/%']['modal'] = TRUE;
 }
 
 function _course_outline_access($node) {
@@ -353,8 +354,7 @@ function course_views_pre_render(&$view) {
   ctools_include('modal');
   // Add CTools' javascript to the page.
   ctools_modal_add_js();
-  //Add our own settings for styling exit modal.
-  course_exit_modal_style();
+
   foreach ($view->result as $id => $course) {
     if (!is_numeric($course->node_registration_nid)) {
       continue;
@@ -371,7 +371,7 @@ function course_views_pre_render(&$view) {
       $path = $next['link_path'];
     }
     $view->result[$id]->continue_link = l(t('Continue'), $path, array('attributes' => array('class' => 'user-course-continue')));
-    $view->result[$id]->exit_link = ctools_modal_text_button('<span></span>', "course-exit/nojs/{$user->uid}/{$course->node_registration_nid}", t('Exit Course'), 'ctools-modal-course-exit-style user-course-exit');
+    $view->result[$id]->exit_link = ctools_modal_text_button('<span></span>', "course-exit/nojs/{$user->uid}/{$course->node_registration_nid}", t('Exit Course'), 'ctools-modal-common-modal-style user-course-exit');
     $view->result[$id]->course_progress = course_get_progress($course->node_registration_nid);
   }
 }
@@ -535,33 +535,6 @@ function theme_course_exit_modal($vars) {
   $output .= '</div>';
   $output .= '</div>';
   return $output;
-}
-
-function course_exit_modal_style() {
-  // Create our own javascript that will be used to theme a modal.
-  $throbber = drupal_get_path('theme', 'elearning') . '/images/throbber.gif';
-  $course_exit = array(
-    'course-exit-style' => array(
-      'modalSize' => array(
-        'type' => 'fixed',
-        'width' => 380,
-        'height' => 160,
-      ),
-      'modalOptions' => array(
-        'opacity' => .5,
-        'background-color' => '#000',
-      ),
-      'animation' => 'fadeIn',
-      'modalTheme' => 'CourseExit',
-      'closeText' => 'x',
-      'throbber' => theme('image', array('path' => $throbber, 'alt' => t('Loading...'), 'title' => t('Loading'))),
-    ),
-  );
-
-  // Add the settings array defined above to Drupal 7's JS settings:
-  drupal_add_js($course_exit, 'setting');
-  // The function below assumes the course_exit.modal.js file resides in [module_dir]/js
-  drupal_add_js(drupal_get_path('module', 'course') . '/course_exit.modal.js');
 }
 
 /**

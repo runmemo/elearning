@@ -8,6 +8,11 @@
  * custom modules.
  */
 
+function common_tools_init() {
+  //Add common ctools modal style
+  common_modal_style();
+}
+
 /**
  * 
  * Prints object/array as a table with layered structure.
@@ -153,4 +158,35 @@ function get_node_translated_title($node) {
    }
    $title  = $node->title_field[$lang][0]['value'];
    return $title;
+}
+
+/**
+ * Ctools Common modal style
+ */
+
+function common_modal_style() {
+  // Create our own javascript that will be used to theme a modal.
+  $throbber = drupal_get_path('theme', 'elearning') . '/images/throbber.gif';
+  $common_modal = array(
+    'common-modal-style' => array(
+      'modalSize' => array(
+        'type' => 'fixed',
+        'width' => 380,
+        'height' => 'auto',
+      ),
+      'modalOptions' => array(
+        'opacity' => .5,
+        'background-color' => '#000',
+      ),
+      'animation' => 'fadeIn',
+      'modalTheme' => 'CommonModal',
+      'closeText' => 'x',
+      'throbber' => theme('image', array('path' => $throbber, 'alt' => t('Loading...'), 'title' => t('Loading'))),
+    ),
+  );
+
+  // Add the settings array defined above to Drupal 7's JS settings:
+  drupal_add_js($common_modal, 'setting');
+  // The function below assumes the course_exit.modal.js file resides in [module_dir]/js
+  drupal_add_js(drupal_get_path('module', 'common_tools') . '/common_modal.js');
 }

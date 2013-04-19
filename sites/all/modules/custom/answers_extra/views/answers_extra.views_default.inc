@@ -137,6 +137,28 @@ function answers_extra_views_default_views() {
   $handler->display->display_options['fields']['nothing_1']['alter']['text'] = '[field_name][field_surname]';
   $handler->display->display_options['fields']['nothing_1']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['nothing_1']['empty'] = '[name]';
+  /* Field: Global: PHP */
+  $handler->display->display_options['fields']['php']['id'] = 'php';
+  $handler->display->display_options['fields']['php']['table'] = 'views';
+  $handler->display->display_options['fields']['php']['field'] = 'php';
+  $handler->display->display_options['fields']['php']['label'] = '';
+  $handler->display->display_options['fields']['php']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['php']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['php']['use_php_setup'] = 0;
+  $handler->display->display_options['fields']['php']['php_output'] = '<?php 
+    ctools_include(\'modal\');
+    ctools_include(\'ajax\');
+    ctools_modal_add_js();
+    $flag = flag_get_flag(\'abuse_content\');
+    $action = \'flag\';
+    global $user;
+    if($flag->is_flagged($row->nid, $user->uid)) {
+      $action = \'unflag\';
+    } 
+    print ctools_modal_text_button(\'<span class="abuse-flag-icon"></span>\', "flag/confirm/$action/abuse_content/{$row->nid}/nojs", t(\'Flag this\'), \'ctools-modal-common-modal-style ctools-modal-abuse\');
+  ?>';
+  $handler->display->display_options['fields']['php']['use_php_click_sortable'] = '0';
+  $handler->display->display_options['fields']['php']['php_click_sortable'] = '';
   /* Field: Field Grouping */
   $handler->display->display_options['fields']['nothing']['id'] = 'nothing';
   $handler->display->display_options['fields']['nothing']['table'] = 'views';
@@ -146,6 +168,7 @@ function answers_extra_views_default_views() {
   $handler->display->display_options['fields']['nothing']['alter']['text'] = '<div class="views-answer-widgets">
          <div class="views-field-field-rating-widget">[field_rating_widget]</div>
          <div class="views-field-ops">[ops]</div>
+         <div class="abuse-flag">[php]</div>
        </div>
        <div class="views-answer-body">
          <div class="views-field-body">[body]</div>

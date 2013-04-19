@@ -1,11 +1,11 @@
 /**
 * Provide the HTML to create the modal dialog.
 */
-Drupal.theme.prototype.CourseExit = function () {
+Drupal.theme.prototype.CommonModal = function () {
   var html = '';
 
   html += '<div id="ctools-modal" class="popups-box">';
-  html += '  <div class="ctools-modal-content ctools-exit-modal-content">';
+  html += '  <div class="ctools-modal-content ctools-common-modal-content">';
   html += '    <div class="popups-container">';
   html += '      <div class="modal-header popups-title">';
   html += '        <span id="modal-title" class="modal-title"></span>';

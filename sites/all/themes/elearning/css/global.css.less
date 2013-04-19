@@ -1733,7 +1733,7 @@ body.page-home {
 /****** Node type "Question" End ******/
 
 /** Ctools Modal CSS*/
-div.ctools-exit-modal-content {
+div.ctools-common-modal-content {
   background:none;
   border:0;
   color:#000000;
@@ -1849,6 +1849,37 @@ div.ctools-exit-modal-content {
       }
     }
   }
+  label{
+    display: none;
+  }
+
+  .resizable-textarea {
+    margin: 0;
+    textarea {
+      border:1px solid #ddd;
+    }
+    .grippie {
+      display: none;
+    }
+  }
+
+  #edit-field-abuse-reason select {
+    width: 100%;
+    border: 1px solid #DDDDDD;
+  }
+
+  #flag-confirm #edit-cancel {
+    visibility: hidden;
+  }
+
+  .form-actions.form-wrapper {
+    border-top: 1px dotted #ddd;
+    padding-top: 10px;
+  }
+
+  form .form-submit {
+    margin-right: 0;
+  }
 }
 
 /** Ctools Modal CSS*/
@@ -1864,5 +1895,15 @@ div.ctools-exit-modal-content {
   a:hover,
   a.active {
     .text-orange()
+  }
+}
+
+
+.abuse-flag {
+  padding: 20px 14px 5px;
+  clear: both;
+  .abuse-flag-icon {
+    background: url(../images/flag.png) no-repeat scroll 0 0;
+    padding: 10px;
   }
 }

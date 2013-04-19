@@ -39,7 +39,7 @@ function open_question_flag_default_flags() {
   $flags = array();
   // Exported flag: "Flag to mark feedback as useful".
   $flags['opaf_useful'] = array(
-    'content_type' => 'node',
+    'entity_type' => 'node',
     'title' => 'Flag to mark feedback as useful',
     'global' => 0,
     'types' => array(
@@ -53,14 +53,6 @@ function open_question_flag_default_flags() {
     'unflag_message' => '',
     'unflag_denied_text' => '',
     'link_type' => 'toggle',
-    'roles' => array(
-      'flag' => array(
-        0 => 2,
-      ),
-      'unflag' => array(
-        0 => 2,
-      ),
-    ),
     'weight' => 0,
     'show_on_form' => 0,
     'access_author' => 'others',
@@ -68,13 +60,21 @@ function open_question_flag_default_flags() {
     'show_on_teaser' => 0,
     'show_contextual_link' => 0,
     'i18n' => 0,
-    'api_version' => 2,
-    'module' => 'test',
+    'api_version' => 3,
+    'module' => 'open_question',
     'locked' => array(
-      0 => 'name',
+      'name' => 'name',
+    ),
+    'status' => FALSE,
+    'import_roles' => array(
+      'flag' => array(
+        0 => 2,
+      ),
+      'unflag' => array(
+        0 => 2,
+      ),
     ),
   );
-
   return $flags;
 }
 
