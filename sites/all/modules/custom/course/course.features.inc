@@ -227,6 +227,7 @@ function course_flag_default_flags() {
     'i18n' => 0,
     'flag_confirmation' => 'Flag this content',
     'unflag_confirmation' => 'Unflag this content',
+    'module' => 'course',
     'api_version' => 3,
   );
 

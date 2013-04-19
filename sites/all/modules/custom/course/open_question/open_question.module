@@ -428,11 +428,13 @@ function oq_review_form($form, &$form_state, $args) {
         '#markup' => $review_body,
       );
 
-      $form['flag'] = array(
-        '#prefix' => '<div class="abuse-flag">',
-        '#markup' => ctools_modal_text_button('<span class="icon"></span>', "flag/confirm/$action/abuse_content/{$nid}/nojs", t('Flag this'), 'ctools-modal-common-modal-style ctools-modal-abuse'),
-        '#suffix' => '</div>'
-      );
+      if ($flag->access($nid)) {
+        $form['flag'] = array(
+          '#prefix' => '<div class="abuse-flag">',
+          '#markup' => ctools_modal_text_button('<span class="icon"></span>', "flag/confirm/$action/abuse_content/{$nid}/nojs", t('Flag this'), 'ctools-modal-common-modal-style ctools-modal-abuse'),
+          '#suffix' => '</div>'
+        );
+      }
       break;
     case 'edit':
       $form['rating'] = array(
@@ -446,11 +448,14 @@ function oq_review_form($form, &$form_state, $args) {
         '#required' => 'true'
       );
 
-      $form['flag'] = array(
-        '#prefix' => '<div class="abuse-flag">',
-        '#markup' => ctools_modal_text_button('<span class="abuse-flag-icon"></span>', "flag/confirm/$action/abuse_content/{$nid}/nojs", t('Flag this'), 'ctools-modal-common-modal-style ctools-modal-abuse'),
-        '#suffix' => '</div>'
-      );
+      if ($flag->access($nid)) {
+        $form['flag'] = array(
+          '#prefix' => '<div class="abuse-flag">',
+          '#markup' => ctools_modal_text_button('<span class="abuse-flag-icon"></span>', "flag/confirm/$action/abuse_content/{$nid}/nojs", t('Flag this'), 'ctools-modal-common-modal-style ctools-modal-abuse'),
+          '#suffix' => '</div>'
+        );
+      }
+
       $form['submit_button'] = array(
         '#type' => 'submit',
         '#value' => 'OK',

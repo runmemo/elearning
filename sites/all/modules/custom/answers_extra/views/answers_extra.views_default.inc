@@ -152,6 +152,13 @@ function answers_extra_views_default_views() {
     $flag = flag_get_flag(\'abuse_content\');
     $action = \'flag\';
     global $user;
+    if (!$flag->access($row->nid)) {
+      // User has no permission to use this flag or flag does not apply to this
+      // entity. The link is not skipped if the user has "flag" access but
+      // not "unflag" access (this way the unflag denied message is shown).
+      return;
+    }
+
     if($flag->is_flagged($row->nid, $user->uid)) {
       $action = \'unflag\';
     } 
