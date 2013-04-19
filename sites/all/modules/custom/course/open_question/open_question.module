@@ -219,7 +219,29 @@ function open_question_answer_form($form, &$form_state, $answered) {
         $answer_text = $answer->body[LANGUAGE_NONE][0]['value'];
         $form_state['answer_value'] = $answer_text;
       }
+      // @todo Ilya: adjust $criteria, when feedback workflow is done.
+      $criteria = array(
+        'entity_type' => 'node',
+        'entity_id' => $answered,
+        'value_type' => 'points',
+        'tag' => 'vote',
+        'function' => 'average'
+      );
+      $points = votingapi_select_single_result_value($criteria);
+      $points = $points ? $points : '0.0';
       // build form for viewing of saved answer
+      $form['view']['answer'] = array(
+        '#type' => 'markup',
+        '#prefix' => '<div class="oq_answer">',
+        '#suffix' => '</div>',
+        '#markup' => $answer_text,
+      );
+      $form['view']['rating'] = array(
+        '#type' => 'markup',
+        '#prefix' => '<div class="oq-answer-rating">',
+        '#suffix' => '</div>',
+        '#markup' => t('Average rating') . ': ' . $points,
+      );
       $form['view']['edit'] = array(
         '#type' => 'submit',
         '#value' => t('Edit'),
@@ -229,12 +251,8 @@ function open_question_answer_form($form, &$form_state, $answered) {
           'wrapper' => 'oq-answer-form-wrapper',
           'progress' => array('message' => t('')),
         ),
-      );
-      $form['view']['answer'] = array(
-        '#type' => 'markup',
-        '#prefix' => '<div class="oq_answer">',
-        '#suffix' => '</div>',
-        '#markup' => $answer_text,
+        '#attributes' => array('class' => array('oq-answer-form-submit')),
+        '#suffix' => '<div class="oq-answer-submit-sign"></div>',
       );
       
       break;

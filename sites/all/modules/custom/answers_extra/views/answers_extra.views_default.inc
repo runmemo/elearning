@@ -168,6 +168,7 @@ function answers_extra_views_default_views() {
   $handler->display->display_options['fields']['nothing']['alter']['text'] = '<div class="views-answer-widgets">
          <div class="views-field-field-rating-widget">[field_rating_widget]</div>
          <div class="views-field-ops">[ops]</div>
+         <div class="views-field-flag-thumbs-up">[ops]</div>
          <div class="abuse-flag">[php]</div>
        </div>
        <div class="views-answer-body">
