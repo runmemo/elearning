@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * course.features.field_base.inc
+ * abuse_content.features.field_base.inc
  */
 
 /**
  * Implements hook_field_default_field_bases().
  */
-function course_field_default_field_bases() {
+function abuse_content_field_default_field_bases() {
   $field_bases = array();
 
   // Exported field_base: 'field_abuse_description'
@@ -36,9 +36,7 @@ function course_field_default_field_bases() {
     'translatable' => 0,
     'type' => 'text_long',
   );
-  // @todo barinder move functionality related to abuse flagging to separate
-  // module outside of course. this should be as generic as abuse contrib module.
-  // 
+
   // Exported field_base: 'field_abuse_reason'
   $field_bases['field_abuse_reason'] = array(
     'active' => 1,
@@ -56,7 +54,6 @@ function course_field_default_field_bases() {
     'module' => 'list',
     'settings' => array(
       'allowed_values' => array(
-        // @todo barinder make proper translatable values for spam and offencive language 
         'reason_1' => 'Reason 1',
         'reason_2' => 'Reason 2',
         'reason_3' => 'Reason 3',

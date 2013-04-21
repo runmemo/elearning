@@ -1,0 +1,19 @@
+name = Abuse Content
+description = Contains for marking course content of other users.
+core = 7.x
+package = Custom
+version = 7.x-1.0
+project = course
+
+dependencies[] = ctools_automodal
+dependencies[] = entity
+dependencies[] = flag
+features[field_base][] = field_abuse_description
+features[field_base][] = field_abuse_reason
+features[field_instance][] = flagging-abuse_content-field_abuse_description
+features[field_instance][] = flagging-abuse_content-field_abuse_reason
+features[features_api][] = api:1
+features[ctools][] = context:context:3
+features[ctools][] = delta:delta:3
+features[ctools][] = strongarm:strongarm:1
+features[flag][] = abuse_content

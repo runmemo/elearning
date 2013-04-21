@@ -1,0 +1,7 @@
+<?php
+
+/**
+ * @file abuse_content.module
+ * Code for the Abuse Content module.
+ */
+include_once 'abuse_content.features.inc';
