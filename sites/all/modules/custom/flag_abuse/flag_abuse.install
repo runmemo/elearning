@@ -1,8 +1,0 @@
-<?php
-
-
-
-
-function flag_abuse_install() {
-  
-}

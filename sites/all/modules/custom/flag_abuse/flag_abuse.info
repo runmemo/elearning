@@ -1,5 +1,0 @@
-name = Flag Abuse
-description = Provides a flag and supporting views for abuse flag.
-core = 7.x
-dependencies[] = flag
-package = Custom
