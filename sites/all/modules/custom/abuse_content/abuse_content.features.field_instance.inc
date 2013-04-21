@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * course.features.field_instance.inc
+ * abuse_content.features.field_instance.inc
  */
 
 /**
  * Implements hook_field_default_field_instances().
  */
-function course_field_default_field_instances() {
+function abuse_content_field_default_field_instances() {
   $field_instances = array();
 
   // Exported field_instance: 'flagging-abuse_content-field_abuse_description'

@@ -24,12 +24,6 @@ dependencies[] = flag
 dependencies[] = rules
 dependencies[] = ctools_automodal
 
-features[field_base][] = field_abuse_description
-features[field_base][] = field_abuse_reason
-features[field_instance][] = flagging-abuse_content-field_abuse_description
-features[field_instance][] = flagging-abuse_content-field_abuse_reason
-
-
 files[] = course.inc
 files[] = views/course.views_default.inc
 files[] = tests/course.test
@@ -53,6 +47,5 @@ features[file_display][] = video__media_default__media_youtube_image
 features[file_display][] = video__media_default__media_youtube_video
 features[variable][] = node_submitted_lesson
 features[flag][] = course_item_complete
-features[flag][] = abuse_content
 features[rules_config][] = rules_lesson_video_complete
 features[rules_config][] = rules_open_question_viewed
