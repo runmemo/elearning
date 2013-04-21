@@ -387,7 +387,7 @@ function oq_review_form($form, &$form_state, $args) {
   ctools_include('ajax');
   ctools_modal_add_js();
 
- 
+  // @todo barinder export permissions for this flag:
   $flag = flag_get_flag('abuse_content');
   $action = 'flag';
   if($flag->is_flagged($nid, $user->uid)) {
@@ -448,6 +448,8 @@ function oq_review_form($form, &$form_state, $args) {
         '#required' => 'true'
       );
 
+      // @todo barinder page reloads on modal form submit, which it should not do.
+      // also flag should be available on the first tab so user could flag feedbacks of other students.
       if ($flag->access($nid)) {
         $form['flag'] = array(
           '#prefix' => '<div class="abuse-flag">',
