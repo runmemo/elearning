@@ -1,5 +1,5 @@
-name = Course Outline -  Book Outline Block
-description = "Course Outline - Provides a block containing an outline of the current book."
+name = Course Outline
+description = "Provides a block containing an outline of the current book."
 package = Custom 
 core = 7.x
 dependencies[] = book
