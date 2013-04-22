@@ -35,7 +35,7 @@ zones[postscript] = 'Postscript'
 
 css[global.css.less][name] = eLearning styles
 css[global.css.less][description] = LESS CSS stylesheet for eLearning.
-css[global.css.less][options][weight] = 10
+css[global.css.less][options][weight] = 1
 settings[alpha_css][global.css.less] = 'global.css.less'
 
 css[elearning-alpha-default-wide.css][name] = elearning wide styles
@@ -48,11 +48,11 @@ css[elearning-alpha-default-normal.css][options][weight] = 10
 
 css[elearning-alpha-default-narrow.css][name] = eLearning narrow styles
 css[elearning-alpha-default-narrow.css][description] = LESS CSS narrow stylesheet.
-css[elearning-alpha-default-narrow.css][options][weight] = 10
+css[elearning-alpha-default-narrow.css][options][weight] = 9
 
 css[elearning-alpha-default.css][name] = eLearning mobile styles
 css[elearning-alpha-default.css][description] = LESS CSS mobile stylesheet.
-css[elearning-alpha-default.css][options][weight] = 10
+css[elearning-alpha-default.css][options][weight] = 8
 
 plugins[vud][widgets] = widgets
 
