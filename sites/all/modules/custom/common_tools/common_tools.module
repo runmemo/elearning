@@ -190,3 +190,29 @@ function common_modal_style() {
   // The function below assumes the course_exit.modal.js file resides in [module_dir]/js
   drupal_add_js(drupal_get_path('module', 'common_tools') . '/common_modal.js');
 }
+
+/***
+ * Implementation of hook_username_alter().
+ */
+function elearning_username_alter(&$name, $account) {
+  if ($account->uid > 0) {
+    $user = user_load($account->uid);
+    $field_name_view = field_view_field('user', $user, 'field_name');
+    $field_name = isset($field_name_view[0]['#markup']) ? $field_name_view[0]['#markup'] : '';
+    $field_surname_view = field_view_field('user', $user, 'field_surname');
+    $field_surname = isset($field_surname_view[0]['#markup']) ? $field_surname_view[0]['#markup'] : '';
+    $name = (!empty($field_name) || !empty($field_surname)) ? $field_name . ' ' .$field_surname : $name;
+  }
+}
+
+/**
+ * Implementation of hook_fivestar_widgets().
+ */
+function common_tools_fivestar_widgets() {
+  // Letting fivestar know about our custom Stars widget.
+  $widgets = array(
+    drupal_get_path('module', 'common_tools') . '/widgets/elearning_fivestar_widget.css' => 'Elearning Stars',
+  );
+
+  return $widgets;
+}

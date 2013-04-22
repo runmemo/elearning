@@ -303,7 +303,7 @@ function open_question_field_default_field_instances() {
       'module' => 'fivestar',
       'settings' => array(
         'widget' => array(
-          'fivestar_widget' => 'default',
+          'fivestar_widget' => 'sites/all/modules/custom/common_tools/widgets/elearning_fivestar_widget.css',
         ),
       ),
       'type' => 'stars',

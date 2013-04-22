@@ -95,40 +95,6 @@ function open_question_views_default_views() {
   $handler->display->display_options['fields']['name']['exclude'] = TRUE;
   $handler->display->display_options['fields']['name']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['name']['link_to_user'] = FALSE;
-  /* Field: User: Name */
-  $handler->display->display_options['fields']['field_name']['id'] = 'field_name';
-  $handler->display->display_options['fields']['field_name']['table'] = 'field_data_field_name';
-  $handler->display->display_options['fields']['field_name']['field'] = 'field_name';
-  $handler->display->display_options['fields']['field_name']['relationship'] = 'uid';
-  $handler->display->display_options['fields']['field_name']['label'] = '';
-  $handler->display->display_options['fields']['field_name']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['field_name']['alter']['alter_text'] = TRUE;
-  $handler->display->display_options['fields']['field_name']['alter']['text'] = '[field_name] ';
-  $handler->display->display_options['fields']['field_name']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['field_name']['settings'] = array(
-    'title_style' => '_none',
-    'title_link' => '',
-    'title_class' => '',
-  );
-  /* Field: User: Surname */
-  $handler->display->display_options['fields']['field_surname']['id'] = 'field_surname';
-  $handler->display->display_options['fields']['field_surname']['table'] = 'field_data_field_surname';
-  $handler->display->display_options['fields']['field_surname']['field'] = 'field_surname';
-  $handler->display->display_options['fields']['field_surname']['relationship'] = 'uid';
-  $handler->display->display_options['fields']['field_surname']['label'] = '';
-  $handler->display->display_options['fields']['field_surname']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['field_surname']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['field_surname']['type'] = 'text_plain';
-  /* Field: Name Grouping */
-  $handler->display->display_options['fields']['nothing']['id'] = 'nothing';
-  $handler->display->display_options['fields']['nothing']['table'] = 'views';
-  $handler->display->display_options['fields']['nothing']['field'] = 'nothing';
-  $handler->display->display_options['fields']['nothing']['ui_name'] = 'Name Grouping';
-  $handler->display->display_options['fields']['nothing']['label'] = '';
-  $handler->display->display_options['fields']['nothing']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['nothing']['alter']['text'] = '[field_name][field_surname] ';
-  $handler->display->display_options['fields']['nothing']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['nothing']['empty'] = '[name]';
   /* Field: Content: Inline Comments */
   $handler->display->display_options['fields']['comment_count']['id'] = 'comment_count';
   $handler->display->display_options['fields']['comment_count']['table'] = 'node_comment_statistics';
@@ -152,25 +118,25 @@ function open_question_views_default_views() {
   $handler->display->display_options['fields']['php']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['php']['use_php_setup'] = 0;
   $handler->display->display_options['fields']['php']['php_output'] = '<?php
-    ctools_include(\'modal\');
-    ctools_include(\'ajax\');
-    ctools_modal_add_js();
-    $flag = flag_get_flag(\'abuse_content\');
-    $action = \'flag\';
-    global $user;
-    if (!$flag->access($row->nid)) {
-      // User has no permission to use this flag or flag does not apply to this
-      // entity. The link is not skipped if the user has "flag" access but
-      // not "unflag" access (this way the unflag denied message is shown).
-      return;
-    }
+      ctools_include(\'modal\');
+      ctools_include(\'ajax\');
+      ctools_modal_add_js();
+      $flag = flag_get_flag(\'abuse_content\');
+      $action = \'flag\';
+      global $user;
+      if (!$flag->access($row->nid)) {
+        // User has no permission to use this flag or flag does not apply to this
+        // entity. The link is not skipped if the user has "flag" access but
+        // not "unflag" access (this way the unflag denied message is shown).
+        return;
+      }
 
-    if($flag->is_flagged($row->nid, $user->uid)) {
-      $action = \'unflag\';
-    } 
-    print ctools_modal_text_button(\'<span class="abuse-flag-icon"></span>\', "flag/confirm/$action/abuse_content/{$row->nid}/nojs", t(\'Flag this\'), \'ctools-modal-common-modal-style ctools-modal-abuse\');
+      if($flag->is_flagged($row->nid, $user->uid)) {
+        $action = \'unflag\';
+      } 
+      print ctools_modal_text_button(\'<span class="abuse-flag-icon"></span>\', "flag/confirm/$action/abuse_content/{$row->nid}/nojs", t(\'Flag this\'), \'ctools-modal-common-modal-style ctools-modal-abuse\');
 
-  ?>';
+    ?>';
   $handler->display->display_options['fields']['php']['use_php_click_sortable'] = '0';
   $handler->display->display_options['fields']['php']['php_click_sortable'] = '';
   /* Field: Field Grouping */
@@ -179,25 +145,22 @@ function open_question_views_default_views() {
   $handler->display->display_options['fields']['nothing_1']['field'] = 'nothing';
   $handler->display->display_options['fields']['nothing_1']['ui_name'] = 'Field Grouping';
   $handler->display->display_options['fields']['nothing_1']['label'] = '';
-  // @todo Ilya 
-  // 1. what is nothing and nothing_1? 
-  // 2. can we show user name if user did not provide first & second names.
   $handler->display->display_options['fields']['nothing_1']['alter']['text'] = '<div class="views-answer-feedback-widgets">
-    <div class="views-answer-feedback-picture">
-      <div class="views-field-picture">[picture]</div>
-      <div class="author-points">[points_1]</div>
+        <div class="views-answer-feedback-picture">
+          <div class="views-field-picture">[picture]</div>
+          <div class="author-points">[points_1]</div>
+        </div>
+        <div class="views-field-flag-thumbs-up">[ops]</div>
+      <div class="abuse-flag">[php]</div>
     </div>
-    <div class="views-field-flag-thumbs-up">[ops]</div>
-    <div class="abuse-flag">[php]</div>
-  </div>
-  <div class="views-answer-feedback-body">
-    <div class="views-field-body">[body]</div>
-    <div class="node-supplementary-wrapper"> 
-      <div class="views-field-created">[created]</div>
-      <div class="views-field-name">[nothing]</div>
-      <div class="views-field-comment-count">[comment_count]</div>
-    </div>
-  </div>';
+      <div class="views-answer-feedback-body">
+        <div class="views-field-body">[body]</div>
+        <div class="node-supplementary-wrapper"> 
+          <div class="views-field-created">[created]</div>
+          <div class="views-field-name">[name]</div>
+          <div class="views-field-comment-count">[comment_count]</div>
+        </div>
+      </div>';
   $handler->display->display_options['fields']['nothing_1']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['nothing_1']['element_default_classes'] = FALSE;
   /* Contextual filter: Content: Open Question Answer (field_open_question_answer) */
@@ -242,6 +205,7 @@ function open_question_views_default_views() {
   /* Display: Master */
   $handler = $view->new_display('default', 'Master', 'default');
   $handler->display->display_options['title'] = 'Open Questions Review List';
+  $handler->display->display_options['css_class'] = 'view-answers-review';
   $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['access']['type'] = 'role';
   $handler->display->display_options['access']['role'] = array(
@@ -256,19 +220,53 @@ function open_question_views_default_views() {
   $handler->display->display_options['pager']['options']['items_per_page'] = '5';
   $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['row_plugin'] = 'fields';
-  /* Field: Content: Title */
-  $handler->display->display_options['fields']['title']['id'] = 'title';
-  $handler->display->display_options['fields']['title']['table'] = 'node';
-  $handler->display->display_options['fields']['title']['field'] = 'title';
-  $handler->display->display_options['fields']['title']['label'] = '';
-  $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
-  $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
+  /* Relationship: Content: Author */
+  $handler->display->display_options['relationships']['uid']['id'] = 'uid';
+  $handler->display->display_options['relationships']['uid']['table'] = 'node';
+  $handler->display->display_options['relationships']['uid']['field'] = 'uid';
+  /* Field: User: Picture */
+  $handler->display->display_options['fields']['picture']['id'] = 'picture';
+  $handler->display->display_options['fields']['picture']['table'] = 'users';
+  $handler->display->display_options['fields']['picture']['field'] = 'picture';
+  $handler->display->display_options['fields']['picture']['relationship'] = 'uid';
+  $handler->display->display_options['fields']['picture']['label'] = '';
+  $handler->display->display_options['fields']['picture']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['picture']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['picture']['empty'] = '<div class="node-question-default-picture"></div>';
+  $handler->display->display_options['fields']['picture']['link_photo_to_profile'] = FALSE;
+  $handler->display->display_options['fields']['picture']['image_style'] = 'question_author';
+  /* Field: Userpoints total: Current total points */
+  $handler->display->display_options['fields']['points']['id'] = 'points';
+  $handler->display->display_options['fields']['points']['table'] = 'userpoints_total';
+  $handler->display->display_options['fields']['points']['field'] = 'points';
+  $handler->display->display_options['fields']['points']['label'] = '';
+  $handler->display->display_options['fields']['points']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['points']['element_label_colon'] = FALSE;
   /* Field: Content: Body */
   $handler->display->display_options['fields']['body']['id'] = 'body';
   $handler->display->display_options['fields']['body']['table'] = 'field_data_body';
   $handler->display->display_options['fields']['body']['field'] = 'body';
   $handler->display->display_options['fields']['body']['label'] = '';
+  $handler->display->display_options['fields']['body']['exclude'] = TRUE;
   $handler->display->display_options['fields']['body']['element_label_colon'] = FALSE;
+  /* Field: Content: Post date */
+  $handler->display->display_options['fields']['created']['id'] = 'created';
+  $handler->display->display_options['fields']['created']['table'] = 'node';
+  $handler->display->display_options['fields']['created']['field'] = 'created';
+  $handler->display->display_options['fields']['created']['label'] = '';
+  $handler->display->display_options['fields']['created']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['created']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['created']['date_format'] = 'time ago';
+  $handler->display->display_options['fields']['created']['custom_date_format'] = '1';
+  /* Field: User: Name */
+  $handler->display->display_options['fields']['name']['id'] = 'name';
+  $handler->display->display_options['fields']['name']['table'] = 'users';
+  $handler->display->display_options['fields']['name']['field'] = 'name';
+  $handler->display->display_options['fields']['name']['relationship'] = 'uid';
+  $handler->display->display_options['fields']['name']['label'] = '';
+  $handler->display->display_options['fields']['name']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['name']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['name']['link_to_user'] = FALSE;
   /* Field: Content: Nid */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'node';
@@ -281,16 +279,37 @@ function open_question_views_default_views() {
   $handler->display->display_options['fields']['php']['table'] = 'views';
   $handler->display->display_options['fields']['php']['field'] = 'php';
   $handler->display->display_options['fields']['php']['label'] = '';
+  $handler->display->display_options['fields']['php']['exclude'] = TRUE;
   $handler->display->display_options['fields']['php']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['php']['use_php_setup'] = 1;
   $handler->display->display_options['fields']['php']['php_setup'] = '\'require_once DRUPAL_ROOT . /sites/all/modules/  custom/course/open_question/open_question.module;\';';
   $handler->display->display_options['fields']['php']['php_value'] = '\'require_once DRUPAL_ROOT . /sites/all/modules/custom/ course/open_question/open_question.module;\';';
   $handler->display->display_options['fields']['php']['php_output'] = '<?php
-$form = drupal_get_form("oq_review_".$row->nid, $row->nid);
-print drupal_render($form);
-?>';
+  $form = drupal_get_form("oq_review_".$row->nid, $row->nid);
+  print drupal_render($form);
+  ?>';
   $handler->display->display_options['fields']['php']['use_php_click_sortable'] = '0';
   $handler->display->display_options['fields']['php']['php_click_sortable'] = '';
+  /* Field: Global: Custom text */
+  $handler->display->display_options['fields']['nothing']['id'] = 'nothing';
+  $handler->display->display_options['fields']['nothing']['table'] = 'views';
+  $handler->display->display_options['fields']['nothing']['field'] = 'nothing';
+  $handler->display->display_options['fields']['nothing']['label'] = '';
+  $handler->display->display_options['fields']['nothing']['alter']['text'] = '<div class="views-other-answer-picture">
+    <div class="views-field-picture">[picture]</div>
+    <div class="author-points">[points]</div>
+  </div>
+
+  <div class="views-other-answer-body">
+    <div class="views-field-body">[body]</div>
+    <div class="node-supplementary-wrapper"> 
+      <div class="views-field-created">[created]</div>
+      <div class="views-field-name">[name]</div>
+    </div>
+   <div class="views-field-feedback-form">[php]</div>
+  </div>';
+  $handler->display->display_options['fields']['nothing']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['nothing']['element_default_classes'] = FALSE;
   /* Sort criterion: Global: Random */
   $handler->display->display_options['sorts']['random']['id'] = 'random';
   $handler->display->display_options['sorts']['random']['table'] = 'views';

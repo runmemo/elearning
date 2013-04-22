@@ -363,8 +363,8 @@ function oq_review_form($form, &$form_state, $args) {
   $form['#attached'] = array(
     'css' => array(
       'type' => 'file',
-      'data' => drupal_get_path('module', 'fivestar') . '/css/fivestar.css'
-    ),   
+      'data' => drupal_get_path('module', 'common_tools') . '/widgets/elearning_fivestar_widget.css'
+    ),
   );
   
   if (empty($form_state['step'])) {  // page is loaded
@@ -418,20 +418,23 @@ function oq_review_form($form, &$form_state, $args) {
 
       break;
     case 'edit':
+      $form['review_link'] = array(
+        '#markup' => '<a class="oq-review-link"></a>',
+      );
       $form['rating'] = array(
         '#type' => 'fivestar',
         '#title' => 'Rating',
-        '#required' => 'true',
+        '#required' => TRUE,
       );
       $form['review'] = array(
         '#type' => 'textarea',
         '#title' => 'Review',
-        '#required' => 'true'
+        '#required' => FALSE
       );
 
       $form['submit_button'] = array(
         '#type' => 'submit',
-        '#value' => 'OK',
+        '#value' => 'Add review',
         '#ajax' => array(
           'callback' => 'oq_review_form_js',
           'wrapper' => "oq-review-wrapper-{$nid}",
@@ -514,4 +517,13 @@ function oq_review_form_submit($form, &$form_state) {
   // rebuild from after submit
   $form_state['rebuild'] = TRUE;
   
+}
+
+/**
+ * Implementation of hook_node_view().
+ */
+function open_question_node_view($node, $view_mode, $langcode) {
+  if ($node->type == 'open_question') {
+    drupal_add_js(drupal_get_path('module', 'open_question') . '/open_question.js');
+  }
 }
