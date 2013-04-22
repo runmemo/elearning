@@ -136,6 +136,43 @@ function open_question_views_default_views() {
   $handler->display->display_options['fields']['comment_count']['label'] = '';
   $handler->display->display_options['fields']['comment_count']['exclude'] = TRUE;
   $handler->display->display_options['fields']['comment_count']['element_label_colon'] = FALSE;
+  /* Field: Content: Nid */
+  $handler->display->display_options['fields']['nid']['id'] = 'nid';
+  $handler->display->display_options['fields']['nid']['table'] = 'node';
+  $handler->display->display_options['fields']['nid']['field'] = 'nid';
+  $handler->display->display_options['fields']['nid']['label'] = '';
+  $handler->display->display_options['fields']['nid']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['nid']['element_label_colon'] = FALSE;
+  /* Field: Global: PHP */
+  $handler->display->display_options['fields']['php']['id'] = 'php';
+  $handler->display->display_options['fields']['php']['table'] = 'views';
+  $handler->display->display_options['fields']['php']['field'] = 'php';
+  $handler->display->display_options['fields']['php']['label'] = '';
+  $handler->display->display_options['fields']['php']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['php']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['php']['use_php_setup'] = 0;
+  $handler->display->display_options['fields']['php']['php_output'] = '<?php
+    ctools_include(\'modal\');
+    ctools_include(\'ajax\');
+    ctools_modal_add_js();
+    $flag = flag_get_flag(\'abuse_content\');
+    $action = \'flag\';
+    global $user;
+    if (!$flag->access($row->nid)) {
+      // User has no permission to use this flag or flag does not apply to this
+      // entity. The link is not skipped if the user has "flag" access but
+      // not "unflag" access (this way the unflag denied message is shown).
+      return;
+    }
+
+    if($flag->is_flagged($row->nid, $user->uid)) {
+      $action = \'unflag\';
+    } 
+    print ctools_modal_text_button(\'<span class="abuse-flag-icon"></span>\', "flag/confirm/$action/abuse_content/{$row->nid}/nojs", t(\'Flag this\'), \'ctools-modal-common-modal-style ctools-modal-abuse\');
+
+  ?>';
+  $handler->display->display_options['fields']['php']['use_php_click_sortable'] = '0';
+  $handler->display->display_options['fields']['php']['php_click_sortable'] = '';
   /* Field: Field Grouping */
   $handler->display->display_options['fields']['nothing_1']['id'] = 'nothing_1';
   $handler->display->display_options['fields']['nothing_1']['table'] = 'views';
@@ -148,6 +185,7 @@ function open_question_views_default_views() {
       <div class="author-points">[points_1]</div>
     </div>
     <div class="views-field-flag-thumbs-up">[ops]</div>
+    <div class="abuse-flag">[php]</div>
   </div>
   <div class="views-answer-feedback-body">
     <div class="views-field-body">[body]</div>

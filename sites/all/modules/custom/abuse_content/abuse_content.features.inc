@@ -17,8 +17,7 @@ function abuse_content_flag_default_flags() {
     'title' => 'Abuse content',
     'global' => 0,
     'types' => array(
-      0 => 'answer',
-      1 => 'open_question_answer',
+      0 => 'open_question_feedback',
     ),
     'flag_short' => 'Mark Abuse',
     'flag_long' => '',
