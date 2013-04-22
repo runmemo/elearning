@@ -17,3 +17,5 @@ features[ctools][] = context:context:3
 features[ctools][] = delta:delta:3
 features[ctools][] = strongarm:strongarm:1
 features[flag][] = abuse_content
+features[user_permission][] = flag abuse_content
+features[user_permission][] = unflag abuse_content
