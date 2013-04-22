@@ -179,6 +179,9 @@ function open_question_views_default_views() {
   $handler->display->display_options['fields']['nothing_1']['field'] = 'nothing';
   $handler->display->display_options['fields']['nothing_1']['ui_name'] = 'Field Grouping';
   $handler->display->display_options['fields']['nothing_1']['label'] = '';
+  // @todo Ilya 
+  // 1. what is nothing and nothing_1? 
+  // 2. can we show user name if user did not provide first & second names.
   $handler->display->display_options['fields']['nothing_1']['alter']['text'] = '<div class="views-answer-feedback-widgets">
     <div class="views-answer-feedback-picture">
       <div class="views-field-picture">[picture]</div>
