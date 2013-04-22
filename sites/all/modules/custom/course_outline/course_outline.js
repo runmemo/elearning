@@ -8,6 +8,7 @@
       $('.block-course-outline h3').last().addClass('last');
       // add background to a instead of li, because of progress-bar
       $('.block-course-outline li').hover(
+       // @todo ilya do this via classAdd().
         function() {
         $(this).find('a').css('background', '#fff0d9');
       },

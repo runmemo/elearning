@@ -26,11 +26,11 @@ function lesson_init() {
 function lesson_block_info() {
  
   $block['lesson_lecturer_notes'] = array(
-    'info' => 'Lesson Notes : Lecturer',
+    'info' => t('Lesson Notes : Lecturer'),
     'cache' => DRUPAL_CACHE_PER_PAGE,
   );
   $block['lesson_student_notes'] = array(
-    'info' => 'Lesson Notes : Student',
+    'info' => t('Lesson Notes : Student'),
     'cache' => DRUPAL_CACHE_PER_PAGE,
   );
   return $block;
@@ -201,7 +201,7 @@ function student_notes($form, &$form_state) {
         default :
             $form['bad_state'] = array(
                 '#type' => 'markup',
-                '#markup' =>  'State ' . $mode . ' is not supported by this form.',
+                '#markup' =>  t('State @mode is not supported by this form.', array('@mode' => $mode)),
             );
     }
    

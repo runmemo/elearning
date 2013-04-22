@@ -25,8 +25,8 @@ function open_question_block_info() {
 function opent_question_permission() {
   return array(
     'create open question' => array(
-      'title' => 'Create open question',
-      'description' => 'Allows user to create open questions.'
+      'title' => t('Create open question'),
+      'description' => t('Allows user to create open questions.'),
     )
   );
 }
@@ -259,7 +259,7 @@ function open_question_answer_form($form, &$form_state, $answered) {
     default :
       $form['bad_state'] = array(
         '#type' => 'markup',
-        '#markup' => 'State ' . $mode . ' is not supported by this form.',
+        '#markup' => t('State @mode is not supported by this form.', array('@mode' => $mode)),
       );
   }
 
@@ -406,13 +406,13 @@ function oq_review_form($form, &$form_state, $args) {
       if ($rating) {
         $form['rating'] = array(
         '#type' => 'item',
-        '#title' => 'Rating',
+        '#title' => t('Rating'),
         '#markup' => theme('fivestar_static', array('rating' => $rating)),
        );
       }
       $form['review'] = array(
         '#type' => 'item',
-        '#title' => 'Review',
+        '#title' => t('Review'),
         '#markup' => $review_body,
       );
 
@@ -423,18 +423,18 @@ function oq_review_form($form, &$form_state, $args) {
       );
       $form['rating'] = array(
         '#type' => 'fivestar',
-        '#title' => 'Rating',
+        '#title' => t('Rating'),
         '#required' => TRUE,
       );
       $form['review'] = array(
         '#type' => 'textarea',
-        '#title' => 'Review',
+        '#title' => t('Review'),
         '#required' => FALSE
       );
 
       $form['submit_button'] = array(
         '#type' => 'submit',
-        '#value' => 'Add review',
+        '#value' => t('Add review'),
         '#ajax' => array(
           'callback' => 'oq_review_form_js',
           'wrapper' => "oq-review-wrapper-{$nid}",

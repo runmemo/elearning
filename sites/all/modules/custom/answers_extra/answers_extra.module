@@ -30,7 +30,7 @@ function answers_extra_views_api() {
  */
 function answers_extra_block_info() {
   $block['question_answers'] = array(
-    'info' => 'Answers for Lesson Questions',
+    'info' => t('Answers for Lesson Questions'),
     'cache' => DRUPAL_CACHE_PER_PAGE,
   );
   return $block;

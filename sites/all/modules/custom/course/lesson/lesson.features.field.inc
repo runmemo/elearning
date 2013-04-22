@@ -409,7 +409,6 @@ function lesson_field_default_fields() {
   t('Body');
   t('Video');
   t('Notes');
-
   t('Lesson');
   
   return $fields;

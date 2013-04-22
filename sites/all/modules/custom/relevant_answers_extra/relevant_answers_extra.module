@@ -35,7 +35,7 @@ function relevant_answers_extra_init() {
  */
 function relevant_answers_extra_block_info() {
   $block['relevant_questions_list'] = array(
-    'info' => 'Relevant Questions List',
+    'info' => t('Relevant Questions List'),
     'cache' => DRUPAL_CACHE_PER_PAGE,
   );
   return $block;
