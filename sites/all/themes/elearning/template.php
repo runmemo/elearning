@@ -200,7 +200,6 @@ function elearning_preprocess_book_navigation(&$vars) {
   if (in_array($node->type, array('lesson', 'open_question'))) {
     $vars['prev_title'] = t('Previous');
     $vars['next_title'] = t('Next');
-    dvm($vars['']);
   } 
 }
 
