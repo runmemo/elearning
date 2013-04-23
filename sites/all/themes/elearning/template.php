@@ -246,3 +246,21 @@ function elearning_preprocess_block(&$vars) {
 function elearning_preprocess_block__answers_extra_question_answers(&$vars) {
    $vars['attributes_array']['class'][] = 'grid-11 alpha omega';
 }
+
+/**
+ * Preprocessing for flag for ctools modal support for abuse_content flag.
+ */
+function elearning_preprocess_flag(&$vars) {
+  $flag = $vars['flag'];
+  if($flag->name == 'abuse_content') {
+    ctools_include('modal');
+    ctools_include('ajax');
+    ctools_modal_add_js();
+    $vars['link']['href'] .= '/nojs';
+    $vars['link_href'] = isset($vars['link']['href']) ? check_url(url($vars['link']['href'], $vars['link'])) : FALSE;
+    $vars['flag_classes_array'][] = 'ctools-use-modal';
+    $vars['flag_classes_array'][] = 'ctools-modal-common-modal-style';
+    $vars['flag_classes_array'][] = 'ctools-modal-abuse';
+    $vars['flag_classes'] = implode(' ', $vars['flag_classes_array']);
+  }
+}
