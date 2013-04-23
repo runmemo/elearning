@@ -92,14 +92,6 @@ function elearning_preprocess_node_course(&$vars, $hook) {
   // tmp image for social icons
   $vars['tmp_social_img'] = $base_url . '/sites/all/themes/elearning/images/social-stuff.png';
   $vars['form_class_participate'] = drupal_get_form('course_registration_form');
-  // @todo Ilya this assignmed bellow is not a great one. If field_video does not exist,
-  // you create it in 'content' array. this should be done similar to the way it is done
-  // on the lessons page, e.g. via adding grid-x class. barinder found a way to adjust height
-  // of the video to keep correct ratio if you need, I will ask him about it.
-  // also in narrow and default (mobile) view modes video position is strange.
-  // can we make it behave somewhat similar to how it is done on the lesson's page.
-  $vars['content']['field_video'][0]['file']['#options']['width'] = 448;
-  $vars['content']['field_video'][0]['file']['#options']['height'] = 243;
   // students view
   $view = views_get_view('course_students');
   $vars['students_view'] = $view->preview('block', array($node->nid));
@@ -211,7 +203,7 @@ function elearning_preprocess_book_navigation(&$vars) {
  * @param type $vars
  */
 function elearning_preprocess_field(&$vars) {
-  $function = 'theme_preprocess_field__' . $vars['element']['#bundle'] . '_' . $vars['element']['#field_name'];
+  $function = __FUNCTION__ . '__' . $vars['element']['#bundle'] . '_' . $vars['element']['#field_name'];
   if(function_exists($function)) {
     $function($vars);
   }
@@ -221,7 +213,18 @@ function elearning_preprocess_field(&$vars) {
  * Preprocessing of field_video on lesson node.
  */
 function elearning_preprocess_field__lesson_field_video(&$vars) {
-  $vars['classes_array'][] = 'grid-9';
+  $vars['classes_array'][] = 'grid-12';
+  $vars['classes_array'][] = 'alpha';
+  $vars['classes_array'][] = 'omega';
+}
+
+/**
+ * Preprocessing of field_video on course node.
+ */
+function elearning_preprocess_field__course_field_video(&$vars) {
+  $vars['classes_array'][] = 'grid-8';
+  $vars['classes_array'][] = 'alpha';
+  $vars['classes_array'][] = 'omega';
 }
 
 /**

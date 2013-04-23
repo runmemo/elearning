@@ -573,6 +573,9 @@ input.form-text {
        }
        li.current {
          .class-progress-current() !important;
+          @media @mobile {
+            .class-progress-parameters(3%, 100%, 100%, 65%, 100%, 0%, no-repeat) !important;
+          }
           @media @narrow {
             .class-progress-parameters(6px, 9px, 100%, 65%, 100%, 0%, repeat-y) !important;
           }
@@ -585,6 +588,9 @@ input.form-text {
        }
        li.completed {
          .class-progress-comleted() !important;
+         @media @mobile {
+           .class-progress-parameters(3%, 100%, 100%, 0%, 100%, 0%, no-repeat) !important;
+         }
          @media @narrow {
            .class-progress-parameters(6px, 100%, 100%, 0%, 100%, 0%, no-repeat) !important;
          }
@@ -597,6 +603,9 @@ input.form-text {
        }
        li.first {
          .class-progress-image();
+         @media @mobile {
+           .class-progress-parameters(3%, 3%, 100%, 0%, 100%, 0%, no-repeat);
+         }
          @media @narrow {
            .class-progress-parameters(6px, 3%, 100%, 0%, 100%, 0%, no-repeat);
          }
@@ -609,6 +618,9 @@ input.form-text {
        }
        li.last {
          .class-progress-image();
+         @media @mobile {
+           .class-progress-parameters(3%, 3%, 100%, 100%, 100%, 100%, no-repeat);
+         }
          @media @narrow {
            .class-progress-parameters(6px, 3%, 100%, 100%, 100%, 100%, no-repeat);
          }
@@ -622,7 +634,7 @@ input.form-text {
           border: medium none;
          }
        }
-       a.active {
+       a.active, a.hovered {
          background: #fff0d9 !important;
        }
        a {
@@ -632,7 +644,7 @@ input.form-text {
          clear: both;
          .font-bold;
          width: 95%;
-         color:#000000;
+         color: #000000;
          .title-wrapper {
            padding: 10px;
            .text-dark-grey();
@@ -815,6 +827,7 @@ input.form-text {
   width: 100%;
   border-bottom: 1px dotted #aeaeae;
   margin-bottom: 23px;
+  padding-bottom: 25px;
   .node-course-teacher-parameters {
   .left();
   .field-name-field-name {
@@ -858,7 +871,21 @@ input.form-text {
   }
   .field-name-field-video {
     .right();
-    margin-bottom: 25px;
+    @media @wide {
+      width: 464px !important;
+    }
+  }
+  .media-youtube-video {
+    position: relative;
+    padding-bottom: 52.25%;
+    height: 0;
+    .media-youtube-player {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 100%;
+      height: 100%;
+    }
   }
 }
 
@@ -1698,6 +1725,22 @@ body.page-home {
       .grid-wide-10();
     }
   }
+  .views-inline-comment-field-alias {
+    bottom: 2px;
+  }
+}
+
+.view-answer-feedbacks .views-answer-feedback-body,
+.view-answers-review .views-other-answer-body {
+  @media @narrow {
+    width: 455px;
+  }
+  @media @normal {
+   width: 635px;
+  }
+  @media @wide {
+    width: 815px;
+  }
 }
 
 .view-answer-feedbacks {
@@ -1707,33 +1750,8 @@ body.page-home {
   .views-answer-feedback-widgets {
     margin-right: 20px;
   }
-  .views-answer-feedback-body {
-    @media @narrow {
-      width: 455px;
-    }
-    @media @normal {
-     width: 635px;
-    }
-    @media @wide {
-      width: 815px;
-    }
-  }
-  .comment-form {
-    label, .form-type-item a {
-      .show(none);
-    }
-    #edit-comment-body {
-      float: none;
-    }
-    .form-actions {
-      .show(inline-block);
-      margin: 0;
-      width: 100%;
-    }
-    .form-submit {
-      .edit-submit();
-      .gradient-light-orange();
-    }
+  .views-inline-comment-field-alias {
+    bottom: 4px;
   }
 }
 
@@ -1748,7 +1766,7 @@ body.page-home {
     }
     .views-field-feedback-form {
       margin-top: 25px;
-      label, .form-item-review, .abuse-flag, .form-submit {
+      label, .form-item-review, .form-submit {
         .show(none);
       }
       .fivestar-user-stars, .fivestar-default {
@@ -1788,22 +1806,47 @@ body.page-home {
     .views-answer-widgets, .views-answer-feedback-widgets {
       .left();
     }
-    .views-field-comment-count {
+    .views-field-comment-count, .views-inline-comment-field-alias {
       .right();
       padding: 8px 0px 8px 22px;
       margin-top: 30px;
       background-image:url('../images/ask-question.png');
       background-position: left center;
       background-repeat: no-repeat;
-      .comment-click {
-        .show(none);
-      }
-      a.comment-link:link, a.comment-link:hover, a.comment-link:visited {
+      a.views-inline-comment-link-alias, a.comment-link {
         .text-orange();
         .link();
         .bold(12px);
         border-bottom: 1px dotted #ce4619;
         padding-right: 0;
+      }
+    }
+    .views-inline-comment-field-alias {
+      .show(none);
+      cursor: pointer;
+      position: relative;
+    }
+    .hidden {
+      visibility: hidden;
+    }
+    .formcloselink, .closelink, .comment-click {
+      .show(none);
+    }
+    .comment-form {
+      label, .form-type-item a, #edit-preview, .form-item-subject {
+        .show(none);
+      }
+      #edit-comment-body {
+        float: none;
+      }
+      .form-actions {
+        .show(inline-block);
+        margin: 0;
+        width: 100%;
+      }
+      #edit-submit {
+        .edit-submit();
+        .gradient-light-orange();
       }
     }
   }
@@ -2071,5 +2114,17 @@ div.ctools-common-modal-content {
     float: left;
     height: 20px;
     width: 20px;
+  }
+  a.flag-action:hover {
+    background: url(../images/flag_hover.png) no-repeat scroll 0 0;
+  }
+  a.unflag-action {
+    background: url(../images/unflag.png) no-repeat scroll 0 0;
+  }
+  a.unflag-action:hover {
+    background: url(../images/flag.png) no-repeat scroll 0 0;
+  }
+  .ajax-progress, .throbber {
+    .show(none);
   }
 }

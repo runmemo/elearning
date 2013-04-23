@@ -523,7 +523,7 @@ function oq_review_form_submit($form, &$form_state) {
  * Implementation of hook_node_view().
  */
 function open_question_node_view($node, $view_mode, $langcode) {
-  if ($node->type == 'open_question') {
+  if ($node->type == 'open_question' || $node->type == 'question') {
     drupal_add_js(drupal_get_path('module', 'open_question') . '/open_question.js');
   }
 }

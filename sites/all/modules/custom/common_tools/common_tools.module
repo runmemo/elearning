@@ -201,7 +201,7 @@ function elearning_username_alter(&$name, $account) {
     $field_name = isset($field_name_view[0]['#markup']) ? $field_name_view[0]['#markup'] : '';
     $field_surname_view = field_view_field('user', $user, 'field_surname');
     $field_surname = isset($field_surname_view[0]['#markup']) ? $field_surname_view[0]['#markup'] : '';
-    $name = (!empty($field_name) || !empty($field_surname)) ? $field_name . ' ' .$field_surname : $name;
+    $name = (!empty($field_name) && !empty($field_surname)) ? $field_name . ' ' .$field_surname : $name;
   }
 }
 

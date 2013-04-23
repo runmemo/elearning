@@ -51,6 +51,10 @@ function open_question_views_default_views() {
   $handler->display->display_options['relationships']['flag_content_rel_1']['label'] = 'flag abuse';
   $handler->display->display_options['relationships']['flag_content_rel_1']['required'] = 0;
   $handler->display->display_options['relationships']['flag_content_rel_1']['flag'] = 'abuse_content';
+  /* Relationship: Comment: Last Comment */
+  $handler->display->display_options['relationships']['cid']['id'] = 'cid';
+  $handler->display->display_options['relationships']['cid']['table'] = 'node_comment_statistics';
+  $handler->display->display_options['relationships']['cid']['field'] = 'cid';
   /* Field: User: Picture */
   $handler->display->display_options['fields']['picture']['id'] = 'picture';
   $handler->display->display_options['fields']['picture']['table'] = 'users';
@@ -124,21 +128,22 @@ function open_question_views_default_views() {
   $handler->display->display_options['fields']['nothing_1']['ui_name'] = 'Field Grouping';
   $handler->display->display_options['fields']['nothing_1']['label'] = '';
   $handler->display->display_options['fields']['nothing_1']['alter']['text'] = '<div class="views-answer-feedback-widgets">
-        <div class="views-answer-feedback-picture">
-          <div class="views-field-picture">[picture]</div>
-          <div class="author-points">[points_1]</div>
-        </div>
-        <div class="views-field-flag-thumbs-up">[ops]</div>
-        <div class="abuse-flag">[ops_1]</div>
-    </div>
-      <div class="views-answer-feedback-body">
-        <div class="views-field-body">[body]</div>
-        <div class="node-supplementary-wrapper"> 
-          <div class="views-field-created">[created]</div>
-          <div class="views-field-name">[name]</div>
-          <div class="views-field-comment-count">[comment_count]</div>
-        </div>
-      </div>';
+          <div class="views-answer-feedback-picture">
+            <div class="views-field-picture">[picture]</div>
+            <div class="author-points">[points_1]</div>
+          </div>
+          <div class="views-field-flag-thumbs-up">[ops]</div>
+          <div class="abuse-flag">[ops_1]</div>
+      </div>
+        <div class="views-answer-feedback-body">
+          <div class="views-field-body">[body]</div>
+          <div class="node-supplementary-wrapper"> 
+            <div class="views-field-created">[created]</div>
+            <div class="views-field-name">[name]</div>
+            <div class="views-inline-comment-field-alias"><a class="views-inline-comment-link-alias">Hide Comment</a></div>
+            <div class="views-field-comment-count">[comment_count]</div>
+          </div>
+        </div>';
   $handler->display->display_options['fields']['nothing_1']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['nothing_1']['element_default_classes'] = FALSE;
   /* Contextual filter: Content: Open Question Answer (field_open_question_answer) */
@@ -164,6 +169,12 @@ function open_question_views_default_views() {
   $handler->display->display_options['filters']['type']['value'] = array(
     'open_question_feedback' => 'open_question_feedback',
   );
+  /* Filter criterion: Comment: Post date */
+  $handler->display->display_options['filters']['created']['id'] = 'created';
+  $handler->display->display_options['filters']['created']['table'] = 'comment';
+  $handler->display->display_options['filters']['created']['field'] = 'created';
+  $handler->display->display_options['filters']['created']['relationship'] = 'cid';
+  $handler->display->display_options['filters']['created']['operator'] = 'not empty';
 
   /* Display: Block */
   $handler = $view->new_display('block', 'Block', 'block');

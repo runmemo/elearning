@@ -122,6 +122,7 @@ function answers_extra_views_default_views() {
              <div class="node-supplementary-wrapper"> 
                <div class="views-field-created">[created]</div>
                <div class="views-field-name">[name]</div>
+               <div class="views-inline-comment-field-alias"><a class="views-inline-comment-link-alias">Hide Comment</a></div>
                <div class="views-field-comment-count">[comment_count]</div>
              </div>
            </div>';
