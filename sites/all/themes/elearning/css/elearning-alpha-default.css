@@ -6,3 +6,7 @@
     -webkit-box-shadow: 0px 3px 10px 2px #888;
     box-shadow: 0px 3px 10px 2px #888;
 }
+
+.book-navigation .page-up {
+  display: block;
+}
