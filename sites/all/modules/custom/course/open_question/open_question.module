@@ -402,7 +402,7 @@ function oq_review_form($form, &$form_state, $args) {
     case 'view':
        $form['edit_button'] = array(
         '#type' => 'submit',
-        '#value' => t('Edit'),
+        '#value' => '',
         '#submit' => array('oq_review_form_edit_submit'),
         '#ajax' => array(
           'callback' => 'oq_review_form_edit_js',
