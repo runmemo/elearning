@@ -219,16 +219,7 @@ function open_question_answer_form($form, &$form_state, $answered) {
         $answer_text = $answer->body[LANGUAGE_NONE][0]['value'];
         $form_state['answer_value'] = $answer_text;
       }
-      // @todo Ilya: adjust $criteria, when feedback workflow is done.
-      $criteria = array(
-        'entity_type' => 'node',
-        'entity_id' => $answered,
-        'value_type' => 'points',
-        'tag' => 'vote',
-        'function' => 'average'
-      );
-      $points = votingapi_select_single_result_value($criteria);
-      $points = $points ? $points : '0.0';
+      $points = number_format(open_question_get_average_rating($answered) / 20, 1, '.', ' ');
       // build form for viewing of saved answer
       $form['view']['answer'] = array(
         '#type' => 'markup',
@@ -426,10 +417,15 @@ function oq_review_form($form, &$form_state, $args) {
         '#title' => t('Rating'),
         '#required' => TRUE,
       );
+      $form['message_placeholder'] = array(
+        '#markup' => '',
+        '#prefix' => '<div id="message-placeholder">',
+        '#suffix' => '</div>'
+      );
       $form['review'] = array(
         '#type' => 'textarea',
         '#title' => t('Review'),
-        '#required' => FALSE
+        '#required' => FALSE,
       );
 
       $form['submit_button'] = array(
@@ -477,15 +473,26 @@ function oqa_is_reviewed($nid, $uid = NULL) {
 }
 
 
+/**
+ * Implements hook FORM_ID_validate for oq_review_form().
+ */
+function oq_review_form_validate($form, &$form_state) {
+  $forbidden_values = array('-', '20', '40', '60');
+  if (in_array($form_state['values']['rating'], $forbidden_values) && empty($form_state['values']['review'])) {
+    form_set_error('review', t('Review field is required.'));
+  }
+}
+
 /** 
- * AJAX callback function for Open Question Review Form
+ * AJAX callback function for oq_review_form().
  */
 function oq_review_form_js($form, &$form_state) {
+  $form['message_placeholder']['#markup'] = common_tools_collect_messages('error');
   return $form;
 }
 
 /**
- * Implements submit for Open Question Review Form
+ * Implements hook FORM_ID_submit for oq_review_form().
  */
 function oq_review_form_submit($form, &$form_state) {
   // validate the form
@@ -526,4 +533,20 @@ function open_question_node_view($node, $view_mode, $langcode) {
   if ($node->type == 'open_question' || $node->type == 'question') {
     drupal_add_js(drupal_get_path('module', 'open_question') . '/open_question.js');
   }
+}
+
+/**
+ * Helper function for calculating average rating for the answer.
+ * @param integer $nid
+ * @return float average rating for the given answer.
+ */
+function open_question_get_average_rating($nid) {
+  $query = db_select('field_data_field_rating', 'fr');
+  $query->join('field_data_field_open_question_answer', 'oqa', 'fr.entity_id = oqa.entity_id');
+  $query->fields('fr', array('field_rating_rating'));
+  $query->condition('oqa.field_open_question_answer_target_id', $nid);
+  $query->addExpression('AVG(fr.field_rating_rating)', 'avg_rating');
+  $db_result = $query->execute();
+  $result = $db_result->fetch();
+  return (isset($result->avg_rating) && !is_null($result->avg_rating)) ? $result->avg_rating : 0;
 }

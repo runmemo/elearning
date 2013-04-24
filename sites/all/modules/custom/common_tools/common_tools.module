@@ -216,3 +216,26 @@ function common_tools_fivestar_widgets() {
 
   return $widgets;
 }
+
+/**
+ * Helper function for collecting messages of the given type
+ * and returning them as item list.
+ * @param string $type
+ * @return string HTML representation of messages.
+ */
+function common_tools_collect_messages($type = 'error') {
+  $items = array();
+  $messages = drupal_get_messages($type);
+  if (isset($messages[$type]) && !empty($messages[$type])) {
+    foreach ($messages[$type] as $message) {
+      $items[] = $message;
+    }
+  }
+  $vars = array(
+    'title' => t(''),
+    'items' => $items,
+    'type' => 'ul',
+    'attributes' => array(),
+  );
+  return theme_item_list($vars);
+}

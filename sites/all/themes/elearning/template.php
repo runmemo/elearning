@@ -165,7 +165,8 @@ function elearning_preprocess_html(&$vars, $hook) {
  */
 function elearning_preprocess_user_profile(&$variables) {
   $account = $variables['elements']['#account'];
-  $variables['access'] = user_edit_access($account);
+  $access = user_edit_access($account);
+  $variables['access'] = $access;
   $variables['user_uid'] = $account->uid;
   $variables['user_name'] = $account->name;
   $variables['user_mail'] = $account->mail;
@@ -179,8 +180,10 @@ function elearning_preprocess_user_profile(&$variables) {
   $variables['field_birthday'] = render($field_birthday);
   $variables['field_phone'] = render($field_phone);
   $variables['userpoints_count'] = userpoints_get_current_points($account->uid, 'all');
-  $view = views_get_view('user_courses');
-  $variables['user_courses_view'] = $view->preview('block', array($account->uid));
+  if ($access) {
+    $view = views_get_view('user_courses');
+    $variables['user_courses_view'] = $view->preview('block', array($account->uid));
+  }
 }
 
 /**

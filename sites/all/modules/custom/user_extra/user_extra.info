@@ -3,6 +3,7 @@ description = Provides additions to default user profile: a form for updating us
 core = 7.x
 package = Custom 
 
+dependencies[] = common_tools
 dependencies[] = context
 dependencies[] = course
 dependencies[] = ctools

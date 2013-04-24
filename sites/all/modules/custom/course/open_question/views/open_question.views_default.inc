@@ -51,10 +51,6 @@ function open_question_views_default_views() {
   $handler->display->display_options['relationships']['flag_content_rel_1']['label'] = 'flag abuse';
   $handler->display->display_options['relationships']['flag_content_rel_1']['required'] = 0;
   $handler->display->display_options['relationships']['flag_content_rel_1']['flag'] = 'abuse_content';
-  /* Relationship: Comment: Last Comment */
-  $handler->display->display_options['relationships']['cid']['id'] = 'cid';
-  $handler->display->display_options['relationships']['cid']['table'] = 'node_comment_statistics';
-  $handler->display->display_options['relationships']['cid']['field'] = 'cid';
   /* Field: User: Picture */
   $handler->display->display_options['fields']['picture']['id'] = 'picture';
   $handler->display->display_options['fields']['picture']['table'] = 'users';
@@ -169,12 +165,11 @@ function open_question_views_default_views() {
   $handler->display->display_options['filters']['type']['value'] = array(
     'open_question_feedback' => 'open_question_feedback',
   );
-  /* Filter criterion: Comment: Post date */
-  $handler->display->display_options['filters']['created']['id'] = 'created';
-  $handler->display->display_options['filters']['created']['table'] = 'comment';
-  $handler->display->display_options['filters']['created']['field'] = 'created';
-  $handler->display->display_options['filters']['created']['relationship'] = 'cid';
-  $handler->display->display_options['filters']['created']['operator'] = 'not empty';
+  /* Filter criterion: Content: Body (body) */
+  $handler->display->display_options['filters']['body_value']['id'] = 'body_value';
+  $handler->display->display_options['filters']['body_value']['table'] = 'field_data_body';
+  $handler->display->display_options['filters']['body_value']['field'] = 'body_value';
+  $handler->display->display_options['filters']['body_value']['operator'] = 'not empty';
 
   /* Display: Block */
   $handler = $view->new_display('block', 'Block', 'block');

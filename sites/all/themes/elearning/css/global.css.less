@@ -60,6 +60,7 @@ input.form-text {
     margin-right: auto;
     position: relative;
     min-height: 100%;
+    padding-bottom: 20px;
 }
 
 .section-header {
@@ -1786,6 +1787,23 @@ body.page-home {
         .gradient-light-orange();
         margin-bottom: 10px;
       }
+      .form-textarea-wrapper {
+        clear: left;
+      }
+      #message-placeholder ul li {
+        .left();
+        .bold(12px);
+        position: relative;
+        bottom: 5px;
+        color: red;
+        border: 1px solid red;
+        background-color: #f4f7f7;
+        padding: 8px;
+        .RoundedShape(2px);
+      }
+      .form-item-active {
+        .show(block);
+      }
     }
   }
 }
@@ -1810,7 +1828,7 @@ body.page-home {
       .right();
       padding: 8px 0px 8px 22px;
       margin-top: 30px;
-      background-image:url('../images/ask-question.png');
+      background-image: url('../images/ask-question.png');
       background-position: left center;
       background-repeat: no-repeat;
       a.views-inline-comment-link-alias, a.comment-link {
@@ -1833,11 +1851,14 @@ body.page-home {
       .show(none);
     }
     .comment-form {
-      label, .form-type-item a, #edit-preview, .form-item-subject {
+      label, .form-type-item a, #edit-preview, .form-item-subject, .ckeditor_links {
         .show(none);
       }
       #edit-comment-body {
         float: none;
+      }
+      .text-format-wrapper {
+        clear: both;
       }
       .form-actions {
         .show(inline-block);
@@ -2110,7 +2131,7 @@ div.ctools-common-modal-content {
   .ctools-modal-abuse {
     background: url(../images/flag.png) no-repeat scroll 0 0;
     color: transparent;
-    margin: 0px 0 0px 16px;
+    margin: 0px 0px 22px 16px;
     float: left;
     height: 20px;
     width: 20px;
