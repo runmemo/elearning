@@ -219,7 +219,7 @@ function open_question_answer_form($form, &$form_state, $answered) {
         $answer_text = $answer->body[LANGUAGE_NONE][0]['value'];
         $form_state['answer_value'] = $answer_text;
       }
-      $points = number_format(open_question_get_average_rating($answered) / 20, 1, '.', ' ');
+      
       // build form for viewing of saved answer
       $form['view']['answer'] = array(
         '#type' => 'markup',
@@ -227,12 +227,17 @@ function open_question_answer_form($form, &$form_state, $answered) {
         '#suffix' => '</div>',
         '#markup' => $answer_text,
       );
-      $form['view']['rating'] = array(
-        '#type' => 'markup',
-        '#prefix' => '<div class="oq-answer-rating">',
-        '#suffix' => '</div>',
-        '#markup' => t('Average rating') . ': ' . $points,
-      );
+      $stats = open_question_get_feedback_stats($answered);
+      if ($stats['count']) {
+        $form['view']['rating'] = array(
+          '#type' => 'markup',
+          '#prefix' => '<div class="oq-answer-rating">',
+          '#suffix' => '</div>',
+          '#markup' => 
+            t('Your average score: !average out of !count.',  
+            array('!average' => $stats['average'], '!count' => $stats['count'])),
+        );
+      }
       $form['view']['edit'] = array(
         '#type' => 'submit',
         '#value' => t('Edit'),
@@ -258,7 +263,7 @@ function open_question_answer_form($form, &$form_state, $answered) {
 }
 
 /**
- * 
+ * Implements submit function for the open question answer form
  */
 function open_question_answer_submit($form, &$form_state) {
 
@@ -357,7 +362,7 @@ function oq_review_form($form, &$form_state, $args) {
       'data' => drupal_get_path('module', 'common_tools') . '/widgets/elearning_fivestar_widget.css'
     ),
   );
-  
+  $feedback_nid = FALSE;
   if (empty($form_state['step'])) {  // page is loaded
     $feedback_nid = oqa_is_reviewed($nid, $user->uid);
     if($feedback_nid) {
@@ -373,27 +378,38 @@ function oq_review_form($form, &$form_state, $args) {
   }
   $step = $form_state['step'];
 
+  $rating = FALSE;
+  if ($feedback_nid) {
+    if (empty($form_state['storage'])) {
+      $review_node = node_load($feedback_nid);
+      $rating_values = field_get_items('node', $review_node, 'field_rating');
+      if ($rating_values) {
+         $rating = $rating_values[0]['rating'];
+      }
+      $items = field_get_items('node', $review_node, 'body');
+      $review_body_item = field_view_value('node', $review_node, 'body', $items[0]);
+      if($review_body_item['#access']) {
+        $review_body = $review_body_item['#markup'];
+      }
+    } 
+    else { // we know values from the submitted form already
+      $rating = $form_state['storage']['rating'];
+      $review_body = $form_state['storage']['body'];
+    }
+  }
+  
   switch ($step) {
     case 'view':
-      if (empty($form_state['storage'])) {
-        $review_node = node_load($feedback_nid);
-        $rating_values = field_get_items('node', $review_node, 'field_rating');
-        if ($rating_values) {
-           $rating = $rating_values[0]['rating'];
-        }
-        else {
-          $rating = FALSE;
-        }
-        $items = field_get_items('node', $review_node, 'body');
-        $review_body_item = field_view_value('node', $review_node, 'body', $items[0]);
-        if($review_body_item['#access']) {
-          $review_body = $review_body_item['#markup'];
-        }
-      } 
-      else { // we know values from the submitted form already
-        $rating = $form_state['storage']['rating'];
-        $review_body = $form_state['storage']['body'];
-      }
+       $form['edit_button'] = array(
+        '#type' => 'submit',
+        '#value' => t('Edit'),
+        '#submit' => array('oq_review_form_edit_submit'),
+        '#ajax' => array(
+          'callback' => 'oq_review_form_edit_js',
+          'wrapper' => "oq-review-wrapper-{$nid}",
+        ),
+      );
+      $form['edit_button']['#attributes']['class'][] = 'oq-review-form-edit-button';
       if ($rating) {
         $form['rating'] = array(
         '#type' => 'item',
@@ -416,6 +432,7 @@ function oq_review_form($form, &$form_state, $args) {
         '#type' => 'fivestar',
         '#title' => t('Rating'),
         '#required' => TRUE,
+        '#default_value' =>  $rating ? $rating : NULL,
       );
       $form['message_placeholder'] = array(
         '#markup' => '',
@@ -426,6 +443,8 @@ function oq_review_form($form, &$form_state, $args) {
         '#type' => 'textarea',
         '#title' => t('Review'),
         '#required' => FALSE,
+        '#format' => 'full_html',
+        '#default_value' => isset($review_body) ? $review_body : '',
       );
 
       $form['submit_button'] = array(
@@ -436,6 +455,7 @@ function oq_review_form($form, &$form_state, $args) {
           'wrapper' => "oq-review-wrapper-{$nid}",
         ),
       );
+      $form['submit_button']['#attributes']['class'][] = 'oq-review-form-submit-button';
       break;
     default: // this should not happen ever
       watchdog('open question', 'Step %step is not defined for open question feedback form.', 
@@ -446,6 +466,27 @@ function oq_review_form($form, &$form_state, $args) {
   return $form;
 }
 
+/**
+ * Implements submit function for the edit button of the review form
+ */
+function oq_review_form_edit_submit($form, &$form_state) {
+    $form_state['step'] = 'edit';
+    $form_state['rebuild'] = TRUE;
+}
+/**
+ * Ajax callback for the edit button of the review form
+ */
+function oq_review_form_edit_js($form, &$form_state) {
+    return $form;
+}
+
+/**
+ * Determins wither open question answer was reviewed
+ * @global object $user
+ * @param integer $nid
+ * @param integer $uid
+ * @return integer id of the feedback node if exists, otherwise FALSE
+ */
 function oqa_is_reviewed($nid, $uid = NULL) {
   if (is_null($uid)) {
     global $user;
@@ -467,9 +508,7 @@ function oqa_is_reviewed($nid, $uid = NULL) {
       return $entity_id;
     }
   }
-
   return FALSE; 
-
 }
 
 
@@ -512,7 +551,11 @@ function oq_review_form_submit($form, &$form_state) {
   $node->title = 'OQ feedback nid#' . $oq_nid . '# uid#' . $user->uid;
   $node->language = LANGUAGE_NONE;
   $node->body[$node->language][0]['value'] = $form_state['values']['review'];
-  $node->body[$node->language][0]['format'] = 'filtered_html';
+  
+  // @todo if we are to use filtered html then we need to user format field 
+  // in the form that will handle html (CKEditor basically).
+  // $node->body[$node->language][0]['format'] = 'filtered_html';
+  
   $node->field_open_question_answer[$node->language][0]['target_id'] = $oq_nid;
   $node->field_rating[$node->language][0]['rating'] = $form_state['values']['rating'];
   node_save($node);
@@ -536,17 +579,23 @@ function open_question_node_view($node, $view_mode, $langcode) {
 }
 
 /**
- * Helper function for calculating average rating for the answer.
- * @param integer $nid
- * @return float average rating for the given answer.
+ * Calculates basic stats for feedbacks to an open question answer.
+ * @param integer $nid id of the open question answer node.
+ * @return array that contains numeric stats values.
  */
-function open_question_get_average_rating($nid) {
+function open_question_get_feedback_stats($nid) { 
   $query = db_select('field_data_field_rating', 'fr');
   $query->join('field_data_field_open_question_answer', 'oqa', 'fr.entity_id = oqa.entity_id');
   $query->fields('fr', array('field_rating_rating'));
   $query->condition('oqa.field_open_question_answer_target_id', $nid);
   $query->addExpression('AVG(fr.field_rating_rating)', 'avg_rating');
+  $query->addExpression('COUNT(*)', 'count_feedbacks');
   $db_result = $query->execute();
   $result = $db_result->fetch();
-  return (isset($result->avg_rating) && !is_null($result->avg_rating)) ? $result->avg_rating : 0;
+  
+  // calculate average on 1-5 scale
+  $average = $result->avg_rating ? number_format($result->avg_rating / 20, 1, '.', ' ') : 0;
+  $count = $result->count_feedbacks;
+  // return stats in array
+  return array('count' => $count, 'average' => $average);
 }

@@ -1757,7 +1757,6 @@ body.page-home {
 }
 
 .view-answers-review {
-  .views-row {
     .views-other-answer-picture {
       .left();
       margin-right: 20px;
@@ -1765,47 +1764,51 @@ body.page-home {
     .views-answer-feedback-picture {
       position: relative;
     }
-    .views-field-feedback-form {
-      margin-top: 25px;
-      label, .form-item-review, .form-submit {
-        .show(none);
-      }
-      .fivestar-user-stars, .fivestar-default {
-        .right();
-      }
-      a.oq-review-link {
-        .right();
-        width: 16px;
-        height: 16px;
-        margin-left: 9px;
-        margin-top: 4px;
-        background: url('../images/ask-question.png') 0% 50% no-repeat;
-        cursor: pointer;
-      }
-      .form-submit {
-        .edit-submit();
-        .gradient-light-orange();
-        margin-bottom: 10px;
-      }
-      .form-textarea-wrapper {
-        clear: left;
-      }
-      #message-placeholder ul li {
-        .left();
-        .bold(12px);
-        position: relative;
-        bottom: 5px;
-        color: red;
-        border: 1px solid red;
-        background-color: #f4f7f7;
-        padding: 8px;
-        .RoundedShape(2px);
-      }
-      .form-item-active {
-        .show(block);
-      }
-    }
+}
+
+.views-field-feedback-form {
+  margin-top: 25px;
+  label, .form-item-review {
+    .show(none);
   }
+  .fivestar-user-stars, .fivestar-default {
+    .right();
+  }
+  a.oq-review-link {
+    .right();
+    width: 16px;
+    height: 16px;
+    margin-left: 9px;
+    margin-top: 4px;
+    background: url('../images/ask-question.png') 0% 50% no-repeat;
+    cursor: pointer;
+  }
+  .form-submit {
+    .edit-submit();
+    .gradient-light-orange();
+    margin-bottom: 10px;
+  }
+  .form-textarea-wrapper {
+    clear: left;
+  }
+  #message-placeholder ul li {
+    .left();
+    .bold(12px);
+    position: relative;
+    bottom: 5px;
+    color: red;
+    border: 1px solid red;
+    background-color: #f4f7f7;
+    padding: 8px;
+    .RoundedShape(2px);
+  }
+  .form-item-active {
+    .show(block);
+  }
+}
+
+.oq-review-form-submit-button {
+  .show(none);
 }
 
 .view-question-answers, .view-answer-feedbacks, .view-answers-review {
@@ -2077,7 +2080,7 @@ div.ctools-common-modal-content {
       }
     }
   }
-  label{
+  label{ 
     display: none;
   }
 

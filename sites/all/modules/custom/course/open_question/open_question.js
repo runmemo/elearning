@@ -28,6 +28,7 @@
           $(this).parents('.views-field-feedback-form').find('.form-item-review').addClass('form-item-active');
           $(this).parents('.views-field-feedback-form').find('.form-submit').addClass('form-item-active');
         } else {
+          // @todo check whether form is active or not, as it is strange to submit form like that once it is open.
           $(this).parents('.views-field-feedback-form').find('.form-submit').trigger('mousedown');
         }
       });
