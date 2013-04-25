@@ -11,6 +11,7 @@
  */
 function abuse_content_flag_default_flags() {
   $flags = array();
+  // @todo barinder add t() to text values bellow
   // Exported flag: "Abuse content".
   $flags['abuse_content'] = array(
     'entity_type' => 'node',
@@ -19,7 +20,7 @@ function abuse_content_flag_default_flags() {
     'types' => array(
       0 => 'open_question_feedback',
     ),
-    'flag_short' => 'Mark Abuse',
+    'flag_short' => 'Submit',
     'flag_long' => '',
     'flag_message' => '',
     'unflag_short' => 'Unflag this item',

@@ -257,16 +257,24 @@ function elearning_preprocess_block__answers_extra_question_answers(&$vars) {
  * Preprocessing for flag for ctools modal support for abuse_content flag.
  */
 function elearning_preprocess_flag(&$vars) {
-  $flag = $vars['flag'];
-  if($flag->name == 'abuse_content') {
-    ctools_include('modal');
-    ctools_include('ajax');
-    ctools_modal_add_js();
-    $vars['link']['href'] .= '/nojs';
-    $vars['link_href'] = isset($vars['link']['href']) ? check_url(url($vars['link']['href'], $vars['link'])) : FALSE;
-    $vars['flag_classes_array'][] = 'ctools-use-modal';
-    $vars['flag_classes_array'][] = 'ctools-modal-common-modal-style';
-    $vars['flag_classes_array'][] = 'ctools-modal-abuse';
-    $vars['flag_classes'] = implode(' ', $vars['flag_classes_array']);
+  if (isset($vars['flag'])) {  
+    $function = __FUNCTION__ . '__' . $vars['flag']->name;
+    // uncomment line bellow if you want to see the full id of needed block:
+    // dvm ($vars['elements']['#block']->module . '_' . $vars['elements']['#block']->delta);
+    if (function_exists($function)) {
+      $function($vars);
+    }
   }
+}
+
+function elearning_preprocess_flag__abuse_content(&$vars) {
+  ctools_include('modal');
+  ctools_include('ajax');
+  ctools_modal_add_js();
+  $vars['link']['href'] .= '/nojs';
+  $vars['link_href'] = isset($vars['link']['href']) ? check_url(url($vars['link']['href'], $vars['link'])) : FALSE;
+  $vars['flag_classes_array'][] = 'ctools-use-modal';
+  $vars['flag_classes_array'][] = 'ctools-modal-common-modal-style';
+  $vars['flag_classes_array'][] = 'ctools-modal-abuse';
+  $vars['flag_classes'] = implode(' ', $vars['flag_classes_array']); 
 }

@@ -27,7 +27,7 @@ function abuse_content_field_default_field_instances() {
     ),
     'entity_type' => 'flagging',
     'field_name' => 'field_abuse_description',
-    'label' => 'Abuse Description',
+    'label' => 'Provide aditional details',
     'required' => 0,
     'settings' => array(
       'text_processing' => 0,
@@ -61,7 +61,7 @@ function abuse_content_field_default_field_instances() {
     ),
     'entity_type' => 'flagging',
     'field_name' => 'field_abuse_reason',
-    'label' => 'Abuse reason',
+    'label' => 'What\'s the issue?',
     'required' => 1,
     'settings' => array(
       'user_register_form' => FALSE,
@@ -70,15 +70,15 @@ function abuse_content_field_default_field_instances() {
       'active' => 1,
       'module' => 'options',
       'settings' => array(),
-      'type' => 'options_select',
+      'type' => 'options_buttons',
       'weight' => 1,
     ),
   );
 
   // Translatables
   // Included for use with string extractors like potx.
-  t('Abuse Description');
-  t('Abuse reason');
+  t('Provide aditional details');
+  t('What\'s the issue?');
 
   return $field_instances;
 }
