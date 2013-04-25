@@ -3,7 +3,7 @@
  * Implements hook preprocess_field
  * 
  * redirects preprocessing to function constracted from bundle and field names.
- * @see elearning_preprocess_field__lesson_field_video
+ * @see elearning_alpha_preprocess_field__lesson_field_video
  * @param type $vars
  */
 function elearning_alpha_preprocess_field(&$vars) {
