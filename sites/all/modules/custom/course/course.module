@@ -7,21 +7,6 @@
 include_once 'course.features.inc';
 
 /**
- * Implements hook_init()
- */
-function course_init() {
-
-  $node = menu_get_object('node');
-
-  // Redirect to fist lesson from unit content type page
-  if ($node && $node->type === 'unit') {
-    $book_link = $node->book;
-    $next = book_next($book_link);
-    drupal_goto($next['link_path'], array(), 301);
-  }
-}
-
-/**
  * Gets node last visited by the user
  * @todo test case
  * @param integer $nid id of the node in the book in which
@@ -201,6 +186,19 @@ function course_theme() {
  * Implements hook_node_view().
  */
 function course_node_view($node, $view_mode) {
+  
+  // Redirect to fist lesson from unit content type page
+  if ($node->type === 'unit' && $view_mode == 'full') {
+      $book_link = $node->book;
+      $next = book_next($book_link);
+      if ($next) { // there is a lesson ahead
+        drupal_goto($next['link_path'], array(), 301);
+      }
+      else { 
+       // @todo unit does not have any lessons, so we need to show something     
+      }
+  }
+  
   //unset Book Links
   hide($node->content['links']['book']);
 
@@ -436,7 +434,8 @@ function course_item_node_types() {
       'lesson' => 'lesson',
       'quiz' => 'quiz',
       'open_question' => 'open_question',
-      'closedquestion' => 'closedquestion');
+      'closedquestion' => 'closedquestion',
+      'certificate' => 'certificate');
     $items = array();
 
     // add content types provided by modules
