@@ -40,7 +40,7 @@ function elearning_alpha_preprocess_node_course(&$vars) {
   // teacher logo and name
   $teacher = field_get_items('node', $node, 'field_teacher');
   if (isset($teacher[0])) {
-    $teacher_account = $teacher[0]['user'];
+    $teacher_account = user_load($teacher[0]['uid']);
     $field_name = field_view_field('user', $teacher_account, 'field_name', array('label' => 'hidden'));
     $field_surname = field_view_field('user', $teacher_account, 'field_surname', array('label' => 'hidden'));
     $vars['teacher_avatar'] = elearning_get_user_picture($teacher_account, '', 'user-profile');
