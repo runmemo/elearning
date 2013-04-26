@@ -172,12 +172,15 @@ function course_user_menu_title() {
  */
 function course_theme() {
   return array(
-    'book_header' => array(
+    'course_header' => array(
       'variables' => array('book_link' => NULL),
-      'template' => 'book-header',
+      'template' => 'course-header',
+      'file' => 'course.pages.inc',
     ),
-    'course_exit_modal' => array(
+    'course_leave_modal' => array(
       'variables' => array('vars' => NULL),
+      'template' => 'course-leave-modal',
+      'file' => 'course.pages.inc',
     ),
   );
 }
@@ -186,7 +189,7 @@ function course_theme() {
  * Implements hook_node_view().
  */
 function course_node_view($node, $view_mode) {
-  
+
   // Redirect to fist lesson from unit content type page
   if ($node->type === 'unit' && $view_mode == 'full') {
       $book_link = $node->book;
@@ -274,66 +277,6 @@ function course_header_block() {
     $block['content'] = theme('book_header', array('book_link' => $book, 'question_page' => $question_page, 'open_question_page' => $open_question_page));
   }
   return $block;
-}
-
-/**
- * Processes variables for book_header.
- *
- * The $variables array contains the following elements:
- * - book_link
- */
-function template_preprocess_book_header(&$vars) {
-  $book_link = $vars['book_link'];
-  $course_node = node_load($book_link['bid']);
-
-  // course title
-  $vars['course_title'] = $course_node->title;
-  // provider logo and name
-  $vars['provider_logo'] = '<div class="provider-logo-default"></div>';
-
-  $provider = field_get_items('node', $course_node, 'field_provider');
-  if ($provider) {
-    $provider_node = node_load($provider[0]['target_id']);
-    $provider_logo = field_view_field('node', $provider_node, 'field_logo', array('label' => 'hidden', 'settings' =>
-       array('image_style' => 'provider_logo')));
-    $vars['provider_logo'] = render($provider_logo);
-  }
-  // teacher logo and name
-  $teacher = field_get_items('node', $course_node, 'field_teacher');
-  if ($teacher) {
-    $teacher_account = user_load($teacher[0]['uid']);
-    $name = field_view_field('user', $teacher_account, 'field_name', array('label' => 'hidden',));
-    $surname = field_view_field('user', $teacher_account, 'field_surname', array('label' => 'hidden'));
-    $vars['teacher_name'] = render($name);
-    $vars['teacher_surname'] = render($surname);
-  }
-  else {
-    // provide default values for teacher name variables:
-    $vars['teacher_name'] = '';
-    $vars['teacher_surname'] = '';
-  }
-  if ($vars['question_page'] == TRUE) {
-    $vars['lesson_link'] = l(t('Return to class'), $book_link['href'], array('attributes' => array('class' => array('node-question-return-link'))));
-  }
-  else {
-    $vars['lesson_link'] = '';
-  }
-  if ($vars['open_question_page'] == TRUE) {
-    $items = array(
-      l(t('Blog'), 'blog', array('attributes' => array('class' => array('open-question-blog-link')))),
-      l(t('Forum'), 'forum', array('attributes' => array('class' => array('open-question-forum-link')))),
-    );
-    $variables = array(
-      'title' => t(''),
-      'items' => $items,
-      'type' => 'ul',
-      'attributes' => array('class' => array('open-question-links')),
-    );
-    $vars['open_question_links'] = theme_item_list($variables);
-  }
-  else {
-    $vars['open_question_links'] = '';
-  }
 }
 
 /**
@@ -456,7 +399,7 @@ function course_menu() {
   $items['course-exit/%ctools_js/%user/%node'] = array(
     'title' => 'Exit Course',
     'page arguments' => array(1, 2, 3),
-    'page callback' => 'course_exit_modal',
+    'page callback' => 'course_leave_modal',
     'access callback' => 'user_edit_access',
     'access arguments' => array(2),
     'type' => MENU_CALLBACK,
@@ -503,7 +446,7 @@ function course_exit_action($js = NULL, $action = 'cancel', $user = NULL, $cours
   exit;
 }
 
-function course_exit_modal($js = NULL, $user = NULL, $course = NULL) {
+function course_leave_modal($js = NULL, $user = NULL, $course = NULL) {
   if ($course == NULL || $user == NULL) {
     return 'Error :: No course node or user uid.';
   }
@@ -517,23 +460,8 @@ function course_exit_modal($js = NULL, $user = NULL, $course = NULL) {
     ctools_include('ajax');
   }
 
-  return ctools_modal_render(t('Confirmation'), theme('course_exit_modal', array('uid' => $user->uid, 'course' => $course)));
-}
-
-function theme_course_exit_modal($vars) {
-  $output = '';
-  $output .= '<div class="course-title">';
-  $output .= t('Are you sure you wants to leave course : @course_title?', array('@course_title' => $vars['course']->title));
-  $output .= '</div>';
-  $output .= '<div class="course-actions">';
-  $output .= '<div class="course-exit-action">';
-  $output .= ctools_ajax_text_button(t('Yes, leave'), "course-exit-action/nojs/exit/{$vars['uid']}/{$vars['course']->nid}", t('Yes'));
-  $output .= '</div>';
-  $output .= '<div class="course-cancel-action">';
-  $output .= ctools_ajax_text_button(t('Cancel'), "course-exit-action/nojs/cancel/{$vars['uid']}/{$vars['course']->nid}", t('Cancel'));
-  $output .= '</div>';
-  $output .= '</div>';
-  return $output;
+  return ctools_modal_render(t('Confirmation'), 
+  			theme('course_leave_modal', array('uid' => $user->uid, 'course' => $course)));
 }
 
 /**
