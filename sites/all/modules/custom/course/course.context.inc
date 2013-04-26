@@ -47,6 +47,12 @@ function course_context_default_contexts() {
           'weight' => '-10',
         ),
       ),
+      'course-book_header' => array(
+        'module' => 'course',
+        'delta' => 'book_header',
+        'region' => 'preface_first',
+        'weight' => '-10',
+      ),
     ),
   );
   $context->condition_mode = 1;

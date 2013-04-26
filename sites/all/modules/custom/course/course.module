@@ -274,7 +274,7 @@ function course_header_block() {
   // Build the block title and contents
   if ($book) {
     $block['subject'] = '';
-    $block['content'] = theme('book_header', array('book_link' => $book, 'question_page' => $question_page, 'open_question_page' => $open_question_page));
+    $block['content'] = theme('course_header', array('book_link' => $book, 'question_page' => $question_page, 'open_question_page' => $open_question_page));
   }
   return $block;
 }
