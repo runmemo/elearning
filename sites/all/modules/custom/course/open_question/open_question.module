@@ -227,17 +227,6 @@ function open_question_answer_form($form, &$form_state, $answered) {
         '#suffix' => '</div>',
         '#markup' => $answer_text,
       );
-      $stats = open_question_get_feedback_stats($answered);
-      if ($stats['count']) {
-        $form['view']['rating'] = array(
-          '#type' => 'markup',
-          '#prefix' => '<div class="oq-answer-rating">',
-          '#suffix' => '</div>',
-          '#markup' => 
-            t('Your average score: !average out of !count.',  
-            array('!average' => $stats['average'], '!count' => $stats['count'])),
-        );
-      }
       $form['view']['edit'] = array(
         '#type' => 'submit',
         '#value' => t('Edit'),
@@ -250,6 +239,23 @@ function open_question_answer_form($form, &$form_state, $answered) {
         '#attributes' => array('class' => array('oq-answer-form-submit')),
         '#suffix' => '<div class="oq-answer-submit-sign"></div>',
       );
+      $stats = open_question_get_feedback_stats($answered);
+      if ($stats['count']) {
+         $form['view']['view_desc'] = array(
+          '#prefix' => '<div class="oq-answer-footer"><div class="oq-answer-view-description">',
+          '#suffix' => '</div>',
+          '#markup' => 
+            t('Reviews with comments') . ':',
+        );
+        $form['view']['rating'] = array(
+          '#type' => 'markup',
+          '#prefix' => '<div class="oq-answer-rating">',
+          '#suffix' => '</div></div>',
+          '#markup' => 
+            t('Your average score: !average', array('!average' => $stats['average']))
+            . '<span class="answer-feedbacks-count"> ' . t('(out of !count)', array('!count' => $stats['count'])) . '</span>',
+        );
+      }
       
       break;
     default :
@@ -598,4 +604,37 @@ function open_question_get_feedback_stats($nid) {
   $count = $result->count_feedbacks;
   // return stats in array
   return array('count' => $count, 'average' => $average);
+}
+
+/**
+ * Implements hook_field_formatter_info().
+ */
+function open_question_field_formatter_info() {
+  return array(
+    'oqa_feedback_formatter' => array(
+      'label' => t('Feedback formatter'),
+      'field types' => array('fivestar'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_field_formatter_view().
+ */
+function open_question_field_formatter_view($entity_type, $entity, $field, $instance, $lang_code, $items, $display) {
+  $elements[0] = array(
+    '#markup' => t('Rating') . ': ' . $items[0]['user'] / 20,
+  );
+  return $elements;
+}
+
+/**
+ * Implements hook_theme_registry_alter().
+ */
+function open_question_theme_registry_alter(&$theme_registry) {
+  $theme_registry['comment']['template'] = 'comment';
+  $theme_registry['comment']['path'] = drupal_get_path('theme', 'elearning') . '/templates';
+  $theme_registry['comment']['type'] = 'theme';
+  $theme_registry['comment']['theme path'] = drupal_get_path('theme', 'elearning') . '/templates';
+  $theme_registry['comment']['theme paths'] = array();
 }

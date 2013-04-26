@@ -1651,6 +1651,7 @@ body.page-home {
 .view-question-answers .views-field-name,
 .view-answer-feedbacks .views-field-created,
 .view-answer-feedbacks .views-field-name,
+.view-answer-feedbacks .views-field-rating,
 .view-answers-review .views-field-created,
 .view-answers-review .views-field-name {
   .left();
@@ -1715,7 +1716,10 @@ body.page-home {
     .bold(14px);
     .text-dark-grey();
   }
-  .views-field-body {
+  .views-field-body,
+  .comment-form,
+  .comment-group,
+  .views-field-comment-count {
     @media @narrow {
       .grid-narrow-10();
     }
@@ -1732,6 +1736,9 @@ body.page-home {
 }
 
 .view-answer-feedbacks .views-answer-feedback-body,
+.view-answer-feedbacks .comment-form,
+.view-answer-feedbacks .comment-group,
+.view-answer-feedbacks .views-field-comment-count,
 .view-answers-review .views-other-answer-body {
   @media @narrow {
     width: 455px;
@@ -1757,13 +1764,13 @@ body.page-home {
 }
 
 .view-answers-review {
-    .views-other-answer-picture {
-      .left();
-      margin-right: 20px;
-    }
-    .views-answer-feedback-picture {
-      position: relative;
-    }
+  .views-other-answer-picture {
+    .left();
+    margin-right: 20px;
+  }
+  .views-answer-feedback-picture {
+    position: relative;
+  }
 }
 
 .views-field-feedback-form {
@@ -1787,6 +1794,9 @@ body.page-home {
     .edit-submit();
     .gradient-light-orange();
     margin-bottom: 10px;
+  }
+  .disabled {
+    opacity: 0.5;
   }
   .form-textarea-wrapper {
     clear: left;
@@ -1843,13 +1853,17 @@ body.page-home {
     .views-answer-widgets, .views-answer-feedback-widgets {
       .left();
     }
-    .views-field-comment-count, .views-inline-comment-field-alias {
+    .views-field-comment-count {
+      .show(inline);
+    }
+    .views-inline-comment-field, .views-inline-comment-field-alias {
       .right();
-      padding: 8px 0px 8px 22px;
-      margin-top: 30px;
+      padding: 8px 0px 8px 31px;
+      margin-top: -16px;
       background-image: url('../images/ask-question.png');
-      background-position: left center;
+      background-position: 8px center;
       background-repeat: no-repeat;
+      border-left: 1px dotted #aeaeae;
       a.views-inline-comment-link-alias, a.comment-link {
         .text-orange();
         .link();
@@ -1861,7 +1875,6 @@ body.page-home {
     .views-inline-comment-field-alias {
       .show(none);
       cursor: pointer;
-      position: relative;
     }
     .hidden {
       visibility: hidden;
@@ -1889,6 +1902,51 @@ body.page-home {
         .gradient-light-orange();
       }
     }
+    .views-field-custom-inline-comments {
+      .right();
+      clear: both;
+    }
+    .comment-group, .comment-form {
+      .right();
+    }
+    .comment-form {
+      margin-bottom: 10px;
+    }
+    .comment-group {
+      .show(block) !important;
+      clear: both;
+    }
+    .spinner {
+      .show(none);
+    }
+    .comment {
+      width: auto;
+      margin: 0;
+      background: transparent;
+      box-shadow: none;
+      padding: 16px 10px 16px 0px;
+      border-top: 1px dotted #aeaeae;
+      .submitted span {
+        font-size: 12px;
+        color: #838383;
+        a:link, a:visited {
+          .link();
+          color: #de4900;
+          font-weight: bold;
+        }
+      }
+      .content {
+        margin-top: 10px;
+        .text-dark-grey();
+        p {
+          margin-bottom: 5px;
+        }
+      }
+    }
+  }
+  .views-row-last .views-field-comment-count {
+    .border-bottom-dotted();
+    .show(inline-block);
   }
 }
 
@@ -1914,7 +1972,7 @@ body.page-home {
 
 #oq-answer-form-wrapper {
   .border-bottom-dotted();
-  padding-bottom: 33px;
+  padding-bottom: 26px;
   .cke_top, .cke_bottom {
     .cke-main-panel-light-grey();
   }
@@ -1952,10 +2010,23 @@ body.page-home {
     .bold(14px);
     .text-blue-grey();
   }
-  .oq-answer-rating {
-    .left();
+  .oq-answer-footer {
+    clear: both;
+    padding-top: 9px;
+    border-top: 1px dotted #aeaeae;
+  }
+  .oq-answer-view-description, .oq-answer-rating {
     .bold(13px);
     color: #000;
+  }
+  .oq-answer-view-description {
+    .left();
+  }
+  .oq-answer-rating {
+    .right();
+  }
+  .answer-feedbacks-count {
+    color: #a1a1a1;
   }
   .oq-answer-submit-sign {
     background: url(../images/answer-edit.png) 0 0 no-repeat;
@@ -1966,7 +2037,7 @@ body.page-home {
   }
   .oq-answer-form-submit {
     border: 0;
-    margin: 0px 5px 0px 0px;
+    margin: 0px 5px 18px 0px;
     padding: 0;
     background: 0;
     .text-orange();

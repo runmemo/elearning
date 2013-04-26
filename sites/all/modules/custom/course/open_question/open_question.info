@@ -20,6 +20,9 @@ dependencies[] = inline_comments
 dependencies[] = vud_field
 dependencies[] = views_php
 
+files[] = views/open_question.views.inc
+files[] = views/open_question_handler_field_inline_comments.inc
+
 features[context][] = open_question
 features[ctools][] = context:context:3
 features[ctools][] = quicktabs:quicktabs:1

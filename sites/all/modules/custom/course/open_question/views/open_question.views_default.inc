@@ -10,7 +10,7 @@
 function open_question_views_default_views() {
   $export = array();
 
-  $view = new view();
+ $view = new view();
   $view->name = 'oqa_feedbacks';
   $view->description = '';
   $view->tag = 'default';
@@ -102,7 +102,7 @@ function open_question_views_default_views() {
   $handler->display->display_options['fields']['name']['exclude'] = TRUE;
   $handler->display->display_options['fields']['name']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['name']['link_to_user'] = FALSE;
-  /* Field: Content: Inline Comments */
+  /* Field: Content: Custom Inline Comments */
   $handler->display->display_options['fields']['comment_count']['id'] = 'comment_count';
   $handler->display->display_options['fields']['comment_count']['table'] = 'node_comment_statistics';
   $handler->display->display_options['fields']['comment_count']['field'] = 'comment_count';
@@ -117,13 +117,31 @@ function open_question_views_default_views() {
   $handler->display->display_options['fields']['ops_1']['label'] = '';
   $handler->display->display_options['fields']['ops_1']['exclude'] = TRUE;
   $handler->display->display_options['fields']['ops_1']['element_label_colon'] = FALSE;
+  /* Field: Field: Rating */
+  $handler->display->display_options['fields']['field_rating']['id'] = 'field_rating';
+  $handler->display->display_options['fields']['field_rating']['table'] = 'field_data_field_rating';
+  $handler->display->display_options['fields']['field_rating']['field'] = 'field_rating';
+  $handler->display->display_options['fields']['field_rating']['label'] = '';
+  $handler->display->display_options['fields']['field_rating']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_rating']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_rating']['click_sort_column'] = 'rating';
+  $handler->display->display_options['fields']['field_rating']['type'] = 'oqa_feedback_formatter';
+  $handler->display->display_options['fields']['field_rating']['settings'] = array(
+    'widget' => array(
+      'fivestar_widget' => 'default',
+    ),
+    'expose' => 1,
+    'style' => 'average',
+    'text' => 'average',
+  );
   /* Field: Field Grouping */
   $handler->display->display_options['fields']['nothing_1']['id'] = 'nothing_1';
   $handler->display->display_options['fields']['nothing_1']['table'] = 'views';
   $handler->display->display_options['fields']['nothing_1']['field'] = 'nothing';
   $handler->display->display_options['fields']['nothing_1']['ui_name'] = 'Field Grouping';
   $handler->display->display_options['fields']['nothing_1']['label'] = '';
-  $handler->display->display_options['fields']['nothing_1']['alter']['text'] = '<div class="views-answer-feedback-widgets">
+  $handler->display->display_options['fields']['nothing_1']['alter']['text'] = '<div class="views-answer-feedback-main">
+  <div class="views-answer-feedback-widgets">
           <div class="views-answer-feedback-picture">
             <div class="views-field-picture">[picture]</div>
             <div class="author-points">[points_1]</div>
@@ -136,10 +154,11 @@ function open_question_views_default_views() {
           <div class="node-supplementary-wrapper"> 
             <div class="views-field-created">[created]</div>
             <div class="views-field-name">[name]</div>
-            <div class="views-inline-comment-field-alias"><a class="views-inline-comment-link-alias">Hide Comment</a></div>
-            <div class="views-field-comment-count">[comment_count]</div>
+            <div class="views-field-rating">[field_rating]</div>
           </div>
-        </div>';
+        </div>
+  </div>
+   <div class="views-field-comment-count">[comment_count]</div>';
   $handler->display->display_options['fields']['nothing_1']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['nothing_1']['element_default_classes'] = FALSE;
   /* Contextual filter: Content: Open Question Answer (field_open_question_answer) */

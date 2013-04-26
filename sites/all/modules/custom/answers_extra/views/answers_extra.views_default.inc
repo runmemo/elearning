@@ -100,7 +100,7 @@ function answers_extra_views_default_views() {
   $handler->display->display_options['fields']['name']['exclude'] = TRUE;
   $handler->display->display_options['fields']['name']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['name']['link_to_user'] = FALSE;
-  /* Field: Content: Inline Comments */
+  /* Field: Content: Custom Inline Comments */
   $handler->display->display_options['fields']['comment_count']['id'] = 'comment_count';
   $handler->display->display_options['fields']['comment_count']['table'] = 'node_comment_statistics';
   $handler->display->display_options['fields']['comment_count']['field'] = 'comment_count';
@@ -113,19 +113,20 @@ function answers_extra_views_default_views() {
   $handler->display->display_options['fields']['nothing']['field'] = 'nothing';
   $handler->display->display_options['fields']['nothing']['ui_name'] = 'Field Grouping';
   $handler->display->display_options['fields']['nothing']['label'] = '';
-  $handler->display->display_options['fields']['nothing']['alter']['text'] = '<div class="views-answer-widgets">
-           <div class="views-field-field-rating-widget">[field_rating_widget]</div>
-           <div class="views-field-flag-thumbs-up">[ops]</div>
-         </div>
-           <div class="views-answer-body">
-             <div class="views-field-body">[body]</div>
-             <div class="node-supplementary-wrapper"> 
-               <div class="views-field-created">[created]</div>
-               <div class="views-field-name">[name]</div>
-               <div class="views-inline-comment-field-alias"><a class="views-inline-comment-link-alias">Hide Comment</a></div>
-               <div class="views-field-comment-count">[comment_count]</div>
-             </div>
-           </div>';
+  $handler->display->display_options['fields']['nothing']['alter']['text'] = '<div class="views-answer-main">
+  <div class="views-answer-widgets">
+    <div class="views-field-field-rating-widget">[field_rating_widget]</div>
+    <div class="views-field-flag-thumbs-up">[ops]</div>
+  </div>
+  <div class="views-answer-body">
+    <div class="views-field-body">[body]</div>
+    <div class="node-supplementary-wrapper"> 
+      <div class="views-field-created">[created]</div>
+      <div class="views-field-name">[name]</div>
+    </div>
+  </div>
+</div>
+<div class="views-field-comment-count">[comment_count]</div>';
   $handler->display->display_options['fields']['nothing']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['nothing']['element_default_classes'] = FALSE;
   /* Sort criterion: Content: Best Answer (field_best_answer_p) */
