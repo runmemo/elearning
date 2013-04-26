@@ -1734,6 +1734,15 @@ body.page-home {
     bottom: 2px;
   }
 }
+.views-inline-comment-cancel {
+  .cancel-action();
+  padding: 0;
+  margin: 0;
+  a { 
+    margin-right:10px;
+    padding: 5px 0;
+  }
+}
 
 .view-answer-feedbacks .views-answer-feedback-body,
 .view-answer-feedbacks .comment-form,
@@ -1895,10 +1904,13 @@ body.page-home {
       .form-actions {
         .show(inline-block);
         margin: 0;
+        padding-right:0;
         width: 100%;
       }
       #edit-submit {
         .edit-submit();
+        margin: 0;
+        height:30px;
         .gradient-light-orange();
       }
     }
@@ -2152,19 +2164,7 @@ div.ctools-common-modal-content {
       .orange-button();
     }
     .course-cancel-action {
-      float: right;
-      padding: 0 10px;
-      a {
-        color: #555;
-        text-decoration: none;
-        font-size: 15px;
-        float: left;
-        font-weight: bold;
-        padding: 7px 0;
-      }
-      a:hover {
-        .text-orange();
-      }
+      .cancel-action();
     }
   }
   .resizable-textarea {
