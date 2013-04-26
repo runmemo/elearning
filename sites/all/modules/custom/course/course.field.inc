@@ -226,11 +226,11 @@ function _course_field_default_fields() {
         ),
         'default' => array(
           'label' => 'above',
-          'module' => 'user_reference',
-          'settings' => array(),
-          'type' => 'user_reference_default',
-          'weight' => '2',
-        ),
+         'module' => 'entityreference',
+         'settings' => array(),
+         'type' => 'entityreference_entity_id',
+         'weight' => 1,
+       ),
         'teaser' => array(
           'label' => 'above',
           'settings' => array(),
@@ -478,11 +478,9 @@ function _course_field_default_fields() {
         'default' => array(
           'label' => 'above',
           'module' => 'entityreference',
-          'settings' => array(
-            'link' => FALSE,
-          ),
-          'type' => 'entityreference_label',
-          'weight' => 6,
+          'settings' => array(),
+          'type' => 'entityreference_entity_id',
+          'weight' => 1,
         ),
         'teaser' => array(
           'label' => 'above',
