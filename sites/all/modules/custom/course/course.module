@@ -334,7 +334,7 @@ function course_get_progress($course_nid = FALSE, $account = FALSE) {
   $course = node_load($course_nid);
   $tree = menu_tree_all_data($course->book['menu_name'], NULL, 3);
   $tree_key = key($tree);
-  if (isset($tree[$tree_key]['below'])) {
+  if (!isset($tree[$tree_key]['below'])) {
     return 0;
   }
   $tree = $tree[$tree_key]['below'];
