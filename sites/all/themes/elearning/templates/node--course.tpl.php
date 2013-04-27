@@ -23,15 +23,15 @@
   <div<?php print $content_attributes; ?>>
     <div class="node-course-header">
       <div class="node-course-header-left grid-10 omega">
-        <?php print $provider_logo; ?>
+        <?php print $provider['logo']; ?>
         <div class ="node-course-provider-name">
           <h1 class="title course-title" id="page-title"><?php print $node->title; ?></h1>
-          <?php if (isset($provider_name) || isset($provider_extra)) : ?>
+          <?php if (isset($provider['name']) || isset($provider['extra'])) : ?>
             <div class="provider-name-extra grid-4 omega">
               <div class="provider-name">
-                <?php if (isset($provider_name)) print $provider_name; ?>
+                <?php if (isset($provider['name'])) print $provider['name']; ?>
               </div>
-              <?php if (isset($provider_extra)) print $provider_extra; ?>
+              <?php if (isset($provider['extra'])) print $provider['extra']; ?>
             </div>
           <?php endif; ?>
         </div>
@@ -40,14 +40,12 @@
     </div>
     <div class="node-course-basic-info">
       <div class="node-course-teacher-parameters">
-        <?php if (isset($teacher_name) || isset($teacher_surname)) : ?>
-          <h2><?php print $teacher_name . $teacher_surname; ?></h2>
-        <?php endif; ?>
+        <h2><?php print $teacher['name'] . $teacher['surname']; ?></h2>
         <div class="node-course-teacher-button">
           <div id="user-profile-picture">
-            <?php print $teacher_avatar; ?>
+            <?php print $teacher['avatar']; ?>
           </div>
-          <?php if (isset($form_class_participate)) print render($form_class_participate); ?>
+          <?php print render($form_class_participate); ?>
         </div>
         <div class="node-course-paramenters">
           <?php if (isset($content['field_duration'])) print render($content['field_duration']); ?>

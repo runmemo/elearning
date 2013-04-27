@@ -3,6 +3,7 @@
  */
 
 (function($) {
+  // @todo ilya move to inline_comments_extra
   Drupal.behaviors.open_question_inline_comments = {
     attach: function(context, settings) {
       // inline comments behavior

@@ -90,6 +90,7 @@ function elearning_preprocess_book_navigation(&$vars) {
 
 /**
  * Process variables for comment.tpl.php.
+ * @todo ilya move to preprocess file
  */
 function elearning_preprocess_comment(&$vars) {
   $vars['submitted'] = t('!username - !time ago', array('!username' => $vars['author'], '!time' => format_interval(REQUEST_TIME - $vars['comment']->created, 1)));

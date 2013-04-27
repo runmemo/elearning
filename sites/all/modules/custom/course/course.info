@@ -3,7 +3,7 @@ description = Contains definitions for main objects of the course.
 core = 7.x
 package = Custom
 version = 7.x-1.0
-project = course
+
 dependencies[] = book
 dependencies[] = file
 dependencies[] = media

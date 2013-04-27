@@ -189,7 +189,9 @@ function course_theme() {
  * Implements hook_node_view().
  */
 function course_node_view($node, $view_mode) {
-
+  //unset Book Links
+  hide($node->content['links']['book']);
+  
   // Redirect to fist lesson from unit content type page
   if ($node->type === 'unit' && $view_mode == 'full') {
       $book_link = $node->book;
@@ -202,14 +204,46 @@ function course_node_view($node, $view_mode) {
       }
   }
   
-  //unset Book Links
-  hide($node->content['links']['book']);
-
-  if (!course_is_item_node($node)) {
-    return;
-  }
+  // add fields from referenced nodes to content
+  if ($view_mode == 'full' && $node->type == 'course') {
+      
+    $provider = field_get_items('node', $node, 'field_provider');
+    if (isset($provider[0])) {
+      
+      $field_logo = field_view_field('node', $provider[0]['entity'], 'field_logo', array('label' => 'hidden', 'settings' => array('image_style' => 'provider_logo')));
+      if (empty($field_logo)) {
+        $node->provider['logo'] = '<div class="provider-logo-default"></div>';
+      }
+      else {
+        $node->provider['logo'] = render($field_logo);
+      }
+      $field_extra = field_view_field('node', $provider[0]['entity'], 'field_provider_extra', array('label' => 'hidden'));   
+      $node->provider['extra'] = render($field_extra);
+      $node->provider['name'] = $provider[0]['entity']->title;
+    }
+    
+        // teacher logo and name
+     $teacher = field_get_items('node', $node, 'field_teacher');
+     $node->teacher = array();
+     if (isset($teacher[0])) {
+       $teacher_account = user_load($teacher[0]['uid']);
+       $field_name = field_view_field('user', $teacher_account, 'field_name', array('label' => 'hidden'));
+       $field_surname = field_view_field('user', $teacher_account, 'field_surname', array('label' => 'hidden'));
+       $node->teacher['avatar'] = elearning_get_user_picture($teacher_account, '', 'user-profile');
+       $node->teacher['name'] = render($field_name);
+       $node->teacher['surname'] = render($field_surname);
+     } 
+     else {
+       $node->teacher['avatar'] = '';
+       $node->teacher['name'] = '';
+       $node->teacher['surname'] = '';
+     }
+  } 
 
   if ($view_mode == 'full' && node_is_page($node)) {
+    if (!course_is_item_node($node)) {
+      return;
+    }
     global $user;
     // find whether user has permission to see this node.
     $access = course_user_access($node, $user);
@@ -228,6 +262,8 @@ function course_node_view($node, $view_mode) {
       $plugin->execute($context_access);
     }
   }
+   
+       
 }
 
 /**
@@ -503,4 +539,19 @@ function course_is_teacher($course_nid = NULL, $uid = NULL) {
   }
 
   return FALSE;
+}
+
+
+function course_field_extra_field() {
+  $extra = array();
+  $extra['node']['course']['form']['provider']['logo'] = array(
+    'display' => array(
+      'picture' => array(
+        'label' => t('Provider Logo'),
+        'description' => t('Logo of course provider'),
+        'weight' => 0,
+      ),
+    )
+  );
+  return $extra;
 }
