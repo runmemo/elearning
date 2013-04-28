@@ -1,0 +1,33 @@
+<?php
+
+function credit_test_install() {
+  // create field field_course_credit
+  $field_course_credit = array(
+    'cardinality' => 1,
+    'field_name' => 'field_course_credit',
+    'module' => 'number',
+    'type' => 'number_integer',
+  );
+  field_create_field($field_course_credit);
+  
+  // create instance of field_course_credit
+  $instance = array(
+    'field_name' => 'field_course_credit',
+    'entity_type' => 'node',
+    'bundle' => 'credit_test',
+    'label' => 'Course Credit',
+    'required' => 0,
+    'settings' => array(
+      'max' => 100,
+      'min' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(    
+      'module' => 'number',
+      'type' => 'number',
+    ),
+  );
+  field_create_instance($instance);
+  $instance['bundle'] = 'credit_test_extra';
+  field_create_instance($instance);
+}

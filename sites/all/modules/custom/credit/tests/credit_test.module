@@ -1,0 +1,56 @@
+<?php
+
+/**
+ * Implements hook_node_info().
+ */
+function credit_test_node_info() {
+  $items = array(
+    'credit_test' => array(
+      'name' => t('Credit test content type'),
+      'base' => 'credit_test',
+      'description' => t('Sample content type for testing of credit module.'),
+    ),
+    'credit_test_extra' => array(
+      'name' => t('Credit extra test content type'),
+      'base' => 'credit_test_extra',
+      'description' => t('Sample content type for testing of credit module (extra).'),
+    ),
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_credit_info() from credit module
+ */
+function credit_test_credit_info() {
+  $info = array();
+  $info['credit'] = array(
+    'bundle' => 'credit_test',
+    'result_callback' => 'credit_test_result'
+  );
+  $info['credit2'] = array(
+    'bundle' => 'credit_test_extra',
+    'result_callback' => 'credit_test_result_simple'
+  );
+  return $info;
+}
+
+/**
+ * Gets credits that were set in the test case on the user object
+ * @see credit_test_credit_info()
+ */
+function credit_test_result($node, $user) {
+  if(isset($user->credits)) {
+    if(isset($user->credits[$node->nid])) {
+      return $user->credits[$node->nid];
+    }
+  }
+  return 0;
+}
+/** 
+ * @see credit_test_credit_info()
+ */
+function credit_test_result_simple($node, $user) {
+  return $user->credit;
+}
+

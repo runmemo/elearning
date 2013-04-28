@@ -2,7 +2,8 @@
 
 class CourseTestCase extends DrupalWebTestCase {
   function setUp() {
-     parent::setUp('course'); 
+     $modules = array_merge(array('course'), func_get_args());
+     parent::setUp($modules); 
     
      $settings = array(
        'type' => 'course'
@@ -15,6 +16,40 @@ class CourseTestCase extends DrupalWebTestCase {
     
   }
   
+  function book_append_child($node, $parent) {
+     $node->book['bid']= $parent->book['nid'];
+     $node->book['plid'] = $parent->book['mlid'];
+     node_save($node);
+  }
+  
+   function createCourse($node_types) {
+    $this->drupalLogin($this->course_author);
+    $book = $this->course;
+    
+    $unit_settings = array(
+      'type' => 'unit',
+    );
+    
+    $i= 0;
+    foreach ($node_types as $unit_key => $unit) {
+      $nodes[$i] = $this->drupalCreateNode($unit_settings);
+      $this->book_append_child($nodes[$i], $book);
+      $u = $i; // unit key in the array
+      $i++;
+      
+      foreach ($unit as $key => $item) {
+        $item_settings = array(
+          'type' => $item,
+        ); 
+        $nodes[$i] = $this->drupalCreateNode($item_settings);
+        $this->book_append_child($nodes[$i], $nodes[$u]);
+        $i ++;
+      }
+    }
+  
+    $this->drupalLogout();
+    return $nodes;   
+  }
 }
 
 /**
@@ -34,62 +69,28 @@ class CourseNavigationTestCase extends CourseTestCase {
       'description' => 'Tests that course navigation works correctly.',
       'group' => 'Course',
     );
-  }
+  }  
   
-
-  function book_append_child($node, $parent) {
-     $node->book['bid']= $parent->book['nid'];
-     $node->book['plid'] = $parent->book['mlid'];
-     node_save($node);
-  }
-  
-  
-  function createCourse() {
-    $this->drupalLogin($this->course_author);
-    $book = $this->course;
-    
-  /*  Creating a course with the following structure:
-   *
-   * Course
-   * --> Unit 1
-   * ----> Lesson 1
-   * ----> Lesson 2
-   * --> Unit 2
-   * ----> Lesson 3
-   * ----> Lesson 4
-   */
-    
-   $unit_settings = array(
-      'type' => 'unit',
-    );
-    $lesson_settings = array(
-      'type' => 'lesson',
-    ); 
-   
-    // Unit 1
-    $nodes[0] = $this->drupalCreateNode($unit_settings);
-    $this->book_append_child($nodes[0], $book);
-    $nodes[1] = $this->drupalCreateNode($lesson_settings);
-    $this->book_append_child($nodes[1], $nodes[0]);
-    $nodes[2] = $this->drupalCreateNode($lesson_settings);
-    $this->book_append_child($nodes[2], $nodes[0]);
-    // Unit 2
-    $nodes[3] = $this->drupalCreateNode($unit_settings);
-    $this->book_append_child($nodes[3], $book);
-    $nodes[4] = $this->drupalCreateNode($lesson_settings);
-    $this->book_append_child($nodes[4], $nodes[3]);
-    
-    $this->drupalLogout();
-
-    return $nodes;
-    
+  function createTestCourse() {
+   // Creating a course with the following structure:
+   $course = array(
+     'unit' => array (
+       'lesson',
+       'lesson',
+     ),
+     'unit' => array (
+       'lesson',
+       'lesson',
+     ),
+   );
+   return $this->createCourse($course);
   }
   
   /** 
    * Checks that user is redirected to the first child node from unit page
    */
   function testUnitRedirect() {
-    $nodes = $this->createCourse();
+    $nodes = $this->createTestCourse();
     $this->drupalGet('node/' . $nodes[0]->nid); // open Unit 1
     $this->assertRaw('node-type-lesson', 'User is redirected to a lesson of the unit.');  
   }

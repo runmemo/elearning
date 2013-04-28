@@ -6,15 +6,8 @@
  */
 
 
-// Add fields to the nodes
-//
-// Weight - default = 0
-// min - 0
-// max - 100
-// validation should check other objects with weight and limit it with total credits on course
-
-// Total credits - on course content type 
-// Pass credit - score reqired for certificate upload
+// @todo validation should check other objects with weight and limit it with total credits on course
+// @todo total credits - on course content type 
 
 /**
  * Calculates credit attributed to a student for a given course
@@ -42,11 +35,10 @@ function credit_calculate($course, $account) {
 /**
  * Gets result of the provided course item
  * @param object $node item of the course
+ * @param object $account user's account
+ * @param 
  */
 function credit_get_item_result($node, $account) {
-  if (!course_is_item_node($node)) {
-    return 0.0;
-  }
   foreach (module_implements('credit_info') as $module) {
     $module_results = module_invoke($module, 'credit_info');
     foreach ($module_results as $result) {

@@ -4,3 +4,74 @@
  * @file
  * contains test cases for Credit module
  */
+
+class CreditTestCase extends CourseTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Credit Test Case',
+      'description' => 'Tests that credit functions work correctly.',
+      'group' => 'Course',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('credit_test');
+      
+    $this->testUser1 = $this->drupalCreateUser(array());
+    $this->testUser2 = $this->drupalCreateUser(array());
+   
+    // add test items to the course
+    $this->nodes = $this->createTestCourse();
+  }
+  /**
+   * Overrides createCourse() function
+   */
+   function createTestCourse() {
+     // Creating a course with the following structure:
+     $course = array(
+      'unit' => array (// i = 0
+        'credit_test', // i = 1
+        'credit_test', // i = 2
+        'credit_test_extra' // i = 3
+      ),
+    );
+    return $this->createCourse($course);
+  }
+  
+  function testCreditCalculate() {
+    // add credit of the total course credit
+    $this->nodes[1]->field_course_credit[LANGUAGE_NONE][0]['value'] = 10;
+    node_save($this->nodes[1]);
+    $this->nodes[2]->field_course_credit[LANGUAGE_NONE][0]['value'] = 30;
+    node_save($this->nodes[2]);
+    $credit3 = rand(5, 60);
+    $this->nodes[3]->field_course_credit[LANGUAGE_NONE][0]['value'] = $credit3;
+    node_save($this->nodes[3]);
+   
+    $user1_credit1 = rand(10, 55) / 100.0;
+    // add user credits
+    $this->testUser1->credits = array(
+      $this->nodes[1]->nid => $user1_credit1, // so this is user1's credit on node 1
+      $this->nodes[2]->nid => 1.00,
+    );
+    $this->testUser2->credits = array(
+      $this->nodes[1]->nid => .80,
+      $this->nodes[2]->nid => .70,
+    );
+    // credit for this node type is take from user->credit property.
+    $user1_credit3 = rand(50, 70) / 100.0;
+    $this->testUser1->credit = $user1_credit3;
+    $user2_credit3 = rand(30, 50) / 100.0;
+    $this->testUser2->credit = $user2_credit3;
+    
+    // check user 1
+    $user1_credit = credit_calculate($this->course, $this->testUser1);
+    $this->assertEqual($user1_credit, 10 * $user1_credit1 + 30 * 1.00 + $credit3 * $user1_credit3);
+    
+    // check user 2
+    $user2_credit = credit_calculate($this->course, $this->testUser2);
+    $this->assertEqual($user2_credit, 10 * .80 + 30 * .70 + $credit3 * $user2_credit3);
+  }
+  
+}
