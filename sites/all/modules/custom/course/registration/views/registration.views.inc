@@ -1,8 +1,10 @@
 <?php
+/**
+ * @file
+ * registration.views.inc
+ */
 
-
-
-function registration_views_data_alter(&$data){ 
+function registration_views_data_alter(&$data) { 
          // Expose the uid as a relationship to users.
     $data['registration']['uid'] = array(
         'title' => t('User'),

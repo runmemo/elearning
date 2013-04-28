@@ -258,7 +258,10 @@ function registration_edit_form_submit(&$form, &$form_state) {
   // Save the registration and go back to the list of registrations
   
   // Add in created and changed times.
-  if ($registration->is_new = isset($registration->is_new) ? $registration->is_new : 0){
+  if (!isset($registration->is_new)) { 
+    $registration->is_new = 0;
+  }
+  if ($registration->is_new) {
     $registration->created = time();
   }
 

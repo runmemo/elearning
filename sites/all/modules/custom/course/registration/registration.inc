@@ -1,4 +1,9 @@
 <?php
+/**
+ * @file
+ * Contains api functions for the registration module
+ */
+
 
 /**
  * Registers user to specified course

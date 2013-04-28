@@ -59,11 +59,11 @@ function registration_schema() {
       'user_registration' => array('nid', 'uid'),
     ),
     'foreign keys' => array(
-      'node_id' => array (
+      'node_id' => array(
           'table' => 'node',
           'columns' => array('nid' => 'nid'),
       ),  
-      'registered_user' => array (
+      'registered_user' => array(
           'table' => 'users',
           'columns' => array('uid' => 'uid'),
       ),  
