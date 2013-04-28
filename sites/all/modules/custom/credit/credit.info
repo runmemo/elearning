@@ -1,0 +1,12 @@
+name = Credit
+description = Provides credit functionality for course.
+core = 7.x
+package = Course
+version = 7.x-1.0
+
+dependencies[] = features
+dependencies[] = number
+features[features_api][] = api:1
+features[field_base][] = field_course_credit
+features[field_base][] = field_pass_credit
+features[field_instance][] = node-course-field_pass_credit

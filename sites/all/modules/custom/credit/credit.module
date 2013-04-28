@@ -1,0 +1,92 @@
+<?php
+
+/**
+ * @file
+ * credit.module
+ */
+
+
+// Add fields to the nodes
+//
+// Weight - default = 0
+// min - 0
+// max - 100
+// validation should check other objects with weight and limit it with total credits on course
+
+// Total credits - on course content type 
+// Pass credit - score reqired for certificate upload
+
+/**
+ * Calculates credit attributed to a student for a given course
+ * @param type $course
+ * @param type $account
+ * @return integer number of points credited to a student
+ */
+function credit_calculate($course, $account) {
+  if ($course->type !== 'course') {
+    return FALSE; // only works for course level
+  }
+  // loop through all items of the course
+  $course_items = course_get_items($course);
+  $credit = .0;
+  foreach ($course_items as $nid) {
+    $item = node_load($nid);
+    $result = credit_get_item_result($item, $account);
+    $weight = credit_get_field_integer_value($item, 'field_course_credit');
+    
+    $credit += $result * $weight;
+  }
+  
+  return $credit;
+}
+/**
+ * Gets result of the provided course item
+ * @param object $node item of the course
+ */
+function credit_get_item_result($node, $account) {
+  if (!course_is_item_node($node)) {
+    return 0.0;
+  }
+  foreach (module_implements('credit_info') as $module) {
+    $module_results = module_invoke($module, 'credit_info');
+    foreach ($module_results as $result) {
+      if ($result['bundle'] === $node->type) {  
+        $function = $result['result_callback'];
+        if (function_exists($function)) {
+          $result = $function($node, $account);
+          return $result;
+        }
+      }
+    }
+  }
+  
+  return 0.0; // node does not provide calculation of result for credit
+}
+
+/**
+ * Gets first value from integer field of the node
+ * @param object $node
+ * @param string $field machine readable name of field
+ * @param integer $default value to return if field is empty
+ * @return int first value from the field if exists, otherwise $default
+ */
+function credit_get_field_integer_value($node, $field, $default = 0) {
+  $credits = field_get_items('node', $node, $field);
+  if ($credits) {
+    return $credits[0]['value'];
+  }
+  return $default;
+}
+
+/**
+ * Implements hook_access_certificate($node, $user) from certificate module
+ */
+function credit_access_certificate($node, $user) {
+  if ($node->type !== 'course') {
+    return t('This is not a course, certificate  is not available');
+  }
+  $user_credit = credit_calculate($node, $user);
+  $pass_credit = credit_get_field_integer_value($node, 'field_pass_credit');
+  // user must have more credit poits than a pass value on the course
+  return $user_credit > $pass_credit;
+}
