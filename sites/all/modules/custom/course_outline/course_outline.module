@@ -1,6 +1,9 @@
 <?php
 
-
+/**
+ * @file
+ * course_outline.module provides a block that shows outline of the course
+ */
 
 /**
  * Implements hook_block_info()
@@ -31,7 +34,7 @@ function course_outline_theme() {
 function theme_menu_link__course_outline_unit(array $variables) {
   $element = $variables['element'];
   $sub_menu = '';
-  $output = "<h3>" . $element['#title'] .'<span class="icon"></span>'. '</h3>';
+  $output = "<h3>" . $element['#title'] . '<span class="icon"></span></h3>';
   if ($element['#below']) {
     $sub_menu = drupal_render($element['#below']);
   }   
@@ -87,18 +90,18 @@ function course_outline_preprocess_tree(&$tree) {
   global $user;
   $counter = new multi_counter;
   $tree_key = key($tree);    
-  if(isset($tree[$tree_key]['#below'])){
+  if (isset($tree[$tree_key]['#below'])) {
     $tree = $tree[$tree_key]['#below']; // remove the top level
     $flag = flag_get_flag('course_item_complete');
     foreach ($tree as &$unit) {
-      if(!isset($unit['#below'])) { 
+      if (!isset($unit['#below'])) { 
         continue;
       }
       // change theme for unit level links
       $unit['#theme'] = 'menu_link__course_outline_unit';
       // for each lesson we add html to the title
       foreach ($unit['#below'] as &$item) {
-        if(!isset($item['#below'])) {
+        if (!isset($item['#below'])) {
           continue;
         }
         $node = menu_get_object('node', 1, $item['#original_link']['link_path']);
@@ -122,7 +125,7 @@ function course_outline_preprocess_tree(&$tree) {
  * @param object $node
  * @return string title for the course outline menu item
  */
-function course_outline_item_title($node){
+function course_outline_item_title($node) {
   switch ($node->type) {
         case 'lesson':
           $title = "<span class='" . $node->type . "'>" . t('Lesson @i.', array('@i' => $node->order)) . '</span>';
@@ -134,7 +137,7 @@ function course_outline_item_title($node){
           $title = "<span class='" . $node->type . "'></span>";
           break;
       }
-      $title = '<div class="title-wrapper">'.$title . $node->title.'</div>';
+      $title = '<div class="title-wrapper">' . $title . $node->title . '</div>';
    return $title;
 }
 

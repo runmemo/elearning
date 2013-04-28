@@ -1,5 +1,6 @@
-/* 
- * @file conteins js for course outline navigation
+/** 
+ * @file 
+ * course_outline.js for course outline navigation
  */
 
 (function($) {
