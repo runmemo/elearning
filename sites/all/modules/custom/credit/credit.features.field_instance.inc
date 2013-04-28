@@ -7,7 +7,7 @@
 /**
  * Implements hook_field_default_field_instances().
  */
-function field_pass_credit_field_default_field_instances() {
+function credit_field_default_field_instances() {
   $field_instances = array();
 
   // Exported field_instance: 'node-course-field_pass_credit'
