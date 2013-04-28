@@ -278,7 +278,7 @@ function course_header_block() {
   $block = array();
   $node = menu_get_object('node');
   if (!$node) {
-    watchdog(t('block header'), t('Block with header of the course was shown in the wrong place.'), array(), WATCHDOG_WARNING);
+    watchdog('block header', 'Block with header of the course was shown in the wrong place.', array(), WATCHDOG_WARNING);
     return $block;
   }
 
@@ -566,7 +566,7 @@ function course_is_teacher($course_nid = NULL, $uid = NULL) {
   
   $teacher = field_get_items('node', $course, 'field_teacher');
   if ($teacher) {
-    if($teacher[0]['uid'] == $uid) {
+    if ($teacher[0]['uid'] == $uid) {
       return TRUE;
     }
   }

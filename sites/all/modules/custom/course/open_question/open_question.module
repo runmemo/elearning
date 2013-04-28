@@ -373,7 +373,7 @@ function oq_review_form($form, &$form_state, $args) {
   $feedback_nid = FALSE;
   if (empty($form_state['step'])) {  // page is loaded
     $feedback_nid = oqa_is_reviewed($nid, $user->uid);
-    if($feedback_nid) {
+    if ($feedback_nid) {
       $form_state['feedback_nid'] = $feedback_nid;
       $form_state['step'] = 'view';
     } 
@@ -396,7 +396,7 @@ function oq_review_form($form, &$form_state, $args) {
       }
       $items = field_get_items('node', $review_node, 'body');
       $review_body_item = field_view_value('node', $review_node, 'body', $items[0]);
-      if($review_body_item['#access']) {
+      if ($review_body_item['#access']) {
         $review_body = $review_body_item['#markup'];
       }
     } 
@@ -649,11 +649,11 @@ function open_question_theme_registry_alter(&$theme_registry) {
  */
 function open_question_form_comment_form_alter(&$form, &$form_state, $form_id) {
   $node = $form_state['build_info']['args'][0];
-  $form['actions']['cancel_link'] = array (
+  $form['actions']['cancel_link'] = array(
     '#prefix' => '<div class="views-inline-comment-cancel">',
     '#sufix' => '</div>',
     '#type' => 'markup',
-    '#markup' => '<a id="comment-form-hide-'. $node->nid . '" class="comment-cancel">' . t('Cancel') . '</a>',
+    '#markup' => '<a id="comment-form-hide-' . $node->nid . '" class="comment-cancel">' . t('Cancel') . '</a>',
     '#weight' => 18,
     // class="views-inline-comment-link-alias"
    );
@@ -662,7 +662,7 @@ function open_question_form_comment_form_alter(&$form, &$form_state, $form_id) {
 /**
  * Implements hook_credit_result_info from credit module
  */
-function open_question_credit_info () {
+function open_question_credit_info() {
   $info = array();
   $info['oq'] = array(
     'bundle' => 'open_question',
