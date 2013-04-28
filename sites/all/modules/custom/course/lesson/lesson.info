@@ -1,7 +1,7 @@
 name = Course Lesson
 description = Module provides content type for presenting information units of the course
 core = 7.x
-package = Custom
+package = Course
 version = 7.x-1.0
 project = lesson
 

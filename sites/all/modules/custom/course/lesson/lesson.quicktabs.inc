@@ -18,7 +18,7 @@ function lesson_quicktabs_default_quicktabs() {
   $quicktabs->hide_empty_tabs = TRUE;
   $quicktabs->default_tab = 0;
   $quicktabs->title = 'Lesson interaction';
-  if(module_exists('relevant_answers_extra')) {
+  if (module_exists('relevant_answers_extra')) {
     $quicktabs->tabs[0] = array(
         'bid' => 'relevant_answers_extra_delta_relevant_questions_list',
         'hide_title' => 1,
