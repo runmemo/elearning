@@ -355,10 +355,57 @@ function open_question_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-open_question-field_course_credit'
+  $field_instances['node-open_question-field_course_credit'] = array(
+    'bundle' => 'open_question',
+    'default_value' => array(
+      0 => array(
+        'value' => 0,
+      ),
+    ),
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'hidden',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 3,
+      ),
+      'teaser' => array(
+        'label' => 'hidden',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_course_credit',
+    'label' => 'Course Credit',
+    'required' => 0,
+    'settings' => array(
+      'max' => 100,
+      'min' => 0,
+      'prefix' => '',
+      'suffix' => '',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'number',
+      'settings' => array(),
+      'type' => 'number',
+      'weight' => -1,
+    ),
+  );
+
+ 
+  
   // Translatables
   // Included for use with string extractors like potx.
   t('Answer');
   t('Body');
+  t('Course Credit');
   t('Open Question');
   t('Open Question Answer');
   t('Proposed Answer');

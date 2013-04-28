@@ -29,7 +29,7 @@ function open_question_ctools_plugin_api() {
 function open_question_views_api() {
   return array(
     'api' => '3.0',
-    'path' => drupal_get_path('module', 'open_question') . '/views',);
+    'path' => drupal_get_path('module', 'open_question') . '/views', );
 }
 
 /**

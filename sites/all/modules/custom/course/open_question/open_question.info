@@ -1,7 +1,7 @@
 name = Open Question
 description = Module allows to add open ended questions to a course
 core = 7.x
-package = Custom
+package = Course
 version = 7.x-1.0
 project = open_question
 dependencies[] = common_tools
@@ -39,6 +39,7 @@ features[field_base][] = field_rating
 features[field_base][] = field_rating_widget
 features[field_instance][] = node-open_question-field_proposed_answer
 features[field_instance][] = node-open_question-field_question
+features[field_instance][] = node-open_question-field_course_credit
 features[field_instance][] = node-open_question_answer-body
 features[field_instance][] = node-open_question_answer-field_open_question
 features[field_instance][] = node-open_question_feedback-body
