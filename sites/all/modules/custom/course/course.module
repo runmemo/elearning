@@ -92,7 +92,7 @@ function course_block_view($delta = '') {
   */
 function course_item_links() {
   $node = menu_get_object('node');
-  if(!node_access('update', $node)) {
+  if (!node_access('update', $node)) {
     return FALSE;
   }
   
@@ -132,6 +132,10 @@ function course_first_node_href($node_type, $book = NULL) {
  */
 function course_node_book() {
   $node = menu_get_object();
+  return _node_get_book($node);
+}
+
+function _node_get_book($node) {
   if ($node && isset($node->book)) {
     return $node->book;
   }
@@ -274,7 +278,7 @@ function course_header_block() {
   $block = array();
   $node = menu_get_object('node');
   if (!$node) {
-    watchdog('block header', t('Block with header of the course was shown in the wrong place.'), array(), WATCHDOG_WARNING);
+    watchdog(t('block header'), t('Block with header of the course was shown in the wrong place.'), array(), WATCHDOG_WARNING);
     return $block;
   }
 
@@ -288,10 +292,10 @@ function course_header_block() {
       $item_nid = str_ireplace('node/', '', $question_paths[0]['value']);
       $item = node_load($item_nid);
       if ($item) {
-        $book = isset($item->book) ? $item->book : FALSE;
+        $book = _node_get_book($item);
         $question_page = TRUE;
       }
-      else { // node notfound
+      else { // node not found
         return $block;
       }
     }
@@ -299,12 +303,12 @@ function course_header_block() {
       return $block;
     }
   }
-  elseif($node->type === 'open_question') {
+  elseif ($node->type === 'open_question') {
     $open_question_page = TRUE;
-    $book = isset($node->book) ? $node->book : FALSE;
+    $book = _node_get_book($node);
   }
   else { // other content types
-    $book = isset($node->book) ? $node->book : FALSE;
+    $book = _node_get_book($node);
   }
 
   // Build the block title and contents
@@ -347,8 +351,15 @@ function course_views_pre_render(&$view) {
       $next = book_next($node->book);
       $path = $next['link_path'];
     }
-    $view->result[$id]->continue_link = l(t('Continue'), $path, array('attributes' => array('class' => 'user-course-continue')));
-    $view->result[$id]->exit_link = ctools_modal_text_button('<span></span>', "course-exit/nojs/{$user->uid}/{$course->node_registration_nid}", t('Exit Course'), 'ctools-modal-common-modal-style user-course-exit');
+    $account = user_load(arg(1));
+    if (user_edit_access($account)) {
+      $view->result[$id]->continue_link = l(t('Continue'), $path, array('attributes' => array('class' => 'user-course-continue')));
+      $view->result[$id]->exit_link = ctools_modal_text_button('<span></span>', "course-exit/nojs/{$user->uid}/{$course->node_registration_nid}", t('Exit Course'), 'ctools-modal-common-modal-style user-course-exit');
+    }
+    else {
+      $view->result[$id]->continue_link = '';
+      $view->result[$id]->exit_link = '';
+    }
     $view->result[$id]->course_progress = course_get_progress($course->node_registration_nid);
   }
 }
@@ -361,31 +372,20 @@ function course_views_pre_render(&$view) {
  */
 function course_get_progress($course_nid = FALSE, $account = FALSE) {
   if (!$course_nid) {
-    return; //Course needs to be passed.
+    return; // course needs to be passed.
   }
   if (!$account) {
     global $user;
     $account = $user;
   }
   $course = node_load($course_nid);
-  $tree = menu_tree_all_data($course->book['menu_name'], NULL, 3);
-  $tree_key = key($tree);
-  if (!isset($tree[$tree_key]['below'])) {
-    return 0;
-  }
-  $tree = $tree[$tree_key]['below'];
+  $items = course_get_items($course);
   $counter = new multi_counter();
   $flag = flag_get_flag('course_item_complete');
-  foreach ($tree as $unit) {
-    if (!isset($unit['below'])) {
-      continue;
-    }
-    foreach ($unit['below'] as $item) {
-      $counter->increment('items');
-      $nid = str_ireplace('node/', '', $item['link']['link_path']);
-      if ($flag->is_flagged($nid, $account->uid)) {
-        $counter->increment('completed');
-      }
+  foreach ($items as $nid) {
+    $counter->increment('items');
+    if ($flag->is_flagged($nid, $account->uid)) {
+      $counter->increment('completed');
     }
   }
   if ($counter->current('items') != 0) {
@@ -393,6 +393,39 @@ function course_get_progress($course_nid = FALSE, $account = FALSE) {
   }
 
   return 0;
+}
+
+/**
+ * Gets all items that are part of the course
+ * @param object $course
+ * @return array nids of nodes that are part of the course
+ */
+function course_get_items($course) {
+  // check if values exist in cache  
+  if ($cached = cache_get('course_get_items_' . $course->nid)) {
+    return $cached->data;
+  }
+  
+  // get items from the course book
+  $items = array();
+  $tree = menu_tree_all_data($course->book['menu_name'], NULL, 3);
+  $tree_key = key($tree);
+  if (!isset($tree[$tree_key]['below'])) {
+    return $items;
+  }
+  $units = $tree[$tree_key]['below'];
+  
+  foreach ($units as $unit) {
+    if (!isset($unit['below'])) {
+      continue;
+    }
+    foreach ($unit['below'] as $item) {
+      $nid = str_ireplace('node/', '', $item['link']['link_path']);
+      $items[] = $nid;
+    }
+  }
+  cache_set('course_get_items_' . $course->nid, $items, 'cache', 60*60);
+  return $items;
 }
 
 function course_is_item_node($node) {
@@ -472,7 +505,7 @@ function course_exit_action($js = NULL, $action = 'cancel', $user = NULL, $cours
         drupal_set_message(t('Successful de-registered from course.'));
       }
       else {
-        drupal_set_message('No registration was found, looks like list of cousrse is wrong', 'error');
+        drupal_set_message(t('No registration was found, looks like list of cousrse is wrong'), 'error');
       }
       $commands[] = ctools_ajax_command_reload();
       break;
@@ -497,7 +530,7 @@ function course_leave_modal($js = NULL, $user = NULL, $course = NULL) {
   }
 
   return ctools_modal_render(t('Confirmation'), 
-  			theme('course_leave_modal', array('uid' => $user->uid, 'course' => $course)));
+    theme('course_leave_modal', array('uid' => $user->uid, 'course' => $course)));
 }
 
 /**
@@ -517,11 +550,11 @@ function course_node_access($node, $op, $account) {
  * Checks if uid is course teacher
  */
 function course_is_teacher($course_nid = NULL, $uid = NULL) {
-  if(is_null($course_nid)) {
+  if (is_null($course_nid)) {
     return FALSE;
   }
   
-  if(is_null($uid)) {
+  if (is_null($uid)) {
     global $user;
     $uid = $user->uid;
   }
@@ -532,7 +565,7 @@ function course_is_teacher($course_nid = NULL, $uid = NULL) {
   }
   
   $teacher = field_get_items('node', $course, 'field_teacher');
-  if($teacher) {
+  if ($teacher) {
     if($teacher[0]['uid'] == $uid) {
       return TRUE;
     }

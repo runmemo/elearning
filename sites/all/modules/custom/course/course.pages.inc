@@ -26,7 +26,7 @@ function template_preprocess_course_header(&$vars) {
   $teacher = field_get_items('node', $course_node, 'field_teacher');
   if ($teacher) {
     $teacher_account = user_load($teacher[0]['uid']);
-    $name = field_view_field('user', $teacher_account, 'field_name', array('label' => 'hidden',));
+    $name = field_view_field('user', $teacher_account, 'field_name', array('label' => 'hidden', ));
     $surname = field_view_field('user', $teacher_account, 'field_surname', array('label' => 'hidden'));
     $vars['teacher_name'] = render($name);
     $vars['teacher_surname'] = render($surname);

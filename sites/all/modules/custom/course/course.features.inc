@@ -54,7 +54,7 @@ function course_node_info() {
     'unit' => array(
       'name' => t('Unit'),
       'base' => 'node_content',
-      'description' => t('Unit is a large section of course that consists of lessons, quizzes and other content. '),
+      'description' => t('Unit is a large section of course that consists of lessons, quizzes and other content.'),
       'has_title' => '1',
       'title_label' => t('Title'),
       'help' => '',
