@@ -1,0 +1,32 @@
+<?php
+
+
+/**
+ * Implements hook_credit_info()
+ */
+function quiz_credit_credit_info() {
+  $results = array();
+  $results['quiz'] = array (
+    'bundle' => 'quiz',
+    // callback function must return value between 0 and 1.
+    'callback' => 'quiz_credit_calculate',
+    
+  );
+  return $results;
+}
+
+
+/**
+ * Calculates credit awared for completion of a quiz to a user
+ * @see quiz_credit_credit_info()
+ */
+function quiz_credit_calculate($quiz_node, $account) {
+  $quiz_score = quiz_calculate_score($quiz_node, $account);
+  
+  $is_evaluated = $quiz_score['is_evaluated'];
+  if ($is_evaluated) {
+    $percentage = $quiz_score['percentage_score'];
+    return $percentage / 100;
+  }
+  return 0.0;
+}
