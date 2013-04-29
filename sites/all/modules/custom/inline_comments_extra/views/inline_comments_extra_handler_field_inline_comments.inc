@@ -5,7 +5,7 @@
  * Views Handler custom class, that is mostly copy of the class from
  * Inline Comments module. We need this override in order to always show the list of comments.
  */
-class open_question_handler_field_inline_comments extends inline_comments_handler_field_inline_comments {
+class inline_comments_extra_handler_field_inline_comments extends inline_comments_handler_field_inline_comments {
 
   function render($values) {
     global $user;

@@ -1738,6 +1738,7 @@ body.page-home {
   a { 
     margin-right:10px;
     padding: 5px 0;
+    cursor: pointer;
   }
 }
 
@@ -1802,7 +1803,8 @@ body.page-home {
     margin-bottom: 10px;
   }
   .disabled {
-    opacity: 0.5;
+    color: #ababab;
+    .gradient-disabled();
   }
   .form-textarea-wrapper {
     clear: left;
@@ -1935,6 +1937,7 @@ body.page-home {
       box-shadow: none;
       padding: 16px 10px 16px 0px;
       border-top: 1px dotted #aeaeae;
+      font-family: Arial;
       .submitted span {
         font-size: 12px;
         color: #838383;
@@ -1946,6 +1949,7 @@ body.page-home {
       }
       .content {
         margin-top: 10px;
+        font-size: 14px;
         .text-dark-grey();
         p {
           margin-bottom: 5px;

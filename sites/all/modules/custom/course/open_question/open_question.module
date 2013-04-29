@@ -581,7 +581,7 @@ function oq_review_form_submit($form, &$form_state) {
  * Implementation of hook_node_view().
  */
 function open_question_node_view($node, $view_mode, $langcode) {
-  if ($node->type == 'open_question' || $node->type == 'question') {
+  if ($node->type == 'open_question') {
     drupal_add_js(drupal_get_path('module', 'open_question') . '/open_question.js');
   }
 }
@@ -628,35 +628,6 @@ function open_question_field_formatter_view($entity_type, $entity, $field, $inst
     '#markup' => t('Rating') . ': ' . $items[0]['user'] / 20,
   );
   return $elements;
-}
-
-/**
- * Implements hook_theme_registry_alter().
- */
-function open_question_theme_registry_alter(&$theme_registry) {
-  $theme_registry['comment']['template'] = 'comment';
-  // @todo ilya please don't do references from module to the theme
-  // it will be better to move this code and template to inline_comments_extra
-  $theme_registry['comment']['path'] = drupal_get_path('theme', 'elearning') . '/templates';
-  $theme_registry['comment']['type'] = 'theme';
-  $theme_registry['comment']['theme path'] = drupal_get_path('theme', 'elearning') . '/templates';
-  $theme_registry['comment']['theme paths'] = array();
-}
-
-/**
- * Adds custom markup to comments form for inline comments
- * @todo Ilya move to inline_comments_extra module
- */
-function open_question_form_comment_form_alter(&$form, &$form_state, $form_id) {
-  $node = $form_state['build_info']['args'][0];
-  $form['actions']['cancel_link'] = array(
-    '#prefix' => '<div class="views-inline-comment-cancel">',
-    '#sufix' => '</div>',
-    '#type' => 'markup',
-    '#markup' => '<a id="comment-form-hide-' . $node->nid . '" class="comment-cancel">' . t('Cancel') . '</a>',
-    '#weight' => 18,
-    // class="views-inline-comment-link-alias"
-   );
 }
 
 /**

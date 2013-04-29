@@ -1,0 +1,11 @@
+name = Inline Comments Extra
+description = Alters Inline Comments module
+core = 7.x
+package = Custom
+version = 7.x-1.0
+project = inline_comments_extra
+dependencies[] = text
+dependencies[] = views
+dependencies[] = inline_comments
+files[] = views/inline_comments_extra.views.inc
+files[] = views/inline_comments_extra_handler_field_inline_comments.inc
