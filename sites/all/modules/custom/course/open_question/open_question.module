@@ -695,9 +695,11 @@ function open_question_result($node, $account) {
     $answer_nid = $answers_nids[0];
     $stats =  open_question_get_feedback_stats($answer_nid); 
     if ($stats['count'] > 0) { // @todo give admin an option to chose number of feedbacks
-      $result =  $stats['average']/5.0;
+      $result =  $stats['average'] / 5.0;
       return $result;
     }
   } 
+  // user did not answer that open question yet 
+  // or nobody provided user with feedback 
   return .0;
 }
