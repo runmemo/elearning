@@ -14,7 +14,10 @@ include_once 'user_extra.features.inc';
  */
 function user_extra_preprocess_user_profile(&$variables) {
   drupal_add_js(drupal_get_path('module', 'user_extra') . '/user_extra.js');
-  $variables['upload_form'] = drupal_get_form('profile_pic_update_form');
+  $account = $variables['elements']['#account'];
+  if (user_edit_access($account)) {
+    $variables['upload_form'] = drupal_get_form('profile_pic_update_form');
+  }
 }
 
 /**
