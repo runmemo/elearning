@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * field_pass_credit.features.field_instance.inc
+ * quiz_credit.features.field_instance.inc
  */
 
 /**
