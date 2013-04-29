@@ -70,10 +70,10 @@ function elearning_preprocess_user_profile(&$variables) {
   $variables['field_birthday'] = render($field_birthday);
   $variables['field_phone'] = render($field_phone);
   $variables['userpoints_count'] = userpoints_get_current_points($account->uid, 'all');
-  if ($access) {
-    $view = views_get_view('user_courses');
-    $variables['user_courses_view'] = $view->preview('block', array($account->uid));
-  }
+  
+  $view = views_get_view('user_courses');
+  $variables['user_courses_view'] = $view->preview('block', array($account->uid));
+  
 }
 
 /**
