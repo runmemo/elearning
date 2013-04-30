@@ -1,0 +1,7 @@
+name = Subscriptions for Question
+description = Allows users to subscribe to questions to get answers update.
+package = "Subscriptions"
+
+dependencies[] = subscriptions
+
+core = 7.x

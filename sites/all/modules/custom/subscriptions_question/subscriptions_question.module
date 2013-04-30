@@ -1,0 +1,167 @@
+<?php
+
+/**
+ * @file
+ * Subscriptions to questions.
+ *
+ * subscriptions_question extends the subscription module to allow users to
+ * subscribe questions. If a user subscribes to a question he will receive
+ * notifications each time a answer is posted to that question. 
+ */
+
+/**
+ * Implements hook_subscriptions().
+ *
+ * @param $op
+ * @param null $arg0
+ * @param null $arg1
+ * @param null $arg2
+ *
+ * @return array|null
+ *
+ * @ingroup hooks
+ */
+function subscriptions_question_subscriptions($op, $arg0 = NULL, $arg1 = NULL, $arg2 = NULL) {
+  static $stypes = array('question' => array('node', 'tid'));
+  $function = '_subscriptions_question_' . $op;
+  if (function_exists($function)) {
+    return $function($arg0, $arg1, $arg2);
+  }
+  switch ($op) {
+    case 'queue':
+      // $arg0 is $event array.
+      if ($arg0['module'] == 'node') {
+        $node = $arg0['node'];
+        $params['node']['field_answer_question'] = array(
+          'join' => array('table' => 'field_data_field_answer_question', 'alias' => 'fs', 'on' => 's.value = fs.field_answer_question_nid'),
+          'where' => array(array('fs.entity_id', $node->nid, '=')),
+          'groupby' => 'fs.entity_id'
+          );
+        return $params;
+      }
+      break;
+
+    case 'fields': // $arg0 is module.
+      if ($arg0 == 'node') {
+        return array(
+          'field_answer_question' => array(
+            'data_function' => 'subscriptions_content_data',
+            'subs_mod' => 'subscriptions_content',
+            'subs_type' => t('thread'),
+            'mailkey' => 'node-type-',
+          ),
+        );
+      }
+      break;
+
+    case 'stypes':
+      return $stypes;
+
+    case 'stype':
+      return (isset($stypes[$arg0]) ? array_merge( $stypes[$arg0], array($arg1, $arg2)) : NULL);
+  }
+  return NULL;
+}
+
+/**
+ * Implements _hook_node_options(), subhook of hook_subscriptions().
+ *
+ * This is called by subscriptions_ui_node_form() in subscriptions_ui.module.
+ *
+ * @param $account
+ * @param $node
+ *
+ * @return array|null
+ *
+ * @ingroup form
+ * @ingroup hooks
+ *
+ * @see subscriptions_ui_node_form()
+ */
+function _subscriptions_question_node_options($account, $node) {
+  if (!user_access('subscribe to questions')) {
+    return NULL;
+  }
+  $options = array();
+  if ($node->type == 'question') {
+    $options['question'][] = array(
+      'name' => t('Subscribe to this question'),
+      'params' => array('module' => 'node', 'field' => 'field_answer_question', 'value' => $node->nid),
+      'link' => 'node/' . $node->nid,
+    );
+    $options['question']['weight'] = -4;
+  }
+  return $options;
+
+  return $options;
+}
+
+/**
+ * Implements _hook_types(), subhook of hook_subscriptions().
+ *
+ * This is called by subscriptions_types() in subscriptions.module.
+ *
+ * @return array
+ *   Returns information about types for Subscriptions module interface.
+ *
+ * @ingroup form
+ * @ingroup hooks
+ *
+ * @see subscriptions_types()
+ */
+function _subscriptions_question_types() {
+  $types['question'] = array(
+    'title'      => 'Questions',
+    'page'       => 'subscriptions_question_page_question',
+    'fields'     => array('node', 'field_answer_question'),
+    'weight'     => -20,
+    'access'     => 'subscribe to questions',
+    'permission' => array(
+      'title'       => t('Subscribe to questions'),
+      'description' => t('Subscribe to the questions')
+    ),
+  );
+  return $types;
+}
+
+/**
+ * Returns a list of question subscriptions.
+ *
+ * @param array $form
+ * @param int $uid
+ *   ID of a user if >0 or of a role if <0.
+ *
+ * @return array
+ *
+ * @ingroup form
+ */
+function subscriptions_question_page_question(array $form, $uid) {
+  _subscriptions_module_load_include('subscriptions_question', 'admin.inc');
+  return _subscriptions_question_form($form, $uid);
+}
+
+/**
+ * Implements hook_node_delete().
+ *
+ * Catches node deletes and remove any associated thread subscriptions.
+ *
+ * @param object $node
+ */
+function subscriptions_question_node_delete($node) {
+  subscriptions_delete_for_all_users('node', 'field_answer_question', $node->nid);
+}
+
+/**
+ * Implements hook_disable().
+ *
+ * Remove our queue items.
+ *
+ * @ingroup hooks
+ */
+function subscriptions_question_disable() {
+  db_delete('subscriptions_queue')
+    ->condition('module', 'node')
+    ->condition('field', 'field_answer_question')
+    ->execute();
+}
+
