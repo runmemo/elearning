@@ -102,23 +102,6 @@ class OpenQuestionCase extends OpenQuestionBaseCase {
     // check if context is correct
     
   }
-  
-  function testIsAnswered() {
-    // login as Student A
-    // ----------------------------
-    
-    // check that open_question_is_answered is FALSE
-    
-    // load open question page
-    
-    // submit answer
-    
-    // check that open_question_is_answered returns value
-    
-    // check that number of created answer nodes for Student A is 1
-    
-    // check that fields are populated correctly on the node
-  }
       
   function testSubmitAnswer() {
         
@@ -342,6 +325,22 @@ class OpenQuestionUnitTest extends DrupalUnitTestCase {
       }
     }
     $this->assertTrue($bundle_exits, 'Open question bundle exists in implementation of hook_credit_info.');
+  }
+  
+  /**
+   * @see open_question_forms()
+   */
+  function testOqFormsHook() {
+    $nid = 504040;
+ 
+    $form_id = 'oq_review_' . $nid;
+    $forms = open_question_forms($form_id, $nid);
+    $this->assertTrue(isset($forms[$form_id]), 'Form with provided id is added to forms array.');
+    $this->assertTrue(function_exists($forms[$form_id]['callback']), 'Form callback function exists.');
+    
+    $form_id = 'oq_wrong_' . $nid;
+    $forms = open_question_forms($form_id, $nid);
+    $this->assertFalse(isset($forms[$form_id]), 'Form with provided id is was not added to forms array.');
   }
     
 }

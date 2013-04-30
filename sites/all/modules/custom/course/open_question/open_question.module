@@ -80,7 +80,7 @@ function open_question_block_view($delta = '') {
       $block['subject'] = '';
      
       if ($answered) {
-        $block['content'] = open_question_answered_content();
+        $block['content'] = open_question_review_list_view();
       } 
       else {
         $block['content']['message'] = array(
@@ -96,10 +96,9 @@ function open_question_block_view($delta = '') {
 }
 
 /*
- * Get content for answered open question.
+ * Gets answers of other students for review.
  */
-
-function open_question_answered_content() {
+function open_question_review_list_view() {
   $block_content = array();
   // show answers of other students for review
   $review_list_view = views_get_view('open_questions_review_list');
@@ -163,7 +162,7 @@ function open_question_is_answered($nid, $uid = NULL) {
  * Form for providing an answer to an open question
  */
 function open_question_answer_form($form, &$form_state, $answered) {
-  //debug($form_state['step']);
+ 
   $form = array();
   $form['#prefix'] = '<div id="oq-answer-form-wrapper">';
   $form['#suffix'] = '</div>';
@@ -225,7 +224,6 @@ function open_question_answer_form($form, &$form_state, $answered) {
     case 'view':
       if (!empty($form_state['answer_value'])) {
         $answer_text = $form_state['answer_value'];
-        debug($answer_text);
       }
       else {
         $answer = node_load($answered);
@@ -310,7 +308,6 @@ function open_question_answer_submit($form, &$form_state) {
       rules_invoke_event('open_question_answered', $user, $oq);
     }
     else { // user changed existing answer
-      debug('Updating existing node' . $form_state['answer_nid']);
       $node = node_load($form_state['answer_nid']);
       $node->body[$node->language][0]['value'] = $form_state['values']['new_answer']['value'];
       node_save($node);
@@ -330,7 +327,7 @@ function open_question_answer_submit($form, &$form_state) {
  * Callback for open question answer submit
  */
 function open_question_answer_submit_js($form, $form_state) {
-  $commands[] = ajax_command_replace('#block-open-question-oq-other-answers-block .content', render(open_question_answered_content()));
+  $commands[] = ajax_command_replace('#block-open-question-oq-other-answers-block .content', render(open_question_review_list_view()));
   $commands[] = ajax_command_replace('#oq-answer-form-wrapper',  render($form));
   // @todo Ilya, why do we need to add css file on submit?
 //  drupal_add_css(drupal_get_path('module', 'inline_comments') . '/css/inline_comments_views.css');
@@ -369,6 +366,9 @@ function open_question_forms($form_id, $nid) {
   return $forms;
 }
 
+/**
+ * Form that is used in review list so users could review answers
+ */
 function oq_review_form($form, &$form_state, $args) {
   global $user;
   $form = array();
