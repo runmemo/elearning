@@ -38,8 +38,16 @@ function opent_question_permission() {
  */
 function open_question_block_view($delta = '') {
   $block = array();
+  if (!in_array($delta, array('oq_answer_form_block','oq_other_answers_block'))) {
+    return $block;
+  }
   $question = menu_get_object('node');
-  
+  if (!$question || $question->type != 'open_question') {
+    watchdog('open question', 
+        'Open question block %delta is displayed on non question page: %path', 
+       array('%path' => current_path(), '%delta' => $delta), WATCHDOG_WARNING);
+    return;
+  }
   $answered = open_question_is_answered($question->nid);
 
   switch ($delta) {
@@ -48,7 +56,12 @@ function open_question_block_view($delta = '') {
 
       if (!node_access('create', 'open_question_answer')) {
         // user does not have rights to see the form
-        $block['content'] = t('You need to register to answer this question.');
+        $block['content'] = array (
+          '#type' => 'markup',
+          '#prefix' => '<p class="oq-review-no-access">',
+          '#suffix' => '</p>',
+          '#markup' => t('You need to register to answer this question.'),
+        );
         return $block;     
       }
       
@@ -72,6 +85,8 @@ function open_question_block_view($delta = '') {
       else {
         $block['content']['message'] = array(
          '#type' => 'markup',
+         '#prefix' => '<p class="oq-review-no-access">',
+         '#suffix' => '</p>',
          '#markup' => t('You need to answer question before you can review answers of other students.'),
         );
       }
@@ -86,10 +101,6 @@ function open_question_block_view($delta = '') {
 
 function open_question_answered_content() {
   $block_content = array();
-  $block_content['message'] = array(
-    '#type' => 'markup',
-    '#markup' => t('Please review and mark answers of other students.'),
-  );
   // show answers of other students for review
   $review_list_view = views_get_view('open_questions_review_list');
   $block_content['review_list'] = array(
@@ -492,8 +503,8 @@ function oq_review_form_edit_js($form, &$form_state) {
 /**
  * Determins wither open question answer was reviewed
  * @global object $user
- * @param integer $nid
- * @param integer $uid
+ * @param integer $nid nid of answer node
+ * @param integer $uid uid of the user
  * @return integer id of the feedback node if exists, otherwise FALSE
  */
 function oqa_is_reviewed($nid, $uid = NULL) {

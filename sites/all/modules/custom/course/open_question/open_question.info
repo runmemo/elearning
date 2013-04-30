@@ -4,6 +4,9 @@ core = 7.x
 package = Course
 version = 7.x-1.0
 project = open_question
+
+files[] = tests/open_question.test
+
 dependencies[] = common_tools
 dependencies[] = context
 dependencies[] = ctools
