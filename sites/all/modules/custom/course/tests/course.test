@@ -1,55 +1,78 @@
 <?php
 
 class CourseTestCase extends DrupalWebTestCase {
+
+  protected $course;
+  protected $course_author;
+  protected $nodes; // items of the course
+  
   function setUp() {
-     $modules = array_merge(array('course'), func_get_args());
-     parent::setUp($modules); 
-    
-     $settings = array(
-       'type' => 'course'
-     );
-     $this->course = $this->drupalCreateNode($settings);
-     $this->course->book['bid'] = $this->course->nid;
-     node_save($this->course);
-     
-     $this->course_author = $this->drupalCreateUser(array('create new books', 'create book content', 'edit own book content', 'add content to books'));
+    $modules = array_merge(array('course'), func_get_args());
+    parent::setUp($modules);
+
+    $this->course_author = $this->drupalCreateUser(array(
+      'create new books',
+      'create book content',
+      'edit own book content',
+      'add content to books'));
+   
+    $this->course = $this->createCourseNode($this->course_author->uid);   
     
   }
-  
+
   function book_append_child($node, $parent) {
-     $node->book['bid']= $parent->book['nid'];
-     $node->book['plid'] = $parent->book['mlid'];
-     node_save($node);
+    $node->book['bid'] = $parent->book['bid'];
+    $node->book['plid'] = $parent->book['mlid'];
+    node_save($node);
   }
   
-   function createCourse($node_types) {
-    $this->drupalLogin($this->course_author);
-    $book = $this->course;
-    
+  /**
+   * creates course node
+   */
+  function createCourseNode($uid) {
+    $settings = array(
+      'type' => 'course',
+      'uid' => $uid,
+    );
+    $course =  $this->drupalCreateNode($settings);
+    $course->book['bid'] = $course->nid;
+    node_save($course);
+    return $course;
+  }
+  
+  /**
+   * Appends items to the course
+   * @param array $node_types
+   * @return array of nodes
+   */
+  function populateCourse($course, $node_types) {
+    $nodes = array();
     $unit_settings = array(
       'type' => 'unit',
+       'uid' => $this->course_author->uid,
     );
-    
-    $i= 0;
+
+    $i = 0;
     foreach ($node_types as $unit_key => $unit) {
       $nodes[$i] = $this->drupalCreateNode($unit_settings);
-      $this->book_append_child($nodes[$i], $book);
+      $this->book_append_child($nodes[$i], $course);
       $u = $i; // unit key in the array
       $i++;
-      
+
       foreach ($unit as $key => $item) {
         $item_settings = array(
           'type' => $item,
-        ); 
+          'uid' => $this->course_author->uid,
+        );
         $nodes[$i] = $this->drupalCreateNode($item_settings);
         $this->book_append_child($nodes[$i], $nodes[$u]);
-        $i ++;
+        $i++;
       }
     }
-  
     $this->drupalLogout();
-    return $nodes;   
+    return $nodes;
   }
+
 }
 
 /**
@@ -59,75 +82,87 @@ class CourseTestCase extends DrupalWebTestCase {
  */
 class CourseNavigationTestCase extends CourseTestCase {
 
-  protected $course;
-  protected $course_author;
   protected $student;
-  
+
   public static function getInfo() {
     return array(
       'name' => 'Course Navigation Test Case',
       'description' => 'Tests that course navigation works correctly.',
       'group' => 'Course',
     );
-  }  
-  
-  function createTestCourse() {
-   // Creating a course with the following structure:
-   $course = array(
-     'unit' => array (
-       'lesson',
-       'lesson',
-     ),
-     'unit' => array (
-       'lesson',
-       'lesson',
-     ),
-   );
-   return $this->createCourse($course);
   }
-  
-  /** 
+
+  function setUp() {
+    parent::setUp('lesson', 'registration');
+
+    $this->student = $this->drupalCreateUser(array('access content'));
+    $this->nodes = $this->populateTestCourse($this->course);
+    
+  }
+
+  function populateTestCourse($course = NULL) {
+    if (!isset($course)) {
+      $course = $this->course;
+    }
+    // Creating a course with the following structure:
+    $outline = array(
+      'unit1' => array(// 0 
+        'lesson1' => 'lesson', // 1
+        'lesson2' => 'lesson', // 2
+      ),
+      'unit2' => array(// 3
+        'lesson3' => 'lesson', // 4
+        'lesson4' => 'lesson', // 5
+      ),
+    );
+    return $this->populateCourse($course, $outline);
+  }
+
+  /**
    * Checks that user is redirected to the first child node from unit page
    */
   function testUnitRedirect() {
-    $nodes = $this->createTestCourse();
+    $nodes = $this->populateTestCourse();
     $this->drupalGet('node/' . $nodes[0]->nid); // open Unit 1
-    $this->assertRaw('node-type-lesson', 'User is redirected to a lesson of the unit.');  
+    $this->assertRaw('node-type-lesson', 'User is redirected to a lesson of the unit.');
   }
- 
-  function testCourseProgress()  {
+
+  function testCourseProgress() {
     // login as student
-    
     // check that progress is 0
-    
     // complete 1st lesson
-    
     // check that progress is correct
-    
     // complete 2nd lesson
-    
     // check that progress is correct
-    
     // complete all lessons 
-    
     // check that progress is 100
-    
   }
-  
+
   function testCourseLastVisitedItem() {
-    // login as student 
-    
-   // go to item X of the course
-    
+    $course2 = $this->createCourseNode($this->course_author->uid);
+    $nodes2 = $this->populateTestCourse($course2);
+    course_register($this->student->uid, $this->course->nid);
+    course_register($this->student->uid, $course2->nid);
+// login as student 
+    $this->drupalLogin($this->student);
+
+    // go to item X of the course
+    $this->drupalGet('node/' . $this->nodes[1]->nid);
     // go to some other page outside of the course
-    
+    $last_nid = course_last_visited_node($this->course->nid, $this->student->uid);
+    $this->assertEqual($last_nid, $this->nodes[1]->nid);
+
+
+    sleep(1);
+    $this->drupalGet('node/' . $nodes2[1]->nid);
+    $this->drupalGet('node/' . $this->nodes[5]->nid);
     // go to user's page
-    
-    // click on continue button in the list of courses
-    
-    // check that user is redirected to item X of the course
-    
+    $this->drupalGet('user/' . $this->student->uid);
+    // assert last visited node
+    $last_nid = course_last_visited_node($this->course->nid, $this->student->uid);
+    $this->assertEqual($last_nid, $this->nodes[5]->nid);
+    $last_nid = course_last_visited_node($course2->nid, $this->student->uid);
+    $this->assertEqual($last_nid, $nodes2[1]->nid);
   }
-  
-  
+
 }
