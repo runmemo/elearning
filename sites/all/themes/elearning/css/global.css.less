@@ -756,9 +756,8 @@ input.form-text {
     .cell();
     .right();
     margin-top: 14px;
-      img {
-        .right();
-      }
+    background: url(../images/social-stuff.png) 0 0 no-repeat;
+    height: 71px;
   }
 }
 
@@ -1642,7 +1641,7 @@ body.page-home {
 }
 /****** Node type "Question" End ******/
 
-/* Views "Question Answers (Extra)", "Open Questions Review List" and "Open Question Answer Feedbacks" START*/
+/* Views on Open Question page START*/
 .node-supplementary,
 .view-question-answers .views-field-created,
 .view-question-answers .views-field-name,
@@ -1782,7 +1781,7 @@ body.page-home {
 
 .views-field-feedback-form {
   margin-top: 25px;
-  label, .form-item-review {
+  label, .form-item-review, .ajax-progress-throbber {
     .show(none);
   }
   .fivestar-user-stars, .fivestar-default {
@@ -1830,18 +1829,21 @@ body.page-home {
 }
 
 .views-field-feedback-form .oq-review-form-edit-button.form-submit {
-  background-image: url(../images/edit-link.png);
-  background-repeat:no-repeat;
+  background: url(../images/feedback-edit-link.png) 0 0 no-repeat;
   padding: 0;
-  margin-top: 2px;
-  margin-left: 3px;
+  margin-top: 5px;
+  margin-left: 8px;
   border: none;
   height: 16px;
-  width:16px;
+  width: 16px;
+}
+
+.views-field-feedback-form .oq-review-form-edit-button.form-submit.progress-disabled {
+  background: url(../images/progress_orange.gif) 0 0 no-repeat;
 }
 
 .views-field-feedback-form .oq-review-form-edit-button.form-submit:hover {
-  background-image: url(../images/edit-hover.png);
+  background: url(../images/feedback-edit-link.png) 0 0 no-repeat;
 }
 
 
@@ -1855,105 +1857,98 @@ body.page-home {
 }
 
 
-
-.view-question-answers, .view-answer-feedbacks {
-  .views-row {
-    .views-answer-widgets, .views-answer-feedback-widgets {
-      .left();
+.view-question-answers, .view-answer-feedbacks, .view-feedback-comments {
+  .views-field-comment-count {
+    .show(inline);
+  }
+  .views-inline-comment-field, .views-inline-comment-field-alias {
+    .right();
+    padding: 8px 0px 8px 31px;
+    margin-top: -16px;
+    background-image: url('../images/ask-question.png');
+    background-position: 8px center;
+    background-repeat: no-repeat;
+    border-left: 1px dotted #aeaeae;
+    a.views-inline-comment-link-alias, a.comment-link {
+      .text-orange();
+      .link();
+      .bold(12px);
+      border-bottom: 1px dotted #ce4619;
+      padding-right: 0;
     }
-    .views-field-comment-count {
-      .show(inline);
-    }
-    .views-inline-comment-field, .views-inline-comment-field-alias {
-      .right();
-      padding: 8px 0px 8px 31px;
-      margin-top: -16px;
-      background-image: url('../images/ask-question.png');
-      background-position: 8px center;
-      background-repeat: no-repeat;
-      border-left: 1px dotted #aeaeae;
-      a.views-inline-comment-link-alias, a.comment-link {
-        .text-orange();
-        .link();
-        .bold(12px);
-        border-bottom: 1px dotted #ce4619;
-        padding-right: 0;
-      }
-    }
-    .views-inline-comment-field-alias {
+  }
+  .views-inline-comment-field-alias {
+    .show(none);
+    cursor: pointer;
+  }
+  .hidden {
+    visibility: hidden;
+  }
+  .formcloselink, .closelink, .comment-click {
+    .show(none);
+  }
+  .comment-form {
+    label, .form-type-item a, #edit-preview, .form-item-subject, .ckeditor_links {
       .show(none);
-      cursor: pointer;
     }
-    .hidden {
-      visibility: hidden;
+    #edit-comment-body {
+      float: none;
     }
-    .formcloselink, .closelink, .comment-click {
-      .show(none);
-    }
-    .comment-form {
-      label, .form-type-item a, #edit-preview, .form-item-subject, .ckeditor_links {
-        .show(none);
-      }
-      #edit-comment-body {
-        float: none;
-      }
-      .text-format-wrapper {
-        clear: both;
-      }
-      .form-actions {
-        .show(inline-block);
-        margin: 0;
-        padding-right:0;
-        width: 100%;
-      }
-      #edit-submit {
-        .edit-submit();
-        margin: 0;
-        height:30px;
-        .gradient-light-orange();
-      }
-    }
-    .views-field-custom-inline-comments {
-      .right();
+    .text-format-wrapper {
       clear: both;
     }
-    .comment-group, .comment-form {
-      .right();
-    }
-    .comment-form {
-      margin-bottom: 10px;
-    }
-    .comment-group {
-      .show(block) !important;
-      clear: both;
-    }
-    .spinner {
-      .show(none);
-    }
-    .comment {
-      width: auto;
+    .form-actions {
+      .show(inline-block);
       margin: 0;
-      background: transparent;
-      box-shadow: none;
-      padding: 16px 10px 16px 0px;
-      border-top: 1px dotted #aeaeae;
-      font-family: Arial;
-      .submitted span {
-        font-size: 12px;
-        color: #838383;
-        a:link, a:visited {
-          .link();
-          color: #de4900;
-          font-weight: bold;
-        }
+      padding-right:0;
+      width: 100%;
+    }
+    #edit-submit {
+      .edit-submit();
+      margin: 0;
+      height: 30px;
+      .gradient-light-orange();
+    }
+  }
+  .comment-group, .comment-form {
+    .right();
+  }
+  .comment-form {
+    margin-bottom: 10px;
+  }
+  .comment-group {
+    .show(block) !important;
+    clear: both;
+  }
+  .spinner {
+    .show(none);
+  }
+  .comment {
+    width: auto;
+    margin: 0;
+    background: transparent;
+    box-shadow: none;
+    padding: 16px 0px;
+    border-top: 1px dotted #aeaeae;
+    font-family: Arial;
+    .submitted span {
+      font-size: 13px;
+      color: #838383;
+      a:link, a:visited {
+        .link();
+        color: #de4900;
+        font-weight: bold;
       }
-      .content {
-        margin-top: 10px;
-        font-size: 14px;
-        .text-dark-grey();
-        p {
-          margin-bottom: 5px;
-        }
+    }
+    .submitted em {
+      font-style: normal;
+    }
+    .content {
+      margin-top: 10px;
+      font-size: 14px;
+      .text-dark-grey();
+      p {
+        margin-bottom: 5px;
       }
     }
   }
@@ -1963,7 +1958,36 @@ body.page-home {
   }
 }
 
-/* Views "Question Answers (Extra)" and "Open Question Answer Feedbacks" END */
+.view-feedback-comments {
+  .feedback-body, .views-field-comment-count {
+    .left();
+    @media @narrow {
+      width: 440px;
+    }
+    @media @normal {
+     width: 620px;
+    }
+    @media @wide {
+      width: 800px;
+    }
+  }
+  .comment-group, .comment-form {
+    width: 95%;
+  }
+  .comment-group .comment,
+  .comment-form #comment-form {
+    width: 100%;
+  }
+}
+
+
+.view-question-answers, .view-answer-feedbacks {
+  .views-answer-widgets, .views-answer-feedback-widgets {
+    .left();
+  }
+}
+
+/* Views on Open Question page END */
 
 /****** Node type "Open Question" Start ******/
 .node-open-question-picture {

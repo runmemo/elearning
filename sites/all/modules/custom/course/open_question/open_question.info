@@ -95,4 +95,5 @@ features[variable][] = node_submitted_open_question
 features[variable][] = node_submitted_open_question_answer
 features[variable][] = node_submitted_open_question_feedback
 features[views_view][] = oqa_feedbacks
+features[views_view][] = oqa_feedback_comments
 features[views_view][] = open_questions_review_list

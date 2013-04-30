@@ -4,19 +4,14 @@
  * Template for course nodes.
  *
  * Available variables:
- * - $provider_logo: Provider's logo image
- * - $provider_name: Name of the course provider
- * - $provider_extra: Additional information about provider
- * - $tmp_social_img: temporary image, representing social iframes
- * - $teacher_name: Field "Name" of the user, who is the course teacher
- * - $teacher_surname: Field "Surame" of the user, who is the course teacher
- * - $teacher_avatar: HTML, representing teacher's picture
+ * - $provider: Array with Provider's logo image, name and extra fields.
+ * - $teacher: Array representing fields "Name", "Surame" and user picture
+ *             of the user, who is the course teacher
  * - $form_class_participate: form for participating in the course
  * - $students_view: embedded view with students, which are already participats
  * - $content: node content
  * 
  * All variables available in node.tpl.php
- * @todo Ilya provide documentation for variables introduced in template.php
  */
 ?>
 <article<?php print $attributes; ?>>
@@ -36,7 +31,7 @@
           <?php endif; ?>
         </div>
       </div>
-      <div class="social-share grid-3 omega"><img src="<?php print $tmp_social_img; ?>"></div>
+      <div class="social-share grid-4 omega"></div>
     </div>
     <div class="node-course-basic-info">
       <div class="node-course-teacher-parameters">
