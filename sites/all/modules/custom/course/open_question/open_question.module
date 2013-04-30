@@ -321,7 +321,8 @@ function open_question_answer_submit($form, &$form_state) {
 function open_question_answer_submit_js($form, $form_state) {
   $commands[] = ajax_command_replace('#block-open-question-oq-other-answers-block .content', render(open_question_answered_content()));
   $commands[] = ajax_command_replace('#oq-answer-form-wrapper',  render($form));
-  drupal_add_css(drupal_get_path('module', 'inline_comments') . '/css/inline_comments_views.css');
+  // @todo Ilya, why do we need to add css file on submit?
+//  drupal_add_css(drupal_get_path('module', 'inline_comments') . '/css/inline_comments_views.css');
   return array('#type' => 'ajax', '#commands' => $commands);
 }
 
@@ -376,11 +377,11 @@ function oq_review_form($form, &$form_state, $args) {
     if ($feedback_nid) {
       $form_state['feedback_nid'] = $feedback_nid;
       $form_state['step'] = 'view';
-    } 
+    }
     else {
       $form_state['step'] = 'edit';
     }
-  } 
+  }
   else {
     $feedback_nid = $form_state['feedback_nid'];
   }
@@ -399,10 +400,14 @@ function oq_review_form($form, &$form_state, $args) {
       if ($review_body_item['#access']) {
         $review_body = $review_body_item['#markup'];
       }
-    } 
+    }
     else { // we know values from the submitted form already
       $rating = $form_state['storage']['rating'];
       $review_body = $form_state['storage']['body'];
+    }
+  if (!empty($review_body)) {
+      $view_obj = views_get_view('oqa_feedback_comments');
+      $view = $view_obj->preview('block', array($feedback_nid));
     }
   }
   
@@ -428,7 +433,7 @@ function oq_review_form($form, &$form_state, $args) {
       $form['review'] = array(
         '#type' => 'item',
         '#title' => t('Review'),
-        '#markup' => $review_body,
+        '#markup' => isset($view) ? $view : $review_body,
       );
 
       break;
@@ -544,44 +549,52 @@ function oq_review_form_js($form, &$form_state) {
 function oq_review_form_submit($form, &$form_state) {
   // validate the form
   drupal_validate_form('oq_review_form', $form, $form_state);
- // if there are errors, return the form to display the error messages
+  // if there are errors, return the form to display the error messages
   if (form_get_errors()) {
     $form_state['rebuild'] = TRUE;
     return $form;
   }
- 
+
   global $user;
   $oq_nid = $form_state['build_info']['args'][0];
+  if (isset($form_state['feedback_nid']) && is_numeric($form_state['feedback_nid'])) {
+    $node = node_load($form_state['feedback_nid']);
+    if ($node) {
+      $lang = $node->language;
+      $node->body[$lang][0]['value'] = $form_state['values']['review'];
+      $node->field_rating[$lang][0]['rating'] = $form_state['values']['rating'];
+      node_save($node);
+    }
+  } else {
+    $node = new stdClass();
+    $node->type = 'open_question_feedback';
+    node_object_prepare($node);
+    $node->title = 'OQ feedback nid#' . $oq_nid . '# uid#' . $user->uid;
+    $node->language = LANGUAGE_NONE;
+    $node->body[$node->language][0]['value'] = $form_state['values']['review'];
 
-  $node = new stdClass();
-  $node->type = 'open_question_feedback';
-  node_object_prepare($node);
-  $node->title = 'OQ feedback nid#' . $oq_nid . '# uid#' . $user->uid;
-  $node->language = LANGUAGE_NONE;
-  $node->body[$node->language][0]['value'] = $form_state['values']['review'];
-  
-  // @todo if we are to use filtered html then we need to user format field 
-  // in the form that will handle html (CKEditor basically).
-  // $node->body[$node->language][0]['format'] = 'filtered_html';
-  
-  $node->field_open_question_answer[$node->language][0]['target_id'] = $oq_nid;
-  $node->field_rating[$node->language][0]['rating'] = $form_state['values']['rating'];
-  node_save($node);
-  $form_state['feedback_nid'] = $node->nid;
+    // @todo if we are to use filtered html then we need to user format field 
+    // in the form that will handle html (CKEditor basically).
+    // $node->body[$node->language][0]['format'] = 'filtered_html';
+
+    $node->field_open_question_answer[$node->language][0]['target_id'] = $oq_nid;
+    $node->field_rating[$node->language][0]['rating'] = $form_state['values']['rating'];
+    node_save($node);
+    $form_state['feedback_nid'] = $node->nid;
+  }
   $form_state['step'] = 'view';
   // store values provided by user in the form
   $form_state['storage']['body'] = $form_state['values']['review'];
-  $form_state['storage']['rating'] =  $form_state['values']['rating'];
+  $form_state['storage']['rating'] = $form_state['values']['rating'];
   // rebuild from after submit
   $form_state['rebuild'] = TRUE;
-  
 }
 
 /**
  * Implementation of hook_node_view().
  */
 function open_question_node_view($node, $view_mode, $langcode) {
-  if ($node->type == 'open_question' || $node->type == 'question') {
+  if ($node->type == 'open_question') {
     drupal_add_js(drupal_get_path('module', 'open_question') . '/open_question.js');
   }
 }
@@ -631,35 +644,6 @@ function open_question_field_formatter_view($entity_type, $entity, $field, $inst
 }
 
 /**
- * Implements hook_theme_registry_alter().
- */
-function open_question_theme_registry_alter(&$theme_registry) {
-  $theme_registry['comment']['template'] = 'comment';
-  // @todo ilya please don't do references from module to the theme
-  // it will be better to move this code and template to inline_comments_extra
-  $theme_registry['comment']['path'] = drupal_get_path('theme', 'elearning') . '/templates';
-  $theme_registry['comment']['type'] = 'theme';
-  $theme_registry['comment']['theme path'] = drupal_get_path('theme', 'elearning') . '/templates';
-  $theme_registry['comment']['theme paths'] = array();
-}
-
-/**
- * Adds custom markup to comments form for inline comments
- * @todo Ilya move to inline_comments_extra module
- */
-function open_question_form_comment_form_alter(&$form, &$form_state, $form_id) {
-  $node = $form_state['build_info']['args'][0];
-  $form['actions']['cancel_link'] = array(
-    '#prefix' => '<div class="views-inline-comment-cancel">',
-    '#sufix' => '</div>',
-    '#type' => 'markup',
-    '#markup' => '<a id="comment-form-hide-' . $node->nid . '" class="comment-cancel">' . t('Cancel') . '</a>',
-    '#weight' => 18,
-    // class="views-inline-comment-link-alias"
-   );
-}
-
-/**
  * Implements hook_credit_result_info from credit module
  */
 function open_question_credit_info() {
@@ -695,9 +679,11 @@ function open_question_result($node, $account) {
     $answer_nid = $answers_nids[0];
     $stats =  open_question_get_feedback_stats($answer_nid); 
     if ($stats['count'] > 0) { // @todo give admin an option to chose number of feedbacks
-      $result =  $stats['average']/5.0;
+      $result =  $stats['average'] / 5.0;
       return $result;
     }
   } 
+  // user did not answer that open question yet 
+  // or nobody provided user with feedback 
   return .0;
 }

@@ -1,0 +1,65 @@
+<?php
+
+/**
+ * Implements hook_views_api().
+ */
+function inline_comments_extra_views_api() {
+  return array(
+    'api' => '3.0',
+    'path' => drupal_get_path('module', 'inline_comments_extra') . '/views',);
+}
+
+/**
+ * Implementation of hook_node_view().
+ */
+function inline_comments_extra_node_view($node, $view_mode, $langcode) {
+  if ($node->type == 'open_question' || $node->type == 'question') {
+    drupal_add_js(drupal_get_path('module', 'inline_comments_extra') . '/inline_comments_extra.js');
+  }
+}
+
+/**
+ * Implements hook_theme_registry_alter().
+ */
+function inline_comments_extra_theme_registry_alter(&$theme_registry) {
+  $theme_registry['comment']['template'] = 'comment';
+  $theme_registry['comment']['path'] = drupal_get_path('module', 'inline_comments_extra');
+  $theme_registry['comment']['type'] = 'theme';
+  $theme_registry['comment']['theme path'] = drupal_get_path('module', 'inline_comments_extra');
+  $theme_registry['comment']['theme paths'] = array();
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ * Adds custom markup to comments form for inline comments
+ */
+function inline_comments_extra_form_comment_form_alter(&$form, &$form_state, $form_id) {
+  $node = $form_state['build_info']['args'][0];
+  $form['actions']['cancel_link'] = array(
+    '#prefix' => '<div class="views-inline-comment-cancel">',
+    '#sufix' => '</div>',
+    '#type' => 'markup',
+    '#markup' => '<a id="comment-form-hide-' . $node->nid . '" class="comment-cancel">' . t('Cancel') . '</a>',
+    '#weight' => 18,
+    // class="views-inline-comment-link-alias"
+  );
+}
+
+/**
+ * Implements hook_query_TAG_alter().
+ * @param QueryAlterableInterface $query
+ */
+function inline_comments_extra_query_comment_filter_alter(QueryAlterableInterface $query) {
+  if (($node = $query->getMetaData('node')) && (get_class($query) == 'PagerDefault')) {
+    $orderby = &$query->getOrderBy();
+    $expressions = &$query->getExpressions();
+    if (isset($orderby['torder'])) {
+      unset($expressions['torder']);
+      unset($orderby['torder']);
+      $orderby['c.thread'] = 'DESC';
+    } else {
+      unset($orderby['c.thread']);
+      $orderby['c.cid'] = 'ASC';
+    }
+  }
+}

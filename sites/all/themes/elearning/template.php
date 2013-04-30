@@ -70,10 +70,9 @@ function elearning_preprocess_user_profile(&$variables) {
   $variables['field_birthday'] = render($field_birthday);
   $variables['field_phone'] = render($field_phone);
   $variables['userpoints_count'] = userpoints_get_current_points($account->uid, 'all');
-  if ($access) {
-    $view = views_get_view('user_courses');
-    $variables['user_courses_view'] = $view->preview('block', array($account->uid));
-  }
+  $view = views_get_view('user_courses');
+  $variables['user_courses_view'] = $view->preview('block', array($account->uid));
+  
 }
 
 /**
@@ -88,10 +87,3 @@ function elearning_preprocess_book_navigation(&$vars) {
   } 
 }
 
-/**
- * Process variables for comment.tpl.php.
- * @todo ilya move to preprocess file
- */
-function elearning_preprocess_comment(&$vars) {
-  $vars['submitted'] = t('!username - !time ago', array('!username' => $vars['author'], '!time' => format_interval(REQUEST_TIME - $vars['comment']->created, 1)));
-}

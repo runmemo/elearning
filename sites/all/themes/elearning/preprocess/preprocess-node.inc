@@ -21,11 +21,6 @@ function elearning_alpha_preprocess_node(&$variables) {
  * @param array $vars
  */
 function elearning_alpha_preprocess_node_course(&$vars) {
-  global $base_url;
- 
-  // tmp image for social icons
-  // @todo ilya move that to css:
-  $vars['tmp_social_img'] = $base_url . '/sites/all/themes/elearning/images/social-stuff.png';
   $vars['form_class_participate'] = drupal_get_form('course_registration_form');
   // load students view
   $view = views_get_view('course_students'); 

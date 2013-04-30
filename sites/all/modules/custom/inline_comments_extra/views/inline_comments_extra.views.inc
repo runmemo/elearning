@@ -10,13 +10,13 @@
  *
  * @return array
  */
-function open_question_views_handlers() {
+function inline_comments_extra_views_handlers() {
   return array(
     'info' => array(
-      'path' => drupal_get_path('module', 'open_question') . '/views',
+      'path' => drupal_get_path('module', 'inline_comments_extra') . '/views',
     ),
     'handlers' => array(
-      'open_question_handler_field_inline_comments' => array(
+      'inline_comments_extra_handler_field_inline_comments' => array(
         'parent' => 'views_handler_field',
       ),
     ),
@@ -29,12 +29,12 @@ function open_question_views_handlers() {
  *
  * @return array
  */
-function open_question_views_data_alter(&$data) {
+function inline_comments_extra_views_data_alter(&$data) {
   $data['node_comment_statistics']['comment_count'] = array(
     'title' => t('Custom Inline Comments'),
     'help' => t('Custom field for displaying ajax comments'),
     'field' => array(
-      'handler' => 'open_question_handler_field_inline_comments',
+      'handler' => 'inline_comments_extra_handler_field_inline_comments',
        'notafield' => TRUE,
     ),
   );

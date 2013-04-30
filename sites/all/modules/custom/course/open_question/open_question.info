@@ -16,12 +16,8 @@ dependencies[] = quicktabs
 dependencies[] = strongarm
 dependencies[] = text
 dependencies[] = views
-dependencies[] = inline_comments
 dependencies[] = vud_field
 dependencies[] = views_php
-
-files[] = views/open_question.views.inc
-files[] = views/open_question_handler_field_inline_comments.inc
 
 features[context][] = open_question
 features[ctools][] = context:context:3
@@ -96,3 +92,5 @@ features[variable][] = node_submitted_open_question
 features[variable][] = node_submitted_open_question_answer
 features[variable][] = node_submitted_open_question_feedback
 features[views_view][] = oqa_feedbacks
+features[views_view][] = oqa_feedback_comments
+features[views_view][] = open_questions_review_list
