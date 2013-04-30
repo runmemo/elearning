@@ -1726,9 +1726,6 @@ body.page-home {
       .grid-wide-10();
     }
   }
-  .views-inline-comment-field-alias {
-    bottom: 2px;
-  }
 }
 .views-inline-comment-cancel {
   .cancel-action();
@@ -1764,9 +1761,6 @@ body.page-home {
   .views-answer-feedback-widgets {
     margin-right: 20px;
   }
-  .views-inline-comment-field-alias {
-    bottom: 4px;
-  }
 }
 
 .view-answers-review {
@@ -1796,12 +1790,20 @@ body.page-home {
     background: url('../images/ask-question.png') 0% 50% no-repeat;
     cursor: pointer;
   }
-  .form-submit {
+  .oq-review-form-submit-button {
     .edit-submit();
+    padding: 13px 16px;
     .gradient-light-orange();
     margin-bottom: 10px;
   }
-  .disabled {
+  .oq-review-form-submit-wo-text {
+    .bold(13px);
+    color: #d0471b;
+    background: none;
+    border: 0;
+    padding: 23px 26px 0px 0px;
+  }
+  .oq-review-form-submit-button.disabled {
     color: #ababab;
     .gradient-disabled();
   }
@@ -1824,28 +1826,25 @@ body.page-home {
   }
 }
 
-.oq-review-form-submit-button {
+.oq-review-form-submit-button, .oq-review-form-submit-wo-text {
   .show(none);
 }
 
 .views-field-feedback-form .oq-review-form-edit-button.form-submit {
-  background: url(../images/feedback-edit-link.png) 0 0 no-repeat;
+  background: url(../images/answer-edit.png) 0 0 no-repeat;
   padding: 0;
-  margin-top: 5px;
-  margin-left: 8px;
+  margin-top: 60px;
+  margin-right: 8px;
   border: none;
-  height: 16px;
-  width: 16px;
+  height: 15px;
+  width: 15px;
+  position: absolute;
+  right: 0;
 }
 
 .views-field-feedback-form .oq-review-form-edit-button.form-submit.progress-disabled {
   background: url(../images/progress_orange.gif) 0 0 no-repeat;
 }
-
-.views-field-feedback-form .oq-review-form-edit-button.form-submit:hover {
-  background: url(../images/feedback-edit-link.png) 0 0 no-repeat;
-}
-
 
 .view-question-answers, .view-answer-feedbacks, .view-answers-review {
   .views-answer-body, .views-answer-feedback-body, .views-other-answer-body {
@@ -1860,26 +1859,6 @@ body.page-home {
 .view-question-answers, .view-answer-feedbacks, .view-feedback-comments {
   .views-field-comment-count {
     .show(inline);
-  }
-  .views-inline-comment-field, .views-inline-comment-field-alias {
-    .right();
-    padding: 8px 0px 8px 31px;
-    margin-top: -16px;
-    background-image: url('../images/ask-question.png');
-    background-position: 8px center;
-    background-repeat: no-repeat;
-    border-left: 1px dotted #aeaeae;
-    a.views-inline-comment-link-alias, a.comment-link {
-      .text-orange();
-      .link();
-      .bold(12px);
-      border-bottom: 1px dotted #ce4619;
-      padding-right: 0;
-    }
-  }
-  .views-inline-comment-field-alias {
-    .show(none);
-    cursor: pointer;
   }
   .hidden {
     visibility: hidden;
@@ -1959,16 +1938,33 @@ body.page-home {
 }
 
 .view-feedback-comments {
+  .views-row {
+    padding: 0 !important;
+  }
   .feedback-body, .views-field-comment-count {
     .left();
     @media @narrow {
-      width: 440px;
+      width: 452px;
     }
     @media @normal {
-     width: 620px;
+     width: 632px;
     }
     @media @wide {
-      width: 800px;
+      width: 812px;
+    }
+  }
+  .views-inline-comment-field {
+    .right();
+    margin-top: -25px;
+    width: 100%;
+    a.comment-link {
+      color: transparent;
+      .bold(12px);
+      background: url('../images/ask-question.png') center center no-repeat;
+      padding: 0px 8px 8px 0px;
+      width: 17px;
+      height: 17px;
+      .right();
     }
   }
   .comment-group, .comment-form {
@@ -1984,6 +1980,22 @@ body.page-home {
 .view-question-answers, .view-answer-feedbacks {
   .views-answer-widgets, .views-answer-feedback-widgets {
     .left();
+  }
+  .views-inline-comment-field {
+    .right();
+    padding: 8px 0px 8px 31px;
+    margin-top: -16px;
+    background-image: url('../images/ask-question.png');
+    background-position: 8px center;
+    background-repeat: no-repeat;
+    border-left: 1px dotted #aeaeae;
+    a.comment-link {
+      .text-orange();
+      .link();
+      .bold(12px);
+      border-bottom: 1px dotted #ce4619;
+      padding-right: 0;
+    }
   }
 }
 

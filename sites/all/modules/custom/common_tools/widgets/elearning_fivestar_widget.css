@@ -26,8 +26,6 @@ form.fivestar-widget input {
 /* Static View-only Star Version */
 div.fivestar-widget-static {
   display: block;
-  border-right: 1px solid #c5c5c5;
-  padding-right: 1px;
 }
 
 div.fivestar-widget-static br {
@@ -61,8 +59,6 @@ div.fivestar-widget-static .star span.off {
 /* Javascript Star Version */
 div.fivestar-widget {
   display: block;
-  border-right: 1px solid #c5c5c5;
-  padding-right: 1px;
 }
 
 div.fivestar-widget .cancel, div.fivestar-widget .star {

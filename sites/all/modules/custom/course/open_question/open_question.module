@@ -376,12 +376,7 @@ function oq_review_form($form, &$form_state, $args) {
   
   $form['#prefix'] = "<div id=oq-review-wrapper-{$nid}>";
   $form['#suffix'] = '</div>';
-  $form['#attached'] = array(
-    'css' => array(
-      'type' => 'file',
-      'data' => drupal_get_path('module', 'common_tools') . '/widgets/elearning_fivestar_widget.css'
-    ),
-  );
+  $form['#attached']['css'][] = drupal_get_path('module', 'common_tools') . '/widgets/elearning_fivestar_widget.css';
   $feedback_nid = FALSE;
   if (empty($form_state['step'])) {  // page is loaded
     $feedback_nid = oqa_is_reviewed($nid, $user->uid);
@@ -421,19 +416,9 @@ function oq_review_form($form, &$form_state, $args) {
       $view = $view_obj->preview('block', array($feedback_nid));
     }
   }
-  
+
   switch ($step) {
     case 'view':
-       $form['edit_button'] = array(
-        '#type' => 'submit',
-        '#value' => '',
-        '#submit' => array('oq_review_form_edit_submit'),
-        '#ajax' => array(
-          'callback' => 'oq_review_form_edit_js',
-          'wrapper' => "oq-review-wrapper-{$nid}",
-        ),
-      );
-      $form['edit_button']['#attributes']['class'][] = 'oq-review-form-edit-button';
       if ($rating) {
         $form['rating'] = array(
         '#type' => 'item',
@@ -441,17 +426,25 @@ function oq_review_form($form, &$form_state, $args) {
         '#markup' => theme('fivestar_static', array('rating' => $rating)),
        );
       }
+      $form['edit_button'] = array(
+        '#type' => 'submit',
+        '#value' => '',
+        '#submit' => array('oq_review_form_edit_submit'),
+        '#ajax' => array(
+          'callback' => 'oq_review_form_edit_js',
+          'wrapper' => "oq-review-wrapper-{$nid}",
+        ),
+        '#prefix' => '<div>',
+      );
+      $form['edit_button']['#attributes']['class'][] = 'oq-review-form-edit-button';
       $form['review'] = array(
         '#type' => 'item',
         '#title' => t('Review'),
         '#markup' => isset($view) ? $view : $review_body,
+        '#suffix' => '</div>',
       );
-
       break;
     case 'edit':
-      $form['review_link'] = array(
-        '#markup' => '<a class="oq-review-link"></a>',
-      );
       $form['rating'] = array(
         '#type' => 'fivestar',
         '#title' => t('Rating'),
@@ -467,10 +460,9 @@ function oq_review_form($form, &$form_state, $args) {
         '#type' => 'textarea',
         '#title' => t('Review'),
         '#required' => FALSE,
-        '#format' => 'full_html',
         '#default_value' => isset($review_body) ? $review_body : '',
       );
-
+      
       $form['submit_button'] = array(
         '#type' => 'submit',
         '#value' => t('Add review'),
@@ -480,6 +472,16 @@ function oq_review_form($form, &$form_state, $args) {
         ),
       );
       $form['submit_button']['#attributes']['class'][] = 'oq-review-form-submit-button';
+      
+      $form['submit_wo_text'] = array(
+        '#type' => 'submit',
+        '#value' => t("Don't add"),
+        '#ajax' => array(
+          'callback' => 'oq_review_form_wo_text_js',
+          'wrapper' => "oq-review-wrapper-{$nid}",
+        ),
+      );
+      $form['submit_wo_text']['#attributes']['class'][] = 'oq-review-form-submit-wo-text';
       break;
     default: // this should not happen ever
       watchdog('open question', 'Step %step is not defined for open question feedback form.', 
@@ -497,11 +499,19 @@ function oq_review_form_edit_submit($form, &$form_state) {
     $form_state['step'] = 'edit';
     $form_state['rebuild'] = TRUE;
 }
+
 /**
  * Ajax callback for the edit button of the review form
  */
 function oq_review_form_edit_js($form, &$form_state) {
-    return $form;
+  return $form;
+}
+
+/**
+ * Ajax callback for the edit button of the review form
+ */
+function oq_review_form_wo_text_js($form, &$form_state) {
+  return $form;
 }
 
 /**
@@ -584,10 +594,6 @@ function oq_review_form_submit($form, &$form_state) {
     $node->language = LANGUAGE_NONE;
     $node->body[$node->language][0]['value'] = $form_state['values']['review'];
 
-    // @todo if we are to use filtered html then we need to user format field 
-    // in the form that will handle html (CKEditor basically).
-    // $node->body[$node->language][0]['format'] = 'filtered_html';
-
     $node->field_open_question_answer[$node->language][0]['target_id'] = $oq_nid;
     $node->field_rating[$node->language][0]['rating'] = $form_state['values']['rating'];
     node_save($node);
@@ -608,6 +614,15 @@ function open_question_node_view($node, $view_mode, $langcode) {
   if ($node->type == 'open_question') {
     drupal_add_js(drupal_get_path('module', 'open_question') . '/open_question.js');
   }
+}
+
+/**
+ * Implementation of hook_css_alter().
+ * @param array $css
+ */
+function open_question_css_alter(&$css) {
+  // Remove fivestar.css file because we use our own widget.
+  unset($css[drupal_get_path('module', 'fivestar') . '/css/fivestar.css']);
 }
 
 /**
