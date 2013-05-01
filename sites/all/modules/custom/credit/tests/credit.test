@@ -22,21 +22,21 @@ class CreditTestCase extends CourseTestCase {
     $this->testUser2 = $this->drupalCreateUser(array());
    
     // add test items to the course
-    $this->nodes = $this->createTestCourse();
+    $this->nodes = $this->populateTestCourse();
   }
   /**
    * Overrides createCourse() function
    */
-   function createTestCourse() {
+   function populateTestCourse() {
      // Creating a course with the following structure:
-     $course = array(
+     $outline = array(
       'unit' => array (// i = 0
         'credit_test', // i = 1
         'credit_test', // i = 2
         'credit_test_extra' // i = 3
       ),
     );
-    return $this->createCourse($course);
+    return $this->populateCourse($this->course, $outline);
   }
   
   function testCreditCalculate() {
