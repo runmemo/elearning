@@ -46,6 +46,7 @@ function subscriptions_question_subscriptions($op, $arg0 = NULL, $arg1 = NULL, $
           'groupby' => 'fs.entity_id'
           );
         return $params;
+        print_nice($params);
       }
       break;
 
@@ -119,6 +120,9 @@ function _subscriptions_question_types() {
   $types['question'] = array(
     'title'      => 'Questions',
     'page'       => 'subscriptions_question_page_question',
+    // @todo barinder, lets rename field_answer_question to question_nid
+    //
+    // I guess you are right in terms of using default event from content_subscriptions
     'fields'     => array('node', 'field_answer_question'),
     'weight'     => -20,
     'access'     => 'subscribe to questions',
