@@ -99,7 +99,7 @@ function registration_cancel($uid, $nid) {
  * that contains page he is currently viewing.
  * @global type $user
  */
-function course_user_access($node, $account) {
+function registration_user_access($node, $account) {
 
   if (!isset($node->book)) { // this node is not part of a book
     return NULL;

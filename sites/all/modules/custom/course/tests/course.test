@@ -19,7 +19,12 @@ class CourseTestCase extends DrupalWebTestCase {
     $this->course = $this->createCourseNode($this->course_author->uid);   
     
   }
-
+  
+  /**
+   * Attaches node to the parent node in the book
+   * @param object $node 
+   * @param object $parent parent node in the book
+   */
   function book_append_child($node, $parent) {
     $node->book['bid'] = $parent->book['bid'];
     $node->book['plid'] = $parent->book['mlid'];
@@ -76,9 +81,7 @@ class CourseTestCase extends DrupalWebTestCase {
 }
 
 /**
- *
- * @author Bulat Yapparov
- *
+ *  Tests navigation related features of the course
  */
 class CourseNavigationTestCase extends CourseTestCase {
 
@@ -93,13 +96,16 @@ class CourseNavigationTestCase extends CourseTestCase {
   }
 
   function setUp() {
-    parent::setUp('lesson', 'registration');
-
+    parent::setUp('lesson'); // @todo get rid of dependencies
     $this->student = $this->drupalCreateUser(array('access content'));
     $this->nodes = $this->populateTestCourse($this->course);
     
   }
-
+  /**
+   * Creates course structure for provided course or
+   * @param object $course
+   * @return array of nodes
+   */
   function populateTestCourse($course = NULL) {
     if (!isset($course)) {
       $course = $this->course;
@@ -141,8 +147,8 @@ class CourseNavigationTestCase extends CourseTestCase {
   function testCourseLastVisitedItem() {
     $course2 = $this->createCourseNode($this->course_author->uid);
     $nodes2 = $this->populateTestCourse($course2);
-    course_register($this->student->uid, $this->course->nid);
-    course_register($this->student->uid, $course2->nid);
+   // course_register($this->student->uid, $this->course->nid);
+   //  course_register($this->student->uid, $course2->nid);
 // login as student 
     $this->drupalLogin($this->student);
 
@@ -165,4 +171,105 @@ class CourseNavigationTestCase extends CourseTestCase {
     $this->assertEqual($last_nid, $nodes2[1]->nid);
   }
 
+}
+
+class CourseUnitTestCase extends DrupalUnitTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Course Unit Test Case',
+      'description' => 'Unit Tests for course module.',
+      'group' => 'Course',
+    );
+  }
+
+  /**
+   * @see _course_get_tree_items($tree) 
+   */
+  function testGetItemsFunction() {
+    
+    // test empty outline
+    $outline = array();
+    $tree = $this->make_book_tree($outline);
+    $items = _course_get_tree_items($tree);
+    $this->assertTrue(empty($items), 'Items list is empty for empty outline.');
+    
+    
+    // test outline with empty units
+    $outline = array(
+      'unit1' => array (),
+      'unit2' => array (),
+    );
+    $tree = $this->make_book_tree($outline);
+    $items = _course_get_tree_items($tree);
+    $this->assertTrue(empty($items), 'Items list is empty for outline with empty units.');
+    
+    // test outline with one item
+     $outline = array(
+      'unit1' => array ('lesson1' => 'lesson'),
+      'unit2' => array (),
+    );
+    $tree = $this->make_book_tree($outline);
+    $items = _course_get_tree_items($tree);
+    $this->assertEqual(count($items), 1, '1 item found for outline with a lesson.');
+   
+    // teset outline with more items
+    $outline = array(
+      'unit1' => array ('lesson1' => 'lesson'),
+      'unit2' => array ('lesson1' => 'lesson', 'quiz1' => 'quiz'),
+      'unit3' => array ('lesson1' => 'lesson', 'quiz1' => 'quiz', 'other1' => 'other'),
+    );
+    $tree = $this->make_book_tree($outline);
+    $items = _course_get_tree_items($tree);
+    $expect = array ( 
+      0 => '3',
+      1 => '5', 2 => '6',
+      3 => '8', 4 => '9', 5 => '10',
+    );
+    $this->assertEqual($items, $expect, 'Items are correct for provided outline.');
+    
+  }
+  
+  /** 
+   * creates book like tree structure for provided outline array
+   */
+  function make_book_tree($outline) {
+    $i = 1;
+    $tree = array(
+      'Tree Top' => $this->tree_new_leaf($i), 
+    );
+    
+    foreach($outline as $unit_key => $unit) {
+      $i++;
+      $this->tree_append_leaf($tree['Tree Top'], $unit_key, $i);
+      $unit_leaf = &$tree['Tree Top']['below'][$unit_key];
+      
+      foreach ($unit as $item) {
+        $i++;
+        $this->tree_append_leaf($unit_leaf, $item, $i);
+      }
+    }
+
+    return $tree;
+  }
+  
+  /**
+   * Appends a leaf to another leaf
+   * @param array $to_leaf 
+   * @param string $leaf key of the new leaf
+   * @param integer $nid of the node of a new leaf
+   */
+  function tree_append_leaf(&$to_leaf, $leaf, $nid) {
+    $to_leaf['below'][$leaf] = $this->tree_new_leaf($nid);
+  }
+  /**
+   * Returns array with new menu link
+   */
+  function tree_new_leaf($nid) {
+    return array (
+        'link' => array(
+          'link_path' => 'node/' . $nid,
+        ),
+        'below' => array(),
+      );
+  }
 }

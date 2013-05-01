@@ -6,18 +6,6 @@
  */
 include_once 'course.features.inc';
 
-function course_init() {
-//  $options = array();
-//  foreach (module_list(FALSE, FALSE, TRUE) as $module) {
-//    if ($permissions = module_invoke($module, 'permission')) {
-//      // List only the modules that have permissions.
-//      dsm($module);
-//      dsm($permissions);
-//    }
-//  }
-//  print_nice(menu_get_object());
-}
-
 /**
  * Gets node last visited by the user
  * @todo test case
@@ -257,32 +245,7 @@ function course_node_view($node, $view_mode) {
        $node->teacher['name'] = '';
        $node->teacher['surname'] = '';
      }
-  } 
-
-  if ($view_mode == 'full' && node_is_page($node)) {
-    if (!course_is_item_node($node)) {
-      return;
-    }
-    global $user;
-    // find whether user has permission to see this node.
-    $access = course_user_access($node, $user);
-    $context_access = 'none';
-    if (isset($access)) { // content is part of the course
-      if ($access) {
-        $context_access = 'true';
-      }
-      else { // user does not have access to course item
-        hide($node->content);
-        $context_access = 'false';
-      }
-    }
-    // set condition for course_access plugin
-    if ($plugin = context_get_plugin('condition', 'course_access')) {
-      $plugin->execute($context_access);
-    }
-  }
-   
-       
+  }       
 }
 
 /**
@@ -411,6 +374,30 @@ function course_get_progress($course_nid = FALSE, $account = FALSE) {
 }
 
 /**
+ * Returns array with nids of course items
+ * @param array $tree array with menue tree structure of the course book
+ * @return array list of course itmes
+ */
+function _course_get_tree_items($tree) {
+  $items = array();
+  $tree_key = key($tree);
+  if (!isset($tree[$tree_key]['below'])) {
+    return $items;
+  }
+  $units = $tree[$tree_key]['below'];
+  foreach ($units as $unit) {
+    if (!isset($unit['below'])) {
+      continue;
+    }
+    foreach ($unit['below'] as $item) {
+      $nid = str_ireplace('node/', '', $item['link']['link_path']);
+      $items[] = $nid;
+    }
+  }  
+  return $items;
+}
+
+/**
  * Gets all items that are part of the course
  * @param object $course
  * @return array nids of nodes that are part of the course
@@ -420,25 +407,10 @@ function course_get_items($course) {
   if ($cached = cache_get('course_get_items_' . $course->nid)) {
     return $cached->data;
   }
-  
   // get items from the course book
-  $items = array();
   $tree = menu_tree_all_data($course->book['menu_name'], NULL, 3);
-  $tree_key = key($tree);
-  if (!isset($tree[$tree_key]['below'])) {
-    return $items;
-  }
-  $units = $tree[$tree_key]['below'];
-  
-  foreach ($units as $unit) {
-    if (!isset($unit['below'])) {
-      continue;
-    }
-    foreach ($unit['below'] as $item) {
-      $nid = str_ireplace('node/', '', $item['link']['link_path']);
-      $items[] = $nid;
-    }
-  }
+  $items = _course_get_tree_items($tree);
+  // set chache
   cache_set('course_get_items_' . $course->nid, $items, 'cache', 60*60);
   return $items;
 }
