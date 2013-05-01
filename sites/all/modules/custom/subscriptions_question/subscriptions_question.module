@@ -41,10 +41,10 @@ function subscriptions_question_subscriptions($op, $arg0 = NULL, $arg1 = NULL, $
         $node = $arg0['node'];
         $params['node']['field_answer_question'] = array(
           'join' => array('table' => 'field_data_field_answer_question', 'alias' => 'fs', 'on' => 's.value = fs.field_answer_question_nid'),
-          // @todo barinder, are you sure that works?
           'where' => array(array('fs.entity_id', $node->nid, '=')),
           'groupby' => 'fs.entity_id'
           ); 
+        dvm($params);
         return $params;
       }
       break;
