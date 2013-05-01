@@ -23,6 +23,7 @@ dependencies[] = entity
 dependencies[] = flag
 dependencies[] = rules
 dependencies[] = ctools_automodal
+dependencies[] = context
 
 files[] = course.inc
 files[] = views/course.views_default.inc

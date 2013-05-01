@@ -332,6 +332,19 @@ function open_question_views_default_views() {
   $handler->display->display_options['pager']['options']['items_per_page'] = '5';
   $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['row_plugin'] = 'fields';
+  /* Header: Global: PHP */
+  $handler->display->display_options['header']['php']['id'] = 'php';
+  $handler->display->display_options['header']['php']['table'] = 'views';
+  $handler->display->display_options['header']['php']['field'] = 'php';
+  $handler->display->display_options['header']['php']['php_output'] = 
+    '<p class="oq-review-list-message"><?php print t("Please review and mark answers of other students.");?></p>';
+  /* No results behavior: Global: PHP */
+  $handler->display->display_options['empty']['php']['id'] = 'php';
+  $handler->display->display_options['empty']['php']['table'] = 'views';
+  $handler->display->display_options['empty']['php']['field'] = 'php';
+  $handler->display->display_options['empty']['php']['empty'] = TRUE;
+  $handler->display->display_options['empty']['php']['php_output'] = 
+    '<p class="oq-review-empty-message"><?php print t("There are now answers for review, well you must be the first to answer that question.");?></p>';
   /* Relationship: Content: Author */
   $handler->display->display_options['relationships']['uid']['id'] = 'uid';
   $handler->display->display_options['relationships']['uid']['table'] = 'node';

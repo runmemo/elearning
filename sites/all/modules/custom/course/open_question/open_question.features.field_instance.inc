@@ -205,13 +205,10 @@ function open_question_field_default_field_instances() {
     'field_name' => 'body',
     'label' => 'Body',
     'required' => FALSE,
-    'settings' => array(
-      'display_summary' => TRUE,
-      'text_processing' => 1,
-      'user_register_form' => FALSE,
-    ),
+    'settings' => array(),
     'widget' => array(
       'module' => 'text',
+      'active' => 1,
       'settings' => array(
         'rows' => 20,
         'summary_rows' => 5,

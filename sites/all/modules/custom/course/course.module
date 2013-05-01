@@ -6,16 +6,31 @@
  */
 include_once 'course.features.inc';
 
+function course_init() {
+//  $options = array();
+//  foreach (module_list(FALSE, FALSE, TRUE) as $module) {
+//    if ($permissions = module_invoke($module, 'permission')) {
+//      // List only the modules that have permissions.
+//      dsm($module);
+//      dsm($permissions);
+//    }
+//  }
+//  print_nice(menu_get_object());
+}
+
 /**
  * Gets node last visited by the user
  * @todo test case
  * @param integer $nid id of the node in the book in which
  *                     we will look for last visited node.
  */
-function course_last_visited_node($nid) {
-  global $user;
-
-  if ($user->uid == 0) {
+function course_last_visited_node($nid, $uid = NULL) {
+  if(!isset($uid)) { 
+    global $user;
+    $uid = $user->uid;
+  }
+  
+  if ($uid == 0) {
     return $nid;
   }
 
@@ -31,7 +46,7 @@ function course_last_visited_node($nid) {
           ORDER BY h.timestamp DESC
           LIMIT 1';
 
-  $result = db_query($sql, array(':nid' => $nid, ':uid' => $user->uid));
+  $result = db_query($sql, array(':nid' => $nid, ':uid' => $uid));
 
   foreach ($result as $record) {
     return $record->nid;
