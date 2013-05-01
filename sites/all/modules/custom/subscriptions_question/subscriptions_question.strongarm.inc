@@ -107,7 +107,7 @@ function subscriptions_question_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'subscriptions_site_mail';
-  $strongarm->value = 'info@edu.dev';
+  $strongarm->value = 'info@runmemo.com';
   $export['subscriptions_site_mail'] = $strongarm;
 
   $strongarm = new stdClass();
