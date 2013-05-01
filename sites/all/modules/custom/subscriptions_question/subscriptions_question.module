@@ -2,6 +2,13 @@
 
 /**
  * @file
+ * Code for the test feature.
+ */
+
+include_once 'subscriptions_question.features.inc';
+
+/**
+ * @file
  * Subscriptions to questions.
  *
  * subscriptions_question extends the subscription module to allow users to
@@ -22,7 +29,7 @@
  * @ingroup hooks
  */
 function subscriptions_question_subscriptions($op, $arg0 = NULL, $arg1 = NULL, $arg2 = NULL) {
-  static $stypes = array('question' => array('node', 'tid'));
+  static $stypes = array('question' => array('node', 'field_answer_question'));
   $function = '_subscriptions_question_' . $op;
   if (function_exists($function)) {
     return $function($arg0, $arg1, $arg2);
@@ -164,4 +171,3 @@ function subscriptions_question_disable() {
     ->condition('field', 'field_answer_question')
     ->execute();
 }
-
