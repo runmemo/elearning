@@ -9,30 +9,34 @@ function quiz_credit_credit_info() {
   $results['quiz'] = array (
     'bundle' => 'quiz',
     // callback function must return value between 0 and 1.
-    'callback' => 'quiz_credit_calculate',
+    'result_callback' => 'quiz_credit_calculate',
     
   );
   return $results;
 }
-
 
 /**
  * Calculates credit awared for completion of a quiz to a user
  * @see quiz_credit_credit_info()
  */
 function quiz_credit_calculate($quiz_node, $account) {
-  $quiz_score = quiz_calculate_score($quiz_node, $account);
-  
-  if($quiz->pass_rate > 0 && $score['percentage_score'] < $quiz->pass_rate) {
+  if ($quiz_node->type !== 'quiz') {
+    return .0;
+  }
+  $query = db_select('quiz_node_results', 'qr')->fields('qr', array('score'));
+  $query->condition('uid', $account->uid)
+      ->condition('nid', $quiz_node->nid)
+      ->condition('is_evaluated', TRUE)
+      ->orderBy('score','DESC')
+      ->range(0, 1);
+  $result = $query->execute()->fetch();
+  if (!$result) {
+    return .0;
+  } 
+  if($quiz_node->pass_rate > 0 && $result->score < $quiz_node->pass_rate) {
     // user did not pass this quiz so no credit is awarded
-    return 0.0;
+    return .0;
   }
-  
-  $is_evaluated = $quiz_score['is_evaluated'];
-  if ($is_evaluated) {
-    $percentage = $quiz_score['percentage_score'];
-    
-    return $percentage / 100;
-  }
-  return 0.0;
+  $percent = $result->score;  
+  return $percent / 100;
 }
