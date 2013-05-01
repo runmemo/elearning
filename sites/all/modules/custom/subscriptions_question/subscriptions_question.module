@@ -99,8 +99,6 @@ function _subscriptions_question_node_options($account, $node) {
     $options['question']['weight'] = -4;
   }
   return $options;
-
-  return $options;
 }
 
 /**
