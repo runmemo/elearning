@@ -53,42 +53,6 @@ function _subscriptions_question_form(array $form, $uid) {
     $subscriptions[$s['nid']][$s['author_uid']] = $s;
   }
 
-  if (module_exists('comment')) {
-    // check whether we've commented:
-    if (db_driver() == 'pgsql') {
-      $select = db_select('subscriptions', 's');
-      $select->addExpression('CAST(s.value AS decimal)', 'value');
-      $select = $select
-        ->condition('s.module', 'node')
-        ->condition('s.field', 'nid')
-        ->condition('s.recipient_uid', $uid);
-    }
-    else {
-      $select = db_select('subscriptions', 's')
-        ->fields('s', array('value'))
-        ->condition('s.module', 'node')
-        ->condition('s.field', 'nid')
-        ->condition('s.recipient_uid', $uid);
-    }
-    $result = db_select('comment', 'c')
-      ->fields('c', array('nid'))
-      ->condition('c.nid', $select, 'IN')
-      ->condition('c.uid', $uid)
-      ->groupBy('c.nid')
-      ->execute();
-    foreach ($result as $c) {
-      if (isset($subscriptions[$c->nid])) {
-        foreach ($subscriptions[$c->nid] as $author_uid => $subscription) {
-          $subscriptions[$c->nid][$author_uid]['commented'] = TRUE;
-        }
-      }
-    }
-    $fields = t('@latest_activity, @authored, @commented');
-  }
-  else {
-    $fields = t('@latest_activity, @authored');
-  }
-
   $form[0] = array(
     '#type' => 'item',
     '#title' => '',
