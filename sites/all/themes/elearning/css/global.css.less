@@ -1781,7 +1781,7 @@ body.page-home {
 
 .views-field-feedback-form {
   margin-top: 25px;
-  label, .form-item-inactive, .ajax-progress-throbber, .oq-review-form-rating-submit, .oq-review-form-submit-button, .oq-review-form-submit-wo-text {
+  label, .form-item-inactive, .ajax-progress-throbber, .oq-review-form-rating-submit, .oq-review-form-rating-submit.form-item-active, .oq-review-form-submit-button, .oq-review-form-submit-wo-text {
     .show(none);
   }
   .fivestar-user-stars, .fivestar-default {
@@ -1848,6 +1848,13 @@ body.page-home {
 .views-field-feedback-form .oq-review-form-edit-button.form-submit.progress-disabled {
   background: url(../images/progress_orange.gif) 0 0 no-repeat;
 }
+
+/*@todo Ilya adjust layout in accordance with psd*/
+.views-field-feedback-form .oq-review-form-edit-button.oq-review-form-empty-body {
+  margin-top: 4px;
+  margin-right: -13px;
+}
+
 
 .view-question-answers, .view-answer-feedbacks, .view-answers-review {
   .views-answer-body, .views-answer-feedback-body, .views-other-answer-body {
