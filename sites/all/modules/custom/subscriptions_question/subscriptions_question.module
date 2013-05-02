@@ -29,7 +29,7 @@ include_once 'subscriptions_question.features.inc';
  * @ingroup hooks
  */
 function subscriptions_question_subscriptions($op, $arg0 = NULL, $arg1 = NULL, $arg2 = NULL) {
-  static $stypes = array('question' => array('node', 'field_answer_question'));
+  static $stypes = array('question' => array('node', 'question_nid'));
   $function = '_subscriptions_question_' . $op;
   if (function_exists($function)) {
     return $function($arg0, $arg1, $arg2);
@@ -39,12 +39,11 @@ function subscriptions_question_subscriptions($op, $arg0 = NULL, $arg1 = NULL, $
       // $arg0 is $event array.
       if ($arg0['module'] == 'node') {
         $node = $arg0['node'];
-        $params['node']['field_answer_question'] = array(
+        $params['node']['question_nid'] = array(
           'join' => array('table' => 'field_data_field_answer_question', 'alias' => 'fs', 'on' => 's.value = fs.field_answer_question_nid'),
           'where' => array(array('fs.entity_id', $node->nid, '=')),
           'groupby' => 'fs.entity_id'
           ); 
-        dvm($params);
         return $params;
       }
       break;
@@ -52,7 +51,7 @@ function subscriptions_question_subscriptions($op, $arg0 = NULL, $arg1 = NULL, $
     case 'fields': // $arg0 is module.
       if ($arg0 == 'node') {
         return array(
-          'field_answer_question' => array(
+          'question_nid' => array(
             'data_function' => 'subscriptions_content_data',
             'subs_mod' => 'subscriptions_content',
             'subs_type' => t('thread'),
@@ -94,7 +93,7 @@ function _subscriptions_question_node_options($account, $node) {
   if ($node->type == 'question') {
     $options['question'][] = array(
       'name' => t('Subscribe to this question'),
-      'params' => array('module' => 'node', 'field' => 'field_answer_question', 'value' => $node->nid),
+      'params' => array('module' => 'node', 'field' => 'question_nid', 'value' => $node->nid),
       'link' => 'node/' . $node->nid,
     );
     $options['question']['weight'] = -4;
@@ -122,7 +121,7 @@ function _subscriptions_question_types() {
     // @todo barinder, lets rename field_answer_question to question_nid
     //
     // I guess you are right in terms of using default event from content_subscriptions
-    'fields'     => array('node', 'field_answer_question'),
+    'fields'     => array('node', 'question_nid'),
     'weight'     => -20,
     'access'     => 'subscribe to questions',
     'permission' => array(
@@ -157,7 +156,7 @@ function subscriptions_question_page_question(array $form, $uid) {
  * @param object $node
  */
 function subscriptions_question_node_delete($node) {
-  subscriptions_delete_for_all_users('node', 'field_answer_question', $node->nid);
+  subscriptions_delete_for_all_users('node', 'question_nid', $node->nid);
 }
 
 /**
@@ -170,6 +169,99 @@ function subscriptions_question_node_delete($node) {
 function subscriptions_question_disable() {
   db_delete('subscriptions_queue')
     ->condition('module', 'node')
-    ->condition('field', 'field_answer_question')
+    ->condition('field', 'question_nid')
     ->execute();
+}
+
+/**
+ * Implements hook_rules_action_info() on behalf of the node module.
+ */
+function subscriptions_question_rules_action_info() {
+  $base = array(
+    'type' => 'subscriptions',
+    'parameter' => array(
+      'node' => array('type' => 'node', 'label' => t('Question')),
+      'user' => array('type' => 'user', 'label' => t('User')),
+    ),
+    'group' => t('Subscriptions'),
+    'access callback' => 'subscriptions_question_add_user_content_access',
+  );
+
+  // Action subsribe a user to a content
+  $items['subscriptions_question_add_user_content'] = array(
+    'label' => t('Subscribe user to question'),
+    'base' => 'subscriptions_question_add_user_content_callback',
+  ) + $base;
+
+  // Action unsubsribe a user to a content
+  $items['subscriptions_question_remove_user_content'] = array(
+    'label' => t('Unsubscribe user from question'),
+    'base' => 'subscriptions_question_remove_user_content_callback',
+  ) + $base;
+
+  return $items;
+}
+
+/**
+ * Rule subscriptions_add_user_content callback
+ */
+function subscriptions_question_add_user_content_callback($node, $user, $type = 'node') {
+  // Get existed
+  $sid = subscriptions_get_subscription($user->uid, 'node', 'question_nid', $node->nid);
+  $args = array (
+    0 => 'node',
+    1 => 'question_nid',
+    2 => $node->nid,
+    3 => -1, // DEBUG $node->uid,
+    4 => $user->uid,
+  );
+
+  if ($sid) {
+    // Add more value to existed subscription_content row
+    $update = db_update('subscriptions')
+    ->condition('module', $args[0])
+    ->condition('field', $args[1])
+    ->condition('value', $args[2])
+    ->condition('author_uid', $args[3])
+    ->condition('recipient_uid', $args[4]);
+
+    $ret = $update->execute();
+  }
+  else {
+    $ret = call_user_func_array('subscriptions_write_subscription', $args);
+  }
+
+  return $ret;
+}
+
+/**
+ * Rule subscriptions_remove_user_content callback
+ */
+function subscriptions_question_remove_user_content_callback($node, $user, $type = 'node') {
+  $args = array (
+    0 => 'node',
+    1 => 'question_nid',
+    2 => $node->nid,
+    3 => -1, // DEBUG $node->uid,
+    4 => $user->uid,
+  );
+
+  // Delete single rows
+  $delete = db_delete('subscriptions')
+    ->condition('module', $args[0])
+    ->condition('field', $args[1])
+    ->condition('value', $args[2])
+    ->condition('author_uid', $args[3])
+    ->condition('recipient_uid', $args[4]);
+
+  $ret = $delete->execute();
+
+  return $ret;
+}
+
+/**
+ * TODO: user_access
+ */
+function subscriptions_question_add_user_content_access() {
+  return TRUE;
 }

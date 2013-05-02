@@ -54,9 +54,8 @@ function abuse_content_field_default_field_bases() {
     'module' => 'list',
     'settings' => array(
       'allowed_values' => array(
-        // @todo barinder make values tranlatable
-        'spam' => 'Spam',
-        'language' => 'Language abuse',
+        'spam' => t('Spam'),
+        'language' => t('Language abuse'),
       ),
       'allowed_values_function' => '',
     ),
