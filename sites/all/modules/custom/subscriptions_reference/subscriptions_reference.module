@@ -1,0 +1,240 @@
+<?php
+
+/**
+ * @file
+ * subscriptoins_reference.module
+ */
+
+include_once 'subscriptions_reference.rules.inc';
+
+define('REFERENCE_MODULE', 'node');
+
+/**
+ * Implements hook_subscriptions()
+ */
+function subscriptions_reference_subscriptions($op, $arg0 = NULL, $arg1 = NULL, $arg2 = NULL) {
+  $function = '_subscriptions_reference_' . $op;
+  if (function_exists($function)) {
+    return $function($arg0, $arg1, $arg2);
+  }
+  switch ($op) {
+    case 'queue':
+      subscriptions_reference_queue_send($arg0); // $arg0 is $event array.
+      return NULL;
+    case 'fields': // $arg0 is module.
+      if ($arg0 == REFERENCE_MODULE) {
+        $fields = array();
+        foreach (_available_reference_fields() as $key => $info) {
+          $fields[$info['field']] = array(
+            'data_function' => 'subscriptions_content_data',
+            'subs_mod' => 'subscriptions_content',
+            'subs_type' => t('thread'),
+            'mailkey' => 'node-type-',
+          );
+        }
+        return $fields;
+      }
+      break;
+
+    case 'stypes': // @todo where is this used??
+      static $stypes = array(); // why is it static?
+      foreach (_available_reference_fields() as $key => $info) {
+         $stypes[$key] =  array(REFERENCE_MODULE, $info['field']);
+      }
+      return $stypes;
+    case 'stype':
+      return (isset($stypes[$arg0]) ? array_merge($stypes[$arg0], array($arg1, $arg2)) : NULL);
+  }
+  return NULL;
+}
+
+/**
+ * Sub hook of hook_subscriptions() for $op == 'queue'
+ * @param array $event contains event properties 
+ * @see subscriptions_reference_node_insert()
+ */
+function subscriptions_reference_queue_send($event) {
+  if ($event['module'] == REFERENCE_MODULE) {
+    if (!isset($event['field'])) return; // this is not our event
+    $node = $event['node'];
+    $field_name = $event['field']; //  
+    $ref_nids = field_get_items('node', $node, $event['field']);
+    if (!$ref_nids) return; // reference field is empty
+    // @todo for entity reference we will want to get 'target_id' field
+    $ref_nid = $ref_nids[0]['nid'];
+    $subscriptions = subscriptions_get(array(
+      'module' => REFERENCE_MODULE,
+      'field' => $field_name,
+      'value' => $ref_nid,
+    ));
+
+    foreach ($subscriptions as $uid => $subscription) {
+      $result = db_insert('subscriptions_queue')
+          ->fields(array(
+            'uid' => $uid,
+            // 'name' => $userrow->name, @todo do we need this?
+            'language' => '',
+            'module' => REFERENCE_MODULE,
+            'field' => $field_name,
+            'value' => $ref_nid,
+            'send_interval' => 1,
+            'author_uid' => -1,
+            'digest' => -1,
+            'load_args' => $event['load_args'],
+            'load_function' => $event['load_function'],
+            'is_new' => TRUE,)
+          )
+          ->execute();
+    }
+  }
+}
+
+/**
+ * Implements hook_node_insert
+ */
+function subscriptions_reference_node_insert($node) {
+
+  $field_name = subscriptions_reference_field_name($node, 'child');
+  if (!$field_name)
+    return;
+
+  $event = array(
+    'module' => REFERENCE_MODULE,
+    'uid' => $node->uid,
+    'load_function' => 'subscriptions_content_load_node',
+    'load_args' => $node->nid,
+    'type' => 'node',
+    'action' => 'insert',
+    'is_new' => TRUE,
+    'node' => $node,
+    'field' => $field_name,
+  );
+
+  if (!subscriptions_content_suppress_notifications()) {
+    subscriptions_queue($event);
+  }
+}
+
+/**
+ * Implements hook_node_delete().
+ */
+function subscriptions_reference_node_delete($node) {
+  $field_name = subscriptions_reference_field_name($node, 'parent');
+  if (!$field_name)
+    return;
+  subscriptions_delete_for_all_users('node', $field_name, $node->nid);
+}
+
+/**
+ * Implements _hook_node_options(), subhook of hook_subscriptions().
+ *
+ * This is called by subscriptions_ui_node_form() in subscriptions_ui.module.
+ *
+ * @param $account
+ * @param $node
+ *
+ * @see subscriptions_ui_node_form()
+ */
+function _subscriptions_reference_node_options($account, $node) {
+  if (!user_access('subscribe to referenced node')) {
+    return NULL;
+  }
+  $options = array();
+  $field_name = subscriptions_reference_field_name($node, 'parent');
+  if ($field_name) {
+    $options['reference'][] = array(
+      'name' => t('Subscribe to this node'),
+      'params' => array('module' => REFERENCE_MODULE, 'field' => $field_name, 'value' => $node->nid),
+      'link' => 'node/' . $node->nid,
+    );
+    $options['reference']['weight'] = -4;
+  }
+  return $options;
+}
+
+/**
+ * Gets the name of the reference field for the node
+ * @param object $node we will check if other nodes expose refs for this node type
+ * @param string $op can be either child or parent
+ * @return name of the reference field
+ */
+function subscriptions_reference_field_name($node, $op = 'child') {
+  foreach (_available_reference_fields() as $key => $info) {
+    if ($info[$op] === $node->type) {
+      return $info['field'];
+    }
+  }
+  return FALSE;
+}
+
+/**
+ * Gets all reference fields from modules that implement subscriptions_reference_info
+ */
+function _available_reference_fields() {
+  // @todo implement cache
+  $fields = array();
+  foreach (module_implements('subscriptions_reference_info') as $module) {
+    $refs_info = module_invoke($module, 'subscriptions_reference_info');
+    foreach ($refs_info as $key => $info) {
+      $fields[$key] = $info;
+    }
+  }
+  return $fields;
+}
+
+/**
+ * Implements _hook_types(), subhook of hook_subscriptions().
+ *
+ * This is called by subscriptions_types() in subscriptions.module.
+ *
+ * @return array
+ *   Returns information about types for Subscriptions module interface.
+ * @see subscriptions_types()
+ */
+function _subscriptions_reference_types() {
+  $types = array();
+
+  foreach (_available_reference_fields() as $key => $info) {
+    $types[$key] = array(
+      'title' => 'Reference ' . $info['child'] . '->' . $info['parent'],
+      'page' => 'subscriptions_reference_page_admin',
+      'fields' => array(REFERENCE_MODULE, $info['field']),
+      'weight' => -20,
+      'access' => 'subscribe to referenced node',
+      'permission' => array(
+        'title' => t('Subscribe to referenced node'),
+        'description' => t('Allows user to subscribe to referenced node')
+      ),
+    );
+  }
+  return $types;
+}
+
+/**
+ * Implements hook_disable().
+ */
+function subscriptions_reference_disable() {
+  //  Remove our queue items that have fields 
+  //  exposed via hook_subscriptions_reference_info()
+  foreach (_available_reference_fields() as $key => $info) {
+    db_delete('subscriptions_queue')
+        ->condition('module', REFERENCE_MODULE)
+        ->condition('field', $info['field'])
+        ->execute();
+  }
+}
+
+/**
+ * @TODO: barinder user_access
+ */
+function subscriptions_reference_subscribe_access() {
+  return TRUE;
+}
+
+/**
+ * Returns a list of reference subscriptions.
+ */
+function subscriptions_reference_page_admin(array $form, $uid) {
+  _subscriptions_module_load_include('subscriptions_reference', 'admin.inc');
+  return _subscriptions_reference_form($form, $uid);
+}

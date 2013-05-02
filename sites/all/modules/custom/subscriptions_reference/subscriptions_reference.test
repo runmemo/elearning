@@ -1,0 +1,60 @@
+<?php
+
+/**
+ * @file
+ * Contains test cases for subscriptions question module
+ */
+
+/** 
+ * Class contains tests 
+ * @todo barinder implement tests
+ */
+class SubscriptionQuestionTestCase extends DrupalWebTestCase {
+  
+  
+  function setUp() {
+    parent::setUp();
+    // create user A
+    
+    // create user B
+    
+    // create question A as user A
+    
+    // 
+  }
+  
+  
+  function testUserGetsNotification() {
+    
+    // create answer to A as user B
+     
+    // check if that and only that email is in the queue (user A is autosubscribed)
+    
+    // run cron
+    
+    // check that email is sent
+    $this->drupalGetMails(); // ?
+    
+    // create answer to question A as user A
+    
+    // check if email is not in the queue
+    
+    // unsubscribe user A from question A
+    
+    // create answer to question A as user B
+    
+    // check that email is not in the queue
+    
+    // run cron
+    
+    // check that email is sent
+    
+    // subscribe user B to question A
+    
+    // answer question A as user C
+    
+    // check that only user B gets notification
+    
+  }
+  
+}
