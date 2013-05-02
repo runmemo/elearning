@@ -1681,6 +1681,12 @@ body.page-home {
         margin: 0;
       }
     }
+    .form-item {
+      margin: 0;
+    }
+    .form-textarea-wrapper {
+      margin-bottom: 10px;
+    }
   }
 }
 
@@ -1775,7 +1781,7 @@ body.page-home {
 
 .views-field-feedback-form {
   margin-top: 25px;
-  label, .form-item-review, .ajax-progress-throbber {
+  label, .form-item-inactive, .ajax-progress-throbber, .oq-review-form-rating-submit, .oq-review-form-submit-button, .oq-review-form-submit-wo-text {
     .show(none);
   }
   .fivestar-user-stars, .fivestar-default {
@@ -1826,11 +1832,8 @@ body.page-home {
   }
 }
 
-.oq-review-form-submit-button, .oq-review-form-submit-wo-text {
-  .show(none);
-}
-
 .views-field-feedback-form .oq-review-form-edit-button.form-submit {
+  color: transparent;
   background: url(../images/answer-edit.png) 0 0 no-repeat;
   padding: 0;
   margin-top: 60px;
@@ -1849,9 +1852,6 @@ body.page-home {
 .view-question-answers, .view-answer-feedbacks, .view-answers-review {
   .views-answer-body, .views-answer-feedback-body, .views-other-answer-body {
     .show(table);
-  }
-  .views-row-last {
-    border: 0;
   }
 }
 
@@ -1931,10 +1931,6 @@ body.page-home {
       }
     }
   }
-  .views-row-last .views-field-comment-count {
-    .border-bottom-dotted();
-    .show(inline-block);
-  }
 }
 
 .view-feedback-comments {
@@ -1973,6 +1969,9 @@ body.page-home {
   .comment-group .comment,
   .comment-form #comment-form {
     width: 100%;
+  }
+  .views-row-last {
+    border: 0;
   }
 }
 

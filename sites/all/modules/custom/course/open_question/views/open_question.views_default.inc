@@ -258,14 +258,14 @@ function open_question_views_default_views() {
   $handler->display->display_options['fields']['nothing']['field'] = 'nothing';
   $handler->display->display_options['fields']['nothing']['ui_name'] = 'Field Grouping';
   $handler->display->display_options['fields']['nothing']['label'] = '';
-  $handler->display->display_options['fields']['nothing']['alter']['text'] = '<span class="comment feedback-body">
-  <span class="submitted">
+  $handler->display->display_options['fields']['nothing']['alter']['text'] = '<div class="comment feedback-body">
+  <div class="submitted">
     <span>[name] - [created]</span>
-  </span>
+  </div>
   <div class="content">
     [body]
   </div>
-  </span>
+  </div>
   <div class="views-field-comment-count">[comment_count]</div>';
   $handler->display->display_options['fields']['nothing']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['nothing']['element_default_classes'] = FALSE;
@@ -301,7 +301,6 @@ function open_question_views_default_views() {
   /* Display: Block */
   $handler = $view->new_display('block', 'Block', 'block');
   $handler->display->display_options['block_description'] = 'Feedback Comments';
-
   $export['oqa_feedback_comments'] = $view;
     
   $view = new view();

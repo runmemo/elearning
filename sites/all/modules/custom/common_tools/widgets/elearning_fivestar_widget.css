@@ -79,6 +79,15 @@ div.fivestar-widget .star, div.fivestar-widget .star a {
   text-decoration: none;
 }
 
+form.oq-review-form-view div.fivestar-widget .off a {
+  background-position: 0 -40px;
+}
+
+form.oq-review-form-view div.fivestar-widget .view-on a {
+  background-position: 0 0;
+}
+
+
 div.fivestar-widget .cancel a, div.fivestar-widget .star a {
   display: block;
   width: 100%;
@@ -91,7 +100,7 @@ div.fivestar-widget div.on a {
   background-position: 0 -20px; /* RTL */
 }
 div.fivestar-widget div.hover a, div.rating div a:hover {
-  background-position: 0 -20px; /* RTL */
+  background-position: 0 -20px !important; /* RTL */
 }
 form.fivestar-widget div.description {
   margin-bottom: 0;

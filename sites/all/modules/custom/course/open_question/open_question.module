@@ -416,22 +416,39 @@ function oq_review_form($form, &$form_state, $args) {
       $view = $view_obj->preview('block', array($feedback_nid));
     }
   }
-
+  $form_active = (isset($form_state['form_active']) && $form_state['form_active'] == TRUE) ? TRUE : FALSE;
+  $form_class = $step == 'view' ? 'oq-review-form-view' : 'oq-review-form-edit';
+  $form['#attributes'] = array('class' => array($form_class));
   switch ($step) {
     case 'view':
-      if ($rating) {
-        $form['rating'] = array(
-        '#type' => 'item',
+      $form['rating'] = array(
+        '#type' => 'fivestar',
         '#title' => t('Rating'),
-        '#markup' => theme('fivestar_static', array('rating' => $rating)),
-       );
+        '#required' => TRUE,
+        '#default_value' => $rating ? $rating : NULL,
+      );
+      $form['message_placeholder'] = array(
+        '#markup' => '',
+        '#prefix' => '<div id="message-placeholder">',
+        '#suffix' => '</div>'
+      );
+      if ($rating) {
+        $form['rating_submit'] = array(
+          '#type' => 'submit',
+          '#value' => 'rating_submit',
+          '#ajax' => array(
+            'callback' => 'oq_review_form_js',
+            'wrapper' => "oq-review-wrapper-{$nid}",
+          ),
+        );
+        $form['rating_submit']['#attributes']['class'][] = 'oq-review-form-rating-submit';
+        $form['review_value'] = array('#type' => 'hidden', '#value' => $review_body);
       }
       $form['edit_button'] = array(
         '#type' => 'submit',
-        '#value' => '',
-        '#submit' => array('oq_review_form_edit_submit'),
+        '#value' => 'edit_submit',
         '#ajax' => array(
-          'callback' => 'oq_review_form_edit_js',
+          'callback' => 'oq_review_form_js',
           'wrapper' => "oq-review-wrapper-{$nid}",
         ),
         '#prefix' => '<div>',
@@ -449,7 +466,7 @@ function oq_review_form($form, &$form_state, $args) {
         '#type' => 'fivestar',
         '#title' => t('Rating'),
         '#required' => TRUE,
-        '#default_value' =>  $rating ? $rating : NULL,
+        '#default_value' => $rating ? $rating : NULL,
       );
       $form['message_placeholder'] = array(
         '#markup' => '',
@@ -461,6 +478,8 @@ function oq_review_form($form, &$form_state, $args) {
         '#title' => t('Review'),
         '#required' => FALSE,
         '#default_value' => isset($review_body) ? $review_body : '',
+        '#prefix' => '<div class="form-item-inactive">',
+        '#suffix' => '</div>',
       );
       
       $form['submit_button'] = array(
@@ -477,11 +496,18 @@ function oq_review_form($form, &$form_state, $args) {
         '#type' => 'submit',
         '#value' => t("Don't add"),
         '#ajax' => array(
-          'callback' => 'oq_review_form_wo_text_js',
+          'callback' => 'oq_review_form_js',
           'wrapper' => "oq-review-wrapper-{$nid}",
         ),
       );
       $form['submit_wo_text']['#attributes']['class'][] = 'oq-review-form-submit-wo-text';
+      
+      if ($form_active) {
+        $form['review']['#prefix'] = '<div class="form-item-active">';
+        $form['review']['#suffix'] = '</div>';
+        $form['submit_button']['#attributes']['class'][] = 'form-item-active';
+        $form['submit_wo_text']['#attributes']['class'][] = 'form-item-active';
+      }
       break;
     default: // this should not happen ever
       watchdog('open question', 'Step %step is not defined for open question feedback form.', 
@@ -489,28 +515,6 @@ function oq_review_form($form, &$form_state, $args) {
           WATCHDOG_WARNING);
       break;
   }
-  return $form;
-}
-
-/**
- * Implements submit function for the edit button of the review form
- */
-function oq_review_form_edit_submit($form, &$form_state) {
-    $form_state['step'] = 'edit';
-    $form_state['rebuild'] = TRUE;
-}
-
-/**
- * Ajax callback for the edit button of the review form
- */
-function oq_review_form_edit_js($form, &$form_state) {
-  return $form;
-}
-
-/**
- * Ajax callback for the edit button of the review form
- */
-function oq_review_form_wo_text_js($form, &$form_state) {
   return $form;
 }
 
@@ -550,9 +554,15 @@ function oqa_is_reviewed($nid, $uid = NULL) {
  * Implements hook FORM_ID_validate for oq_review_form().
  */
 function oq_review_form_validate($form, &$form_state) {
+  if ($form_state['clicked_button']['#value'] != 'rating_submit' && $form_state['clicked_button']['#value'] != 'edit_submit') {
   $forbidden_values = array('-', '20', '40', '60');
   if (in_array($form_state['values']['rating'], $forbidden_values) && empty($form_state['values']['review'])) {
     form_set_error('review', t('Review field is required.'));
+  }
+  } elseif ($form_state['clicked_button']['#value'] == 'rating_submit') {
+    if ($form_state['values']['rating'] <= 60 && empty($form_state['values']['review_value'])) {
+      form_set_error('rating', t('Please, provide text along with your mark.'));
+    }
   }
 }
 
@@ -560,7 +570,9 @@ function oq_review_form_validate($form, &$form_state) {
  * AJAX callback function for oq_review_form().
  */
 function oq_review_form_js($form, &$form_state) {
-  $form['message_placeholder']['#markup'] = common_tools_collect_messages('error');
+  if ($form_state['values']['op'] == t('Add review') || $form_state['values']['op'] == t("Don't add")) {
+    $form['message_placeholder']['#markup'] = common_tools_collect_messages('error');
+  }
   return $form;
 }
 
@@ -568,41 +580,56 @@ function oq_review_form_js($form, &$form_state) {
  * Implements hook FORM_ID_submit for oq_review_form().
  */
 function oq_review_form_submit($form, &$form_state) {
-  // validate the form
-  drupal_validate_form('oq_review_form', $form, $form_state);
-  // if there are errors, return the form to display the error messages
-  if (form_get_errors()) {
-    $form_state['rebuild'] = TRUE;
-    return $form;
-  }
-
-  global $user;
-  $oq_nid = $form_state['build_info']['args'][0];
-  if (isset($form_state['feedback_nid']) && is_numeric($form_state['feedback_nid'])) {
-    $node = node_load($form_state['feedback_nid']);
-    if ($node) {
-      $lang = $node->language;
-      $node->body[$lang][0]['value'] = $form_state['values']['review'];
-      $node->field_rating[$lang][0]['rating'] = $form_state['values']['rating'];
-      node_save($node);
-    }
+  if ($form_state['values']['op'] == 'edit_submit') {
+    $form_state['step'] = 'edit';
+    $form_state['form_active'] = TRUE;
   } else {
-    $node = new stdClass();
-    $node->type = 'open_question_feedback';
-    node_object_prepare($node);
-    $node->title = 'OQ feedback nid#' . $oq_nid . '# uid#' . $user->uid;
-    $node->language = LANGUAGE_NONE;
-    $node->body[$node->language][0]['value'] = $form_state['values']['review'];
+    // validate the form
+    drupal_validate_form('oq_review_form', $form, $form_state);
+    // if there are errors, return the form to display the error messages
+    if (form_get_errors()) {
+      $form_state['rebuild'] = TRUE;
+      return $form;
+    }
 
-    $node->field_open_question_answer[$node->language][0]['target_id'] = $oq_nid;
-    $node->field_rating[$node->language][0]['rating'] = $form_state['values']['rating'];
-    node_save($node);
-    $form_state['feedback_nid'] = $node->nid;
+    if ($form_state['values']['op'] == 'rating_submit') {
+      if (isset($form_state['feedback_nid']) && is_numeric($form_state['feedback_nid'])) {
+        $node = node_load($form_state['feedback_nid']);
+        if ($node) {
+          $node->field_rating[$node->language][0]['rating'] = $form_state['values']['rating'];
+          node_save($node);
+        }
+      }
+    } else {
+      if (isset($form_state['feedback_nid']) && is_numeric($form_state['feedback_nid'])) {
+        $node = node_load($form_state['feedback_nid']);
+        if ($node) {
+          $lang = $node->language;
+          $node->body[$lang][0]['value'] = $form_state['values']['review'];
+          $node->field_rating[$lang][0]['rating'] = $form_state['values']['rating'];
+          node_save($node);
+        }
+      } else {
+        global $user;
+        $oq_nid = $form_state['build_info']['args'][0];
+        $node = new stdClass();
+        $node->type = 'open_question_feedback';
+        node_object_prepare($node);
+        $node->title = 'OQ feedback nid#' . $oq_nid . '# uid#' . $user->uid;
+        $node->language = LANGUAGE_NONE;
+        $node->body[$node->language][0]['value'] = $form_state['values']['review'];
+
+        $node->field_open_question_answer[$node->language][0]['target_id'] = $oq_nid;
+        $node->field_rating[$node->language][0]['rating'] = $form_state['values']['rating'];
+        node_save($node);
+        $form_state['feedback_nid'] = $node->nid;
+      }
+    }
+    $form_state['step'] = 'view';
+    // store values provided by user in the form
+    $form_state['storage']['body'] = $form_state['values']['op'] == 'rating_submit' ? $form_state['values']['review_value'] : $form_state['values']['review'];
+    $form_state['storage']['rating'] = $form_state['values']['rating'];
   }
-  $form_state['step'] = 'view';
-  // store values provided by user in the form
-  $form_state['storage']['body'] = $form_state['values']['review'];
-  $form_state['storage']['rating'] = $form_state['values']['rating'];
   // rebuild from after submit
   $form_state['rebuild'] = TRUE;
 }
