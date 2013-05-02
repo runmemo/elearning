@@ -454,6 +454,9 @@ function oq_review_form($form, &$form_state, $args) {
         '#prefix' => '<div>',
       );
       $form['edit_button']['#attributes']['class'][] = 'oq-review-form-edit-button';
+      if (empty($review_body)) {
+        $form['edit_button']['#attributes']['class'][] = 'oq-review-form-empty-body';
+      }
       $form['review'] = array(
         '#type' => 'item',
         '#title' => t('Review'),
@@ -554,13 +557,13 @@ function oqa_is_reviewed($nid, $uid = NULL) {
  * Implements hook FORM_ID_validate for oq_review_form().
  */
 function oq_review_form_validate($form, &$form_state) {
-  if ($form_state['clicked_button']['#value'] != 'rating_submit' && $form_state['clicked_button']['#value'] != 'edit_submit') {
   $forbidden_values = array('-', '20', '40', '60');
-  if (in_array($form_state['values']['rating'], $forbidden_values) && empty($form_state['values']['review'])) {
-    form_set_error('review', t('Review field is required.'));
-  }
+  if ($form_state['clicked_button']['#value'] != 'rating_submit' && $form_state['clicked_button']['#value'] != 'edit_submit') {
+    if (in_array($form_state['values']['rating'], $forbidden_values) && empty($form_state['values']['review'])) {
+      form_set_error('review', t('Review field is required.'));
+    }
   } elseif ($form_state['clicked_button']['#value'] == 'rating_submit') {
-    if ($form_state['values']['rating'] <= 60 && empty($form_state['values']['review_value'])) {
+    if (in_array($form_state['values']['rating'], $forbidden_values) && empty($form_state['values']['review_value'])) {
       form_set_error('rating', t('Please, provide text along with your mark.'));
     }
   }
@@ -570,7 +573,7 @@ function oq_review_form_validate($form, &$form_state) {
  * AJAX callback function for oq_review_form().
  */
 function oq_review_form_js($form, &$form_state) {
-  if ($form_state['values']['op'] == t('Add review') || $form_state['values']['op'] == t("Don't add")) {
+  if ($form_state['values']['op'] == 'rating_submit' || $form_state['values']['op'] == t('Add review') || $form_state['values']['op'] == t("Don't add")) {
     $form['message_placeholder']['#markup'] = common_tools_collect_messages('error');
   }
   return $form;
