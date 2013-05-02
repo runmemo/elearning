@@ -28,10 +28,23 @@ function subscriptions_question_user_default_permissions() {
     'module' => 'subscriptions',
   );
 
+  // Exported permission: flag follow_question.
+  $permissions['flag follow_question'] = array(
+    'name' => 'flag follow_question',
+    'roles' => array(
+      'authenticated user' => 'authenticated user',
+    ),
+    'module' => 'flag',
+  );
+
   // Exported permission: subscribe to questions.
   $permissions['subscribe to questions'] = array(
     'name' => 'subscribe to questions',
-    'roles' => array(),
+    'roles' => array(
+      'administrator' => 'administrator',
+      'student' => 'student',
+      'teacher' => 'teacher',
+    ),
     'module' => 'subscriptions',
   );
 
@@ -42,6 +55,15 @@ function subscriptions_question_user_default_permissions() {
       'administrator' => 'administrator',
     ),
     'module' => 'subscriptions',
+  );
+
+  // Exported permission: unflag follow_question.
+  $permissions['unflag follow_question'] = array(
+    'name' => 'unflag follow_question',
+    'roles' => array(
+      'authenticated user' => 'authenticated user',
+    ),
+    'module' => 'flag',
   );
 
   return $permissions;
