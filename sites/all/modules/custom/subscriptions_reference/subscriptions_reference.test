@@ -99,5 +99,7 @@ class SubscriptionReferenceUnitTestCase extends DrupalUnitTestCase {
     //  here is an example of mock testing:
     //  http://www.workhabit.com/blog/mock-function-testing-drupal
     //  that requires: pecl runkit
+    //  @see PHPMockFunction folder in libraries
+    
   }
 }
