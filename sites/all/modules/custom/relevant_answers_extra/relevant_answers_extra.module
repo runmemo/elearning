@@ -168,7 +168,7 @@ function quick_question_form_submit($form, &$form_state) {
   $node->language = LANGUAGE_NONE;
   $node->body[$node->language][0]['value'] = $form_state['values']['description'];
   $node->body[$node->language][0]['format'] = 'filtered_html';
-  $node->field_notify_p[$node->language][0]['value'] = 1;
+  $node->field_notify_p[$node->language][0]['value'] = 0;
   $node->field_question_path[$node->language][0]['value'] = $original_path;
   node_save($node);
   unset($form_state['values']['description']);
