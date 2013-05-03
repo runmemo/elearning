@@ -25,6 +25,7 @@ function subscriptions_question_subscriptions_reference_info() {
     'question_answers' => array(
       'parent' => 'question',
       'child' => 'answer',
-      'field' => QUESTION_REFERENCE_FIELD),
-  );
+      'field' => QUESTION_REFERENCE_FIELD,
+      'ref_item' => 'nid',
+  ));
 }

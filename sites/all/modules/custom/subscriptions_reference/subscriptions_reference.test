@@ -23,6 +23,19 @@ class SubscriptionQuestionTestCase extends DrupalWebTestCase {
     // 
   }
   
+  /**
+   * Tests subscribe functions used by rules
+   * @see subscriptions_reference.rules.inc 
+   * @see subscriptions_reference_subscribe()
+   * @see subscriptions_reference_unsubscribe()
+   * 
+   */
+  function testSubscribeRules() {
+    // subscriptions_reference_subscribe()
+    
+    
+    // subscriptions_reference_unsubscribe()
+  }
   
   function testUserGetsNotification() {
     
