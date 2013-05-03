@@ -39,7 +39,7 @@ function subscriptions_reference_rules_action_info() {
  * Rules subscribe action callback
  */
 function subscriptions_reference_subscribe($node, $user) {
-  $reference_feild = subscriptions_reference_field_name($node, 'parent');
+  $reference_feild = subscriptions_reference_get_field_name($node, 'parent');
   if (!$reference_feild)
     return;
   // write subscription to database
@@ -50,7 +50,7 @@ function subscriptions_reference_subscribe($node, $user) {
  * Rules unsubscribe action callback
  */
 function subscriptions_reference_unsubscribe($node, $user) {
-  $reference_feild = subscriptions_reference_field_name($node, 'parent');
+  $reference_feild = subscriptions_reference_get_field_name($node, 'parent');
   if (!$reference_feild) return;
   
   db_delete('subscriptions')

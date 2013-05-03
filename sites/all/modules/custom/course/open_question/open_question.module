@@ -743,3 +743,18 @@ function open_question_result($node, $account) {
   // or nobody provided user with feedback 
   return .0;
 }
+
+
+
+/**
+ * Implements hook_subscriptions_reference_info()
+ */
+function open_question_subscriptions_reference_info() {
+   return array(
+    'oq_subscribe_feedbacks' => array( // should unique accross modules that implement that hook
+      'parent' => 'open_question_answer',  // is being referenced
+      'child' => 'open_question_feedback',    // contains the field
+      'field' => 'field_open_question_answer',
+      'ref_item' => 'target_id'),   // name of the field
+  );
+}

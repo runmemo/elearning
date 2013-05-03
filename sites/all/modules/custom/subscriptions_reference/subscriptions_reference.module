@@ -4,7 +4,6 @@
  * @file
  * subscriptoins_reference.module
  */
-
 include_once 'subscriptions_reference.rules.inc';
 
 define('REFERENCE_MODULE', 'node');
@@ -39,7 +38,7 @@ function subscriptions_reference_subscriptions($op, $arg0 = NULL, $arg1 = NULL, 
     case 'stypes': // @todo where is this used??
       static $stypes = array(); // why is it static?
       foreach (_available_reference_fields() as $key => $info) {
-         $stypes[$key] =  array(REFERENCE_MODULE, $info['field']);
+        $stypes[$key] = array(REFERENCE_MODULE, $info['field']);
       }
       return $stypes;
     case 'stype':
@@ -55,13 +54,16 @@ function subscriptions_reference_subscriptions($op, $arg0 = NULL, $arg1 = NULL, 
  */
 function subscriptions_reference_queue_send($event) {
   if ($event['module'] == REFERENCE_MODULE) {
-    if (!isset($event['field'])) return; // this is not our event
+    if (!isset($event['ref_item']))
+      return; // this is not our event
     $node = $event['node'];
     $field_name = $event['field']; //  
     $ref_nids = field_get_items('node', $node, $event['field']);
-    if (!$ref_nids) return; // reference field is empty
-    // @todo for entity reference we will want to get 'target_id' field
-    $ref_nid = $ref_nids[0]['nid'];
+    if (!$ref_nids)
+      return; // reference field is empty
+      
+// @todo for entity reference we will want to get 'target_id' field
+    $ref_nid = $ref_nids[0][$event['ref_item']];
     $subscriptions = subscriptions_get(array(
       'module' => REFERENCE_MODULE,
       'field' => $field_name,
@@ -94,10 +96,11 @@ function subscriptions_reference_queue_send($event) {
  */
 function subscriptions_reference_node_insert($node) {
 
-  $field_name = subscriptions_reference_field_name($node, 'child');
-  if (!$field_name)
+  $field_info = subscriptions_get_reference_info($node, 'child');
+  if (!$field_info) { 
     return;
-
+  }
+  
   $event = array(
     'module' => REFERENCE_MODULE,
     'uid' => $node->uid,
@@ -107,7 +110,8 @@ function subscriptions_reference_node_insert($node) {
     'action' => 'insert',
     'is_new' => TRUE,
     'node' => $node,
-    'field' => $field_name,
+    'field' => $field_info['field'],
+    'ref_item' => $field_info['ref_item']
   );
 
   if (!subscriptions_content_suppress_notifications()) {
@@ -119,7 +123,7 @@ function subscriptions_reference_node_insert($node) {
  * Implements hook_node_delete().
  */
 function subscriptions_reference_node_delete($node) {
-  $field_name = subscriptions_reference_field_name($node, 'parent');
+  $field_name = subscriptions_reference_get_field_name($node, 'parent');
   if (!$field_name)
     return;
   subscriptions_delete_for_all_users('node', $field_name, $node->nid);
@@ -140,7 +144,7 @@ function _subscriptions_reference_node_options($account, $node) {
     return NULL;
   }
   $options = array();
-  $field_name = subscriptions_reference_field_name($node, 'parent');
+  $field_name = subscriptions_reference_get_field_name($node, 'parent');
   if ($field_name) {
     $options['reference'][] = array(
       'name' => t('Subscribe to this node'),
@@ -158,13 +162,18 @@ function _subscriptions_reference_node_options($account, $node) {
  * @param string $op can be either child or parent
  * @return name of the reference field
  */
-function subscriptions_reference_field_name($node, $op = 'child') {
+function subscriptions_get_reference_info($node, $op = 'child') {
   foreach (_available_reference_fields() as $key => $info) {
     if ($info[$op] === $node->type) {
-      return $info['field'];
+      return $info;
     }
   }
   return FALSE;
+}
+
+function subscriptions_reference_get_field_name($node, $op = 'child') {
+  $info = subscriptions_get_reference_info($node, $op);
+  return $info ? $info['field'] : FALSE;
 }
 
 /**
@@ -193,7 +202,6 @@ function _available_reference_fields() {
  */
 function _subscriptions_reference_types() {
   $types = array();
-
   foreach (_available_reference_fields() as $key => $info) {
     $types[$key] = array(
       'title' => 'Reference ' . $info['child'] . '->' . $info['parent'],
