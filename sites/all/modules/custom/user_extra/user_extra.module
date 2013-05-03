@@ -242,6 +242,8 @@ function user_extra_form_alter(&$form, &$form_state, $form_id) {
   } elseif ($form_id == 'user_register_form') {
     $form['#attributes']['class'][] = 'register-form';
     $form['#attributes']['class'][] = 'login-system-form';
+    $form['field_name']['#weight'] = -12;
+    $form['field_surname']['#weight'] = -11;
     $form['field_name']['#prefix'] = '<div class="register-form-name-wrapper">';
     $form['field_surname']['#suffix'] = '</div>';
     // @todo Ilya provide real path to the license agreement page.
