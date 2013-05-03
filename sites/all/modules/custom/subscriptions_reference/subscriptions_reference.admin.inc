@@ -21,23 +21,21 @@
 function _subscriptions_reference_form(array $form, $uid) {
   $tr = 't';
   $subscriptions = array();
-  $query = db_select('node', 'n', array('fetch' => PDO::FETCH_ASSOC))
-    ->extend('PagerDefault')
-    ->limit(50);
-  $query
+  $query = db_select('node', 'n');
+  $query->join('subscriptions', 's', 'n.nid = s.value');
+  $result = $query
     ->fields('n', array('nid', 'uid', 'title', 'status', 'changed'))
-    ->join('subscriptions', 's', 'n.nid = s.value');
-  $query
-    ->fields('s', array('send_interval', 'author_uid', 'send_comments', 'send_updates'));
-  $query
+    ->fields('s', array('send_interval', 'author_uid', 'send_comments', 'send_updates'))
     ->condition('s.module', 'node')
     ->condition('s.field', $form['field']['#value'])
     ->condition('s.recipient_uid', $uid)
-    ->addTag('node_access');
-  foreach ($query->execute() as $s) {
+    ->addTag('node_access')
+    ->extend('PagerDefault')
+    ->limit(50)
+    ->execute();
+  while ($s = $result->fetchAssoc()) {
     $subscriptions[$s['nid']][$s['author_uid']] = $s;
   }
-
   
   $form[0] = array(
     '#type' => 'item',
