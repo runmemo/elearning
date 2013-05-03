@@ -31,7 +31,7 @@ function _subscriptions_reference_form(array $form, $uid) {
     ->fields('s', array('send_interval', 'author_uid', 'send_comments', 'send_updates'));
   $query
     ->condition('s.module', 'node')
-    ->condition('s.field', QUESTION_REFERENCE_FIELD)
+    ->condition('s.field', $form['field']['#value'])
     ->condition('s.recipient_uid', $uid)
     ->addTag('node_access');
   foreach ($query->execute() as $s) {
