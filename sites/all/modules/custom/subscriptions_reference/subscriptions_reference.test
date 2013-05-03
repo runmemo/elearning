@@ -13,12 +13,12 @@ class SubscriptionQuestionTestCase extends DrupalWebTestCase {
   
   
   function setUp() {
-    parent::setUp();
-    // create user A
+    parent::setUp('subscriptions_reference_test');
+    // create user A (uA)
     
-    // create user B
+    // create user B (uB)
     
-    // create question A as user A
+    // create parent node (nP) as uA
     
     // 
   }
@@ -37,24 +37,28 @@ class SubscriptionQuestionTestCase extends DrupalWebTestCase {
     // subscriptions_reference_unsubscribe()
   }
   
+  
+  /**
+   * @see subscriptions_reference_test.module in tests
+   */
   function testUserGetsNotification() {
     
-    // create answer to A as user B
+    // create child (nC) for nP as uB
      
-    // check if that and only that email is in the queue (user A is autosubscribed)
+    // check if that and only that email is in the queue (uA is autosubscribed)
     
     // run cron
     
     // check that email is sent
     $this->drupalGetMails(); // ?
     
-    // create answer to question A as user A
+    // create answer to nP as user A
     
     // check if email is not in the queue
     
-    // unsubscribe user A from question A
+    // unsubscribe uA from nP
     
-    // create answer to question A as user B
+    // create child to nP as uB
     
     // check that email is not in the queue
     
@@ -62,9 +66,9 @@ class SubscriptionQuestionTestCase extends DrupalWebTestCase {
     
     // check that email is sent
     
-    // subscribe user B to question A
+    // subscribe user B to node Parent
     
-    // answer question A as user C
+    // add child to Parent node as user C
     
     // check that only user B gets notification
     
