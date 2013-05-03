@@ -24,7 +24,7 @@
         review.removeClass('.form-item-inactive').addClass('form-item-active');
         submit.addClass('form-item-active');
         submit_wo_text.attr('disabled', 'disabled').removeClass('form-item-active');
-        if (this.selectedIndex <= 3) {  
+        if (this.selectedIndex <= 3) {
           if (textarea === '') {
             submit.attr('disabled', 'disabled').addClass('disabled');
           }

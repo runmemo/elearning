@@ -1853,6 +1853,7 @@ body.page-home {
 .views-field-feedback-form .oq-review-form-edit-button.oq-review-form-empty-body {
   margin-top: 4px;
   margin-right: -13px;
+  .show(none);
 }
 
 
@@ -2107,57 +2108,55 @@ body.page-home {
 
 /** Ctools Modal CSS*/
 div.ctools-common-modal-content {
-  background:none;
-  border:0;
-  color:#000000;
-  margin:0;
-  padding:0;
-  text-align:left;
-  box-shadow:2px 2px 7px #333;
-  .modal-scroll{
-    overflow:hidden;
-    overflow-y:auto;
+  background: none;
+  border: 0;
+  color: #000000;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  box-shadow: 2px 2px 7px #333;
+  .modal-scroll {
+    overflow: hidden;
+    overflow-y: auto;
   }
   #popups-overlay {
-    background-color:transparent;
+    background-color: transparent;
   }
   #popups-loading {
-    width:248px;
-    position:absolute;
-    display:none;
-    opacity:1;
+    width: 248px;
+    position: absolute;
+    display: none;
+    opacity: 1;
     -moz-border-radius: 8px;
     -webkit-border-radius: 8px;
-    z-index:99;
+    z-index: 99;
     span.popups-loading-message {
-      background:#FFF url(../images/loading-large.gif) no-repeat 8px center;
-      display:block;
-      color:#444444;
-      font-family:Arial;
-      font-size:22px;
-      font-weight:bold;
-      height:36px;
-      line-height:36px;
-      padding:0 40px;
+      background: #FFF url(../images/loading-large.gif) no-repeat 8px center;
+      .show(block);
+      color: #444444;
+      .bold(22px);
+      height: 36px;
+      line-height: 36px;
+      padding: 0 40px;
     }
   }
   .popups-box,
   #popups-loading {
     border: 0px solid #454545;
-    opacity:1;
-    overflow:hidden;
-    padding:0;
-    background-color:transparent;
+    opacity: 1;
+    overflow: hidden;
+    padding: 0;
+    background-color: transparent;
   }
   .popups-container {
-    overflow:hidden;
-    height:100%;
-    background-color:#fff;
+    overflow: hidden;
+    height: 100%;
+    background-color: #fff;
   }
   div.popups-title {
-    background-color:#f4f4f4;
-    border:1px solid #ddd;
-    padding:4px 10px 5px;
+    background-color: #f4f4f4;
+    border: 1px solid #ddd;
+    padding: 4px 10px 5px;
     color: #555;
     text-align: center;
     .modal-title {
@@ -2165,25 +2164,26 @@ div.ctools-common-modal-content {
     }
   }
   .popups-body {
-    background-color:#fff;
-    padding:8px;
+    background-color: #fff;
+    padding: 8px;
   }
   .popups-box .popups-buttons,
   .popups-box .popups-footer {
-    background-color:#fff;
+    background-color: #fff;
   }
   .popups-title a.close {
     color: transparent;
     text-decoration:none;
     background: url(../images/close.png) no-repeat scroll center center;
+    width: 8px;
   }
   .popups-title a:hover.close {
     background: url(../images/close_hover.png) no-repeat scroll center center;
   }
   .popups-close {
-    font-size:120%;
-    float:right;
-    text-align:right;
+    font-size: 120%;
+    float: right;
+    text-align: right;
     border-left: 1px solid #ddd;
     padding: 0 0 0 10px;
   }
@@ -2214,7 +2214,7 @@ div.ctools-common-modal-content {
     margin: 0;
     float: left;
     textarea {
-      border:1px solid #ddd;
+      border: 1px solid #ddd;
     }
     .grippie {
       display: none;
@@ -2279,3 +2279,141 @@ div.ctools-common-modal-content {
     .show(none);
   }
 }
+
+/* Login/Registration forms styles START */
+
+.not-logged-in .ctools-modal-user-forms {
+  .popups-body {
+    padding: 0px 14px 14px 14px;
+    width: auto !important;
+  }
+}
+
+.login-system-form {
+  margin-top: 27px;
+  .form-item {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    label {
+      .bold(12px);
+      color: #505050;
+    }
+    .form-text {
+      height: 41px;
+      .bold(14px);
+      .box-shadow();
+      border: 0;
+    }
+    input.error {
+      border: 1px solid #e24110;
+      background-color: #fff2ee;
+      color: #e24110;
+    }
+  }
+  .form-submit, .form-submit:hover {
+    .light-orange-button();
+    padding: 9px 20px !important;
+    font-size: 14px !important;
+  }
+  .messages.error {
+    background-color: #e64412;
+    color: #fff;
+    .bold(12px);
+    background-image: none;
+    padding: 13px 13px 13px 9px;
+    margin: 0px 0px -13px 0px;
+    ul {
+      list-style: none;
+      margin: 0;
+    }
+  }
+  .form-actions.form-wrapper {
+    padding-top: 16px !important;
+    margin-top: 29px;
+  }
+}
+
+.login-form {
+  .login-form-registration, .login-form-reset {
+    .right();
+  }
+  .form-item-name {
+    margin-bottom: 22px;
+  }
+  .form-item-pass {
+    margin-bottom: 16px;
+  }
+  a.login-form-additional-link {
+    color: #ec4600;
+    .link();
+    .bold(12px);
+  }
+  .login-form-fb-submit, .login-form-fb-submit:hover {
+    .gradient-fb();
+    .left();
+  }
+  .ajax-progress.ajax-progress-throbber {
+    position: absolute;
+    bottom: 22px;
+    right: 100px;
+    .throbber {
+      background: transparent url(../images/progress_orange.gif) no-repeat 0 0;
+      .left();
+      height: 16px;
+      margin: 0px 3px 2px 0px;
+      width: 16px;
+    }
+  }
+}
+
+.ctools-modal-register-form {
+  width: 440px !important;
+}
+
+.register-form {
+  .description, .password-strength, .password-strength-text, .password-strength-title, .password-indicator {
+    .show(none);
+  }
+  .password-suggestions {
+    .show(none) !important;
+  }
+  .register-form-name-wrapper {
+    margin-bottom: 22px;
+    .show(inline-block);
+    .field-name-field-name, .field-name-field-surname {
+      width: 197px;
+      .left();
+    }
+    .field-name-field-name {
+      margin-right: 17px;
+    }
+  }
+  .form-item-mail {
+    margin-bottom: 25px;
+  }
+  .form-item-pass {
+    margin-bottom: 23px;
+    .password-parent {
+      margin-bottom: 27px;
+      width: 100%;
+    }
+    .confirm-parent {
+      width: 100%;
+    }
+  }
+  .password-confirm, .register-form-license-text {
+    .bold(12px);
+    color: #505050;
+  }
+  .password-confirm {
+    margin: 0px 0px 0px 0px;
+  }
+  .register-form-license-text {
+    a:link, a:visited {
+      .link();
+      color: #e44100;
+    }
+  }
+}
+
+/* Login/Registration forms styles END */
