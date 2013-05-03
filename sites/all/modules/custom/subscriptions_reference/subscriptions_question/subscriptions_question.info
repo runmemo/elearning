@@ -20,6 +20,7 @@ features[features_api][] = api:1
 features[flag][] = follow_question
 features[rules_config][] = rules_follow_question
 features[rules_config][] = rules_unfollow_question
+features[rules_config][] = rules_subscribe_author_to_question
 features[user_permission][] = administer user subscriptions
 features[user_permission][] = bulk-administer user subscriptions
 features[user_permission][] = flag follow_question
