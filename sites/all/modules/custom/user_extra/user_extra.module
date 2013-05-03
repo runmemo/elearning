@@ -240,6 +240,11 @@ function user_extra_form_alter(&$form, &$form_state, $form_id) {
       ),
     );
   } elseif ($form_id == 'user_register_form') {
+    $form['actions']['submit']['#ajax'] = array(
+      'callback' => 'user_extra_reg_submit_callback',
+      'wrapper' => 'user-register-form',
+      'progress' => array('type' => 'throbber'),
+    );
     $form['#attributes']['class'][] = 'register-form';
     $form['#attributes']['class'][] = 'login-system-form';
     $form['field_name']['#weight'] = -12;
@@ -259,4 +264,26 @@ function user_extra_form_alter(&$form, &$form_state, $form_id) {
     $form['#attributes']['class'][] = 'login-system-form';
     drupal_set_title(t('Request new passowrd'));
   }
+}
+
+/**
+ * Ajax callback for user_register_form(). Return forms with errors
+ * or empty form with success message.
+ * @param array $form
+ * @param array $form_state
+ * @return array form array
+ */
+function user_extra_reg_submit_callback($form, &$form_state) {
+  drupal_validate_form('user_register_form', $form, $form_state);
+  if (form_get_errors()) {
+    $form_state['rebuild'] = TRUE;
+  } else {
+    $form['actions']['submit']['#access'] = FALSE;
+    $form['field_name']['#access'] = FALSE;
+    $form['field_surname']['#access'] = FALSE;
+    $form['account']['mail']['#access'] = FALSE;
+    $form['account']['pass']['#access'] = FALSE;
+    $form['message']['#access'] = FALSE;
+  }
+  return $form;
 }
