@@ -39,23 +39,23 @@ function subscriptions_reference_rules_action_info() {
  * Rules subscribe action callback
  */
 function subscriptions_reference_subscribe($node, $user) {
-  $reference_feild = subscriptions_reference_field_name($node, 'parent');
-  if (!$reference_feild)
+  $reference_field = subscriptions_reference_field_name($node, 'parent');
+  if (!$reference_field)
     return;
   // write subscription to database
-  subscriptions_write_subscription(REFERENCE_MODULE, $reference_feild, $node->nid, -1, $user->uid);
+  subscriptions_write_subscription(REFERENCE_MODULE, $reference_field, $node->nid, -1, $user->uid);
 }
 
 /**
  * Rules unsubscribe action callback
  */
 function subscriptions_reference_unsubscribe($node, $user) {
-  $reference_feild = subscriptions_reference_field_name($node, 'parent');
-  if (!$reference_feild) return;
+  $reference_field = subscriptions_reference_field_name($node, 'parent');
+  if (!$reference_field) return;
   
   db_delete('subscriptions')
       ->condition('module', REFERENCE_MODULE)
-      ->condition('field', $reference_feild)
+      ->condition('field', $reference_field)
       ->condition('value', $node->nid)
       ->condition('author_uid', -1)  // DEBUG $node->uid,
       ->condition('recipient_uid', $user->uid)
