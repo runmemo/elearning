@@ -4,7 +4,6 @@
  * @file
  * subscriptoins_reference.module
  */
-include_once 'subscriptions_reference.rules.inc';
 
 define('REFERENCE_MODULE', 'node');
 
