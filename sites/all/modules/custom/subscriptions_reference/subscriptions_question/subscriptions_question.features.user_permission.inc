@@ -28,6 +28,15 @@ function subscriptions_question_user_default_permissions() {
     'module' => 'subscriptions',
   );
 
+  // Exported permission: flag follow_lesson_item.
+  $permissions['flag follow_lesson_item'] = array(
+    'name' => 'flag follow_lesson_item',
+    'roles' => array(
+      'authenticated user' => 'authenticated user',
+    ),
+    'module' => 'flag',
+  );
+
   // Exported permission: flag follow_question.
   $permissions['flag follow_question'] = array(
     'name' => 'flag follow_question',
@@ -37,9 +46,38 @@ function subscriptions_question_user_default_permissions() {
     'module' => 'flag',
   );
 
-  // Exported permission: subscribe to questions.
-  $permissions['subscribe to questions'] = array(
-    'name' => 'subscribe to questions',
+  // Exported permission: subscribe to all content types.
+  $permissions['subscribe to all content types'] = array(
+    'name' => 'subscribe to all content types',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'subscriptions',
+  );
+
+  // Exported permission: subscribe to content.
+  $permissions['subscribe to content'] = array(
+    'name' => 'subscribe to content',
+    'roles' => array(
+      'administrator' => 'administrator',
+      'student' => 'student',
+      'teacher' => 'teacher',
+    ),
+    'module' => 'subscriptions',
+  );
+
+  // Exported permission: subscribe to content types.
+  $permissions['subscribe to content types'] = array(
+    'name' => 'subscribe to content types',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'subscriptions',
+  );
+
+  // Exported permission: subscribe to referenced node.
+  $permissions['subscribe to referenced node'] = array(
+    'name' => 'subscribe to referenced node',
     'roles' => array(
       'administrator' => 'administrator',
       'student' => 'student',
@@ -55,6 +93,15 @@ function subscriptions_question_user_default_permissions() {
       'administrator' => 'administrator',
     ),
     'module' => 'subscriptions',
+  );
+
+  // Exported permission: unflag follow_lesson_item.
+  $permissions['unflag follow_lesson_item'] = array(
+    'name' => 'unflag follow_lesson_item',
+    'roles' => array(
+      'authenticated user' => 'authenticated user',
+    ),
+    'module' => 'flag',
   );
 
   // Exported permission: unflag follow_question.
