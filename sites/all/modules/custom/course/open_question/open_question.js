@@ -5,6 +5,11 @@
 (function($) {
   Drupal.behaviors.open_question_review_list = {
     attach: function(context, settings) {
+      
+      function get_feedback_form(child) {
+        return child.parents('.views-field-feedback-form');
+      }
+      
       $('.oq-review-form-view').ready(function() {
         $('.oq-review-form-view .star').each(function(index, element) {
           if (!$(this).hasClass('on')) {
@@ -17,54 +22,61 @@
       });
 
       $('select[name="rating"]').change(function() {
-        var review = $(this).parents('.views-field-feedback-form').find('.form-item-inactive');
-        var submit = $(this).parents('.views-field-feedback-form').find('.oq-review-form-submit-button');
-        var submit_wo_text = $(this).parents('.views-field-feedback-form').find('.oq-review-form-submit-wo-text');
-        var textarea = $(this).parents('.views-field-feedback-form').find('textarea[name="review"]').val();
-        review.removeClass('.form-item-inactive').addClass('form-item-active');
-        submit.addClass('form-item-active');
-        submit_wo_text.attr('disabled', 'disabled').removeClass('form-item-active');
+        var feedback_form = get_feedback_form($(this));
+        var review = feedback_form.find('.form-item-inactive');
+        var submit = feedback_form.find('.oq-review-form-submit');
+        var button_skip = feedback_form.find('.oq-review-form-skip');
+        var textarea = feedback_form.find('textarea[name="review"]').val();
         if (this.selectedIndex <= 3) {  
           if (textarea === '') {
-            submit.attr('disabled', 'disabled').addClass('disabled');
+            submit.prop('disabled', true);
           }
-        } else {
+        } 
+        else {
           if (textarea === '') {
-            submit_wo_text.removeAttr('disabled').addClass('form-item-active');
+            button_skip.hide();
           } else {
-            submit_wo_text.attr('disabled', 'disabled').removeClass('form-item-active');
+            button_skip.show();
           }
-          submit.removeClass('disabled').removeAttr('disabled');
+          submit.prop('disabled', false);
         }
-        var rating_submit = $(this).parents('.views-field-feedback-form').find('.oq-review-form-rating-submit');
+        var rating_submit = feedback_form.find('.oq-review-form-rating-submit');
         if (rating_submit.length > 0) {
           rating_submit.trigger('mousedown');
         }
       });
+      // 
       $('textarea[name="review"]').keyup(function() {
-        var select = $(this).parents('.views-field-feedback-form').find('select[name="rating"]');
+        var feedback_form = get_feedback_form($(this));
+      //  console.debug(feedback_form);
+        var select = feedback_form.find('select[name="rating"]');
         var rating = select[0].selectedIndex;
-        var text = $(this).val().length;
-        if (text < 1 && rating > 3) {
-          $(this).parents('.views-field-feedback-form').find('.oq-review-form-submit-wo-text').addClass('form-item-active').removeAttr('disabled');
-        } else {
-          if (text >= 1) {
-            $(this).parents('.views-field-feedback-form').find('.oq-review-form-submit-wo-text').removeClass('form-item-active').attr('disabled', 'disabled');
+        console.debug(rating);
+        var button_skip = feedback_form.find('.oq-review-form-skip');     
+        var review_length = $(this).val().length;
+        console.debug(review_length)
+        if (review_length < 1 && rating > 3) {
+          button_skip.attr('disabled', true);
+        } 
+        else {
+          if (review_length >= 1) {
+            button_skip.prop('disabled', true);
           }
         }
-        if (text < 4 && rating <= 3) {
-          $(this).parents('.views-field-feedback-form').find('.oq-review-form-submit-button').attr('disabled', 'disabled').addClass('disabled');
+        var btn_submit = feedback_form.find('.oq-review-form-submit');
+        if (review_length < 4 && rating <= 3) {
+          btn_submit.prop('disabled', true);
         } else {
-          if ((text >= 4 && rating <= 3) || (rating > 3)) {
-            $(this).parents('.views-field-feedback-form').find('.oq-review-form-submit-button').removeClass('disabled').removeAttr('disabled');
+          if ((review_length >= 4 && rating <= 3) || (rating > 3)) {
+            btn_submit.prop('disabled', false);
           }
         }
       });
 
-      $('select[name="rating"][class~="error"]').parents('.views-field-feedback-form').find('.form-item-inactive').removeClass('.form-item-inactive').addClass('form-item-active');
-      $('select[name="rating"][class~="error"]').parents('.views-field-feedback-form').find('.form-submit').addClass('form-item-active');
-      $('textarea[name="review"][class~="error"]').parents('.views-field-feedback-form').find('.form-item-inactive').removeClass('.form-item-inactive').addClass('form-item-active');
-      $('textarea[name="review"][class~="error"]').parents('.views-field-feedback-form').find('.form-submit').addClass('form-item-active');
+      $('select[name="rating"][class~="error"]').parents('.views-field-feedback-form').find('.is-inactive').removeClass('.is-inactive').addClass('is-active');
+      $('select[name="rating"][class~="error"]').parents('.views-field-feedback-form').find('.form-submit').addClass('is-active');
+      $('textarea[name="review"][class~="error"]').parents('.views-field-feedback-form').find('.is-inactive').removeClass('.is-inactive').addClass('is-active');
+      $('textarea[name="review"][class~="error"]').parents('.views-field-feedback-form').find('.form-submit').addClass('is-active');
     }
   };
 })(jQuery);

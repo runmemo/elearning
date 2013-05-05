@@ -1,0 +1,50 @@
+@import "mixins.less";
+/* @file
+ * contains less css for quicktabs
+ */
+
+.ui-tabs {
+  padding: 0;
+  border: 0;
+  .ui-widget-content {
+    padding: 1em 0;
+  }
+}
+
+.ui-tabs-nav {
+  .border-bottom-dotted();
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.ui-state-default {
+  .quicktabs-border();
+  .RoundedShape(0px);
+  .bold(14px);
+  margin-right: 10px;
+  width:160px;
+  @media @narrow {
+    .grid-narrow-4();
+  }
+  @media @normal {
+    width: 213px;
+  }
+  @media @wide {
+    .grid-wide-4();
+  }
+  a {
+    font-weight: bold;
+    width: 100%;
+    padding: 12px 0px;
+    text-align: center;
+  }
+}
+
+.ui-state-active,
+.ui-state-hover {
+  background: #ffffff;
+  a {
+    .text-orange;
+  }
+}
