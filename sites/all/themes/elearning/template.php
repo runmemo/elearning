@@ -87,3 +87,14 @@ function elearning_preprocess_book_navigation(&$vars) {
   } 
 }
 
+/**
+ * Implements hook_css_alter() 
+ */
+function elearning_css_alter(&$css) {
+  // Get current themes path.
+  $theme_path = drupal_get_path('theme', variable_get('theme_default', NULL));
+  // Get formalize.css from subthemes css folder.
+  if (array_key_exists('sites/all/themes/omega/omega/css/formalize.css', $css)) {
+    $css['sites/all/themes/omega/omega/css/formalize.css']['data'] = $theme_path . '/css/formalize.css';
+  }
+}

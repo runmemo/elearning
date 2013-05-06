@@ -126,15 +126,10 @@ function course_outline_preprocess_tree(&$tree) {
  * @return string title for the course outline menu item
  */
 function course_outline_item_title($node) {
+  $title = "<span class='" . $node->type . "-icon'></span>";
   switch ($node->type) {
         case 'lesson':
-          $title = "<span class='" . $node->type . "'>" . t('Lesson @i.', array('@i' => $node->order)) . '</span>';
-          break;
-        case 'quiz': // @todo : add question mark icon.
-          $title = "<span class='" . $node->type . "'></span>";
-          break;
-        default:
-          $title = "<span class='" . $node->type . "'></span>";
+          $title = $title . t('Lesson @i.', array('@i' => $node->order)) . '</span>';
           break;
       }
       $title = '<div class="title-wrapper">' . $title . $node->title . '</div>';

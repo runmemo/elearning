@@ -3,6 +3,10 @@
 
 @import "mixins.less";
 @import "grid-16.less";
+@import "form.less";
+@import "course-outline.less";
+@import "quicktabs.less";
+@import "modal.less";
 
 /****** Common properties Start ******/
 html, body {
@@ -35,23 +39,6 @@ h2 {
   .font();
   font-size: 18px;
   color: #333333;
-}
-
-form .form-submit {
-  .orange-button();
-}
-
-input.form-text {
-  width: 100%;
-}
-
-
-.fieldset-wrapper {
-    background: #f7f7f7;
-    padding: 1px 10px;
-    .grippie {
-      display: none;
-    }
 }
 
 .section-content {
@@ -202,8 +189,7 @@ input.form-text {
   }
 }
 
-
-#section-footer {
+.section-footer {
     background: #4c4c4c;
     .gris();
     height: 36px;
@@ -212,33 +198,36 @@ input.form-text {
     bottom: 0;
     left: 0;
     width: 100%;
-    .region-footer-first {
-        display: block;
-        .block-menu-footer-menu {
-            .left();
-            li {
-                .menu-float();
-                a {
-                    .gris();
-                    .middle-cell();
-                    height: 30px;
-                }
-            }
-        }
-        .block-block {
-            .right();
-            .content {
-                height: 36px;
-                display: table; 
-                .rights-reserved {
-                    .middle-cell();
-                }
+    
+}
+
+.region-footer-first {
+    display: block;
+    .block-block {
+        .right();
+        .content {
+            height: 36px;
+            display: table; 
+            .rights-reserved {
+                .middle-cell();
             }
         }
     }
 }
 
-#zone-footer {
+.block-menu-footer-menu {
+    .left();
+    li {
+        .menu-float();
+        a {
+            .gris();
+            .middle-cell();
+            height: 30px;
+        }
+    }
+}
+
+.zone-footer {
   li {
      .menu-float(); 
   }
@@ -391,47 +380,39 @@ input.form-text {
 
 #quick-question-wrapper {
   margin-bottom: 15px;
- 
+  .fieldset-legend {
+    background-image:url('../images/ask-question.png');
+    padding-left: 20px;
+    background-position: left center;
+    .fieldset-title {
+      .text-orange();
+      .bold(14px);
+      .link();
+      border-bottom: 1px dotted;
+    }
+  }
+  .fieldset-wrapper {
+    clear: both;
+    .form-text {
+      width: 100%;
+    }
+  }
+  .form-submit {
+    .button-submit();
+    left: -8px;
+    top: -49px;
+    margin-top: 0px;
+  }
   fieldset {
     margin-bottom: 0;
     legend {
       float: right;
       padding-bottom: 5px;
-      .fieldset-legend {
-        background-image:url('../images/ask-question.png');
-        padding-left: 20px;
-        background-position: left center;
-        a.fieldset-title {
-          .text-orange();
-          .bold(14px);
-          .link();
-          border-bottom: 1px dotted;
-        }
-      }
     }
     input,
     textarea {
       border: medium none;
       .bold(14px);
-    }
-    .fieldset-wrapper {
-      background: #f7f7f7;
-      padding: 1px 10px;
-      clear: both;
-      input.form-text {
-        width: 100%;
-      }
-      .grippie {
-        display: none;
-      }
-      .form-submit {
-        left: -8px;
-        top: -59px;
-        position: relative;
-        .orange-button();
-        padding: 10px 20px;
-        margin-top: 0px;
-      }
     }
   }
 }
@@ -443,7 +424,7 @@ input.form-text {
   }
   .page-next,
   .page-previous {
-    .orange-button();
+    .button-submit();
       float: left;
     padding: 8px 0;
     text-align: center;
@@ -512,205 +493,8 @@ input.form-text {
   }
 }
 
-* html .media-youtube-video {
+.media-youtube-video {
   margin-bottom: 45px;
-}
-
-.block-course-outline {
-   ul.menu {
-     width: 100%;
-     padding-bottom: 20px;
-     h3 {
-       .bold(16px);
-       margin-bottom: 0;
-       background: #f0f0f0;
-       border-color: #e5e1e2;
-       border-width: 1px 1px 0px;
-       border-style: solid;
-       padding: 10px;
-       cursor: pointer;
-       clear: both;
-       .text-dark-grey();
-       .icon {
-         background: url('../images/arrow_down.png') no-repeat scroll right center;
-         padding: 12px 8px;
-         float: right;
-       }
-     }
-     h3:hover {
-       .text-orange;
-       .icon {
-         background: url('../images/arrow_down_hover.png') no-repeat scroll right center;
-       }
-     }
-     h3.last,
-     h3.active {
-       border-width: 1px;
-       box-shadow: 0px 1px 1px #EEEEEE;
-     }
-     h3.active {
-       .icon {
-         background: url('../images/arrow_up.png') no-repeat scroll right center;
-       }
-     }
-     h3.active:hover {
-       .icon {
-         background: url('../images/arrow_up_hover.png') no-repeat scroll right center;
-       }
-     }
-     ul {
-       padding: 0;
-       margin-top: 5px;
-       border-radius: 0;
-       .class-progress-image();
-       .class-progress-parameters(1px, 100%, 97%, 0%, 100%, 0%, no-repeat);
-       li {
-         padding: 0;
-         margin: 0;
-         list-style-type: none;
-         list-style-image: none;
-         float: left;
-         width: 100%;
-       }
-       li.current {
-         .class-progress-current() !important;
-          @media @mobile {
-            .class-progress-parameters(3%, 100%, 100%, 65%, 100%, 0%, no-repeat) !important;
-          }
-          @media @narrow {
-            .class-progress-parameters(6px, 9px, 100%, 65%, 100%, 0%, repeat-y) !important;
-          }
-          @media @normal {
-            .class-progress-parameters(7px, 9px, 100%, 65%, 100%, 0%, repeat-y) !important;
-          }
-          @media @wide {
-            .class-progress-parameters(9px, 9px, 100%, 65%, 100%, 0%, repeat-y) !important;
-          }
-       }
-       li.completed {
-         .class-progress-comleted() !important;
-         @media @mobile {
-           .class-progress-parameters(3%, 100%, 100%, 0%, 100%, 0%, no-repeat) !important;
-         }
-         @media @narrow {
-           .class-progress-parameters(6px, 100%, 100%, 0%, 100%, 0%, no-repeat) !important;
-         }
-         @media @normal {
-           .class-progress-parameters(7px, 100%, 100%, 0%, 100%, 0%, no-repeat) !important;
-         }
-         @media @wide {
-           .class-progress-parameters(9px, 100%, 100%, 0%, 100%, 0%, no-repeat) !important;
-         }
-       }
-       li.first {
-         .class-progress-image();
-         @media @mobile {
-           .class-progress-parameters(3%, 3%, 100%, 0%, 100%, 0%, no-repeat);
-         }
-         @media @narrow {
-           .class-progress-parameters(6px, 3%, 100%, 0%, 100%, 0%, no-repeat);
-         }
-         @media @normal {
-           .class-progress-parameters(7px, 3%, 100%, 0%, 100%, 0%, no-repeat);
-         }
-         @media @wide {
-           .class-progress-parameters(9px, 3%, 100%, 0%, 100%, 0%, no-repeat);
-         }
-       }
-       li.last {
-         .class-progress-image();
-         @media @mobile {
-           .class-progress-parameters(3%, 3%, 100%, 100%, 100%, 100%, no-repeat);
-         }
-         @media @narrow {
-           .class-progress-parameters(6px, 3%, 100%, 100%, 100%, 100%, no-repeat);
-         }
-         @media @normal {
-           .class-progress-parameters(6px, 3%, 100%, 100%, 100%, 100%, no-repeat);
-         }
-         @media @wide {
-           .class-progress-parameters(9px, 3%, 100%, 100%, 100%, 100%, no-repeat);
-         }
-         a {
-          border: medium none;
-         }
-       }
-       a.active, a.hovered {
-         background: #fff0d9 !important;
-       }
-       a {
-         .border-bottom-dotted();
-         text-decoration: none;
-         float: left;
-         clear: both;
-         .font-bold;
-         width: 95%;
-         color: #000000;
-         .title-wrapper {
-           padding: 10px;
-           .text-dark-grey();
-           
-         }
-      }
-    }
-  }
-  span.lesson {
-    .text-orange;
-    padding: 0 5px 0 0;
-  }
-  span.quiz, span.open_question {
-    background: url('../images/question_mark.png') no-repeat;
-    padding: 0 8px;
-  }
-}
-
-.ui-tabs .ui-tabs-nav li {
-  background: #f8f8f8;
-  border: 0;
-}
-
-.quicktabs-ui-wrapper.ui-tabs {
-  padding: 0;
-  border: 0;
-  ul.ui-tabs-nav {
-    padding: 0;
-    border: 0;
-    background: transparent;
-    .border-bottom-dotted;
-    li {
-      .quicktabs-border();
-      .bold(14px);
-      margin-right: 10px;
-      .RoundedShape(0px);
-      width:160px;
-      @media @narrow {
-        .grid-narrow-4();
-      }
-      @media @normal {
-        width: 213px;
-      }
-      @media @wide {
-        .grid-wide-4();
-      }
-      a {
-        font-weight: bold;
-        width: 100%;
-        padding: 12px 0px;
-        text-align: center;
-      }
-    }
-    li.ui-state-active,
-    li.ui-state-hover {
-      background: #ffffff;
-      .quicktabs-border();
-      a {
-        .text-orange;
-      }
-    }
-  }
-  .ui-widget-content {
-    padding: 1em 0;
-  }
 }
 
 /****** Node type "Course" Start ******/
@@ -820,8 +604,6 @@ input.form-text {
   }
 }
   
-   
-
 .node-course-basic-info {
   display: inline-block;
   width: 100%;
@@ -844,13 +626,6 @@ input.form-text {
         .user-picture {
           padding: 6px;
         }
-      }
-      #course-registration-form .form-submit {
-        .light-orange-button();
-        float: none;
-        width: 100%;
-        padding: 10px 0px;
-        margin-top: 4px;
       }
   }
   .node-course-paramenters {
@@ -884,6 +659,14 @@ input.form-text {
       height: 100%;
     }
   }
+}
+
+#course-registration-form .form-submit {
+  .light-orange-button();
+  float: none;
+  width: 100%;
+  padding: 10px 0px;
+  margin-top: 4px;
 }
 
 
@@ -1295,56 +1078,55 @@ input.form-text {
   }
 }
 
-#block-quicktabs-user-profile-tab {
-  .view-user-questions-list {
-    .view-content {
-      .bold(14px);
-      margin-top: 14px;
-      .views-row {
-        margin-bottom: 18px;
-        padding-bottom: 15px;
-        .border-bottom-dotted();
-        .views-field-field-answer-count {
-          margin: 13px 15px 8px 0px;
-          .left();
-            @media @normal { 
-              .show();
-              .grid-normal-2();
-            }
-            @media @narrow {
-              .grid-narrow-2();
-            }
-            @media @wide {
-              .grid-wide-2();
-            }
-          .field-content {
-            color: #ce4619;
-            text-align: center;
-              .zero {
-                color: #b5b5b5;
-              }
+.view-user-questions-list {
+  .view-content {
+    .bold(14px);
+    margin-top: 14px;
+    .views-row {
+      margin-bottom: 18px;
+      padding-bottom: 15px;
+      .border-bottom-dotted();
+      .views-field-field-answer-count {
+        margin: 13px 15px 8px 0px;
+        .left();
+          @media @normal { 
+            .show();
+            .grid-normal-2();
           }
-        }
-        a {
-          .link();
-          .text-orange();
-        }
-        .views-field-title {
-          margin-bottom: 13px;
-        }
-        .views-field-body {
-          .show(table);
-          .empty-body {
-            .show(inline-block);
+          @media @narrow {
+            .grid-narrow-2();
           }
-          p {
-            margin-bottom: 0px;
+          @media @wide {
+            .grid-wide-2();
           }
+        .field-content {
+          color: #ce4619;
+          text-align: center;
+            .zero {
+              color: #b5b5b5;
+            }
+        }
+      }
+      a {
+        .link();
+        .text-orange();
+      }
+      .views-field-title {
+        margin-bottom: 13px;
+      }
+      .views-field-body {
+        .show(table);
+        .empty-body {
+          .show(inline-block);
+        }
+        p {
+          margin-bottom: 0px;
         }
       }
     }
   }
 }
+
 
 /****** User Profile End ******/
 
@@ -1356,7 +1138,7 @@ body.page-home {
   } 
 }
 
-#block-views-front-page-slider-block {
+.block-views-front-page-slider-block {
   width: 864px;
   position: relative;
 }
@@ -1600,16 +1382,18 @@ body.page-home {
   }
 }
 
-#quick-answer-wrapper, #oq-answer-form-wrapper {
-  legend, .ckeditor_links, .filter-wrapper {
+#quick-answer-wrapper, 
+#oq-answer-form-wrapper {
+  legend, 
+  .ckeditor_links, 
+  .filter-wrapper {
     .show(none) !important;
   }
   .fieldset-wrapper {
       background: #ffffff;
   }
   .form-submit {
-    .edit-submit();
-    .gradient-light-orange();
+    .light-orange-button();
   }
 }
 
@@ -1663,7 +1447,9 @@ body.page-home {
   }
 }
 
-.view-question-answers, .view-answer-feedbacks, .view-answers-review {
+.view-question-answers, 
+.view-answer-feedbacks, 
+.view-answers-review {
   .views-row {
     .show(inline-block);
     background: #ffffff;
@@ -1733,8 +1519,9 @@ body.page-home {
     }
   }
 }
+
 .views-inline-comment-cancel {
-  .cancel-action();
+  .button-cancel();
   padding: 0;
   margin: 0;
   a { 
@@ -1781,10 +1568,15 @@ body.page-home {
 
 .views-field-feedback-form {
   margin-top: 25px;
-  label, .form-item-inactive, .ajax-progress-throbber, .oq-review-form-rating-submit, .oq-review-form-rating-submit.form-item-active, .oq-review-form-submit-button, .oq-review-form-submit-wo-text {
+  label, 
+  .form-item-inactive, 
+  .ajax-progress-throbber, 
+  .oq-review-form-rating-submit, 
+  .oq-review-form-rating-submit.form-item-active {
     .show(none);
   }
-  .fivestar-user-stars, .fivestar-default {
+  .fivestar-user-stars, 
+  .fivestar-default {
     .right();
   }
   a.oq-review-link {
@@ -1796,23 +1588,7 @@ body.page-home {
     background: url('../images/ask-question.png') 0% 50% no-repeat;
     cursor: pointer;
   }
-  .oq-review-form-submit-button {
-    .edit-submit();
-    padding: 13px 16px;
-    .gradient-light-orange();
-    margin-bottom: 10px;
-  }
-  .oq-review-form-submit-wo-text {
-    .bold(13px);
-    color: #d0471b;
-    background: none;
-    border: 0;
-    padding: 23px 26px 0px 0px;
-  }
-  .oq-review-form-submit-button.disabled {
-    color: #ababab;
-    .gradient-disabled();
-  }
+
   .form-textarea-wrapper {
     clear: left;
   }
@@ -1832,7 +1608,22 @@ body.page-home {
   }
 }
 
-.views-field-feedback-form .oq-review-form-edit-button.form-submit {
+.oq-review-form-submit {
+  .button-submit();
+  margin-bottom: 10px;
+}
+
+.oq-review-form-submit[disabled] {
+  color: #ababab;
+  .gradient-disabled();
+}
+
+.oq-review-form-skip {
+  .button-cancel();
+}
+
+.oq-review-form-edit-button[type="submit"] {
+  .button();
   color: transparent;
   background: url(../images/answer-edit.png) 0 0 no-repeat;
   padding: 0;
@@ -1845,26 +1636,31 @@ body.page-home {
   right: 0;
 }
 
-.views-field-feedback-form .oq-review-form-edit-button.form-submit.progress-disabled {
+.oq-review-form-edit-button.progress-disabled {
   background: url(../images/progress_orange.gif) 0 0 no-repeat;
 }
 
 /*@todo Ilya adjust layout in accordance with psd*/
-.views-field-feedback-form .oq-review-form-edit-button.oq-review-form-empty-body {
+.oq-review-form-edit-button.oq-review-form-empty-body {
   margin-top: 4px;
   margin-right: -13px;
   .show(none);
 }
 
 
-.view-question-answers, .view-answer-feedbacks, .view-answers-review {
-  .views-answer-body, .views-answer-feedback-body, .views-other-answer-body {
+.view-question-answers, 
+.view-answer-feedbacks, 
+.view-answers-review {
+  .views-answer-body, 
+  .views-answer-feedback-body, 
+  .views-other-answer-body {
     .show(table);
   }
 }
 
-
-.view-question-answers, .view-answer-feedbacks, .view-feedback-comments {
+.view-question-answers, 
+.view-answer-feedbacks, 
+.view-feedback-comments {
   .views-field-comment-count {
     .show(inline);
   }
@@ -1875,7 +1671,11 @@ body.page-home {
     .show(none);
   }
   .comment-form {
-    label, .form-type-item a, #edit-preview, .form-item-subject, .ckeditor_links {
+    label, 
+    .form-type-item a, 
+    #edit-preview, 
+    .form-item-subject, 
+    .ckeditor_links {
       .show(none);
     }
     #edit-comment-body {
@@ -1890,11 +1690,10 @@ body.page-home {
       padding-right:0;
       width: 100%;
     }
-    #edit-submit {
-      .edit-submit();
+    .form-submit {
+      .light-orange-button();
       margin: 0;
       height: 30px;
-      .gradient-light-orange();
     }
   }
   .comment-group, .comment-form {
@@ -1984,8 +1783,10 @@ body.page-home {
 }
 
 
-.view-question-answers, .view-answer-feedbacks {
-  .views-answer-widgets, .views-answer-feedback-widgets {
+.view-question-answers, 
+.view-answer-feedbacks {
+  .views-answer-widgets, 
+  .views-answer-feedback-widgets {
     .left();
   }
   .views-inline-comment-field {
@@ -2022,7 +1823,7 @@ body.page-home {
   }
 }
 
-.node-type-open-question #block-quicktabs-open-question-tabs {
+.block-quicktabs-open-question-tabs {
   margin-top: 13px;
 }
 
@@ -2106,142 +1907,6 @@ body.page-home {
 
 /****** Node type "Question" End ******/
 
-/** Ctools Modal CSS*/
-div.ctools-common-modal-content {
-  background: none;
-  border: 0;
-  color: #000000;
-  margin: 0;
-  padding: 0;
-  text-align: left;
-  box-shadow: 2px 2px 7px #333;
-  .modal-scroll {
-    overflow: hidden;
-    overflow-y: auto;
-  }
-  #popups-overlay {
-    background-color: transparent;
-  }
-  #popups-loading {
-    width: 248px;
-    position: absolute;
-    display: none;
-    opacity: 1;
-    -moz-border-radius: 8px;
-    -webkit-border-radius: 8px;
-    z-index: 99;
-    span.popups-loading-message {
-      background: #FFF url(../images/loading-large.gif) no-repeat 8px center;
-      .show(block);
-      color: #444444;
-      .bold(22px);
-      height: 36px;
-      line-height: 36px;
-      padding: 0 40px;
-    }
-  }
-  .popups-box,
-  #popups-loading {
-    border: 0px solid #454545;
-    opacity: 1;
-    overflow: hidden;
-    padding: 0;
-    background-color: transparent;
-  }
-  .popups-container {
-    overflow: hidden;
-    height: 100%;
-    background-color: #fff;
-  }
-  div.popups-title {
-    background-color: #f4f4f4;
-    border: 1px solid #ddd;
-    padding: 4px 10px 5px;
-    color: #555;
-    text-align: center;
-    .modal-title {
-      color: #555;
-    }
-  }
-  .popups-body {
-    background-color: #fff;
-    padding: 8px;
-  }
-  .popups-box .popups-buttons,
-  .popups-box .popups-footer {
-    background-color: #fff;
-  }
-  .popups-title a.close {
-    color: transparent;
-    text-decoration:none;
-    background: url(../images/close.png) no-repeat scroll center center;
-    width: 8px;
-  }
-  .popups-title a:hover.close {
-    background: url(../images/close_hover.png) no-repeat scroll center center;
-  }
-  .popups-close {
-    font-size: 120%;
-    float: right;
-    text-align: right;
-    border-left: 1px solid #ddd;
-    padding: 0 0 0 10px;
-  }
-  .modal-content .modal-throbber-wrapper img {
-    margin-top: 30px;
-  }
-  .course-title {
-    border-bottom: 1px dotted #CCCCCC;
-    color: #555555;
-    font-weight: bold;
-    padding: 10px;
-  }
-  .course-actions {
-    float: right;
-    width: 100%;
-    margin-top: 10px;
-    .course-exit-action {
-      float: right;
-    }
-    .course-exit-action a{
-      .orange-button();
-    }
-    .course-cancel-action {
-      .cancel-action();
-    }
-  }
-  .resizable-textarea {
-    margin: 0;
-    float: left;
-    textarea {
-      border: 1px solid #ddd;
-    }
-    .grippie {
-      display: none;
-    }
-  }
-
-  #edit-field-abuse-reason select {
-    width: 100%;
-    border: 1px solid #DDDDDD;
-  }
-
-  #flag-confirm #edit-cancel {
-    visibility: hidden;
-  }
-
-  .form-actions.form-wrapper {
-    border-top: 1px dotted #ddd;
-    padding-top: 10px;
-  }
-
-  form .form-submit {
-    margin-right: 0;
-  }
-}
-
-/** Ctools Modal CSS*/
-
 .block-course-course-item-links .content li{
   .menu-float();
   a {
@@ -2266,13 +1931,13 @@ div.ctools-common-modal-content {
     height: 20px;
     width: 20px;
   }
-  a.flag-action:hover {
+  .flag-action:hover {
     background: url(../images/flag_hover.png) no-repeat scroll 0 0;
   }
-  a.unflag-action {
+  .unflag-action {
     background: url(../images/unflag.png) no-repeat scroll 0 0;
   }
-  a.unflag-action:hover {
+  .unflag-action:hover {
     background: url(../images/flag.png) no-repeat scroll 0 0;
   }
   .ajax-progress, .throbber {
@@ -2282,7 +1947,8 @@ div.ctools-common-modal-content {
 
 /* Login/Registration forms styles START */
 
-.not-logged-in .ctools-modal-user-forms {
+.not-logged-in 
+.ctools-modal-user-forms {
   .popups-body {
     padding: 0px 14px 14px 14px;
     width: auto !important;
@@ -2355,7 +2021,8 @@ div.ctools-common-modal-content {
   }
 }
 
-.login-form, .register-form {
+.login-form, 
+.register-form {
   .ajax-progress.ajax-progress-throbber {
     position: absolute;
     bottom: 22px;

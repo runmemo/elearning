@@ -2,14 +2,14 @@
 
 /**
  * @file
- * Contains test cases for subscriptions question module
+ * Contains test cases for subscriptions reference module
  */
 
 /** 
  * Class contains tests 
  * @todo barinder implement tests
  */
-class SubscriptionQuestionTestCase extends DrupalWebTestCase {
+class SubscriptionReferenceTestCase extends DrupalWebTestCase {
   
   
   function setUp() {
@@ -74,4 +74,32 @@ class SubscriptionQuestionTestCase extends DrupalWebTestCase {
     
   }
   
+}
+
+class SubscriptionReferenceUnitTestCase extends DrupalUnitTestCase {
+  
+  public static function getInfo() {
+    return array(
+      'name' => 'Subscription Reference Unit Test Case',
+      'description' => 'Unit tests for subscription reference.',
+      'group' => 'Subscription Reference',
+    );
+  }
+  
+  function test_hook_subscriptions_reference() {
+    //  @todo find a way to mock the function _available_reference_fields() 
+    //  override_function(); this is one possible solution
+    //  http://php.net/manual/en/function.override-function.php
+    //  http://www.php.net/manual/en/function.override-function.php#50821
+    //  that requires: pecl apd
+    
+    //  overriding of the function will allow testing of other functions
+    //  without touching db
+    
+    //  here is an example of mock testing:
+    //  http://www.workhabit.com/blog/mock-function-testing-drupal
+    //  that requires: pecl runkit
+    //  @see PHPMockFunction folder in libraries
+    
+  }
 }
