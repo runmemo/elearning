@@ -1579,7 +1579,7 @@ body.page-home {
   .fivestar-default {
     .right();
   }
-  a.oq-review-link {
+  .oq-review-link {
     .right();
     width: 16px;
     height: 16px;
@@ -1605,52 +1605,47 @@ body.page-home {
   }
 }
 
-.views-field-feedback-form .oq-review-form-submit {
+.oq-review-form-submit {
   .button-submit();
   margin-bottom: 10px;
   padding: 13px 16px;
 }
 
-.views-field-feedback-form .oq-review-form-submit[disabled] {
+.oq-review-form-submit[disabled] {
   color: #ababab;
   .gradient-disabled();
 }
 
-.views-field-feedback-form .oq-review-form-skip {
+.oq-review-form-skip {
   .button-cancel();
-  .show(none);
 }
 
-.views-field-feedback-form .oq-review-form-edit-button[type="submit"] {
-  .button();
-  color: transparent;
-  background: url(../images/answer-edit.png) 0 0 no-repeat;
+.oq-form-fieldset-toggle {
+  width: 100%;
+  clear: both;
   padding: 0;
+  background: none;
+  .fieldset-wrapper {
+    padding: 0;
+  }
+}
+
+.oq-review-form-edit {
+  .button-icon();
+  background: url(../images/answer-edit.png) 0 0 no-repeat;
   margin-top: 60px;
   margin-right: 8px;
-  border: none;
-  height: 15px;
-  width: 15px;
   position: absolute;
   right: 0;
 }
 
-.views-field-feedback-form .oq-review-form-edit-button.progress-disabled {
+.views-field-feedback-form .oq-review-form-edit.progress-disabled {
   background: url(../images/progress_orange.gif) 0 0 no-repeat;
 }
 
-.oq-review-form-edit .form-item-review .form-textarea,
-.oq-review-form-edit .form-item-review .grippie,
-.oq-review-form-edit .oq-review-form-submit {
-  .show(none);
-}
-
-.oq-review-form-edit .is-active {
-  .show(block) !important;
-}
 
 /*@todo Ilya adjust layout in accordance with psd*/
-.oq-review-form-edit-button.oq-review-form-empty-body {
+.oq-review-form-edit-body-is-empty {
   margin-top: 4px;
   margin-right: -13px;
   .show(none);
@@ -1836,7 +1831,7 @@ body.page-home {
   margin-top: 13px;
 }
 
-#oq-answer-form-wrapper {
+.oq-answer-form-wrapper {
   .border-bottom-dotted();
   padding-bottom: 26px;
   .cke_top, .cke_bottom {
