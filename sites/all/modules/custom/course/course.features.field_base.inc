@@ -132,69 +132,70 @@ function course_field_default_field_bases() {
     'type' => 'image',
   );
 
-  // Exported field_base: 'field_grade_marks'
-  $field_bases['field_grade_marks'] = array(
-    'active' => 1,
-    'cardinality' => 1,
-    'deleted' => 0,
-    'entity_types' => array(),
-    'field_name' => 'field_grade_marks',
-    'foreign keys' => array(),
-    'indexes' => array(),
-    'locked' => 0,
-    'module' => 'number',
-    'settings' => array(),
-    'translatable' => 0,
-    'type' => 'number_integer',
-  );
+  if(module_exists('field_collection')) {
+    // Exported field_base: 'field_grade_marks'
+    $field_bases['field_grade_marks'] = array(
+      'active' => 1,
+      'cardinality' => 1,
+      'deleted' => 0,
+      'entity_types' => array(),
+      'field_name' => 'field_grade_marks',
+      'foreign keys' => array(),
+      'indexes' => array(),
+      'locked' => 0,
+      'module' => 'number',
+      'settings' => array(),
+      'translatable' => 0,
+      'type' => 'number_integer',
+    );
 
-  // Exported field_base: 'field_grade_name'
-  $field_bases['field_grade_name'] = array(
-    'active' => 1,
-    'cardinality' => 1,
-    'deleted' => 0,
-    'entity_types' => array(),
-    'field_name' => 'field_grade_name',
-    'foreign keys' => array(),
-    'indexes' => array(
-      'value' => array(
-        0 => 'value',
+    // Exported field_base: 'field_grade_name'
+    $field_bases['field_grade_name'] = array(
+      'active' => 1,
+      'cardinality' => 1,
+      'deleted' => 0,
+      'entity_types' => array(),
+      'field_name' => 'field_grade_name',
+      'foreign keys' => array(),
+      'indexes' => array(
+        'value' => array(
+          0 => 'value',
+        ),
       ),
-    ),
-    'locked' => 0,
-    'module' => 'list',
-    'settings' => array(
-      'allowed_values' => array(
-        'pass' => 'Pass',
-        'merit' => 'Merit',
-        'honor' => 'Honor',
-        'best' => 'Best of the best',
+      'locked' => 0,
+      'module' => 'list',
+      'settings' => array(
+        'allowed_values' => array(
+          'pass' => 'Pass',
+          'merit' => 'Merit',
+          'honor' => 'Honor',
+          'best' => 'Best of the best',
+        ),
+        'allowed_values_function' => '',
       ),
-      'allowed_values_function' => '',
-    ),
-    'translatable' => 0,
-    'type' => 'list_text',
-  );
+      'translatable' => 0,
+      'type' => 'list_text',
+    );
 
-  // Exported field_base: 'field_grades'
-  $field_bases['field_grades'] = array(
-    'active' => 1,
-    'cardinality' => -1,
-    'deleted' => 0,
-    'entity_types' => array(),
-    'field_name' => 'field_grades',
-    'foreign keys' => array(),
-    'indexes' => array(),
-    'locked' => 0,
-    'module' => 'field_collection',
-    'settings' => array(
-      'hide_blank_items' => 1,
-      'path' => '',
-    ),
-    'translatable' => 0,
-    'type' => 'field_collection',
-  );
-
+    // Exported field_base: 'field_grades'
+    $field_bases['field_grades'] = array(
+      'active' => 1,
+      'cardinality' => -1,
+      'deleted' => 0,
+      'entity_types' => array(),
+      'field_name' => 'field_grades',
+      'foreign keys' => array(),
+      'indexes' => array(),
+      'locked' => 0,
+      'module' => 'field_collection',
+      'settings' => array(
+        'hide_blank_items' => 1,
+        'path' => '',
+      ),
+      'translatable' => 0,
+      'type' => 'field_collection',
+    );
+  }
   // Exported field_base: 'field_provider'
   $field_bases['field_provider'] = array(
     'active' => 1,
