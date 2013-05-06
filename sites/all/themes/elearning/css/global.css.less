@@ -398,10 +398,10 @@ h2 {
     }
   }
   .form-submit {
-      left: -8px;
-      top: -59px;
-      padding: 10px 20px;
-      margin-top: 0px;
+    .button-submit();
+    left: -8px;
+    top: -49px;
+    margin-top: 0px;
   }
   fieldset {
     margin-bottom: 0;
@@ -424,7 +424,7 @@ h2 {
   }
   .page-next,
   .page-previous {
-    .orange-button();
+    .button-submit();
       float: left;
     padding: 8px 0;
     text-align: center;
@@ -1521,7 +1521,7 @@ body.page-home {
 }
 
 .views-inline-comment-cancel {
-  .cancel-action();
+  .button-cancel();
   padding: 0;
   margin: 0;
   a { 
@@ -1572,8 +1572,7 @@ body.page-home {
   .form-item-inactive, 
   .ajax-progress-throbber, 
   .oq-review-form-rating-submit, 
-  .oq-review-form-rating-submit.form-item-active, 
-  .oq-review-form-skip {
+  .oq-review-form-rating-submit.form-item-active {
     .show(none);
   }
   .fivestar-user-stars, 
@@ -1610,6 +1609,7 @@ body.page-home {
 }
 
 .oq-review-form-submit {
+  .button-submit();
   margin-bottom: 10px;
 }
 
@@ -1619,11 +1619,7 @@ body.page-home {
 }
 
 .oq-review-form-skip {
-    .bold(13px);
-    color: #d0471b;
-    background: none;
-    border: 0;
-    padding: 23px 26px 0px 0px;
+  .button-cancel();
 }
 
 .oq-review-form-edit-button[type="submit"] {
