@@ -240,6 +240,9 @@ function user_extra_form_alter(&$form, &$form_state, $form_id) {
       ),
     );
   } elseif ($form_id == 'user_register_form') {
+    $form['account']['mail']['#description'] = t('Please, use e-mail, provided by your college or university, e.g. vasya101@msu.ru');
+    $form['account']['mail']['#suffix'] = '<a class="register-form-popup-link email-popup"></a>';
+    $form['account']['pass']['#suffix'] = '<a class="register-form-popup-link pass-popup"></a>';
     $form['actions']['submit']['#ajax'] = array(
       'callback' => 'user_extra_reg_submit_callback',
       'wrapper' => 'user-register-form',

@@ -51,7 +51,7 @@ h2 {
 }
 
 .section-header {
-  .gradient-orange();
+  .gradient-main-panel();
     border-top: #9e2600 @border-1;
     border-bottom: #9e2600 @border-1;
     height: 45px;
@@ -662,7 +662,7 @@ h2 {
 }
 
 #course-registration-form .form-submit {
-  .light-orange-button();
+  .button-submit();
   float: none;
   width: 100%;
   padding: 10px 0px;
@@ -958,7 +958,7 @@ h2 {
     .show(none);
   }
   .upload-form-submit-link {
-    .light-orange-button();
+    .button-submit();
     margin: 10px;
     cursor: pointer;
   }
@@ -1393,7 +1393,9 @@ body.page-home {
       background: #ffffff;
   }
   .form-submit {
-    .light-orange-button();
+    .button-submit();
+    margin-top: 9px;
+    padding: 13px 16px;
   }
 }
 
@@ -1569,10 +1571,8 @@ body.page-home {
 .views-field-feedback-form {
   margin-top: 25px;
   label, 
-  .form-item-inactive, 
   .ajax-progress-throbber, 
-  .oq-review-form-rating-submit, 
-  .oq-review-form-rating-submit.form-item-active {
+  .oq-review-form-rating-submit {
     .show(none);
   }
   .fivestar-user-stars, 
@@ -1603,26 +1603,25 @@ body.page-home {
     padding: 8px;
     .RoundedShape(2px);
   }
-  .form-item-active {
-    .show(block);
-  }
 }
 
-.oq-review-form-submit {
+.views-field-feedback-form .oq-review-form-submit {
   .button-submit();
   margin-bottom: 10px;
+  padding: 13px 16px;
 }
 
-.oq-review-form-submit[disabled] {
+.views-field-feedback-form .oq-review-form-submit[disabled] {
   color: #ababab;
   .gradient-disabled();
 }
 
-.oq-review-form-skip {
+.views-field-feedback-form .oq-review-form-skip {
   .button-cancel();
+  .show(none);
 }
 
-.oq-review-form-edit-button[type="submit"] {
+.views-field-feedback-form .oq-review-form-edit-button[type="submit"] {
   .button();
   color: transparent;
   background: url(../images/answer-edit.png) 0 0 no-repeat;
@@ -1636,8 +1635,18 @@ body.page-home {
   right: 0;
 }
 
-.oq-review-form-edit-button.progress-disabled {
+.views-field-feedback-form .oq-review-form-edit-button.progress-disabled {
   background: url(../images/progress_orange.gif) 0 0 no-repeat;
+}
+
+.oq-review-form-edit .form-item-review .form-textarea,
+.oq-review-form-edit .form-item-review .grippie,
+.oq-review-form-edit .oq-review-form-submit {
+  .show(none);
+}
+
+.oq-review-form-edit .is-active {
+  .show(block) !important;
 }
 
 /*@todo Ilya adjust layout in accordance with psd*/
@@ -1691,7 +1700,7 @@ body.page-home {
       width: 100%;
     }
     .form-submit {
-      .light-orange-button();
+      .button-submit();
       margin: 0;
       height: 30px;
     }
@@ -1952,6 +1961,7 @@ body.page-home {
   .popups-body {
     padding: 0px 14px 14px 14px;
     width: auto !important;
+    position: initial;
   }
 }
 
@@ -1970,6 +1980,7 @@ body.page-home {
       .box-shadow();
       border: 0;
       padding-left: 11px;
+      width: 100%;
     }
     input.error {
       border: 1px solid #e24110;
@@ -1978,7 +1989,7 @@ body.page-home {
     }
   }
   .form-submit, .form-submit:hover {
-    .light-orange-button();
+    .button-submit();
     padding: 9px 20px !important;
     font-size: 14px !important;
   }
@@ -2021,7 +2032,7 @@ body.page-home {
   }
 }
 
-.login-form, 
+.login-form,
 .register-form {
   .ajax-progress.ajax-progress-throbber {
     position: absolute;
@@ -2060,11 +2071,26 @@ body.page-home {
       margin-right: 17px;
     }
   }
+  .form-item-mail .description,
+  .form-item-pass .description {
+    position: absolute;
+    left: 98%;
+    width: 131px;
+    padding: 15px;
+    background: #fdfdfd;
+    z-index: 10000;    
+  }
   .form-item-mail {
     margin-bottom: 25px;
+    .description {
+      top: 28%;
+    }
   }
   .form-item-pass {
     margin-bottom: 23px;
+    .description {
+      top: 44%;
+    }
     .password-parent {
       margin-bottom: 27px;
       width: 100%;
@@ -2088,6 +2114,25 @@ body.page-home {
   }
   .ajax-progress.ajax-progress-throbber {
     right: 208px !important;
+  }
+  .register-form-popup-link {
+    width: 21px;
+    height: 21px;
+    background: transparent url(../images/info-popup-link.png) no-repeat 0 0;
+    cursor: pointer;
+  }
+  .register-form-popup-link:hover {
+    background: transparent url(../images/info-popup-link-hover.png) no-repeat 0 0;
+  }
+  .email-popup {
+    position: absolute;
+    top: 170px;
+    left: 90%;
+  }
+  .pass-popup {
+    position: absolute;
+    top: 251px;
+    left: 90%;
   }
 }
 

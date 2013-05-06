@@ -28,10 +28,17 @@
 
     return html;
 
-  }
+  };
   Drupal.behaviors.user_login_system_forms = {
     attach: function(context, settings) {
       $('.messages').insertBefore('.form-actions');
+      // popup behaviour for register form
+      $('.email-popup').hover(function() {
+        $('.form-item-mail .description').fadeToggle();
+      });
+      $('.pass-popup').hover(function() {
+        $('.form-item-pass .description').fadeToggle();
+      });
     }
   };
 })(jQuery);

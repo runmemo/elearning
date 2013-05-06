@@ -428,7 +428,7 @@ function oq_review_form($form, &$form_state, $args) {
       );
       $form['message_placeholder'] = array(
         '#markup' => '',
-        '#prefix' => '<div id="message-placeholder">',
+        '#prefix' => '<div class="oq-form-message">',
         '#suffix' => '</div>'
       );
       if ($rating) {
@@ -503,6 +503,13 @@ function oq_review_form($form, &$form_state, $args) {
         ),
       );
       $form['submit_skip']['#attributes']['class'][] = 'oq-review-form-skip';
+      // if the form is rebuilded after "edit_submit" button,
+      // add class 'is-active' in order to show textarea and button
+      if (isset($form_state['active']) && $form_state['active'] == TRUE) {
+        $form['review']['#attributes']['class'][] = 'is-active';
+        $form['submit_button']['#attributes']['class'][] = 'is-active';
+        $form['submit_skip']['#attributes']['class'][] = 'is-active';
+      }
 
       break;
     default: // this should not happen ever
@@ -577,6 +584,8 @@ function oq_review_form_js($form, &$form_state) {
  */
 function oq_review_form_submit($form, &$form_state) {
   if ($form_state['values']['op'] == 'edit_submit') {
+    // add this variable to show form elements after edit submit
+    $form_state['active'] = TRUE;
     $form_state['step'] = 'edit';
   } else {
     // validate the form

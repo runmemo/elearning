@@ -23,20 +23,22 @@
 
       $('select[name="rating"]').change(function() {
         var feedback_form = get_feedback_form($(this));
-        var review = feedback_form.find('.form-item-inactive');
         var submit = feedback_form.find('.oq-review-form-submit');
         var button_skip = feedback_form.find('.oq-review-form-skip');
         var textarea = feedback_form.find('textarea[name="review"]').val();
-        if (this.selectedIndex <= 3) {  
+        submit.addClass('is-active');
+        button_skip.addClass('is-active');
+        feedback_form.find('textarea[name="review"]').addClass('is-active');
+        feedback_form.find('.grippie').addClass('is-active');
+        if (this.selectedIndex <= 3) {
           if (textarea === '') {
             submit.prop('disabled', true);
           }
-        } 
+          button_skip.removeClass('is-active');
+        }
         else {
-          if (textarea === '') {
-            button_skip.hide();
-          } else {
-            button_skip.show();
+          if (textarea !== '') {
+            button_skip.removeClass('is-active');
           }
           submit.prop('disabled', false);
         }
@@ -48,19 +50,16 @@
       // 
       $('textarea[name="review"]').keyup(function() {
         var feedback_form = get_feedback_form($(this));
-      //  console.debug(feedback_form);
         var select = feedback_form.find('select[name="rating"]');
         var rating = select[0].selectedIndex;
-        console.debug(rating);
         var button_skip = feedback_form.find('.oq-review-form-skip');     
         var review_length = $(this).val().length;
-        console.debug(review_length)
         if (review_length < 1 && rating > 3) {
-          button_skip.attr('disabled', true);
+          button_skip.addClass('is-active');
         } 
         else {
-          if (review_length >= 1) {
-            button_skip.prop('disabled', true);
+          if (review_length >= 1 && rating > 3) {
+            button_skip.removeClass('is-active');
           }
         }
         var btn_submit = feedback_form.find('.oq-review-form-submit');
