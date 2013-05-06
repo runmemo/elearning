@@ -166,6 +166,7 @@ function open_question_answer_form($form, &$form_state, $answered) {
   $form = array();
   $form['#prefix'] = '<div id="oq-answer-form-wrapper">';
   $form['#suffix'] = '</div>';
+  $form['#attributes']['class'][] = 'oq-answer-form';
   
   $nid = 0;
   if (empty($form_state['step'])) {  // page is loaded
@@ -374,6 +375,8 @@ function oq_review_form($form, &$form_state, $args) {
   $form = array();
   $nid = $args[0]; 
   
+  $form['#prefix'] = '<div id="oq-review-wrapper-' . $nid . '">';
+  $form['#suffix'] = '</div>'; 
   $form['#attributes']['class'][] = 'oq-review-wrapper-' . $nid;
   $form['#attached']['css'][] = drupal_get_path('module', 'common_tools') . '/widgets/elearning_fivestar_widget.css';
   
@@ -504,7 +507,7 @@ function oq_review_form($form, &$form_state, $args) {
         '#default_value' => isset($review_body) ? $review_body : '',
       );
       $form['toggle_fields']['review']['#attributes']['class'][] = 'oq-form-review';
-      $form['toggle_fields']['review']['#attributes']['class'][] = 'js-oq-review-field' . $nid;
+      $form['toggle_fields']['review']['#attributes']['class'][] = 'js-oq-review-field-' . $nid;
      
       // submit button
       $form['toggle_fields']['submit_button'] = array(

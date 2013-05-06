@@ -16,6 +16,14 @@
         return nid;
       }
       
+      function get_skip_review_button(nid) {
+        return $('.js-oq-skip-review-' + nid);
+      }
+      
+      function get_submit_button(nid) {
+        return $('.js-oq-submit-review-' + nid);
+      }
+      
       $('.oq-review-form-view').ready(function() {
         $(this).find('.star').each(function(index, element) {
           if (!$(this).hasClass('on')) {
@@ -30,8 +38,8 @@
       $('select[name="rating"]').change(function() {
         var feedback_form = get_feedback_form($(this));
         var nid = get_answer_nid($(this));
-        var btn_submit = $('.js-oq-submit-review-' + nid);
-        var btn_skip = $('.js-oq-skip-review-' + nid);
+        var btn_submit = get_submit_button(nid);
+        var btn_skip = get_skip_review_button(nid);
         var str_review = $('.js-oq-review-field-' + nid).val();
         var toggle_fields = $('.js-oq-form-toggle-' + nid);
         toggle_fields.show('fast');
@@ -43,6 +51,7 @@
         }
         else {
           btn_submit.prop('disabled', false);
+          console.debug(str_review);
           if (str_review !== '') {
             btn_skip.hide();
           } 
@@ -61,7 +70,7 @@
         var nid = get_answer_nid($(this));
         var select = feedback_form.find('select[name="rating"]');
         var rating = select[0].selectedIndex;
-        var btn_skip = $('.js-oq-skip-review-' + nid);     
+        var btn_skip = get_skip_review_button(nid);    
         var review_length = $(this).val().length;
         if (review_length < 1 && rating > 3) {
           btn_skip.show();
@@ -71,7 +80,7 @@
             btn_skip.hide();
           }
         }
-        var btn_submit = $('.js-oq-submit-review-' + nid);
+        var btn_submit = get_submit_button(nid);
         if (review_length < 4 && rating <= 3) {
           btn_submit.prop('disabled', true);
         } else {
