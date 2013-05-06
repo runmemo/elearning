@@ -10,77 +10,6 @@
 function course_field_default_field_instances() {
   $field_instances = array();
 
-  // Exported field_instance: 'field_collection_item-field_merits-field_merit_marks'
-  $field_instances['field_collection_item-field_merits-field_merit_marks'] = array(
-    'bundle' => 'field_merits',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'number',
-        'settings' => array(
-          'decimal_separator' => '.',
-          'prefix_suffix' => TRUE,
-          'scale' => 0,
-          'thousand_separator' => ' ',
-        ),
-        'type' => 'number_integer',
-        'weight' => 2,
-      ),
-    ),
-    'entity_type' => 'field_collection_item',
-    'field_name' => 'field_merit_marks',
-    'label' => 'Merit Marks',
-    'required' => 0,
-    'settings' => array(
-      'max' => 100,
-      'min' => 0,
-      'prefix' => '',
-      'suffix' => '',
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 0,
-      'module' => 'number',
-      'settings' => array(),
-      'type' => 'number',
-      'weight' => 3,
-    ),
-  );
-
-  // Exported field_instance: 'field_collection_item-field_merits-field_merit_name'
-  $field_instances['field_collection_item-field_merits-field_merit_name'] = array(
-    'bundle' => 'field_merits',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'list',
-        'settings' => array(),
-        'type' => 'list_default',
-        'weight' => 3,
-      ),
-    ),
-    'entity_type' => 'field_collection_item',
-    'field_name' => 'field_merit_name',
-    'label' => 'Merit Name',
-    'required' => 0,
-    'settings' => array(
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'options',
-      'settings' => array(),
-      'type' => 'options_select',
-      'weight' => 4,
-    ),
-  );
-
   // Exported field_instance: 'node-course-body'
   $field_instances['node-course-body'] = array(
     'bundle' => 'course',
@@ -314,49 +243,121 @@ function course_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-course-field_merits'
-  $field_instances['node-course-field_merits'] = array(
-    'bundle' => 'course',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'field_collection',
-        'settings' => array(
-          'add' => 'Add',
-          'delete' => 'Delete',
-          'description' => TRUE,
-          'edit' => 'Edit',
-          'view_mode' => 'full',
+  if(module_exists('field_collection')) {
+    // Exported field_instance: 'field_collection_item-field_grades-field_grade_marks'
+    $field_instances['field_collection_item-field_grades-field_grade_marks'] = array(
+      'bundle' => 'field_grades',
+      'default_value' => NULL,
+      'deleted' => 0,
+      'description' => '',
+      'display' => array(
+        'default' => array(
+          'label' => 'above',
+          'module' => 'number',
+          'settings' => array(
+            'decimal_separator' => '.',
+            'prefix_suffix' => TRUE,
+            'scale' => 0,
+            'thousand_separator' => ' ',
+          ),
+          'type' => 'number_integer',
+          'weight' => 2,
         ),
-        'type' => 'field_collection_view',
-        'weight' => 11,
       ),
-      'teaser' => array(
-        'label' => 'above',
+      'entity_type' => 'field_collection_item',
+      'field_name' => 'field_grade_marks',
+      'label' => 'Grade Marks',
+      'required' => 0,
+      'settings' => array(
+        'max' => 100,
+        'min' => 0,
+        'prefix' => '',
+        'suffix' => '',
+        'user_register_form' => FALSE,
+      ),
+      'widget' => array(
+        'active' => 0,
+        'module' => 'number',
         'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
+        'type' => 'number',
+        'weight' => 3,
       ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_merits',
-    'label' => 'Merits',
-    'required' => 0,
-    'settings' => array(
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 0,
-      'module' => 'field_collection',
-      'settings' => array(),
-      'type' => 'field_collection_embed',
-      'weight' => 8,
-    ),
-  );
+    );
 
+    // Exported field_instance: 'field_collection_item-field_grades-field_grade_name'
+    $field_instances['field_collection_item-field_grades-field_grade_name'] = array(
+      'bundle' => 'field_grades',
+      'default_value' => NULL,
+      'deleted' => 0,
+      'description' => '',
+      'display' => array(
+        'default' => array(
+          'label' => 'above',
+          'module' => 'list',
+          'settings' => array(),
+          'type' => 'list_default',
+          'weight' => 3,
+        ),
+      ),
+      'entity_type' => 'field_collection_item',
+      'field_name' => 'field_grade_name',
+      'label' => 'Grade Name',
+      'required' => 0,
+      'settings' => array(
+        'user_register_form' => FALSE,
+      ),
+      'widget' => array(
+        'active' => 1,
+        'module' => 'options',
+        'settings' => array(),
+        'type' => 'options_select',
+        'weight' => 4,
+      ),
+    );
+
+    // Exported field_instance: 'node-course-field_grades'
+    $field_instances['node-course-field_grades'] = array(
+      'bundle' => 'course',
+      'default_value' => NULL,
+      'deleted' => 0,
+      'description' => '',
+      'display' => array(
+        'default' => array(
+          'label' => 'above',
+          'module' => 'field_collection',
+          'settings' => array(
+            'add' => 'Add',
+            'delete' => 'Delete',
+            'description' => TRUE,
+            'edit' => 'Edit',
+            'view_mode' => 'full',
+          ),
+          'type' => 'field_collection_view',
+          'weight' => 11,
+        ),
+        'teaser' => array(
+          'label' => 'above',
+          'settings' => array(),
+          'type' => 'hidden',
+          'weight' => 0,
+        ),
+      ),
+      'entity_type' => 'node',
+      'field_name' => 'field_grades',
+      'label' => 'Grades',
+      'required' => 0,
+      'settings' => array(
+        'user_register_form' => FALSE,
+      ),
+      'widget' => array(
+        'active' => 0,
+        'module' => 'field_collection',
+        'settings' => array(),
+        'type' => 'field_collection_embed',
+        'weight' => 8,
+      ),
+    );
+  }
   // Exported field_instance: 'node-course-field_provider'
   $field_instances['node-course-field_provider'] = array(
     'bundle' => 'course',
