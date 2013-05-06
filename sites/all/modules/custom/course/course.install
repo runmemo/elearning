@@ -44,3 +44,28 @@ function course_update_7002() {
   create_field($fields['node-course-field-course-dates']);
   create_field($fields['node-course-field-image']);
 }
+
+function course_update_7003() {
+  $ret = array();
+
+  // your array of modules you wish to enable and install in the update
+  $modules = array('field_collection');
+
+  // You must rebuild the module cache for the system table to see the modules
+  module_rebuild_cache();
+
+  // enable modules first
+  module_enable($modules);
+
+  // now run their install files
+  drupal_install_modules($modules);
+
+  // other magic functions that are only called when admin/build/modules form is submitted
+  menu_rebuild();
+  node_types_rebuild();
+  drupal_clear_css_cache();
+
+  // just a report for the install page -- otherwise this update will show up as "FAILED"
+  $ret[] = array('success' => true, 'query' => "Enabled Field collection module");
+  return $ret;
+}
