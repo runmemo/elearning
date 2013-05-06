@@ -1648,6 +1648,7 @@ body.page-home {
 .oq-review-form-edit-button.oq-review-form-empty-body {
   margin-top: 4px;
   margin-right: -13px;
+  .show(none);
 }
 
 
@@ -1947,3 +1948,151 @@ body.page-home {
     .show(none);
   }
 }
+
+/* Login/Registration forms styles START */
+
+.not-logged-in 
+.ctools-modal-user-forms {
+  .popups-body {
+    padding: 0px 14px 14px 14px;
+    width: auto !important;
+  }
+}
+
+.login-system-form {
+  margin-top: 27px;
+  .form-item {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    label {
+      .bold(12px);
+      color: #505050;
+    }
+    .form-text {
+      height: 41px;
+      .bold(14px);
+      .box-shadow();
+      border: 0;
+      padding-left: 11px;
+    }
+    input.error {
+      border: 1px solid #e24110;
+      background-color: #fff2ee;
+      color: #e24110;
+    }
+  }
+  .form-submit, .form-submit:hover {
+    .light-orange-button();
+    padding: 9px 20px !important;
+    font-size: 14px !important;
+  }
+  .messages.error {
+    background-color: #e64412;
+    color: #fff;
+    .bold(12px);
+    background-image: none;
+    padding: 13px 13px 13px 9px;
+    margin: 0px 0px -13px 0px;
+    ul {
+      list-style: none;
+      margin: 0;
+    }
+  }
+  .form-actions.form-wrapper {
+    padding-top: 16px !important;
+    margin-top: 29px;
+  }
+}
+
+.login-form {
+  .login-form-registration, .login-form-reset {
+    .right();
+  }
+  .form-item-name {
+    margin-bottom: 22px;
+  }
+  .form-item-pass {
+    margin-bottom: 16px;
+  }
+  a.login-form-additional-link {
+    color: #ec4600;
+    .link();
+    .bold(12px);
+  }
+  .login-form-fb-submit, .login-form-fb-submit:hover {
+    .gradient-fb();
+    .left();
+  }
+}
+
+.login-form, 
+.register-form {
+  .ajax-progress.ajax-progress-throbber {
+    position: absolute;
+    bottom: 22px;
+    right: 100px;
+    .throbber {
+      background: transparent url(../images/progress_orange.gif) no-repeat 0 0;
+      .left();
+      height: 16px;
+      margin: 0px 3px 2px 0px;
+      width: 16px;
+    }
+  }
+}
+
+
+.ctools-modal-register-form {
+  width: 440px !important;
+}
+
+.register-form {
+  .description, .password-strength, .password-strength-text, .password-strength-title, .password-indicator {
+    .show(none);
+  }
+  .password-suggestions {
+    .show(none) !important;
+  }
+  .register-form-name-wrapper {
+    margin-bottom: 22px;
+    .show(inline-block);
+    .field-name-field-name, .field-name-field-surname {
+      width: 197px;
+      .left();
+    }
+    .field-name-field-name {
+      margin-right: 17px;
+    }
+  }
+  .form-item-mail {
+    margin-bottom: 25px;
+  }
+  .form-item-pass {
+    margin-bottom: 23px;
+    .password-parent {
+      margin-bottom: 27px;
+      width: 100%;
+    }
+    .confirm-parent {
+      width: 100%;
+    }
+  }
+  .password-confirm, .register-form-license-text {
+    .bold(12px);
+    color: #505050;
+  }
+  .password-confirm {
+    margin: 0px 0px 0px 0px;
+  }
+  .register-form-license-text {
+    a:link, a:visited {
+      .link();
+      color: #e44100;
+    }
+  }
+  .ajax-progress.ajax-progress-throbber {
+    right: 208px !important;
+  }
+}
+
+/* Login/Registration forms styles END */

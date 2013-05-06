@@ -52,7 +52,7 @@ function user_extra_field_default_field_instances() {
       'default_value2' => 'same',
       'default_value_code' => '',
       'default_value_code2' => '',
-      'user_register_form' => 1,
+      'user_register_form' => 0,
     ),
     'widget' => array(
       'active' => 1,
@@ -66,7 +66,7 @@ function user_extra_field_default_field_instances() {
         'year_range' => '-90:+0',
       ),
       'type' => 'date_popup',
-      'weight' => 9,
+      'weight' => 4,
     ),
   );
 
@@ -95,10 +95,10 @@ function user_extra_field_default_field_instances() {
     'entity_type' => 'user',
     'field_name' => 'field_name',
     'label' => 'Name',
-    'required' => 0,
+    'required' => 1,
     'settings' => array(
       'text_processing' => 0,
-      'user_register_form' => 0,
+      'user_register_form' => 1,
     ),
     'widget' => array(
       'active' => 1,
@@ -107,7 +107,7 @@ function user_extra_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 7,
+      'weight' => 0,
     ),
   );
 
@@ -139,7 +139,7 @@ function user_extra_field_default_field_instances() {
     'required' => 0,
     'settings' => array(
       'text_processing' => 0,
-      'user_register_form' => 1,
+      'user_register_form' => 0,
     ),
     'widget' => array(
       'active' => 1,
@@ -148,7 +148,7 @@ function user_extra_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 10,
+      'weight' => 5,
     ),
   );
 
@@ -177,10 +177,10 @@ function user_extra_field_default_field_instances() {
     'entity_type' => 'user',
     'field_name' => 'field_surname',
     'label' => 'Surname',
-    'required' => 0,
+    'required' => 1,
     'settings' => array(
       'text_processing' => 0,
-      'user_register_form' => 0,
+      'user_register_form' => 1,
     ),
     'widget' => array(
       'active' => 1,
@@ -189,7 +189,7 @@ function user_extra_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 8,
+      'weight' => 1,
     ),
   );
 
