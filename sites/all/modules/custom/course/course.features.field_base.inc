@@ -133,13 +133,13 @@ function course_field_default_field_bases() {
   );
 
   if(module_exists('field_collection')) {
-    // Exported field_base: 'field_merit_marks'
-    $field_bases['field_merit_marks'] = array(
+    // Exported field_base: 'field_grade_marks'
+    $field_bases['field_grade_marks'] = array(
       'active' => 1,
       'cardinality' => 1,
       'deleted' => 0,
       'entity_types' => array(),
-      'field_name' => 'field_merit_marks',
+      'field_name' => 'field_grade_marks',
       'foreign keys' => array(),
       'indexes' => array(),
       'locked' => 0,
@@ -149,13 +149,13 @@ function course_field_default_field_bases() {
       'type' => 'number_integer',
     );
 
-    // Exported field_base: 'field_merit_name'
-    $field_bases['field_merit_name'] = array(
+    // Exported field_base: 'field_grade_name'
+    $field_bases['field_grade_name'] = array(
       'active' => 1,
       'cardinality' => 1,
       'deleted' => 0,
       'entity_types' => array(),
-      'field_name' => 'field_merit_name',
+      'field_name' => 'field_grade_name',
       'foreign keys' => array(
         'format' => array(
           'columns' => array(
@@ -178,13 +178,13 @@ function course_field_default_field_bases() {
       'type' => 'text',
     );
 
-    // Exported field_base: 'field_merits'
-    $field_bases['field_merits'] = array(
+    // Exported field_base: 'field_grades'
+    $field_bases['field_grades'] = array(
       'active' => 1,
       'cardinality' => -1,
       'deleted' => 0,
       'entity_types' => array(),
-      'field_name' => 'field_merits',
+      'field_name' => 'field_grades',
       'foreign keys' => array(),
       'indexes' => array(),
       'locked' => 0,
