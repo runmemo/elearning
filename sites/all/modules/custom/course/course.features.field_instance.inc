@@ -244,8 +244,8 @@ function course_field_default_field_instances() {
   );
 
   if(module_exists('field_collection')) {
-    // Exported field_instance: 'field_collection_item-field_grades-field_grade_marks'
-    $field_instances['field_collection_item-field_grades-field_grade_marks'] = array(
+    // Exported field_instance: 'field_collection_item-field_grades-field_grade_score'
+    $field_instances['field_collection_item-field_grades-field_grade_score'] = array(
       'bundle' => 'field_grades',
       'default_value' => NULL,
       'deleted' => 0,
@@ -265,8 +265,8 @@ function course_field_default_field_instances() {
         ),
       ),
       'entity_type' => 'field_collection_item',
-      'field_name' => 'field_grade_marks',
-      'label' => 'Grade Marks',
+      'field_name' => 'field_grade_score',
+      'label' => 'Grade Score',
       'required' => 0,
       'settings' => array(
         'max' => 100,
@@ -549,7 +549,7 @@ function course_field_default_field_instances() {
   t('Discipline');
   t('Duration');
   t('Home Page Image');
-  t('Grade Marks');
+  t('Grade Score');
   t('Grade Name');
   t('Grades');
   t('Provider');
