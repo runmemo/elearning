@@ -27,13 +27,21 @@ function subscriptions_reference_subscriptions($op, $arg0 = NULL, $arg1 = NULL, 
             'data_function' => 'subscriptions_content_data',
             'subs_mod' => 'subscriptions_content',
             'subs_type' => t('thread'),
-            'mailkey' => 'node-type-',
+            'mailkey' => 'node-reference-',
           );
         }
         return $fields;
       }
+    // _mail_edit_module_list();
+     
       break;
-
+    case 'mailkeys':
+      $mailkeys = array();
+      foreach (_available_reference_fields() as $key => $info) {
+        print_nice($info);
+        $mailkeys['node-reference-' . str_replace('_', '-', $info['field'])] = t('Notifications for %type reference subscriptions', array('%type' => $info['child'] . '->' . $info['parent'],));
+      }
+      return $mailkeys;
     case 'stypes': // @todo where is this used??
       static $stypes = array(); // why is it static?
       foreach (_available_reference_fields() as $key => $info) {
