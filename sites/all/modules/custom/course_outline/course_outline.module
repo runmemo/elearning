@@ -129,7 +129,7 @@ function course_outline_preprocess_tree(&$tree) {
  * @return string title for the course outline menu item
  */
 function course_outline_item_title($node) {
-  $title = "<span class='outline-" . $node->type . "-icon'></span>";
+  $title = "<span class='outline-" . str_replace('_', '-', $node->type) . "-icon'></span>";
   switch ($node->type) {
         case 'lesson':
           $title = $title . '<span class="outline-lesson-prefix">' . t('Lesson @i.', array('@i' => $node->order)) . '</span>';
