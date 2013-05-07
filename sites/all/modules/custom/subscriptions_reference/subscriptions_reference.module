@@ -15,6 +15,12 @@ function subscriptions_reference_subscriptions($op, $arg0 = NULL, $arg1 = NULL, 
   if (function_exists($function)) {
     return $function($arg0, $arg1, $arg2);
   }
+  
+  static $stypes = array(); // why is it static?
+  foreach (_available_reference_fields() as $key => $info) {
+    $stypes[$key] = array(REFERENCE_MODULE, $info['field']);
+  }
+  
   switch ($op) {
     case 'queue':
       subscriptions_reference_queue_send($arg0); // $arg0 is $event array.
@@ -43,10 +49,6 @@ function subscriptions_reference_subscriptions($op, $arg0 = NULL, $arg1 = NULL, 
       }
       return $mailkeys;
     case 'stypes': // @todo where is this used??
-      static $stypes = array(); // why is it static?
-      foreach (_available_reference_fields() as $key => $info) {
-        $stypes[$key] = array(REFERENCE_MODULE, $info['field']);
-      }
       return $stypes;
     case 'stype':
       return (isset($stypes[$arg0]) ? array_merge($stypes[$arg0], array($arg1, $arg2)) : NULL);
