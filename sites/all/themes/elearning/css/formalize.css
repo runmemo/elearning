@@ -21,14 +21,15 @@ input[type="reset"],
 input[type="submit"],
 input[type="button"] {
   -webkit-appearance: none;
-  -moz-border-radius: 11px;
-  -webkit-border-radius: 11px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
   -moz-background-clip: padding;
   -webkit-background-clip: padding;
   background-clip: padding-box;
   cursor: pointer;
   outline: 0;
   overflow: visible;
+  font: bold 14px Arial;
   *padding-top: 2px; /* IE7 */
   *padding-bottom: 0px; /* IE7 */
 }

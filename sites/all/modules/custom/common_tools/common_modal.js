@@ -31,13 +31,17 @@
   };
   Drupal.behaviors.user_login_system_forms = {
     attach: function(context, settings) {
+      function toggle_popup(element) {
+        $('.form-item-' + element + ' .description').fadeToggle();
+        $('.popup-' + element + '-arrow').fadeToggle();
+      }
       $('.messages').insertBefore('.form-actions');
       // popup behaviour for register form
-      $('.email-popup').hover(function() {
-        $('.form-item-mail .description').fadeToggle();
+      $('.popup-mail').hover(function() {
+        toggle_popup('mail');
       });
-      $('.pass-popup').hover(function() {
-        $('.form-item-pass .description').fadeToggle();
+      $('.popup-pass').hover(function() {
+        toggle_popup('pass');
       });
     }
   };

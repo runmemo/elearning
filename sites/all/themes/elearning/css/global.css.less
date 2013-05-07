@@ -213,20 +213,14 @@ h2 {
 }
 
 .block-menu-footer-menu {
-    .left();
-    li {
-        .menu-float();
-        a {
-            .gris();
-            .middle-cell();
-            height: 30px;
-        }
-    }
-}
-
-.zone-footer {
+  .left();
   li {
-     .menu-float(); 
+    .menu-float();
+    a {
+      .gris();
+      .middle-cell();
+      height: 30px;
+    }
   }
 }
 
@@ -1514,12 +1508,16 @@ body.page-home {
 }
 
 .views-inline-comment-cancel {
-  .button-cancel();
+  .link-cancel();
+  .show(table);
+  .right();
   padding: 0;
   margin: 0;
-  a { 
-    margin-right:10px;
-    padding: 5px 0;
+  a {
+    .show(table-cell);
+    vertical-align: middle;
+    float: none;
+    padding: 0px 10px;
     cursor: pointer;
   }
 }
@@ -1584,7 +1582,7 @@ body.page-home {
   .form-textarea-wrapper {
     clear: left;
   }
-  #message-placeholder ul li {
+  .oq-form-message ul li {
     .left();
     .bold(12px);
     position: relative;
@@ -2065,7 +2063,10 @@ body.page-home {
     width: 131px;
     padding: 15px;
     background: #fdfdfd;
-    z-index: 10000;    
+    z-index: 10000;
+    moz-box-shadow: 2px 4px 23px 1px #888;
+    -webkit-box-shadow: 2px 4px 23px 1px #888;
+    box-shadow: 2px 4px 23px 1px #888;
   }
   .form-item-mail {
     margin-bottom: 25px;
@@ -2103,6 +2104,8 @@ body.page-home {
     right: 208px !important;
   }
   .register-form-popup-link {
+    position: absolute;
+    left: 90%;
     width: 21px;
     height: 21px;
     .bg-img('info-popup-link.png');
@@ -2111,15 +2114,28 @@ body.page-home {
   .register-form-popup-link:hover {
     .bg-img('info-popup-link-hover.png');
   }
-  .email-popup {
+  .popup-arrow-left {
     position: absolute;
-    top: 170px;
-    left: 90%;
+    z-index: 10001;
+    left: 95%;
+    width: 0;
+    height: 0;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-right: 13px solid #fdfdfd;
+    .show(none);
   }
-  .pass-popup {
-    position: absolute;
+  .popup-mail-arrow {
+    top: 170px;
+  }
+  .popup-pass-arrow {
     top: 251px;
-    left: 90%;
+  }
+  .popup-mail {
+    top: 170px;
+  }
+  .popup-pass {
+    top: 251px;
   }
 }
 
