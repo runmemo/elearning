@@ -244,9 +244,9 @@ function course_field_default_field_instances() {
   );
 
   if(module_exists('field_collection')) {
-    // Exported field_instance: 'field_collection_item-field_grades-field_grade_marks'
-    $field_instances['field_collection_item-field_grades-field_grade_marks'] = array(
-      'bundle' => 'field_grades',
+    // Exported field_instance: 'field_collection_item-field_merits-field_merit_marks'
+    $field_instances['field_collection_item-field_merits-field_merit_marks'] = array(
+      'bundle' => 'field_merits',
       'default_value' => NULL,
       'deleted' => 0,
       'description' => '',
@@ -265,8 +265,8 @@ function course_field_default_field_instances() {
         ),
       ),
       'entity_type' => 'field_collection_item',
-      'field_name' => 'field_grade_marks',
-      'label' => 'Grade Marks',
+      'field_name' => 'field_merit_marks',
+      'label' => 'Merit Marks',
       'required' => 0,
       'settings' => array(
         'max' => 100,
@@ -284,9 +284,9 @@ function course_field_default_field_instances() {
       ),
     );
 
-    // Exported field_instance: 'field_collection_item-field_grades-field_grade_name'
-    $field_instances['field_collection_item-field_grades-field_grade_name'] = array(
-      'bundle' => 'field_grades',
+    // Exported field_instance: 'field_collection_item-field_merits-field_merit_name'
+    $field_instances['field_collection_item-field_merits-field_merit_name'] = array(
+      'bundle' => 'field_merits',
       'default_value' => NULL,
       'deleted' => 0,
       'description' => '',
@@ -300,8 +300,8 @@ function course_field_default_field_instances() {
         ),
       ),
       'entity_type' => 'field_collection_item',
-      'field_name' => 'field_grade_name',
-      'label' => 'Grade Name',
+      'field_name' => 'field_merit_name',
+      'label' => 'Merit Name',
       'required' => 0,
       'settings' => array(
         'text_processing' => 0,
@@ -324,8 +324,8 @@ function course_field_default_field_instances() {
       ),
     );
 
-    // Exported field_instance: 'node-course-field_grades'
-    $field_instances['node-course-field_grades'] = array(
+    // Exported field_instance: 'node-course-field_merits'
+    $field_instances['node-course-field_merits'] = array(
       'bundle' => 'course',
       'default_value' => NULL,
       'deleted' => 0,
@@ -352,8 +352,8 @@ function course_field_default_field_instances() {
         ),
       ),
       'entity_type' => 'node',
-      'field_name' => 'field_grades',
-      'label' => 'Grades',
+      'field_name' => 'field_merits',
+      'label' => 'Merits',
       'required' => 0,
       'settings' => array(
         'user_register_form' => FALSE,
