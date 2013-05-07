@@ -9,14 +9,9 @@ dependencies[] = entity
 dependencies[] = features
 dependencies[] = flag
 dependencies[] = rules
-dependencies[] = strongarm
-dependencies[] = subscriptions
-dependencies[] = subscriptions_ui
-dependencies[] = subscriptions_mail
 dependencies[] = subscriptions_content
 dependencies[] = subscriptions_rules
 
-features[ctools][] = strongarm:strongarm:1
 features[features_api][] = api:1
 features[flag][] = follow_nodes
 features[rules_config][] = rules_follow_node
