@@ -69,9 +69,8 @@ h2 {
  #block-course-user-notifications-count {
     .left();
     width: 51px;
-    background-image: url(../images/userpoints-circle.png);
+    .bg-img('userpoints-circle.png');
     background-position: center;
-    background-repeat: no-repeat;
     border: 3px solid transparent;
     border-image: url(../images/line-main-menu.png) 0 3 stretch;
     border-top: 0;
@@ -90,16 +89,14 @@ h2 {
   .right();
   .width-auto();
   .content {
-    background-image: url(../images/superfish-menu-triangle-small.png);
-    background-repeat: no-repeat;
+    .bg-img('superfish-menu-triangle-small.png');
     background-position: 50% 100%;
       ul.sf-menu {
         .width-auto();
         li.menuparent {
           .main-menu-border();
           .width-auto();
-          background-image: url(../images/user-crown-tr.png);
-          background-repeat: no-repeat;
+          .bg-img('user-crown-tr.png');
           background-position: top right;
             a.menuparent:link, a.menuparent:visited {
               .bold(14px);
@@ -176,7 +173,7 @@ h2 {
     padding: 0px;
     margin: 8px 0 0 0;
     li {
-    background: url(../images/line-main-menu.png) no-repeat right;
+    .bg-image('line-main-menu.png');
     height: 30px;
     .menu-float();
     a {
@@ -234,11 +231,10 @@ h2 {
 }
 
 .default-avatar {
+  .box-shadow();
+  .bg-img('small-avatar-default.jpg');  
   width: 51px;
   height: 48px;
-  .box-shadow();
-  background-image: url(../images/small-avatar-default.jpg);
-  background-repeat: no-repeat;
 }
 
 /****** Common properties End ******/
@@ -381,7 +377,7 @@ h2 {
 #quick-question-wrapper {
   margin-bottom: 15px;
   .fieldset-legend {
-    background-image:url('../images/ask-question.png');
+    .bg-img('ask-question.png');
     padding-left: 20px;
     background-position: left center;
     .fieldset-title {
@@ -467,7 +463,7 @@ h2 {
          margin-right: 5px;
        }
       .quiz {
-        background: url('../images/question_mark.png') no-repeat scroll 0 0 transparent;
+        .bg-img('question_mark.png');
         padding:0 10px;
       }
      }
@@ -540,7 +536,7 @@ h2 {
     .cell();
     .right();
     margin-top: 14px;
-    background: url(../images/social-stuff.png) 0 0 no-repeat;
+    .bg-img('social-stuff.png');
     height: 71px;
   }
 }
@@ -719,10 +715,12 @@ h2 {
       }
     }
     li.first {
-      background: url(../images/blog-link.png) 80% 15% no-repeat;
+      .bg-img('blog-link.png');
+      background-position: 80% 15%;
     }
     li.last {
-      background: url(../images/forum-link.png) 50% 15% no-repeat;
+      .bg-img('forum-link.png');
+      background-position: 80% 15%;
     }    
   }
 }  
@@ -776,10 +774,10 @@ h2 {
           .link-image-left(16px);
         }
         a.profile-edit:link, a.profile-edit:visited {
-          background-image: url(../images/profile-edit-link.png);
+          .bg-img('profile-edit-link.png');
         }
         a.profile-edit:hover, a.profile-edit:active {
-          background-image: url(../images/profile-edit-hover.png);
+          .bg-img('profile-edit-hover.png');
         }
       }
     }
@@ -831,9 +829,8 @@ h2 {
       height: 23px;
       margin: 15px 0px 115px 40px;
       padding: 6px 0px 0px 29px;
-      background-image: url(../images/profile-crown.png);
-      background-position: 0px 0px;
-      background-repeat: no-repeat;
+      .bg-img('profile-crown.png');
+     
     }
   }
 }
@@ -841,10 +838,9 @@ h2 {
 .user-profile-default-picture {
   .show(inline-block);
   margin: 5px 6px 3px 6px;
-  background-image: url(../images/user-profile-default.png);
+  .bg-img('user-profile-default.png');
   width: 107px;
   height: 107px;
-  background-repeat: no-repeat;
 }
 
 /* User profile picture update form styles */
@@ -897,7 +893,8 @@ h2 {
       height: 31px;
       margin-top: 1px;
       border-left: 1px solid #d8d8d8;
-      background: url(../images/close.png) 50% 50% no-repeat;
+      .bg-img('close.png');
+      background-position: 50% 50%;
       cursor: pointer;
     }
   }
@@ -968,9 +965,8 @@ h2 {
     left: 14px;
     height: 107px;
     width: 107px;
+    .bg-img('throbber.gif');
     background-color: #fff;
-    background-image: url(../images/throbber.gif);
-    background-repeat: no-repeat;
     background-position: center center;
     margin-bottom: -2px;
   }
@@ -1009,10 +1005,10 @@ h2 {
           padding-right: 10px;
         }
         a.user-course-continue:link, a.user-course-continue:visited {
-          background-image: url(../images/continue_link.png);
+          .bg-img('continue_link.png');
         }
         a.user-course-continue:hover, a.user-course-continue:active {
-          background-image: url(../images/continue_link_hover.png);
+          .bg-img('continue_link_hover.png');
         }
       }
     .views-field-link-exit {
@@ -1022,10 +1018,10 @@ h2 {
           margin-left: 10px;
         }
         a.user-course-exit:link span, a.user-course-exit:visited span {
-          background-image: url(../images/exit.png);
+          .bg-img('images/exit.png');
         }
         a.user-course-exit:hover span, a.user-course-exit:active span {
-          background-image: url(../images/exit_hover.png);
+          .bg-img('exit_hover.png');
         }
       }
     }
@@ -1155,9 +1151,7 @@ body.page-home {
         margin-top: 16px;
         .views-slideshow-pager-field-item {
           .left();
-          background-image: url(../images/slider-buttons.png);
-          background-position: 0px 0px;
-          background-repeat: no-repeat;
+          .bg-img('slider-buttons.png');
           width: 12px;
           height: 12px;
           cursor: pointer;
@@ -1180,8 +1174,7 @@ body.page-home {
         .views-slideshow-controls-text-pause {
           a {
             .show(inline-block);
-            background-image: url(../images/slider-pause.png);
-            background-repeat: no-repeat;
+            .bg-img('slider-pause.png');
             color: transparent;
             width: 13px;
             font-size: 0px;
@@ -1230,8 +1223,7 @@ body.page-home {
       color: #000000;
       padding: 10px 0px 10px 8px;
       width: 400px;
-      background-image: url(../images/arrow-right-home.png);
-      background-repeat: no-repeat;
+      .bg-img('arrow-right-home.png');
       background-position: 97%;
     }
     .views-field-field-logo {
@@ -1330,8 +1322,7 @@ body.page-home {
   width: 44px;
   height: 44px;
   .box-shadow();
-  background-image: url(../images/small-avatar-default.jpg);
-  background-repeat: no-repeat;
+  .bg-img('small-avatar-default.jpg');
   background-position: 40% 48%;
 }
 
@@ -1487,7 +1478,7 @@ body.page-home {
     color: transparent;
     width: 19px;
     height: 20px;
-    background: url(../images/best_answer_button.png) no-repeat;
+    b.bg-img('best_answer_button.png');
     margin: 16px 0px 16px 16px;
   }
   a.flag-action {
@@ -1585,7 +1576,8 @@ body.page-home {
     height: 16px;
     margin-left: 9px;
     margin-top: 4px;
-    background: url('../images/ask-question.png') 0% 50% no-repeat;
+    .bg-img('ask-question.png');
+    background-position: 0% 50%;
     cursor: pointer;
   }
 
@@ -1632,7 +1624,7 @@ body.page-home {
 
 .oq-review-form-edit {
   .button-icon();
-  background: url(../images/answer-edit.png) 0 0 no-repeat;
+  .bg-img('answer-edit.png');
   margin-top: 60px;
   margin-right: 8px;
   position: absolute;
@@ -1640,7 +1632,7 @@ body.page-home {
 }
 
 .views-field-feedback-form .oq-review-form-edit.progress-disabled {
-  background: url(../images/progress_orange.gif) 0 0 no-repeat;
+  .bg-img('progress_orange.gif');
 }
 
 
@@ -1767,7 +1759,7 @@ body.page-home {
     a.comment-link {
       color: transparent;
       .bold(12px);
-      background: url('../images/ask-question.png') center center no-repeat;
+      .bg-img('ask-question.png');
       padding: 0px 8px 8px 0px;
       width: 17px;
       height: 17px;
@@ -1795,9 +1787,9 @@ body.page-home {
   }
   .views-inline-comment-field {
     .right();
+    .bg-img('ask-question.png');
     padding: 8px 0px 8px 31px;
     margin-top: -16px;
-    background-image: url('../images/ask-question.png');
     background-position: 8px center;
     background-repeat: no-repeat;
     border-left: 1px dotted #aeaeae;
@@ -1890,7 +1882,7 @@ body.page-home {
     color: #a1a1a1;
   }
   .oq-answer-submit-sign {
-    background: url(../images/answer-edit.png) 0 0 no-repeat;
+    .bg-img('answer-edit.png');
     width: 15px;
     height: 15px;
     .right();
@@ -1928,7 +1920,7 @@ body.page-home {
 .abuse-flag {
   clear: both;
   .ctools-modal-abuse {
-    background: url(../images/flag.png) no-repeat scroll 0 0;
+    .bg-img('flag.png');
     color: transparent;
     margin: 0px 0px 22px 16px;
     float: left;
@@ -1936,13 +1928,13 @@ body.page-home {
     width: 20px;
   }
   .flag-action:hover {
-    background: url(../images/flag_hover.png) no-repeat scroll 0 0;
+    .bg-img('flag_hover.png');
   }
   .unflag-action {
-    background: url(../images/unflag.png) no-repeat scroll 0 0;
+    .bg-img('unflag.png');
   }
   .unflag-action:hover {
-    background: url(../images/flag.png) no-repeat scroll 0 0;
+    .bg-img('flag.png');
   }
   .ajax-progress, .throbber {
     .show(none);
@@ -2034,7 +2026,7 @@ body.page-home {
     bottom: 22px;
     right: 100px;
     .throbber {
-      background: transparent url(../images/progress_orange.gif) no-repeat 0 0;
+      .bg-img('progress_orange.gif');
       .left();
       height: 16px;
       margin: 0px 3px 2px 0px;
@@ -2113,11 +2105,11 @@ body.page-home {
   .register-form-popup-link {
     width: 21px;
     height: 21px;
-    background: transparent url(../images/info-popup-link.png) no-repeat 0 0;
+    .bg-img('info-popup-link.png');
     cursor: pointer;
   }
   .register-form-popup-link:hover {
-    background: transparent url(../images/info-popup-link-hover.png) no-repeat 0 0;
+    .bg-img('info-popup-link-hover.png');
   }
   .email-popup {
     position: absolute;
