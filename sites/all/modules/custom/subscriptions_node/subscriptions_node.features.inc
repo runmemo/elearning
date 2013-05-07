@@ -25,8 +25,8 @@ function subscriptions_node_flag_default_flags() {
     'title' => 'follow node',
     'global' => 0,
     'types' => array(
-      1 => 'open_question',
-      2 => 'question',
+      1 => 'open_question_feedback',
+      2 => 'answer',
     ),
     'flag_short' => 'Follow',
     'flag_long' => '',
