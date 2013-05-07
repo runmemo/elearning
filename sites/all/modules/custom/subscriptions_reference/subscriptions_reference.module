@@ -42,7 +42,12 @@ function subscriptions_reference_subscriptions($op, $arg0 = NULL, $arg1 = NULL, 
     case 'mailkeys':
       $mailkeys = array();
       foreach (_available_reference_fields() as $key => $info) {
-        $mailkeys[subscriptions_reference_get_maikey($info['field'])] = t('Notifications for %type reference subscriptions', array('%type' => $info['child'] . '->' . $info['parent'],));
+        $mailkeys[subscriptions_reference_get_maikey($info['field'])] 
+        = t('Notifications for new %child that references %parent via field %field',
+            array(
+              '%child' => $info['child'] , 
+              '%parent' => $info['parent'], 
+              '%field' => $info['field']));
       }
       return $mailkeys;
     case 'stypes': // @todo where is this used??
