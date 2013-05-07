@@ -293,9 +293,9 @@ function course_field_default_field_instances() {
       'display' => array(
         'default' => array(
           'label' => 'above',
-          'module' => 'list',
+          'module' => 'text',
           'settings' => array(),
-          'type' => 'list_default',
+          'type' => 'text_default',
           'weight' => 3,
         ),
       ),
@@ -304,13 +304,22 @@ function course_field_default_field_instances() {
       'label' => 'Grade Name',
       'required' => 0,
       'settings' => array(
+        'text_processing' => 0,
         'user_register_form' => FALSE,
       ),
       'widget' => array(
         'active' => 1,
-        'module' => 'options',
-        'settings' => array(),
-        'type' => 'options_select',
+        'module' => 'autocomplete_widgets',
+        'settings' => array(
+          'autocomplete_case' => 0,
+          'autocomplete_match' => 'contains',
+          'autocomplete_xss' => 0,
+          'i18n_flddata' => 0,
+          'obey_access_controls' => 1,
+          'order' => 'ASC',
+          'size' => 60,
+        ),
+        'type' => 'autocomplete_widgets_flddata',
         'weight' => 4,
       ),
     );

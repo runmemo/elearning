@@ -25,6 +25,7 @@ dependencies[] = rules
 dependencies[] = ctools_automodal
 dependencies[] = context
 dependencies[] = field_collection
+dependencies[] = autocomplete_widgets
 
 files[] = course.inc
 files[] = views/course.views_default.inc
