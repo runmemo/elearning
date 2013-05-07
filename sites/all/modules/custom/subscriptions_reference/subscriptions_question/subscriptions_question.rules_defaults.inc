@@ -52,37 +52,5 @@ function subscriptions_question_default_rules_configuration() {
       ]
     }
   }');
-  $items['rules_follow_lesson_items'] = entity_import('rules_config', '{ "rules_follow_lesson_items" : {
-      "LABEL" : "follow lesson items",
-      "PLUGIN" : "reaction rule",
-      "REQUIRES" : [ "subscriptions_rules", "flag" ],
-      "ON" : [ "flag_flagged_follow_lesson_item" ],
-      "DO" : [
-        { "subscriptions_rules_add_user_content" : {
-            "node" : [ "flagged-node" ],
-            "user" : [ "flagging-user" ],
-            "type" : "comment",
-            "send_interval" : [ "" ]
-          }
-        }
-      ]
-    }
-  }');
-  $items['rules_unfollow_lesson_items'] = entity_import('rules_config', '{ "rules_unfollow_lesson_items" : {
-      "LABEL" : "unfollow lesson items",
-      "PLUGIN" : "reaction rule",
-      "REQUIRES" : [ "subscriptions_rules", "flag" ],
-      "ON" : [ "flag_unflagged_follow_lesson_item" ],
-      "DO" : [
-        { "subscriptions_rules_remove_user_content" : {
-            "node" : [ "flagged-node" ],
-            "user" : [ "flagging-user" ],
-            "type" : "comment",
-            "send_interval" : [ "" ]
-          }
-        }
-      ]
-    }
-  }');
   return $items;
 }
