@@ -51,7 +51,6 @@
         }
         else {
           btn_submit.prop('disabled', false);
-          console.debug(str_review);
           if (str_review !== '') {
             btn_skip.hide();
           } 
@@ -83,6 +82,7 @@
         var btn_submit = get_submit_button(nid);
         if (review_length < 4 && rating <= 3) {
           btn_submit.prop('disabled', true);
+          btn_skip.hide();
         } else {
           if ((review_length >= 4 && rating <= 3) || (rating > 3)) {
             btn_submit.prop('disabled', false);
