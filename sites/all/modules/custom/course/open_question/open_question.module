@@ -492,7 +492,7 @@ function oq_review_form($form, &$form_state, $args) {
       $form['toggle_fields'] = array(
         '#type' => 'fieldset',
         '#states' =>array(  
-          'invisible' => array( // hid fieldset when feedback was not saved
+          'invisible' => array( // hide fieldset when feedback was not saved
             ':input[name="feedback_saved_' . $nid .'"]' => array('value' => 'false'),
           ),
         ),
@@ -594,7 +594,7 @@ function oq_review_form_validate($form, &$form_state) {
  */
 function oq_review_form_js($form, &$form_state) {
   if ($form_state['values']['op'] == 'rating_submit' || $form_state['values']['op'] == t('Add review') || $form_state['values']['op'] == t("Don't add")) {
-    $form['message_placeholder']['#markup'] = common_tools_collect_messages('error');
+    $form['message_placeholder']['#markup'] = '<div class="oq-form-message">' . common_tools_collect_messages('error') . '</div>';
   }
   return $form;
 }
@@ -604,7 +604,6 @@ function oq_review_form_js($form, &$form_state) {
  */
 function oq_review_form_submit($form, &$form_state) {
   if ($form_state['values']['op'] == 'edit_submit') {
-    // add this variable to show form elements after edit submit
     $form_state['step'] = 'edit';
   } else {
     // validate the form

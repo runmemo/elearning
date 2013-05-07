@@ -13,6 +13,12 @@
  display : @type;
 }
 
+@images-folder: "../images/";
+/* Background Image */
+.bg-img(@img) { 
+  background:url("@{images-folder}@{img}") no-repeat scroll 0 0 transparent;;
+}
+
 .gradient-main-panel() {
     background: #dc5128; /* Old browsers */
     background: -moz-linear-gradient(top,  #dc5128 0%, #c94213 100%); /* FF3.6+ */
@@ -142,7 +148,7 @@
 
 .menu-float() {
     float: left;
-    list-style: none;
+    list-style: none !important;
     margin: 0px;
 }
 

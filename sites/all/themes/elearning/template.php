@@ -97,4 +97,6 @@ function elearning_css_alter(&$css) {
   if (array_key_exists('sites/all/themes/omega/omega/css/formalize.css', $css)) {
     $css['sites/all/themes/omega/omega/css/formalize.css']['data'] = $theme_path . '/css/formalize.css';
   }
+  // delete system.menus.css
+  unset($css[drupal_get_path('module', 'system') . '/system.menus.css']);
 }
