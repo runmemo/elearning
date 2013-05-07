@@ -549,9 +549,9 @@ function course_field_default_field_instances() {
   t('Discipline');
   t('Duration');
   t('Home Page Image');
-  t('Grade Marks');
-  t('Grade Name');
-  t('Grades');
+  t('Merit Marks');
+  t('Merit Name');
+  t('Merits');
   t('Provider');
   t('Teacher');
   t('Title');

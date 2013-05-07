@@ -29,7 +29,6 @@ input[type="button"] {
   cursor: pointer;
   outline: 0;
   overflow: visible;
-  width: auto;
   *padding-top: 2px; /* IE7 */
   *padding-bottom: 0px; /* IE7 */
 }

@@ -6,12 +6,26 @@
   Drupal.behaviors.open_question_review_list = {
     attach: function(context, settings) {
       
-      function get_feedback_form(child) {
-        return child.parents('.views-field-feedback-form');
+      function get_feedback_form(element) {
+        return element.parents('.views-field-feedback-form');
+      }
+      
+      function get_answer_nid(element) {
+        var form = get_feedback_form(element);
+        var nid = form.find('.js-oq-answer-nid').val();
+        return nid;
+      }
+      
+      function get_skip_review_button(nid) {
+        return $('.js-oq-skip-review-' + nid);
+      }
+      
+      function get_submit_button(nid) {
+        return $('.js-oq-submit-review-' + nid);
       }
       
       $('.oq-review-form-view').ready(function() {
-        $('.oq-review-form-view .star').each(function(index, element) {
+        $(this).find('.star').each(function(index, element) {
           if (!$(this).hasClass('on')) {
             $(this).addClass('off');
           }
@@ -23,22 +37,27 @@
 
       $('select[name="rating"]').change(function() {
         var feedback_form = get_feedback_form($(this));
-        var review = feedback_form.find('.form-item-inactive');
-        var submit = feedback_form.find('.oq-review-form-submit');
-        var button_skip = feedback_form.find('.oq-review-form-skip');
-        var textarea = feedback_form.find('textarea[name="review"]').val();
-        if (this.selectedIndex <= 3) {  
-          if (textarea === '') {
-            submit.prop('disabled', true);
-          }
-        } 
+        var nid = get_answer_nid($(this));
+        var btn_submit = get_submit_button(nid);
+        var btn_skip = get_skip_review_button(nid);
+        var str_review = $('.js-oq-review-field-' + nid).val();
+        var toggle_fields = $('.js-oq-form-toggle-' + nid);
+        toggle_fields.show('fast');
+        if (this.selectedIndex <= 3) {
+          btn_skip.hide();
+          if (str_review === '') {
+            btn_submit.prop('disabled', true);
+          }         
+        }
         else {
-          if (textarea === '') {
-            button_skip.hide();
-          } else {
-            button_skip.show();
+          btn_submit.prop('disabled', false);
+          console.debug(str_review);
+          if (str_review !== '') {
+            btn_skip.hide();
+          } 
+          else {
+            btn_skip.show();
           }
-          submit.prop('disabled', false);
         }
         var rating_submit = feedback_form.find('.oq-review-form-rating-submit');
         if (rating_submit.length > 0) {
@@ -48,22 +67,20 @@
       // 
       $('textarea[name="review"]').keyup(function() {
         var feedback_form = get_feedback_form($(this));
-      //  console.debug(feedback_form);
+        var nid = get_answer_nid($(this));
         var select = feedback_form.find('select[name="rating"]');
         var rating = select[0].selectedIndex;
-        console.debug(rating);
-        var button_skip = feedback_form.find('.oq-review-form-skip');     
+        var btn_skip = get_skip_review_button(nid);    
         var review_length = $(this).val().length;
-        console.debug(review_length)
         if (review_length < 1 && rating > 3) {
-          button_skip.attr('disabled', true);
+          btn_skip.show();
         } 
         else {
-          if (review_length >= 1) {
-            button_skip.prop('disabled', true);
+          if (review_length >= 1 && rating > 3) {
+            btn_skip.hide();
           }
         }
-        var btn_submit = feedback_form.find('.oq-review-form-submit');
+        var btn_submit = get_submit_button(nid);
         if (review_length < 4 && rating <= 3) {
           btn_submit.prop('disabled', true);
         } else {

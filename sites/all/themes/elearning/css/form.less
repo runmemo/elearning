@@ -1,6 +1,6 @@
-@import "mixins.less";
 
-/* @file
+/**
+ * @file
  * contains reusable less css for forms
  */
 
@@ -20,14 +20,8 @@
 
 .button-submit() {
   .button();
-  .gradient-orange();
+  .gradient-submit-button();
 }
-
-.light-orange-button() {
-  .button();
-  .gradient-light-orange();
-}
-
 
 .fieldset-wrapper {
     background: #f7f7f7;
@@ -39,11 +33,10 @@
 
 .action-cancel() {
   float: right;
-  color: #555;
+  color: #d0471b;
   text-decoration: none;
-  font-size: 15px;
-  font-weight: bold;
-  padding: 7px 10px;
+  .bold(13px);
+  padding: 16px 26px 0px 0px;
   background: none;
   border: 0;
   &:hover {
@@ -62,7 +55,16 @@
   }
 }
 
-
 .form-text {
   width: 100%;
+}
+
+/* css for buttons that are represented by small icons */
+.button-icon(@size: 15px) {
+  button();
+  color: transparent;
+  padding: 0;
+  border: none;
+  height: @size;
+  width: @size;
 }
