@@ -784,12 +784,7 @@ h2 {
 
 .user-profile-basic-info {
   .user-profile-picture-points {
-    @media @narrow {
-      margin-right: 0px;
-    }
-    @media @normal {
-      margin-right: 20px;
-    }
+    margin-right: 20px;
     @media @wide {
       margin-right: 25px;
     }
@@ -821,7 +816,7 @@ h2 {
     }
     .user-profile-userpoints {
       height: 23px;
-      margin: 15px 0px 115px 40px;
+      margin: 15px 0px 15px 40px;
       padding: 6px 0px 0px 29px;
       .bg-img('profile-crown.png');
      
@@ -972,7 +967,15 @@ h2 {
 }
 
 .view-user-courses {
+  margin-bottom: 22px;
   background: #fafafa;
+  width: 95%;
+  @media @normal {
+    .grid-normal-9();
+  }
+  @media @wide {
+    .grid-wide-9();
+  }
   .view-header {
     .view-block-header();
     p {
@@ -981,7 +984,7 @@ h2 {
     }
   }
   .view-content {
-    margin: 22px 24px;
+    padding: 22px 24px;
     .views-user-courses-links {
       .show(table);
       width: 100%;

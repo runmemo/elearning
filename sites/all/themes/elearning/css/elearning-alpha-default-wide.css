@@ -15,3 +15,7 @@ body.page-home .region-content-inner {
 .view-home-page-courses {
   width: 1030px;
 }
+
+.view-user-courses {
+  clear: none;
+}

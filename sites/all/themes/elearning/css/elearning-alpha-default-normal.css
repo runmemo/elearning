@@ -8,3 +8,7 @@
 .view-home-page-courses {
   width: 864px;
 }
+
+.view-user-courses {
+  clear: none;
+}

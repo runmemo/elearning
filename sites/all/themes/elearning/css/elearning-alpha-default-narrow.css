@@ -7,3 +7,7 @@
 .view-home-page-courses {
     width: 632px;
 }
+
+.view-user-courses {
+  clear: none;
+}
