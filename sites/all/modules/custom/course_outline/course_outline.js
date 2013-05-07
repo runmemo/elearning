@@ -6,17 +6,8 @@
 (function($) {
   Drupal.behaviors.course_outline_accordion = {
     attach: function(context, settings) {
-      $('.block-course-outline h3').last().addClass('last');
-      // add background to a instead of li, because of progress-bar
-      $('.block-course-outline li').hover(
-        function() {
-        $(this).find('a').addClass('hovered');
-      },
-        function() {
-          $(this).find('a').removeClass('hovered');
-        });
-      $('.block-course-outline a.active').parent().parent().prev().addClass('active');
-      $('.block-course-outline h3').unbind('click').bind('click', function() {
+     
+      $('.js-outline-unit').unbind('click').bind('click', function() {
         $(this).next('ul').slideToggle().css('display', 'inline-block');
         $(this).toggleClass('active');
       });

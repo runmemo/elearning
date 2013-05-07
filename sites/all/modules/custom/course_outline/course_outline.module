@@ -34,7 +34,7 @@ function course_outline_theme() {
 function theme_menu_link__course_outline_unit(array $variables) {
   $element = $variables['element'];
   $sub_menu = '';
-  $output = "<h3>" . $element['#title'] . '<span class="icon"></span></h3>';
+  $output = '<h3 class="outline-unit js-outline-unit">' . $element['#title'] . '<span class="icon"></span></h3>';
   if ($element['#below']) {
     $sub_menu = drupal_render($element['#below']);
   }   
@@ -107,9 +107,12 @@ function course_outline_preprocess_tree(&$tree) {
         $node = menu_get_object('node', 1, $item['#original_link']['link_path']);
      
         $completed = $flag->is_flagged($node->nid, $user->uid);
-        $item['#attributes']['class'][] = $completed ? 'completed' : 'incompleted';
+        $item['#attributes']['class'][] = 'outline-item';
+        unset($item['#attributes']['class']['leaf']);
+        $item['#attributes']['class'][] = $completed ? 'outline-item-is-complete' : 'outline-item-is-incomplete';
         if ($node->nid == arg(1)) {
-          $item['#attributes']['class'][] = 'current';
+          $item['#attributes']['class'][] = 'js-outline-current';
+          $item['#attributes']['class'][] = 'outline-item-is-current';
         }
         $node->order = $counter->increment($node->type);
      
@@ -126,10 +129,10 @@ function course_outline_preprocess_tree(&$tree) {
  * @return string title for the course outline menu item
  */
 function course_outline_item_title($node) {
-  $title = "<span class='" . $node->type . "-icon'></span>";
+  $title = "<span class='outline-" . $node->type . "-icon'></span>";
   switch ($node->type) {
         case 'lesson':
-          $title = $title . t('Lesson @i.', array('@i' => $node->order)) . '</span>';
+          $title = $title . '<span class="outline-lesson-prefix">' . t('Lesson @i.', array('@i' => $node->order)) . '</span>';
           break;
       }
       $title = '<div class="title-wrapper">' . $title . $node->title . '</div>';

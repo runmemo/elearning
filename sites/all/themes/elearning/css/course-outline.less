@@ -1,155 +1,164 @@
-
 /**
  * @file
  * Contains less css for course outline
  */
 
-
-.block-course-outline {
-  ul.menu {
+.block-course-outline .menu {
     width: 100%;
     padding-bottom: 20px;
-    h3 {
-      .bold(16px);
-      margin-bottom: 0;
-      background: #f0f0f0;
-      border-color: #e5e1e2;
-      border-width: 1px 1px 0px;
-      border-style: solid;
-      padding: 10px;
-      cursor: pointer;
-      clear: both;
-      .text-dark-grey();
-      .icon {
-        background: url('../images/arrow_down.png') no-repeat scroll right center;
-        padding: 12px 8px;
-        float: right;
-      }
-    }
-    h3:hover {
-      .text-orange;
-      .icon {
-        background: url('../images/arrow_down_hover.png') no-repeat scroll right center;
-      }
-    }
-    h3.last,
-    h3.active {
-      border-width: 1px;
-      box-shadow: 0px 1px 1px #EEEEEE;
-    }
-    h3.active {
-      .icon {
-        background: url('../images/arrow_up.png') no-repeat scroll right center;
-      }
-    }
-    h3.active:hover {
-      .icon {
-        background: url('../images/arrow_up_hover.png') no-repeat scroll right center;
-      }
-    }
-    ul {
+    .menu {
       padding: 0;
       margin-top: 5px;
       border-radius: 0;
       .class-progress-image();
       .class-progress-parameters(1px, 100%, 97%, 0%, 100%, 0%, no-repeat);
-      li {
-        padding: 0;
-        margin: 0;
-        list-style-type: none;
-        list-style-image: none;
-        float: left;
-        width: 100%;
-      }
-      li.current {
-        .class-progress-current() !important;
-         @media @mobile {
-           .class-progress-parameters(3%, 100%, 100%, 65%, 100%, 0%, no-repeat) !important;
-         }
-         @media @narrow {
-           .class-progress-parameters(6px, 9px, 100%, 65%, 100%, 0%, repeat-y) !important;
-         }
-         @media @normal {
-           .class-progress-parameters(7px, 9px, 100%, 65%, 100%, 0%, repeat-y) !important;
-         }
-         @media @wide {
-           .class-progress-parameters(9px, 9px, 100%, 65%, 100%, 0%, repeat-y) !important;
-         }
-      }
-      li.completed {
-        .class-progress-comleted() !important;
-        @media @mobile {
-          .class-progress-parameters(3%, 100%, 100%, 0%, 100%, 0%, no-repeat) !important;
-        }
-        @media @narrow {
-          .class-progress-parameters(6px, 100%, 100%, 0%, 100%, 0%, no-repeat) !important;
-        }
-        @media @normal {
-          .class-progress-parameters(7px, 100%, 100%, 0%, 100%, 0%, no-repeat) !important;
-        }
-        @media @wide {
-          .class-progress-parameters(9px, 100%, 100%, 0%, 100%, 0%, no-repeat) !important;
-        }
-      }
-      li.first {
-        .class-progress-image();
-        @media @mobile {
-          .class-progress-parameters(3%, 3%, 100%, 0%, 100%, 0%, no-repeat);
-        }
-        @media @narrow {
-          .class-progress-parameters(6px, 3%, 100%, 0%, 100%, 0%, no-repeat);
-        }
-        @media @normal {
-          .class-progress-parameters(7px, 3%, 100%, 0%, 100%, 0%, no-repeat);
-        }
-        @media @wide {
-          .class-progress-parameters(9px, 3%, 100%, 0%, 100%, 0%, no-repeat);
-        }
-      }
-      li.last {
-        .class-progress-image();
-        @media @mobile {
-          .class-progress-parameters(3%, 3%, 100%, 100%, 100%, 100%, no-repeat);
-        }
-        @media @narrow {
-          .class-progress-parameters(6px, 3%, 100%, 100%, 100%, 100%, no-repeat);
-        }
-        @media @normal {
-          .class-progress-parameters(6px, 3%, 100%, 100%, 100%, 100%, no-repeat);
-        }
-        @media @wide {
-          .class-progress-parameters(9px, 3%, 100%, 100%, 100%, 100%, no-repeat);
-        }
-        a {
-         border: medium none;
-        }
-      }
-      a.active, a.hovered {
-        background: #fff0d9 !important;
-      }
-      a {
-        .border-bottom-dotted();
-        text-decoration: none;
-        float: left;
-        clear: both;
-        .font-bold;
-        width: 95%;
-        color: #000000;
-        .title-wrapper {
-          padding: 10px;
-          .text-dark-grey();
+    }
+}
 
-        }
-     }
-   }
- }
- .lesson {
+/* Unit panels */
+
+.outline-unit {
+  .bold(16px);
+  margin-bottom: 0;
+  background: #f0f0f0;
+  border-color: #e5e1e2;
+  border-width: 1px 1px 0px;
+  border-style: solid;
+  padding: 10px;
+  cursor: pointer;
+  clear: both;
+  .text-dark-grey();
+  .icon {
+    background: url('../images/arrow_down.png') no-repeat scroll right center;
+    padding: 12px 8px;
+    float: right;
+  }
+  &:hover {
+    .text-orange;
+    .icon {
+      background: url('../images/arrow_down_hover.png') no-repeat scroll right center;
+    }
+  }
+}
+
+.outline-unit.last,
+.outline-unit.active {
+  border-width: 1px;
+  box-shadow: 0px 1px 1px #EEEEEE;
+  .icon {
+    background: url('../images/arrow_up.png') no-repeat scroll right center;
+  }
+  &:hover {
+    .icon {
+      background: url('../images/arrow_up_hover.png') no-repeat scroll right center;
+    }
+  }
+}
+
+/* Course items */
+
+.outline-quiz-icon, 
+.outline-open-question-icon {
+  background: url('../images/question_mark.png') no-repeat;
+  padding: 0 8px;
+}
+
+.outline-lesson-prefix {
    .text-orange();
    padding: 0 5px 0 0;
- }
- .quiz-icon, 
- .open_question-icon {
-   background: url('../images/question_mark.png') no-repeat;
-   padding: 0 8px;
- }
+}
+
+.outline-item {
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+  list-style-image: none;
+  float: left;
+  width: 100%;
+  a {
+    .border-bottom-dotted();
+    text-decoration: none;
+    float: left;
+    clear: both;
+    .font-bold;
+    width: 95%;
+    color: #000000;
+    .title-wrapper {
+      padding: 10px;
+      .text-dark-grey(); 
+   }
+   &:hover {
+     background: #fff0d9;
+   }
+  }
+  a.active {
+    background: #fff0d9;
+  }
+}
+
+.outline-item-is-current {
+  .class-progress-current();
+   @media @mobile {
+     .class-progress-parameters(3%, 100%, 100%, 65%, 100%, 0%, no-repeat) !important;
+   }
+   @media @narrow {
+     .class-progress-parameters(6px, 9px, 100%, 65%, 100%, 0%, repeat-y) !important;
+   }
+   @media @normal {
+     .class-progress-parameters(7px, 9px, 100%, 65%, 100%, 0%, repeat-y) !important;
+   }
+   @media @wide {
+     .class-progress-parameters(9px, 9px, 100%, 65%, 100%, 0%, repeat-y) !important;
+   }
+}
+
+.outline-item-is-complete {
+  .class-progress-complete();
+  @media @mobile {
+    .class-progress-parameters(3%, 100%, 100%, 0%, 100%, 0%, no-repeat) !important;
+  }
+  @media @narrow {
+    .class-progress-parameters(6px, 100%, 100%, 0%, 100%, 0%, no-repeat) !important;
+  }
+  @media @normal {
+    .class-progress-parameters(7px, 100%, 100%, 0%, 100%, 0%, no-repeat) !important;
+  }
+  @media @wide {
+    .class-progress-parameters(9px, 100%, 100%, 0%, 100%, 0%, no-repeat) !important;
+  }
+}
+
+.outline-item.first {
+  .class-progress-image();
+  @media @mobile {
+    .class-progress-parameters(3%, 3%, 100%, 0%, 100%, 0%, no-repeat);
+  }
+  @media @narrow {
+    .class-progress-parameters(6px, 3%, 100%, 0%, 100%, 0%, no-repeat);
+  }
+  @media @normal {
+    .class-progress-parameters(7px, 3%, 100%, 0%, 100%, 0%, no-repeat);
+  }
+  @media @wide {
+    .class-progress-parameters(9px, 3%, 100%, 0%, 100%, 0%, no-repeat);
+  }
+}
+
+.outline-item.last {
+  .class-progress-image();
+  @media @mobile {
+    .class-progress-parameters(3%, 3%, 100%, 100%, 100%, 100%, no-repeat);
+  }
+  @media @narrow {
+    .class-progress-parameters(6px, 3%, 100%, 100%, 100%, 100%, no-repeat);
+  }
+  @media @normal {
+    .class-progress-parameters(6px, 3%, 100%, 100%, 100%, 100%, no-repeat);
+  }
+  @media @wide {
+    .class-progress-parameters(9px, 3%, 100%, 100%, 100%, 100%, no-repeat);
+  }
+  a {
+   border: medium none;
+  }
 }

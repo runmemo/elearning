@@ -251,6 +251,8 @@
   background-position:0 0, 100% 0;
   background-repeat: no-repeat;
 }
+
+/* Course outline */
 .class-progress-parameters(@size-x: 1px, @size-y: 100%, @position-x-1: 97%, @position-y-1: 0%, @position-x-2: 100%, @position-y-2: 0%, @repeat: no-repeat) {
   background-size: @size-x @size-y;
   background-position: @position-x-1 @position-y-1, @position-x-2 @position-y-2;
@@ -264,7 +266,7 @@
   background-image: -o-linear-gradient(#b0c39c, #b0c39c), -o-linear-gradient(#b0c39c, #b0c39c);
 }
 
-.class-progress-comleted() {
+.class-progress-complete() {
   background-image: linear-gradient(to right, #b0c39c, #b9d69d);
   background-image: -webkit-linear-gradient(right, #b0c39c, #b9d69d);
   background-image: -moz-linear-gradient(to right, #b0c39c, #b9d69d), -moz-linear-gradient(to right, #b0c39c, #b9d69d);
