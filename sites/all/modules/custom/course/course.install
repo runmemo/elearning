@@ -1,7 +1,6 @@
 <?php
 
 require_once drupal_get_path('module', 'course') . '/course.user_role.inc';
-//require_once drupal_get_path('module', 'course') . '/course.field.inc';
 
 function course_install() {
 
@@ -11,40 +10,7 @@ function course_install() {
           $role->rid = $existing->rid;
         }
         user_role_save($role);  
-    }
-    
-    // add all fields that are defined in sport_event.field.inc file
- /*   foreach (_course_field_default_fields() as $field) {
-      create_field($field);
-    } */
-  
+    }   
 }
 
-/**
- * Adds fields to provider content type and entity reference
- * from course to provider
- */
-function course_update_7001() {
- /* $fields = _course_field_default_fields();
-  create_field($fields['node-course-field-provider']);
-  create_field($fields['node-provider-field-logo']);
-  create_field($fields['node-provider-body']);*/
-  
-  
-}
-
-/**
- * Adds surname and first name fields to user
- */
-function course_update_7002() {
- /* $fields = _course_field_default_fields();
-  create_field($fields['node-course-field-course-load']);
-  create_field($fields['node-course-field-duration']);
-  create_field($fields['node-provider-field-provider-extra']);
-  create_field($fields['node-course-field-course-dates']);
-  create_field($fields['node-course-field-image']);*/
-}
-
-function course_update_7003() {
-  //
-}
+// function course_update_7003() 
