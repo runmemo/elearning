@@ -33,27 +33,33 @@ function subscriptions_reference_subscriptions($op, $arg0 = NULL, $arg1 = NULL, 
             'data_function' => 'subscriptions_content_data',
             'subs_mod' => 'subscriptions_content',
             'subs_type' => t('thread'),
-            'mailkey' => 'node-reference-',
+            'mailkey' => subscriptions_reference_get_maikey($info['field']),
           );
         }
         return $fields;
       }
-    // _mail_edit_module_list();
-     
       break;
     case 'mailkeys':
       $mailkeys = array();
       foreach (_available_reference_fields() as $key => $info) {
-        print_nice($info);
-        $mailkeys['node-reference-' . str_replace('_', '-', $info['field'])] = t('Notifications for %type reference subscriptions', array('%type' => $info['child'] . '->' . $info['parent'],));
+        $mailkeys[subscriptions_reference_get_maikey($info['field'])] = t('Notifications for %type reference subscriptions', array('%type' => $info['child'] . '->' . $info['parent'],));
       }
       return $mailkeys;
     case 'stypes': // @todo where is this used??
       return $stypes;
     case 'stype':
       return (isset($stypes[$arg0]) ? array_merge($stypes[$arg0], array($arg1, $arg2)) : NULL);
+    case 'token_types':
+      if (strpos($arg0, 'node-reference-') === 0) {
+        return array('node');
+      }
+      break;
   }
   return NULL;
+}
+
+function subscriptions_reference_get_maikey($field) {
+  return 'node-reference-' . str_replace('_', '-', $field);
 }
 
 /**
