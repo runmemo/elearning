@@ -10,31 +10,39 @@
  * @todo barinder implement tests
  */
 class SubscriptionReferenceTestCase extends DrupalWebTestCase {
-  
+  protected $parent;
+  protected $parent_author;
+  protected $child_subscriber;
   
   function setUp() {
-    parent::setUp('subscriptions_reference_test');
+    parent::setUp('subscriptions_reference', 'subscriptions_reference_test');
+
     // create user A (uA)
+    $this->parent_author = $this->drupalCreateUser(array(
+      'subscribe to referenced node',
+    ));
     
     // create user B (uB)
+    $this->child_subscriber = $this->drupalCreateUser(array(
+      'subscribe to referenced node',
+    ));
     
     // create parent node (nP) as uA
-    
-    // 
+    $this->parent = $this->createParentNode($this->parent_author->uid);
+
   }
-  
+
   /**
-   * Tests subscribe functions used by rules
-   * @see subscriptions_reference.rules.inc 
-   * @see subscriptions_reference_subscribe()
-   * @see subscriptions_reference_unsubscribe()
-   * 
+   * creates parent node
    */
-  function testSubscribeRules() {
-    // subscriptions_reference_subscribe()
-    
-    
-    // subscriptions_reference_unsubscribe()
+  function createParentNode($uid) {
+    $settings = array(
+      'type' => 'test_parent',
+      'uid' => $uid,
+    );
+    $parent = $this->drupalCreateNode($settings);
+    node_save($parent);
+    return $parent;
   }
   
   
@@ -42,36 +50,131 @@ class SubscriptionReferenceTestCase extends DrupalWebTestCase {
    * @see subscriptions_reference_test.module in tests
    */
   function testUserGetsNotification() {
-    
-    // create child (nC) for nP as uB
-     
+
+    // subscribe uA to nP : Authors are not auto subscribed see : rules_subscribe_author_to_question for more
+    $this->subscribeRules($this->parent, $this->parent_author);
+
     // check if that and only that email is in the queue (uA is autosubscribed)
+    $result = db_select('subscriptions', 's')
+      ->fields('s', array('sid'))
+      ->condition('value', $this->parent->nid, '=')
+      ->execute();
+    $this->assertEqual($result->rowCount(), 1, '1 item found in subscriptions');
+
+    // create child (nC) for nP as uB
+    $child = $this->createChildNode($this->child_subscriber->uid, $this->parent->nid);
     
+    // check if that and only that email is in the queue (uA is not autosubscribed)
+    $result = db_select('subscriptions_queue', 'sq')
+      ->fields('sq', array('sqid'))
+      ->condition('value', $this->parent->nid, '=')
+      ->condition('uid', $this->parent_author->uid, '=')
+      ->condition('load_args', $child->nid, '=')
+      ->execute();
+    $this->assertEqual($result->rowCount(), 1, '1 item found in subscriptions queue');
+
     // run cron
+    $this->cronRun();
     
     // check that email is sent
-    $this->drupalGetMails(); // ?
+    $this->drupalGetMails(); // How to check this ?
     
-    // create answer to nP as user A
+    // create chid to nP as user A
+    $child = $this->createChildNode($this->parent_author->uid, $this->parent->nid);
     
-    // check if email is not in the queue
-    
+    // check if email is in the queue
+    $result = db_select('subscriptions_queue', 'sq')
+      ->fields('sq', array('sqid'))
+      ->condition('value', $this->parent->nid, '=')
+      ->condition('uid', $this->parent_author->uid, '=')
+      ->condition('load_args', $child->nid, '=')
+      ->execute();
+    $this->assertEqual($result->rowCount(), 1, '1 item found in subscriptions queue');    
+
     // unsubscribe uA from nP
+    $this->unSubscribeRules($this->parent, $this->parent_author);
     
     // create child to nP as uB
-    
-    // check that email is not in the queue
+    $child = $this->createChildNode($this->child_subscriber->uid, $this->parent->nid);
+
+    // check if email is not in the queue
+    $result = db_select('subscriptions_queue', 'sq')
+      ->fields('sq', array('sqid'))
+      ->condition('value', $this->parent->nid, '=')
+      ->condition('uid', $this->parent_author->uid, '=')
+      ->condition('load_args', $child->nid, '=')
+      ->execute();
+    $this->assertEqual($result->rowCount(), 0, '0 item found in subscriptions queue');    
     
     // run cron
-    
-    // check that email is sent
+    $this->cronRun();
+
+    // check that email is sent - How to do that ?
     
     // subscribe user B to node Parent
+    $this->subscribeRules($this->parent, $this->child_subscriber);
+
+    // check subscription of uB to nP
+    $result = db_select('subscriptions', 's')
+      ->fields('s', array('sid'))
+      ->condition('value', $this->parent->nid, '=')
+      ->condition('recipient_uid', $this->child_subscriber->uid, '=')
+      ->execute();
+    $this->assertEqual($result->rowCount(), 1, '1 item found in subscriptions');
     
-    // add child to Parent node as user C
+    // add child to Parent node as user A
+    $child = $this->createChildNode($this->parent_author->uid, $this->parent->nid);
     
     // check that only user B gets notification
+    $result = db_select('subscriptions_queue', 'sq')
+      ->fields('sq', array('sqid'))
+      ->condition('value', $this->parent->nid, '=')
+      ->condition('uid', $this->child_subscriber->uid, '=')
+      ->condition('load_args', $child->nid, '=')
+      ->execute();
+    $this->assertEqual($result->rowCount(), 1, '1 item found in subscriptions queue'); 
     
+  }
+
+  /**
+   * creates child node
+   */
+  function createChildNode($uid, $parent_nid) {
+    global $language;
+    $settings = array(
+      'type' => 'test_child',
+      'uid' => $uid,
+      'field_test_parent' => array('$language->language' => array('nid' => $parent_nid))
+    );
+
+    $child = $this->drupalCreateNode($settings);
+    node_save($child);
+    return $child;
+  }
+
+  /**
+   * Tests subscribe functions used by rules
+   * @see subscriptions_reference.rules.inc 
+   * @see subscriptions_reference_subscribe()
+   * @see subscriptions_reference_unsubscribe()
+   * 
+   */
+  function subscribeRules($node, $user) {
+    module_load_include('inc', 'subscriptions_reference', 'subscriptions_reference.rules');
+    subscriptions_reference_subscribe($node, $user);
+  }
+
+  function unSubscribeRules($node, $user) {
+    module_load_include('inc', 'subscriptions_reference', 'subscriptions_reference.rules');
+    subscriptions_reference_unsubscribe($node, $user);
+  }
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Subscription Reference Drupal Web Test',
+      'description' => 'Drupal Web tests for subscription reference. 1',
+      'group' => 'Subscription Reference',
+    );
   }
   
 }
