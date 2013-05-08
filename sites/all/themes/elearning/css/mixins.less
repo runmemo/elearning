@@ -16,7 +16,10 @@
 @images-folder: "../images/";
 /* Background Image */
 .bg-img(@img) { 
-  background:url("@{images-folder}@{img}") no-repeat scroll 0 0 transparent;;
+  background-image:url("@{images-folder}@{img}");
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  background-color: transparent;
 }
 
 .gradient-main-panel() {
