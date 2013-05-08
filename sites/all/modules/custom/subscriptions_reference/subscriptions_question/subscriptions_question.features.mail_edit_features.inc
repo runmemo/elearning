@@ -62,6 +62,36 @@ function subscriptions_question_default_mail_edit_features() {
 {{[subs:files:field_files:count]#| [subs:files:field_files:index:#0:url]
 }}}}| ---------------------------------------------------',
   );
+  
+  
+  // Russian email template for notification
+  $mail_edit_features['subscriptions_mail_node-reference-field-answer-question--ru'] = array(
+    'id' => 'subscriptions_mail_node-reference-field-answer-question',
+    'language' => 'ru',
+    'description' => 'Notifications for answer-&gt;question reference subscriptions',
+    'subject' => '[[site:name]] Новый ответ на вопрос от [node:author:name]: [node:title]',
+    'body' => '{{MAIL@| Здравствуйте, [current-user:name].
+
+|На [site:name]  {{![node:author:name]?неизвестный:пользователь [node:author:name]}} добавил ответ к вопросу, на который вы подписаны: [node:field-answer-question].
+{{![subs:is-published]#| ***** This post is unpublished! *****}}
+{{![subs:category:tid]?:{{[subs:category:tid]==[subs:forum:tid]?:| Категория: [subs:category:name]}}}}
+{{![subs:forum:tid]?:| Форум: [subs:forum:name]}}
+| Название: [node:title]
+{{![subs:terms:field_tags:count]?:| [subs:terms:field_tags:first:vocabulary:name]: {{[subs:terms:field_tags:count]#{{!!#0#, }}[subs:terms:field_tags:index:#0:name]}}
+}}
+{{![subs:is-old]?&nbsp;[node:body]:{{![subs:has-distinct-summary]?&nbsp;
+[node:body]:| Абстракт:
+&nbsp;
+[node:summary]}}}}
+| Ссылка: [node:url]
+',
+    'subscriptions_comment_body' => '',
+    'module' => 'subscriptions_mail',
+    'mailkey' => 'node-reference-field-answer-question',
+    'registry_description' => 'Notifications for <em class="placeholder">answer-&gt;question</em> reference subscriptions',
+  );
+  
+  
 
   return $mail_edit_features;
 }
