@@ -120,7 +120,7 @@ h2 {
           box-shadow: 0px 1px 3px 0px #888;
           border-top: none;
             a:link, a:visited {
-              color: #383838 !important;
+              color: #383838;
               .link();
             }
             a:hover {
@@ -735,7 +735,7 @@ h2 {
     .text-grey();
     margin-top: 23px;
     a:link, a:visited {
-      color: #333333 !important;
+      color: #333333;
       .link();
     }
     a:hover {
@@ -767,11 +767,16 @@ h2 {
         a.profile-edit {
           .link-image-left(16px);
         }
-        a.profile-edit:link, a.profile-edit:visited {
+        a.profile-edit:link, 
+        a.profile-edit:visited {
           .bg-img('profile-edit-link.png');
+          background-position: 0 2px;
         }
-        a.profile-edit:hover, a.profile-edit:active {
+        a.profile-edit:hover,
+        a.profile-edit:active {
+          .text-orange();
           .bg-img('profile-edit-hover.png');
+          background-position: 0 2px;
         }
       }
     }
