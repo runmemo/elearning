@@ -18,7 +18,7 @@ function mail_edit_features_features_export($data, &$export, $module_name = '') 
   if (!isset($export['features']['mail_edit_features'])) {
     $export['features']['mail_edit_features'] = array();
   }
-  
+
   foreach ($data as $identifier) {
     list($id, $language) = explode('--', $identifier);
     $mail_edit_features = array(
@@ -42,7 +42,6 @@ function mail_edit_features_features_export($data, &$export, $module_name = '') 
     $export['features']['mail_edit_features'][$identifier] = $identifier;
     $pipe['mail_edit'][] = $mail_edit_features;
   }
-  dvm($pipe);
   return $pipe;
 }
 
