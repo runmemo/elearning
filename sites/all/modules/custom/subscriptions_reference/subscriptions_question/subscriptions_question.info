@@ -16,6 +16,9 @@ dependencies[] = subscriptions_ui
 dependencies[] = subscriptions_mail
 dependencies[] = subscriptions_content
 dependencies[] = subscriptions_rules
+dependencies[] = mail_edit
+dependencies[] = mail_edit_features
+
 features[ctools][] = strongarm:strongarm:1
 features[features_api][] = api:1
 features[rules_config][] = rules_subscribe_author_to_question
@@ -32,6 +35,8 @@ features[user_permission][] = administer user subscriptions
 features[user_permission][] = bulk-administer user subscriptions
 features[user_permission][] = subscribe to questions
 features[user_permission][] = suspend own subscriptions
+features[mail_edit_features][] = subscriptions_mail_node-reference-field-answer-question--en
+
 features[variable][] = subscriptions_avoid_empty_subscribe_links
 features[variable][] = subscriptions_blocked_content_types
 features[variable][] = subscriptions_blocked_nodes
