@@ -140,17 +140,27 @@ class SubscriptionReferenceTestCase extends DrupalWebTestCase {
    * creates child node
    */
   function createChildNode($uid, $parent_nid) {
-    global $language;
     $settings = array(
       'type' => 'test_child',
       'uid' => $uid,
-      'field_test_parent' => array('$language->language' => array('nid' => $parent_nid))
     );
-
-    $child = $this->drupalCreateNode($settings);
-    node_save($child);
-    return $child;
+    $node = $this->drupalCreateNode($settings);
+    node_save($node);
+    $this->appendParent($node, $parent_nid);
+    return $node;
   }
+
+  /**
+   * Attaches child node to the parent node in the
+   * @param object $node 
+   * @param object $parent parent node in the book
+   */
+  function appendParent($node, $parent_nid) {
+    $node->field_test_parent['und'][0]['target_id'] = $parent_nid;
+    node_save($node);
+    debug($node);
+  }
+  
 
   /**
    * Tests subscribe functions used by rules
