@@ -1,0 +1,64 @@
+diff --git a/inc/mail_edit_features.features.inc b/inc/mail_edit_features.features.inc
+index 20f194e..a4d410a 100644
+--- a/inc/mail_edit_features.features.inc
++++ b/inc/mail_edit_features.features.inc
+@@ -18,9 +18,9 @@ function mail_edit_features_features_export($data, &$export, $module_name = '')
+   if (!isset($export['features']['mail_edit_features'])) {
+     $export['features']['mail_edit_features'] = array();
+   }
+-
++  
+   foreach ($data as $identifier) {
+-    list($id, $language) = explode('-', $identifier);
++    list($id, $language) = explode('--', $identifier);
+     $mail_edit_features = array(
+       'machine_name' => $identifier,
+       'table' => 'mail_edit',
+@@ -42,7 +42,6 @@ function mail_edit_features_features_export($data, &$export, $module_name = '')
+     $export['features']['mail_edit_features'][$identifier] = $identifier;
+     $pipe['mail_edit'][] = $mail_edit_features;
+   }
+-
+   return $pipe;
+ }
+ 
+@@ -55,7 +54,7 @@ function mail_edit_features_features_export_options() {
+     ' JOIN {mail_edit} me ON mer.id = me.id');
+ 
+   foreach ($query as $result) {
+-    $options[$result->id . '-' . $result->language] = t('Template for @id (@lang)',
++    $options[$result->id . '--' . $result->language] = t('Template for @id (@lang)',
+       array('@id' => $result->id, '@lang' => $result->language));
+   }
+ 
+@@ -94,7 +93,7 @@ function mail_edit_features_features_rebuild($module) {
+     $current_templates = mail_edit_features_content_get();
+ 
+     foreach ($defaults as $default_mail_template) {
+-      $identifier = $default_mail_template['id'] . '-' . $default_mail_template['language'];
++      $identifier = $default_mail_template['id'] . '--' . $default_mail_template['language'];
+ 
+       // Template already exists in DB - update it.
+       if (isset($current_templates[$identifier])) {
+diff --git a/mail_edit_features.module b/mail_edit_features.module
+index 6a69923..73525dc 100644
+--- a/mail_edit_features.module
++++ b/mail_edit_features.module
+@@ -23,7 +23,7 @@ function mail_edit_features_features_api() {
+  * Function converts array to string.
+  */
+ function mail_edit_features_string_get($identifier) {
+-  list($id, $language) = explode('-', $identifier);
++  list($id, $language) = explode('--', $identifier);
+   $convert = '';
+ 
+   $res = db_query("SELECT me.*, mer.module, mer.mailkey, mer.description AS registry_description " .
+@@ -46,7 +46,7 @@ function mail_edit_features_content_get() {
+     ' JOIN {mail_edit} me ON mer.id = me.id');
+   $templates = array();
+   foreach ($query as $result) {
+-    $templates[$result->id . '-' . $result->language] = $result;
++    $templates[$result->id . '--' . $result->language] = $result;
+   }
+ 
+   return $templates;
