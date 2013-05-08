@@ -245,7 +245,9 @@ class SubscriptionReferenceUnitTestCase extends DrupalUnitTestCase {
     //  @see PHPMockFunction folder in libraries
     
   }
-  
+  /**
+   * Tests that rule actions have correct settings in hook_rules_action_info()
+   */
   function testSubscribeRules() {
     module_load_include('inc', 'subscriptions_reference', 'subscriptions_reference.rules');
     $actions = subscriptions_reference_rules_action_info();
