@@ -266,3 +266,31 @@ function subscriptions_reference_page_admin(array $form, $uid) {
   _subscriptions_module_load_include('subscriptions_reference', 'admin.inc');
   return _subscriptions_reference_form($form, $uid);
 }
+
+/**
+ * Rules subscribe action callback
+ */
+function subscriptions_reference_subscribe($node, $user) {
+  $reference_field = subscriptions_reference_get_field_name($node, 'parent');
+  if (!$reference_field)
+    return;
+  // write subscription to database
+  subscriptions_write_subscription(REFERENCE_MODULE, $reference_field, $node->nid, -1, $user->uid);
+}
+
+
+/**
+ * Rules unsubscribe action callback
+ */
+function subscriptions_reference_unsubscribe($node, $user) {
+  $reference_field = subscriptions_reference_get_field_name($node, 'parent');
+  if (!$reference_field) return;
+  
+  db_delete('subscriptions')
+      ->condition('module', REFERENCE_MODULE)
+      ->condition('field', $reference_field)
+      ->condition('value', $node->nid)
+      ->condition('author_uid', -1)  // DEBUG $node->uid,
+      ->condition('recipient_uid', $user->uid)
+      ->execute();
+}

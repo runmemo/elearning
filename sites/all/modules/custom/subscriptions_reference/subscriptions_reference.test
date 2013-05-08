@@ -11,29 +11,33 @@
  */
 class SubscriptionReferenceTestCase extends DrupalWebTestCase {
   protected $parent;
-  protected $parent_author;
-  protected $child_subscriber;
+  protected $user_a;
+  protected $user_b;
   
   function setUp() {
     parent::setUp('subscriptions_reference', 'subscriptions_reference_test');
 
     // create user A (uA)
-    $this->parent_author = $this->drupalCreateUser(array(
+    $this->user_a = $this->drupalCreateUser(array(
       'subscribe to referenced node',
     ));
+    $this->drupalLogin($this->user_a); // we need to set access attribute
     
     // create user B (uB)
-    $this->child_subscriber = $this->drupalCreateUser(array(
+    $this->user_b = $this->drupalCreateUser(array(
       'subscribe to referenced node',
     ));
+    $this->drupalLogin($this->user_b); // we need to set access attribute
+    $this->drupalLogout();
     
     // create parent node (nP) as uA
-    $this->parent = $this->createParentNode($this->parent_author->uid);
+    $this->parent = $this->createParentNode($this->user_a->uid);
 
   }
 
   /**
    * creates parent node
+   * @param integer $uid id of node author
    */
   function createParentNode($uid) {
     $settings = array(
@@ -45,94 +49,132 @@ class SubscriptionReferenceTestCase extends DrupalWebTestCase {
     return $parent;
   }
   
+  /**
+   * Tests subscribe functions used by rules
+   * @see subscriptions_reference_subscribe()
+   * @see subscriptions_reference_unsubscribe()
+   * 
+   */
+  function testSubsciptionFunctions() {
+    $params = array( // default pararms for getting our subscriptions
+      'module' => REFERENCE_MODULE, 
+      'field' => 'field_test_parent',
+      'value' => $this->parent->nid);
+    
+    // subscribe uA to nP : Authors are not auto subscribed see : rules_subscribe_author_to_question for more
+    subscriptions_reference_subscribe($this->parent, $this->user_a);
+    $s = subscriptions_get($params);
+    // check if that and only that email is in the queue (uA is autosubscribed)
+    $this->assertTrue(isset($s[$this->user_a->uid]), 'User A has subscriptions');
+    if(isset($s[$this->user_a->uid])) {
+      $this->assertEqual(count($s[$this->user_a->uid]), 1, 'User has 1 subscription');
+    }
+    
+    // subscribe user B to parent node
+    subscriptions_reference_subscribe($this->parent, $this->user_b);
+    // check subscription of uB to nP
+    $s = $s = subscriptions_get($params);
+    $this->assertTrue(isset($s[$this->user_b->uid]), 'User B has subscriptions');
+    $this->assertTrue(isset($s[$this->user_a->uid]), 'User A still has subscriptions');
+    if(isset($s[$this->user_b->uid])) {
+      $this->assertEqual(count($s[$this->user_b->uid]), 1, 'User B has 1 subscription');
+    }
+    
+    // unsubscribe user A
+    subscriptions_reference_unsubscribe($this->parent, $this->user_a);
+    $s = subscriptions_get($params);
+    $this->assertFalse(isset($s[$this->user_a->uid]), 'User A has no subscriptions');
+    $this->assertTrue(isset($s[$this->user_b->uid]), 'User B still has a subscription');
+    
+  }
   
   /**
    * @see subscriptions_reference_test.module in tests
    */
   function testUserGetsNotification() {
-
+   
     // subscribe uA to nP : Authors are not auto subscribed see : rules_subscribe_author_to_question for more
-    $this->subscribeRules($this->parent, $this->parent_author);
-
-    // check if that and only that email is in the queue (uA is autosubscribed)
-    $result = db_select('subscriptions', 's')
-      ->fields('s', array('sid'))
-      ->condition('value', $this->parent->nid, '=')
-      ->execute();
-    $this->assertEqual($result->rowCount(), 1, '1 item found in subscriptions');
-
+    subscriptions_reference_subscribe($this->parent, $this->user_a); // A is author
     // create child (nC) for nP as uB
-    $child = $this->createChildNode($this->child_subscriber->uid, $this->parent->nid);
-    
+    $child_node_b = $this->createChildNode($this->user_b->uid, $this->parent->nid);
     // check if that and only that email is in the queue (uA is not autosubscribed)
-    $result = db_select('subscriptions_queue', 'sq')
-      ->fields('sq', array('sqid'))
-      ->condition('value', $this->parent->nid, '=')
-      ->condition('uid', $this->parent_author->uid, '=')
-      ->condition('load_args', $child->nid, '=')
-      ->execute();
-    $this->assertEqual($result->rowCount(), 1, '1 item found in subscriptions queue');
-
-    // run cron
-    $this->cronRun();
+    $conditions = array(
+      'value' => $this->parent->nid,
+      'uid' => $this->user_a->uid,
+      'load_args' => $child_node_b->nid
+    );
+    $queue = $this->getSubscriptionQueueItems(array());
+    $this->assertEqual(count($queue), 1, '1 item found in subscriptions queue');
+    $queue = $this->getSubscriptionQueueItems($conditions);
+    $this->assertEqual(count($queue), 1, 'Item\'s attributes match subscription');  
     
-    // check that email is sent
-    $this->drupalGetMails(); // How to check this ?
+    // NOTE: we have one email to send to user A
     
-    // create chid to nP as user A
-    $child = $this->createChildNode($this->parent_author->uid, $this->parent->nid);
+    // create child to nP as user A
+    $child_node_a = $this->createChildNode($this->user_a->uid, $this->parent->nid);
     
     // check if email is in the queue
-    $result = db_select('subscriptions_queue', 'sq')
-      ->fields('sq', array('sqid'))
-      ->condition('value', $this->parent->nid, '=')
-      ->condition('uid', $this->parent_author->uid, '=')
-      ->condition('load_args', $child->nid, '=')
-      ->execute();
-    $this->assertEqual($result->rowCount(), 1, '1 item found in subscriptions queue');    
+    $conditions = array(
+      'value' => $this->parent->nid,
+      'uid' => $this->user_a->uid,
+      'load_args' => $child_node_a->nid
+    );
+    $queue = $this->getSubscriptionQueueItems($conditions);
+    $emails_in_queue = count($queue);
+    $this->assertEqual($emails_in_queue, 1, '1 item found in subscriptions queue');    
 
+    // NOTE: we have second email to send to user A
+    
     // unsubscribe uA from nP
-    $this->unSubscribeRules($this->parent, $this->parent_author);
+    subscriptions_reference_unsubscribe($this->parent, $this->user_a);
     
     // create child to nP as uB
-    $child = $this->createChildNode($this->child_subscriber->uid, $this->parent->nid);
+    $child_node_b2 = $this->createChildNode($this->user_b->uid, $this->parent->nid);
 
     // check if email is not in the queue
-    $result = db_select('subscriptions_queue', 'sq')
-      ->fields('sq', array('sqid'))
-      ->condition('value', $this->parent->nid, '=')
-      ->condition('uid', $this->parent_author->uid, '=')
-      ->condition('load_args', $child->nid, '=')
-      ->execute();
-    $this->assertEqual($result->rowCount(), 0, '0 item found in subscriptions queue');    
-    
-    // run cron
-    $this->cronRun();
-
-    // check that email is sent - How to do that ?
+    $conditions = array(
+      'value' => $this->parent->nid,
+      'uid' => $this->user_b->uid,
+      'load_args' => $child_node_b2->nid
+    );
+    $queue = $this->getSubscriptionQueueItems($conditions);
+    $this->assertEqual($queue, FALSE, '0 item found in subscriptions queue');    
     
     // subscribe user B to node Parent
-    $this->subscribeRules($this->parent, $this->child_subscriber);
-
-    // check subscription of uB to nP
-    $result = db_select('subscriptions', 's')
-      ->fields('s', array('sid'))
-      ->condition('value', $this->parent->nid, '=')
-      ->condition('recipient_uid', $this->child_subscriber->uid, '=')
-      ->execute();
-    $this->assertEqual($result->rowCount(), 1, '1 item found in subscriptions');
-    
+    subscriptions_reference_subscribe($this->parent, $this->user_b); // B is not an author
     // add child to Parent node as user A
-    $child = $this->createChildNode($this->parent_author->uid, $this->parent->nid);
+    $child_node = $this->createChildNode($this->user_a->uid, $this->parent->nid);
     
     // check that only user B gets notification
-    $result = db_select('subscriptions_queue', 'sq')
-      ->fields('sq', array('sqid'))
-      ->condition('value', $this->parent->nid, '=')
-      ->condition('uid', $this->child_subscriber->uid, '=')
-      ->condition('load_args', $child->nid, '=')
-      ->execute();
-    $this->assertEqual($result->rowCount(), 1, '1 item found in subscriptions queue'); 
+    $conditions = array(
+      'value' => $this->parent->nid,
+      'uid' => $this->user_b->uid,
+      'load_args' => $child_node->nid,
+    );
+    $queue = $this->getSubscriptionQueueItems($conditions);
+    $this->assertEqual(count($queue), 1, '1 item found in subscriptions queue'); 
+    
+    // NOTE: we have one email for user B (+ two for user A remaining).
+    
+   // Run CRON and check that correct emails were sent
+   // $this->cronRun(); this call somehow complicates things, 
+   // so just calling cron function in question directly
+    subscriptions_mail_cron();
+   // check that queue is empty after cron execution
+    $queue = $this->getSubscriptionQueueItems();
+    $this->assertFalse($queue, 'Queue is empty');
+    // check that emails were sent
+    $mails = $this->drupalGetMails();   
+    $this->assertEqual(count($mails), 3, '3 emails were sent as expected');
+    // check first email to user A
+    $this->assertEqual($mails[0]['key'], 'node-reference-field-test-parent', 'Mail key is correct');
+    $this->assertEqual($mails[0]['to'], $this->user_a->mail, 'Mail is sent to correct email address');
+    // check second email to user A
+    $this->assertEqual($mails[1]['key'], 'node-reference-field-test-parent', 'Mail key is correct');
+    $this->assertEqual($mails[1]['to'], $this->user_a->mail, 'Mail is sent to correct email address');
+    // check email to user B
+    $this->assertEqual($mails[2]['key'], 'node-reference-field-test-parent', 'Mail key is correct');
+    $this->assertEqual($mails[2]['to'], $this->user_b->mail, 'Mail is sent to correct email address');
     
   }
 
@@ -144,39 +186,25 @@ class SubscriptionReferenceTestCase extends DrupalWebTestCase {
       'type' => 'test_child',
       'uid' => $uid,
     );
+    $settings['field_test_parent']['und'][0]['target_id'] = $parent_nid;
     $node = $this->drupalCreateNode($settings);
-    node_save($node);
-    $this->appendParent($node, $parent_nid);
+   
     return $node;
   }
 
   /**
-   * Attaches child node to the parent node in the
-   * @param object $node 
-   * @param object $parent parent node in the book
+   * Gets records from subscriptions_queue table
+   * @param array $conditions
+   * @return array queue items - fetched records from queue table
    */
-  function appendParent($node, $parent_nid) {
-    $node->field_test_parent['und'][0]['target_id'] = $parent_nid;
-    node_save($node);
-    debug($node);
-  }
-  
-
-  /**
-   * Tests subscribe functions used by rules
-   * @see subscriptions_reference.rules.inc 
-   * @see subscriptions_reference_subscribe()
-   * @see subscriptions_reference_unsubscribe()
-   * 
-   */
-  function subscribeRules($node, $user) {
-    module_load_include('inc', 'subscriptions_reference', 'subscriptions_reference.rules');
-    subscriptions_reference_subscribe($node, $user);
-  }
-
-  function unSubscribeRules($node, $user) {
-    module_load_include('inc', 'subscriptions_reference', 'subscriptions_reference.rules');
-    subscriptions_reference_unsubscribe($node, $user);
+  function getSubscriptionQueueItems($conditions = array()) {
+     $query = db_select('subscriptions_queue', 'sq')
+      ->fields('sq', array('sqid', 'value', 'field', 'uid', 'load_args',));
+     foreach ($conditions as $field => $value) {
+       $query->condition($field, $value);
+     }
+     $queue = $query->execute()->fetchAll();
+     return $queue;
   }
 
   public static function getInfo() {
@@ -215,4 +243,17 @@ class SubscriptionReferenceUnitTestCase extends DrupalUnitTestCase {
     //  @see PHPMockFunction folder in libraries
     
   }
+  
+  function testSubscribeRules() {
+    module_load_include('inc', 'subscriptions_reference', 'subscriptions_reference.rules');
+    $actions = subscriptions_reference_rules_action_info();
+    foreach ($actions as $action) {
+      $this->assertTrue(function_exists($action['base']), 'Function exists for rules action.');
+      $this->assertTrue(isset($action['parameter']['node']), 'Node is a parameter of the action.');
+      $this->assertTrue(isset($action['parameter']['user']), 'User is a parameter of the action.');
+      $this->assertEqual($action['parameter']['node']['type'], 'node', 'Node parameter has correct type.');
+      $this->assertEqual($action['parameter']['user']['type'], 'user', 'User parameter has correct type.');
+    }
+  }
+  
 }
