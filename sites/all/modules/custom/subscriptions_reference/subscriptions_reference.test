@@ -89,6 +89,8 @@ class SubscriptionReferenceTestCase extends DrupalWebTestCase {
   }
   
   /**
+   * Tests that correct notifications are being sent to users 
+   * subscribed to new content via subscriptions_reference
    * @see subscriptions_reference_test.module in tests
    */
   function testUserGetsNotification() {
