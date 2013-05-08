@@ -8,3 +8,5 @@ dependencies[] = subscriptions
 dependencies[] = subscriptions_mail
 dependencies[] = subscriptions_content
 dependencies[] = rules
+
+files[] = subscriptions_reference.test
