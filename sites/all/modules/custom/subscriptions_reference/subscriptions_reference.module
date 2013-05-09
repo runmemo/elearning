@@ -164,7 +164,7 @@ function subscriptions_reference_node_delete($node) {
  * @see subscriptions_ui_node_form()
  */
 function _subscriptions_reference_node_options($account, $node) {
-  $access_name = subscriptions_reference_access_string($node->type);
+  $access_name = subscriptions_reference_permission_string($node->type);
   if (!user_access($access_name)) {
     return NULL;
   }
@@ -235,7 +235,7 @@ function _subscriptions_reference_types() {
       'page' => 'subscriptions_reference_page_admin',
       'fields' => array(REFERENCE_MODULE, $field['field']),
       'weight' => -20,
-      'access' => subscriptions_reference_access_string($field['parent']),
+      'access' => subscriptions_reference_permission_string($field['parent']),
       'permission' => array(
         'title' => t('Subscribe to ' . $type_name . ' referencies'),
         'description' => t('Allows user to subscribe to new %child via reference to %parent' , 
@@ -247,7 +247,12 @@ function _subscriptions_reference_types() {
   return $types;
 }
 
-function subscriptions_reference_access_string($type) {
+/**
+ * Builds permission string for given content type
+ * @param sting $type content type
+ * @return string permission string
+ */
+function subscriptions_reference_permission_string($type) {
   $type_name = node_type_get_name($type);
   return 'subscribe to '. strtolower($type_name) . ' reference';
 }
