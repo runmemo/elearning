@@ -93,7 +93,7 @@ function open_question_default_rules_configuration() {
     }
   }');
   $items['rules_subscribe_author_to_open_question_answer'] = entity_import('rules_config', '{ "rules_subscribe_author_to_open_question_answer" : {
-      "LABEL" : "Subscribe author to open_question_answer",
+      "LABEL" : "Subscribe Author to Open Question Answer",
       "PLUGIN" : "reaction rule",
       "REQUIRES" : [ "rules", "subscriptions_reference" ],
       "ON" : [ "node_insert" ],
@@ -105,7 +105,13 @@ function open_question_default_rules_configuration() {
         }
       ],
       "DO" : [
-        { "subscriptions_reference_subscribe_action" : { "node" : [ "node" ], "user" : [ "node:author" ] } }
+        { "flag_flagnode" : {
+            "flag" : "subscriptions_reference_flag",
+            "node" : [ "node" ],
+            "flagging_user" : [ "node:author" ],
+            "permission_check" : 0
+          }
+        }
       ]
     }
   }');
