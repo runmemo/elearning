@@ -21,6 +21,7 @@ dependencies[] = text
 dependencies[] = views
 dependencies[] = vud_field
 dependencies[] = views_php
+dependencies[] = subscriptions_reference
 
 features[context][] = open_question
 features[ctools][] = context:context:3
@@ -51,6 +52,7 @@ features[flag][] = opaf_useful
 features[rules_config][] = rules_open_question_answered
 features[rules_config][] = rules_feedback_marked_as_useful
 features[rules_config][] = rules_feedback_unmarked_as_useful
+features[rules_config][] = rules_subscribe_author_to_open_question_answer
 features[node][] = open_question
 features[node][] = open_question_answer
 features[node][] = open_question_feedback

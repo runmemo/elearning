@@ -92,5 +92,22 @@ function open_question_default_rules_configuration() {
       ]
     }
   }');
+  $items['rules_subscribe_author_to_open_question_answer'] = entity_import('rules_config', '{ "rules_subscribe_author_to_open_question_answer" : {
+      "LABEL" : "Subscribe author to open_question_answer",
+      "PLUGIN" : "reaction rule",
+      "REQUIRES" : [ "rules", "subscriptions_reference" ],
+      "ON" : [ "node_insert" ],
+      "IF" : [
+        { "node_is_of_type" : {
+            "node" : [ "node" ],
+            "type" : { "value" : { "open_question_answer" : "open_question_answer" } }
+          }
+        }
+      ],
+      "DO" : [
+        { "subscriptions_reference_subscribe_action" : { "node" : [ "node" ], "user" : [ "node:author" ] } }
+      ]
+    }
+  }');
   return $items;
 }
