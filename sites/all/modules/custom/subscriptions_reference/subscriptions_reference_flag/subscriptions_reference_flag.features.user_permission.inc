@@ -7,7 +7,7 @@
 /**
  * Implements hook_user_default_permissions().
  */
-function subscriptions_reference_user_default_permissions() {
+function subscriptions_reference_flag_user_default_permissions() {
   $permissions = array();
 
   // Exported permission: administer user subscriptions.
@@ -33,6 +33,7 @@ function subscriptions_reference_user_default_permissions() {
     'name' => 'subscribe to all content types',
     'roles' => array(
       'administrator' => 'administrator',
+      'teacher' => 'teacher',
     ),
     'module' => 'subscriptions',
   );
