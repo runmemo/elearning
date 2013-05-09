@@ -17,7 +17,7 @@ function subscriptions_reference_subscriptions($op, $arg0 = NULL, $arg1 = NULL, 
   }
   
   static $stypes = array(); // why is it static?
-  foreach (_available_reference_fields() as $key => $info) {
+  foreach (_subscriptions_reference_available_fields() as $key => $info) {
     $stypes[$key] = array(REFERENCE_MODULE, $info['field']);
   }
   
@@ -28,7 +28,7 @@ function subscriptions_reference_subscriptions($op, $arg0 = NULL, $arg1 = NULL, 
     case 'fields': // $arg0 is module.
       if ($arg0 == REFERENCE_MODULE) {
         $fields = array();
-        foreach (_available_reference_fields() as $key => $info) {
+        foreach (_subscriptions_reference_available_fields() as $key => $info) {
           $fields[$info['field']] = array(
             'data_function' => 'subscriptions_content_data',
             'subs_mod' => 'subscriptions_content',
@@ -41,7 +41,7 @@ function subscriptions_reference_subscriptions($op, $arg0 = NULL, $arg1 = NULL, 
       break;
     case 'mailkeys':
       $mailkeys = array();
-      foreach (_available_reference_fields() as $key => $info) {
+      foreach (_subscriptions_reference_available_fields() as $key => $info) {
         $mailkeys[subscriptions_reference_get_maikey($info['field'])] 
         = t('Notifications for new %child that references %parent via field %field',
             array(
@@ -111,6 +111,10 @@ function subscriptions_reference_queue_send($event) {
   }
 }
 
+function subscription_reference_permissions() {
+  
+}
+
 /**
  * Implements hook_node_insert
  */
@@ -160,7 +164,8 @@ function subscriptions_reference_node_delete($node) {
  * @see subscriptions_ui_node_form()
  */
 function _subscriptions_reference_node_options($account, $node) {
-  if (!user_access('subscribe to referenced node')) {
+  $access_name = subscriptions_reference_access_string($node->type);
+  if (!user_access($access_name)) {
     return NULL;
   }
   $options = array();
@@ -183,7 +188,7 @@ function _subscriptions_reference_node_options($account, $node) {
  * @return name of the reference field
  */
 function subscriptions_get_reference_info($node, $op = 'child') {
-  foreach (_available_reference_fields() as $key => $info) {
+  foreach (_subscriptions_reference_available_fields() as $key => $info) {
     if ($info[$op] === $node->type) {
       return $info;
     }
@@ -199,7 +204,7 @@ function subscriptions_reference_get_field_name($node, $op = 'child') {
 /**
  * Gets all reference fields from modules that implement subscriptions_reference_info
  */
-function _available_reference_fields() {
+function _subscriptions_reference_available_fields() {
   // @todo implement cache
   $fields = array();
   foreach (module_implements('subscriptions_reference_info') as $module) {
@@ -222,20 +227,29 @@ function _available_reference_fields() {
  */
 function _subscriptions_reference_types() {
   $types = array();
-  foreach (_available_reference_fields() as $key => $info) {
+  foreach (_subscriptions_reference_available_fields() as $key => $field) {
+    $type_name = node_type_get_name($field['parent']);
+    $child_type_name = node_type_get_name($field['child']);
     $types[$key] = array(
-      'title' => 'Reference ' . $info['child'] . '->' . $info['parent'],
+      'title' => 'Reference ' . $field['child'] . '->' . $field['parent'],
       'page' => 'subscriptions_reference_page_admin',
-      'fields' => array(REFERENCE_MODULE, $info['field']),
+      'fields' => array(REFERENCE_MODULE, $field['field']),
       'weight' => -20,
-      'access' => 'subscribe to referenced node',
+      'access' => subscriptions_reference_access_string($field['parent']),
       'permission' => array(
-        'title' => t('Subscribe to referenced node'),
-        'description' => t('Allows user to subscribe to referenced node')
+        'title' => t('Subscribe to ' . $type_name . ' referencies'),
+        'description' => t('Allows user to subscribe to new %child via reference to %parent' , 
+            array('%child' => $child_type_name, '%parent' => $type_name)),
       ),
     );
   }
+
   return $types;
+}
+
+function subscriptions_reference_access_string($type) {
+  $type_name = node_type_get_name($type);
+  return 'subscribe to '. strtolower($type_name) . ' reference';
 }
 
 /**
@@ -244,7 +258,7 @@ function _subscriptions_reference_types() {
 function subscriptions_reference_disable() {
   //  Remove our queue items that have fields 
   //  exposed via hook_subscriptions_reference_info()
-  foreach (_available_reference_fields() as $key => $info) {
+  foreach (_subscriptions_reference_available_fields() as $key => $info) {
     db_delete('subscriptions_queue')
         ->condition('module', REFERENCE_MODULE)
         ->condition('field', $info['field'])

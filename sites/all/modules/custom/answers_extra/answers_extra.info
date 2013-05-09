@@ -7,14 +7,15 @@ dependencies[] = answers
 dependencies[] = ctools
 dependencies[] = features
 dependencies[] = context
+dependencies[] = rules
+dependencies[] = mail_edit_features
 
 features[field_instance][] = node-answer-field_rating_widget
 features[field_instance][] = node-question-field_rating_widget
-
 features[features_api][] = api:1
-
 features[ctools][] = context:context:3
 features[context][] = question
-
 features[ctools][] = views:views_default:3.0
 features[views_view][] = answers_to_a_question_extra
+features[rules_config][] = rules_subscribe_author_to_question
+features[mail_edit_features][] = subscriptions_mail_node-reference-field-answer-question--en

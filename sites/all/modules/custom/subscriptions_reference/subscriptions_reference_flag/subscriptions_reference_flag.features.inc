@@ -7,7 +7,7 @@
 /**
  * Implements hook_ctools_plugin_api().
  */
-function subscriptions_question_ctools_plugin_api() {
+function subscriptions_reference_flag_ctools_plugin_api() {
   list($module, $api) = func_get_args();
   if ($module == "strongarm" && $api == "strongarm") {
     return array("version" => "1");
@@ -17,16 +17,19 @@ function subscriptions_question_ctools_plugin_api() {
 /**
  * Implements hook_flag_default_flags().
  */
-function subscriptions_question_flag_default_flags() {
+function subscriptions_reference_flag_flag_default_flags() {
   $flags = array();
-  // Exported flag: "follow question".
-  $flags['follow_question'] = array(
+  $fields = _subscriptions_reference_available_fields();
+  $types = array();
+  foreach($fields as $field) {
+    $types[] = $field['parent'];
+  }
+  // Exported flag: "follow referencing content".
+  $flags['subscriptions_reference_flag'] = array(
     'entity_type' => 'node',
-    'title' => 'follow question',
+    'title' => 'Follow referencing content',
     'global' => 0,
-    'types' => array(
-      0 => 'question',
-    ),
+    'types' => $types,
     'flag_short' => 'Follow',
     'flag_long' => '',
     'flag_message' => '',

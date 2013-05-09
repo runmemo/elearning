@@ -166,3 +166,17 @@ function quick_answer_submit_callback($form, &$form_state) {
   $commands[] = ajax_command_replace('#quick-answer-wrapper', render($form));
   return array('#type' => 'ajax', '#commands' => $commands);
 }
+
+
+/**
+ * Implements hook_subscriptions_reference_info()
+ */
+function answers_extra_subscriptions_reference_info() {
+  return array(
+    'question_answers' => array(
+      'parent' => 'question',
+      'child' => 'answer',
+      'field' => 'field_answer_question',
+      'ref_item' => 'nid',
+  ));
+}
