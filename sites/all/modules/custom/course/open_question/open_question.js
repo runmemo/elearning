@@ -6,16 +6,6 @@
   Drupal.behaviors.open_question_review_list = {
     attach: function(context, settings) {
       
-      function get_feedback_form(element) {
-        return element.parents('.views-field-feedback-form');
-      }
-      
-      function get_answer_nid(element) {
-        var form = get_feedback_form(element);
-        var nid = form.find('.js-oq-answer-nid').val();
-        return nid;
-      }
-      
       function get_skip_review_button(nid) {
         return $('.js-oq-skip-review-' + nid);
       }
@@ -36,8 +26,9 @@
       });
 
       $('select[name="rating"]').change(function() {
-        var feedback_form = get_feedback_form($(this));
-        var nid = get_answer_nid($(this));
+        // @todo Ilya for some reason this is being called several times
+        // on one star change. for me it is fired 3 times.
+        var nid = $(this).data('feedback-nid');
         var btn_submit = get_submit_button(nid);
         var btn_skip = get_skip_review_button(nid);
         var str_review = $('.js-oq-review-field-' + nid).val();
@@ -58,17 +49,16 @@
             btn_skip.show();
           }
         }
-        var rating_submit = feedback_form.find('.oq-review-form-rating-submit');
+        var rating_submit = $('.js-oq-form-rating-submit-' + nid);
         if (rating_submit.length > 0) {
           rating_submit.trigger('mousedown');
         }
       });
       // 
       $('textarea[name="review"]').keyup(function() {
-        var feedback_form = get_feedback_form($(this));
-        var nid = get_answer_nid($(this));
-        var select = feedback_form.find('select[name="rating"]');
-        var rating = select[0].selectedIndex;
+        var nid = $(this).data('feedback-nid');
+        var rate_select = $('select[data-feedback-nid="' + nid +'"]');
+        var rating = rate_select.prop("selectedIndex");
         var btn_skip = get_skip_review_button(nid);    
         var review_length = $(this).val().length;
         if (review_length < 1 && rating > 3) {

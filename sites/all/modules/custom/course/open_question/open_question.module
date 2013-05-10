@@ -457,6 +457,7 @@ function oq_review_form($form, &$form_state, $args) {
           ),
         );
         $form['rating_submit']['#attributes']['class'][] = 'oq-review-form-rating-submit';
+        $form['rating_submit']['#attributes']['class'][] = 'js-oq-form-rating-submit-' . $nid;
         $form['review_value'] = array('#type' => 'hidden', '#value' => $review_body);
       }
       $form['edit_button'] = array(
@@ -488,7 +489,7 @@ function oq_review_form($form, &$form_state, $args) {
         '#title' => t('Rating'),
         '#required' => TRUE,
         '#default_value' => $rating ? $rating : NULL,
-      );
+      ); 
       $form['toggle_fields'] = array(
         '#type' => 'fieldset',
         '#states' =>array(  
@@ -497,6 +498,7 @@ function oq_review_form($form, &$form_state, $args) {
           ),
         ),
       );
+      $form['toggle_fields']['#attributes']['data-feedback-nid'][] = $nid;
       $form['toggle_fields']['#attributes']['class'][] = 'js-oq-form-toggle-' . $nid;
       $form['toggle_fields']['#attributes']['class'][] = 'oq-form-fieldset-toggle';
       
@@ -507,6 +509,7 @@ function oq_review_form($form, &$form_state, $args) {
         '#default_value' => isset($review_body) ? $review_body : '',
       );
       $form['toggle_fields']['review']['#attributes']['class'][] = 'oq-form-review';
+      $form['toggle_fields']['review']['#attributes']['data-feedback-nid'][] = $nid;
       $form['toggle_fields']['review']['#attributes']['class'][] = 'js-oq-review-field-' . $nid;
      
       // submit button
@@ -536,8 +539,10 @@ function oq_review_form($form, &$form_state, $args) {
       watchdog('open question', 'Step %step is not defined for open question feedback form.', 
           array('%step' => $step), 
           WATCHDOG_WARNING);
-      break;
+      return array();
   }
+  
+  $form['rating']['#attributes']['data-feedback-nid'][] = $nid;
   return $form;
 }
 
@@ -719,7 +724,7 @@ function open_question_field_formatter_view($entity_type, $entity, $field, $inst
 }
 
 /**
- * Implements hook_credit_result_info from credit module
+ * Implements hook_credit_result_info() from credit module.
  */
 function open_question_credit_info() {
   $info = array();
