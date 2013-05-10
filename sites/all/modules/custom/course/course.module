@@ -150,28 +150,12 @@ function _node_get_book($node) {
  * @param type $items
  */
 function course_menu_alter(&$items) {
-  $items['user']['title callback'] = 'course_user_menu_title';
   $items['flag/confirm/%/%flag/%']['modal'] = TRUE;
   $items['node/%node/outline']['access callback'] = '_course_update_access';
 }
 
 function _course_update_access($node) {
   return node_access('update', $node);
-}
-
-/**
- * Custom menu title callback in order to show proper title for anonymous users.
- * @global type $user
- * @return string
- */
-function course_user_menu_title() {
-  global $user;
-  $title = t('Login');
-  if ($user->uid > 0) {
-    $title = $user->name;
-    $title .= ' (' . token_replace('[site:current-user:points:all]', array('user' => $user)) . ')';
-  }
-  return $title;
 }
 
 /**
