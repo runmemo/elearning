@@ -49,8 +49,8 @@ function course_menu_default_menu_links() {
     // Exported menu link: user-menu:<front>
   $menu_links['user-menu:<front>'] = array(
     'menu_name' => 'user-menu',
-    'link_path' => '<front>',
-    'router_path' => '',
+    'link_path' => 'user',
+    'router_path' => 'user',
     'link_title' => 'Profile',
     'options' => array(
       'attributes' => array(

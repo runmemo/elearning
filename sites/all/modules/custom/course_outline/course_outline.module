@@ -22,10 +22,14 @@ function course_outline_block_info() {
  */
 function course_outline_theme() {
   return array(
-        'menu_link__course_outline_unit' => array(
-           'render element' => 'element'        
-        )
-    );
+    'menu_link__course_outline_unit' => array(
+      'render element' => 'element'
+    ),
+    'course_outline_certifcate' => array(
+      'variables' => array('variables' => NULL),
+      'template' => 'course-outline-certifcate',
+    ),
+  );
 }
 
 /**
@@ -56,12 +60,31 @@ function course_outline_block_view($delta = '') {
   if (!$book) {
     return NULL;
   }
-  
+ 
   drupal_add_js(drupal_get_path('module', 'course_outline') . '/course_outline.js');
   drupal_add_css(drupal_get_path('module', 'course_outline') . '/course_outline.css');
   drupal_add_library('system', 'ui.accordion');
 
   $tree = menu_tree_all_data($book['menu_name'], NULL, 3);
+  $tree_key = key($tree);
+  $certificate = array();
+  if (isset($tree[$tree_key]['link']['link_path'])) {
+    global $user;
+    $course_node = menu_get_object('node', 1, $tree[$tree_key]['link']['link_path']);
+    if ($course_node) {
+      $certificate['popup_description'] = course_outline_grades_description($course_node);
+      $certificate['user_credit'] = credit_calculate($course_node, $user);
+      $certificate['points'] = t('@num points', array('@num' => $certificate['user_credit']));
+      $certificate['pass_credit'] = credit_get_field_integer_value($course_node, 'field_pass_credit');
+      $certificate['class'] = 'certificate-disabled';
+      $link_text = t('Certificate unavailable');
+      if ($certificate['user_credit'] > $certificate['pass_credit']) {
+        $certificate['class'] = 'certificate-enabled';
+        $link_text = t('Download certificate');
+      }
+      $certificate['link'] = l($link_text, 'node/' . $course_node->nid . '/certificate');
+    }
+  }
   course_outline_preprocess_tree($tree);
 
   // If we pass 1 as the second param, we just get the top level node in the
@@ -69,15 +92,18 @@ function course_outline_block_view($delta = '') {
   // ['p1'] in the $book array (which contains the top mlid) when we use it 
   // for the block title.
   $book_name = book_toc($book['bid'], 1);
-
+  
   $tree_output = menu_tree_output($tree);
   // alter titles and classes of the links in the tree
   course_outline_preprocess_tree($tree_output);
-
+  $tree_output[] = array(
+    '#type' => 'markup',
+    '#markup' => theme('course_outline_certifcate', $certificate),
+  );
   // Build the block title and contents
   $block['subject'] = ''; //$book_name[$book['p1']];
   $block['content'] = $tree_output;
-  
+
   return $block;
 }
 
@@ -89,7 +115,7 @@ function course_outline_block_view($delta = '') {
 function course_outline_preprocess_tree(&$tree) {
   global $user;
   $counter = new multi_counter;
-  $tree_key = key($tree);    
+  $tree_key = key($tree);
   if (isset($tree[$tree_key]['#below'])) {
     $tree = $tree[$tree_key]['#below']; // remove the top level
     $flag = flag_get_flag('course_item_complete');
@@ -139,6 +165,67 @@ function course_outline_item_title($node) {
    return $title;
 }
 
+/**
+ * Processes course node, collects grades info and build HTML with grades popup.
+ * @param object $course
+ * @return string HTML for popup description block
+ */
+function course_outline_grades_description($course) {
+  $output = '';
+  $grades = field_get_items('node', $course, 'field_grades');
+  if (!$grades) {
+    return $output;
+  }
+  if (count($grades) < 1) {
+    return $output;
+  }
+  $grades_items = array();
+  foreach ($grades as $grade) {
+    $grade = field_collection_item_load($grade['value']);
+    $score_value = field_get_items('field_collection_item', $grade, 'field_grade_score');
+    $desc_value = field_get_items('field_collection_item', $grade, 'field_grade_name');
+    if ((isset($score_value[0]['value']) && is_numeric($score_value[0]['value'])) && isset($desc_value[0]['value'])) {
+    $grades_items[] = array(
+      'score' => $score_value[0]['value'],
+      'desc' => $desc_value[0]['value'],
+    );
+    }
+  }
+  if (empty($grades_items)) {
+    return $output;
+  }
+  $output .= '<div class="header">' . t('Compliance scores and marks in the certificate') . '</div>';
+  $items = array();
+  foreach ($grades_items as $i => $item) {
+    $list_item = '';
+    $points = '';
+    if ($i == 0) {
+      $points = '0-' . $item['score'];
+      $desc = t('certificate unavailable');
+    } else {
+      $desc = $item['desc'];
+      $prev = $i - 1;
+      $next = $i + 1;
+      if (!isset($grades_items[$next]['score'])) {
+        $points = '> ' . $item['score'];
+      } else {
+        $points = $grades_items[$prev]['score'] . '-' . $item['score'];
+      }
+    }
+    $list_item = '<span class="points-range">' . t('!range points', array('!range' => $points)) . '</span>';
+    $list_item .= ' - <span class="points-desc">' . $desc . '</span>';
+    $items[] = $list_item;
+  }
+  $vars = array(
+    'title' => t(''),
+    'items' => $items,
+    'type' => 'ul',
+    'attributes' => array(),
+  );
+  $list = theme_item_list($vars);
+  $output = '<div class="outline-certificate-description">' . $output . $list . '</div>';
+  return $output;
+}
 
 /**
  * Helper counter class allows to keep several counts
