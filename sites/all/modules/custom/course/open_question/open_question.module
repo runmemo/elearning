@@ -374,27 +374,22 @@ function open_question_forms($form_id, $nid) {
 function oq_review_form($form, &$form_state, $args) {
   global $user;
   $form = array();
-  $nid = $args[0]; 
+  $answer_nid = $args[0]; 
   
-  $form['#prefix'] = '<div id="oq-review-wrapper-' . $nid . '">';
+  $form['#prefix'] = '<div id="oq-review-wrapper-' . $answer_nid . '">';
   $form['#suffix'] = '</div>'; 
-  $form['#attributes']['class'][] = 'oq-review-wrapper-' . $nid;
+  $form['#attributes']['class'][] = 'oq-review-wrapper-' . $answer_nid;
+  $form['#attributes']['data-answer-nid'][] = $answer_nid;
   $form['#attached']['css'][] = drupal_get_path('module', 'common_tools') . '/widgets/elearning_fivestar_widget.css';
   
-  $form['nid'] = array (
-    '#type' => 'hidden', 
-    '#value' => $nid,
+  $form['message_placeholder'] = array(
+    '#type' => 'markup',
+    '#markup' => '<div class="oq-form-message"></div>',
   );
-  $form['nid']['#attributes']['class'][] = 'js-oq-answer-nid';
-  
-   $form['message_placeholder'] = array(
-     '#type' => 'markup',
-     '#markup' => '<div class="oq-form-message"></div>',
-   );
   
   $feedback_nid = FALSE;
   if (empty($form_state['step'])) {  // page is loaded
-    $feedback_nid = oqa_is_reviewed($nid, $user->uid);
+    $feedback_nid = oqa_is_reviewed($answer_nid, $user->uid);
     if ($feedback_nid) {
       $form_state['feedback_nid'] = $feedback_nid;
       $form_state['step'] = 'view';
@@ -411,23 +406,18 @@ function oq_review_form($form, &$form_state, $args) {
   $rating = FALSE;
   
   // add a hidden state that shows whether feedback exists in db
-  $form['feedback_saved_' . $nid] = array(
+  $form['feedback_saved_' . $answer_nid] = array(
       '#type' => 'hidden',
       '#value' => $feedback_nid ? 'true' : 'false',
     );
   
   if ($feedback_nid) {  
     if (empty($form_state['storage'])) {
-      $review_node = node_load($feedback_nid);
-      $rating_values = field_get_items('node', $review_node, 'field_rating');
-      if ($rating_values) {
-         $rating = $rating_values[0]['rating'];
-      }
-      $items = field_get_items('node', $review_node, 'body');
-      $review_body_item = field_view_value('node', $review_node, 'body', $items[0]);
-      if ($review_body_item['#access']) {
-        $review_body = $review_body_item['#markup'];
-      }
+      $feedback_node = node_load($feedback_nid);
+      $feedback_wrapper = entity_metadata_wrapper('node', $feedback_node);
+      $rating = $feedback_wrapper->field_rating->raw();
+      $feedback_field = $feedback_wrapper->body->value();
+      $review_body = $feedback_field['value'];
     }
     else { // we know values from the submitted form already
       $rating = $form_state['storage']['rating'];
@@ -454,11 +444,11 @@ function oq_review_form($form, &$form_state, $args) {
           '#value' => 'rating_submit',
           '#ajax' => array(
             'callback' => 'oq_review_form_js',
-            'wrapper' => 'oq-review-wrapper-' . $nid,
+            'wrapper' => 'oq-review-wrapper-' . $answer_nid,
           ),
         );
         $form['rating_submit']['#attributes']['class'][] = 'oq-review-form-rating-submit';
-        $form['rating_submit']['#attributes']['class'][] = 'js-oq-form-rating-submit-' . $nid;
+        $form['rating_submit']['#attributes']['class'][] = 'js-oq-form-rating-submit-' . $answer_nid;
         $form['review_value'] = array('#type' => 'hidden', '#value' => $review_body);
       }
       $form['edit_button'] = array(
@@ -466,7 +456,7 @@ function oq_review_form($form, &$form_state, $args) {
         '#value' => 'edit_submit',
         '#ajax' => array(
           'callback' => 'oq_review_form_js',
-          'wrapper' => "oq-review-wrapper-{$nid}",
+          'wrapper' => "oq-review-wrapper-{$answer_nid}",
         ),
         '#prefix' => '<div>',
       );
@@ -495,12 +485,12 @@ function oq_review_form($form, &$form_state, $args) {
         '#type' => 'fieldset',
         '#states' =>array(  
           'invisible' => array( // hide fieldset when feedback was not saved
-            ':input[name="feedback_saved_' . $nid .'"]' => array('value' => 'false'),
+            ':input[name="feedback_saved_' . $answer_nid .'"]' => array('value' => 'false'),
           ),
         ),
       );
-      $form['toggle_fields']['#attributes']['data-feedback-nid'][] = $nid;
-      $form['toggle_fields']['#attributes']['class'][] = 'js-oq-form-toggle-' . $nid;
+      $form['toggle_fields']['#attributes']['data-answer-nid'][] = $answer_nid;
+      $form['toggle_fields']['#attributes']['class'][] = 'js-oq-form-toggle-' . $answer_nid;
       $form['toggle_fields']['#attributes']['class'][] = 'oq-form-fieldset-toggle';
       
       $form['toggle_fields']['review'] = array(
@@ -510,8 +500,8 @@ function oq_review_form($form, &$form_state, $args) {
         '#default_value' => isset($review_body) ? $review_body : '',
       );
       $form['toggle_fields']['review']['#attributes']['class'][] = 'oq-form-review';
-      $form['toggle_fields']['review']['#attributes']['data-feedback-nid'][] = $nid;
-      $form['toggle_fields']['review']['#attributes']['class'][] = 'js-oq-review-field-' . $nid;
+      $form['toggle_fields']['review']['#attributes']['data-answer-nid'][] = $answer_nid;
+      $form['toggle_fields']['review']['#attributes']['class'][] = 'js-oq-review-field-' . $answer_nid;
      
       // submit button
       $form['toggle_fields']['submit_button'] = array(
@@ -519,22 +509,22 @@ function oq_review_form($form, &$form_state, $args) {
         '#value' => t('Add review'),
         '#ajax' => array(
           'callback' => 'oq_review_form_js',
-          'wrapper' => "oq-review-wrapper-{$nid}",
+          'wrapper' => "oq-review-wrapper-{$answer_nid}",
         ),
       );
       $form['toggle_fields']['submit_button']['#attributes']['class'][] = 'oq-review-form-submit';
-      $form['toggle_fields']['submit_button']['#attributes']['class'][] = 'js-oq-submit-review-' . $nid;
+      $form['toggle_fields']['submit_button']['#attributes']['class'][] = 'js-oq-submit-review-' . $answer_nid;
       // button that allows to skip review and just save the score
       $form['toggle_fields']['submit_skip'] = array(
         '#type' => 'submit',
         '#value' => t("Skip review"),
         '#ajax' => array(
           'callback' => 'oq_review_form_js',
-          'wrapper' => "oq-review-wrapper-{$nid}",
+          'wrapper' => "oq-review-wrapper-{$answer_nid}",
         ),
       );
       $form['toggle_fields']['submit_skip']['#attributes']['class'][] = 'oq-review-form-skip';
-      $form['toggle_fields']['submit_skip']['#attributes']['class'][] = 'js-oq-skip-review-' . $nid;
+      $form['toggle_fields']['submit_skip']['#attributes']['class'][] = 'js-oq-skip-review-' . $answer_nid;
       break;
     default: // this should not happen ever
       watchdog('open question', 'Step %step is not defined for open question feedback form.', 
@@ -543,7 +533,7 @@ function oq_review_form($form, &$form_state, $args) {
       return array();
   }
   
-  $form['rating']['#attributes']['data-feedback-nid'][] = $nid;
+  $form['rating']['#attributes']['data-answer-nid'][] = $answer_nid;
   return $form;
 }
 

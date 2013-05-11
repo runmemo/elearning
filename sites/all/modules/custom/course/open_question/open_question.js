@@ -28,7 +28,7 @@
       $('select[name="rating"]').change(function() {
         // @todo Ilya for some reason this is being called several times
         // on one star change. for me it is fired 3 times.
-        var nid = $(this).data('feedback-nid');
+        var nid = $(this).data('answer-nid');
         var btn_submit = get_submit_button(nid);
         var btn_skip = get_skip_review_button(nid);
         var str_review = $('.js-oq-review-field-' + nid).val();
@@ -56,8 +56,8 @@
       });
       // 
       $('textarea[name="review"]').keyup(function() {
-        var nid = $(this).data('feedback-nid');
-        var rate_select = $('select[data-feedback-nid="' + nid +'"]');
+        var nid = $(this).data('answer-nid');
+        var rate_select = $('select[data-answer-nid="' + nid +'"]');
         var rating = rate_select.prop("selectedIndex");
         var btn_skip = get_skip_review_button(nid);    
         var review_length = $(this).val().length;
