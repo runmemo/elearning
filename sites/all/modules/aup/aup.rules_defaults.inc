@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * aup.rules_defaults.inc
@@ -157,7 +158,8 @@ function aup_default_rules_configuration() {
       ]
     }
   }');
-  $items['rules_user_selects_a_best_answer'] = entity_import('rules_config', '{ "rules_user_selects_a_best_answer" : {
+  if (module_exists('best_answer')) {
+    $items['rules_user_selects_a_best_answer'] = entity_import('rules_config', '{ "rules_user_selects_a_best_answer" : {
       "LABEL" : "User selects a best answer",
       "PLUGIN" : "reaction rule",
       "TAGS" : [ "Answers Userpoints" ],
@@ -194,7 +196,7 @@ function aup_default_rules_configuration() {
       ]
     }
   }');
-  $items['rules_user_unselects_a_prior_best_answer'] = entity_import('rules_config', '{ "rules_user_unselects_a_prior_best_answer" : {
+    $items['rules_user_unselects_a_prior_best_answer'] = entity_import('rules_config', '{ "rules_user_unselects_a_prior_best_answer" : {
       "LABEL" : "User unselects a prior best answer",
       "PLUGIN" : "reaction rule",
       "TAGS" : [ "Answers Userpoints" ],
@@ -231,6 +233,7 @@ function aup_default_rules_configuration() {
       ]
     }
   }');
+  }
   $items['rules_user_votes_down_a_question'] = entity_import('rules_config', '{ "rules_user_votes_down_a_question" : {
       "LABEL" : "User votes down a question",
       "PLUGIN" : "reaction rule",
