@@ -9,13 +9,15 @@
  * Implements hook_block_info()
  */
 function course_outline_block_info() {
-  $block['book_outline'] = array(
+  $block['course_outline'] = array(
     'info' => t('Course Outline'),
-  //  'cache' => DRUPAL_CACHE_PER_PAGE,
+      //  'cache' => DRUPAL_CACHE_PER_PAGE,
+  );
+  $block['course_certificate'] = array(
+    'info' => t('Course Certificate'),
   );
   return $block;
 }
-
 
 /**
  * Implements hook_theme()
@@ -41,10 +43,9 @@ function theme_menu_link__course_outline_unit(array $variables) {
   $output = '<h3 class="outline-unit js-outline-unit">' . $element['#title'] . '<span class="icon"></span></h3>';
   if ($element['#below']) {
     $sub_menu = drupal_render($element['#below']);
-  }   
+  }
   return $output . $sub_menu . "\n";
 }
-
 
 /**
  * Define the contents and title of the block/
@@ -60,59 +61,63 @@ function course_outline_block_view($delta = '') {
   if (!$book) {
     return NULL;
   }
- 
-  drupal_add_js(drupal_get_path('module', 'course_outline') . '/course_outline.js');
-  drupal_add_css(drupal_get_path('module', 'course_outline') . '/course_outline.css');
-  drupal_add_library('system', 'ui.accordion');
+  $block['subject'] = '';
+  switch ($delta) {
+    case 'course_outline':
+      // Build course outline.
+      drupal_add_js(drupal_get_path('module', 'course_outline') . '/course_outline.js');
+      drupal_add_css(drupal_get_path('module', 'course_outline') . '/course_outline.css');
+      drupal_add_library('system', 'ui.accordion');
 
-  $tree = menu_tree_all_data($book['menu_name'], NULL, 3);
-  $tree_key = key($tree);
-  
-  course_outline_preprocess_tree($tree);
+      $tree = menu_tree_all_data($book['menu_name'], NULL, 3);
+      $tree_key = key($tree);
 
-  // If we pass 1 as the second param, we just get the top level node in the
-  // book. Since the key will be the top level mlid, we'll have to use 
-  // ['p1'] in the $book array (which contains the top mlid) when we use it 
-  // for the block title.
-  $book_name = book_toc($book['bid'], 1);
-  
-  $tree_output = menu_tree_output($tree);
-  // alter titles and classes of the links in the tree
-  course_outline_preprocess_tree($tree_output);
-  
-  // Build the block title and contents
-  $block['subject'] = ''; //$book_name[$book['p1']];
-  $block['content'][] = $tree_output;
-  
-  // Build certificate block
-  $certificate = array();
-  if (isset($tree[$tree_key]['link']['link_path'])) {
-    global $user;
-    $course_node = menu_get_object('node', 1, $tree[$tree_key]['link']['link_path']);
-    if ($course_node) {
-      $certificate['popup_description'] = course_outline_grades_description($course_node);
-      $certificate['user_credit'] = credit_calculate($course_node, $user);
-      $certificate['points'] = t('@num points', array('@num' => $certificate['user_credit']));
-      $certificate['pass_credit'] = credit_get_field_integer_value($course_node, 'field_pass_credit');
-      if ($certificate['user_credit'] > $certificate['pass_credit']) {
-        $certificate['class'] = 'certificate-enabled';
-        $link_text = t('Download certificate');
-        $certificate['link'] = l($link_text, 'node/' . $course_node->nid . '/certificate');
-    } 
-      else {
-        $text = t('Certificate unavailable');
-        $certificate['class'] = 'certificate-disabled';
-        $certificate['link'] = '<span class="certificate-disabled-text">' . $text . '</span>';
+      course_outline_preprocess_tree($tree);
+
+      // If we pass 1 as the second param, we just get the top level node in the
+      // book. Since the key will be the top level mlid, we'll have to use 
+      // ['p1'] in the $book array (which contains the top mlid) when we use it 
+      // for the block title.
+      $book_name = book_toc($book['bid'], 1);
+
+      $tree_output = menu_tree_output($tree);
+      // Alter titles and classes of the links in the tree.
+      course_outline_preprocess_tree($tree_output);
+
+      // Build the block title and contents.
+      $block['content'][] = $tree_output;
+      break;
+
+    case 'course_certificate' :
+      // Build certificate block.
+      $certificate = array();
+      global $user;
+      $course_node = node_load($book['bid']);
+      if ($course_node) {
+        $certificate['popup_description'] = course_outline_grades_description($course_node);
+        $certificate['user_credit'] = credit_calculate($course_node, $user);
+        $certificate['points'] = t('@num points', array('@num' => $certificate['user_credit']));
+        $certificate['pass_credit'] = credit_get_field_integer_value($course_node, 'field_pass_credit');
+        if ($certificate['user_credit'] > $certificate['pass_credit']) {
+          $certificate['class'] = 'certificate-enabled';
+          $link_text = t('Download certificate');
+          $certificate['link'] = l($link_text, 'node/' . $course_node->nid . '/certificate');
+        }
+        else {
+          $text = t('Certificate unavailable');
+          $certificate['class'] = 'certificate-disabled';
+          $certificate['link'] = '<span class="certificate-disabled-text">' . $text . '</span>';
+        }
       }
-     
-    }
+
+      $certificate_output = array(
+        '#type' => 'markup',
+        '#markup' => theme('course_outline_certifcate', $certificate),
+      );
+      $block['content'][] = $certificate_output;
+      break;
   }
-  $certificate_output = array(
-   '#type' => 'markup',
-    '#markup' => theme('course_outline_certifcate', $certificate),
-  ); 
-  $block['content'][] = $certificate_output;
-  
+
   return $block;
 }
 
@@ -129,7 +134,7 @@ function course_outline_preprocess_tree(&$tree) {
     $tree = $tree[$tree_key]['#below']; // remove the top level
     $flag = flag_get_flag('course_item_complete');
     foreach ($tree as &$unit) {
-      if (!isset($unit['#below'])) { 
+      if (!isset($unit['#below'])) {
         continue;
       }
       // change theme for unit level links
@@ -140,7 +145,7 @@ function course_outline_preprocess_tree(&$tree) {
           continue;
         }
         $node = menu_get_object('node', 1, $item['#original_link']['link_path']);
-     
+
         $completed = $flag->is_flagged($node->nid, $user->uid);
         $item['#attributes']['class'][] = 'outline-item';
         unset($item['#attributes']['class']['leaf']);
@@ -150,14 +155,15 @@ function course_outline_preprocess_tree(&$tree) {
           $item['#attributes']['class'][] = 'outline-item-is-current';
         }
         $node->order = $counter->increment($node->type);
-     
+
         $item['#title'] = course_outline_item_title($node);
         $item['#localized_options']['html'] = TRUE;
         $item['#attributes']['class'][] = $node->type;
       }
-    }  
-  }  
+    }
+  }
 }
+
 /**
  * Builds title for course outline menu item
  * @param object $node
@@ -166,12 +172,12 @@ function course_outline_preprocess_tree(&$tree) {
 function course_outline_item_title($node) {
   $title = "<span class='outline-" . str_replace('_', '-', $node->type) . "-icon'></span>";
   switch ($node->type) {
-        case 'lesson':
-          $title = $title . '<span class="outline-lesson-prefix">' . t('Lesson @i.', array('@i' => $node->order)) . '</span>';
-          break;
-      }
-      $title = '<div class="title-wrapper">' . $title . $node->title . '</div>';
-   return $title;
+    case 'lesson':
+      $title = $title . '<span class="outline-lesson-prefix">' . t('Lesson @i.', array('@i' => $node->order)) . '</span>';
+      break;
+  }
+  $title = '<div class="title-wrapper">' . $title . $node->title . '</div>';
+  return $title;
 }
 
 /**
@@ -180,9 +186,17 @@ function course_outline_item_title($node) {
  * @return string HTML for popup description block
  */
 function course_outline_grades_description($course) {
+
+  if ($cached = cache_get('course_grades_' . $course->nid, 'cache')) {
+    $output = $cached->data;
+    if ($output) {
+      return $output;
+    }
+  }
+
   $output = '';
   $grades_items = array();
- 
+
   $node_wrapper = entity_metadata_wrapper('node', $course);
   foreach ($node_wrapper->field_grades as $key => $grade) {
     $grades_items[] = array(
@@ -195,7 +209,7 @@ function course_outline_grades_description($course) {
   }
   $output .= '<div class="header">' . t('Compliance scores and marks for the certificate') . '</div>';
   $items = array();
-  
+
   $first_range = '0-' . $grades_items[0]['score'];
   $list_item = '<span class="points-range points-range-no-grade">' . t('!range points', array('!range' => $first_range)) . '</span>';
   $list_item .= ' - <span class="points-desc points-desc-no-grade">' . t('Certificate is not available') . '</span>';
@@ -203,13 +217,13 @@ function course_outline_grades_description($course) {
   foreach ($grades_items as $i => $item) {
     $list_item = '';
     $desc = $item['name'];
-    $prev = $i - 1;
     $next = $i + 1;
     if (!isset($grades_items[$next]['score'])) {
       $points = '&gt; ' . $item['score'];
-    } else {
+    }
+    else {
       $points = $grades_items[$i]['score'] . '-' . $grades_items[$next]['score'];
-    }   
+    }
     $list_item = '<span class="points-range">' . t('!range points', array('!range' => $points)) . '</span>';
     $list_item .= ' - <span class="points-desc">' . $desc . '</span>';
     $items[] = $list_item;
@@ -222,6 +236,9 @@ function course_outline_grades_description($course) {
   );
   $list = theme_item_list($vars);
   $output = '<div class="outline-certificate-description">' . $output . $list . '</div>';
+
+  cache_set('course_grades_' . $course->nid, $output, 'cache', 24 * 60 * 60); //1 hour
+
   return $output;
 }
 
