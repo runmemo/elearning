@@ -11,10 +11,10 @@ function best_answer_extra_user_default_permissions() {
   $permissions = array();
 
   // Exported permission: use vote up/down.
+  // @todo Ilya what this for?
   $permissions['use vote up/down'] = array(
     'name' => 'use vote up/down',
     'roles' => array(
-      'administrator' => 'administrator',
       'authenticated user' => 'authenticated user',
     ),
     'module' => 'vud',
