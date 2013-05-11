@@ -181,24 +181,14 @@ function course_outline_item_title($node) {
  */
 function course_outline_grades_description($course) {
   $output = '';
-  $grades = field_get_items('node', $course, 'field_grades');
-
-  if (!$grades || count($grades) < 1) {
-    return $output;
-  }
-  
   $grades_items = array();
-  foreach ($grades as $grade) {
-    $grade = field_collection_item_load($grade['value']);
-    
-    $score_value = field_get_items('field_collection_item', $grade, 'field_grade_score');
-    $desc_value = field_get_items('field_collection_item', $grade, 'field_grade_name');
-    if ((isset($score_value[0]['value']) && is_numeric($score_value[0]['value'])) && isset($desc_value[0]['value'])) {
-      $grades_items[] = array(
-        'score' => $score_value[0]['value'],
-        'desc' => $desc_value[0]['value'],
-      );
-    }
+ 
+  $node_wrapper = entity_metadata_wrapper('node', $course);
+  foreach ($node_wrapper->field_grades as $key => $grade) {
+    $grades_items[] = array(
+      'score' => $grade->field_grade_score->raw(),
+      'name' => $grade->field_grade_name->raw(),
+    );
   }
   if (empty($grades_items)) {
     return $output;
@@ -212,7 +202,7 @@ function course_outline_grades_description($course) {
   $items[] = $list_item;
   foreach ($grades_items as $i => $item) {
     $list_item = '';
-    $desc = $item['desc'];
+    $desc = $item['name'];
     $prev = $i - 1;
     $next = $i + 1;
     if (!isset($grades_items[$next]['score'])) {
