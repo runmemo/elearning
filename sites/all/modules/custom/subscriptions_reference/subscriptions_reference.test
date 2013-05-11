@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Base test case class for Subscriptions
+ */
 class SubscriptionsTestCase extends DrupalWebTestCase {
   function setUp() {
     $modules = array_merge(array('subscriptions'), func_get_args());
