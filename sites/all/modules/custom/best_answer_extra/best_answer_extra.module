@@ -2,25 +2,8 @@
 
 /**
  * @file
- * Additional functionality to Best Answer module.
+ * Provides functionality to Best Answer selecting process.
  */
-
-/**
- * Implements hook_flag_access_multiple().
- */
-function best_answer_extra_flag_access_multiple($flag, $entity_ids, $account) {
-  // @todo Ilya: find a better way to show best answer to others
-  if ($flag->name == 'best_answer') {
-    $access = array();
-    foreach ($entity_ids as $entity_id => $type) {
-      $question = entity_metadata_wrapper('node', $entity_id)->field_answer_question->value();
-      if ($question && $question->uid != $account->uid) {
-         $access[$entity_id] = FALSE;
-      }
-    }
-    return $access;
-  }
-}
 
 /**
  * Implements hook_node_view().
@@ -32,7 +15,7 @@ function best_answer_extra_node_view($node, $view_mode, $langcode) {
 }
 
 /**
- * Implements hook_flag().
+ * Implements hook_flag_flag().
  *
  * Fires on flag event to control that there is only one best answer per question.
  * TODO: Create test for this hook to ensure that when flagged an answer as best the rest of 
@@ -57,6 +40,21 @@ function best_answer_extra_flag_flag($flag, $entity_id, $account, $flagging) {
           $flag->flag('unflag', $nid);
         }
       }
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_flag().
+ * @param array $vars
+ */
+function best_answer_extra_preprocess_flag(&$vars) {
+  if ($vars['flag']->name == 'best_answer') {
+    $question = entity_metadata_wrapper('node', $vars['entity_id'])->field_answer_question->value();
+    if ($question && $question->uid != $vars['user']->uid) {
+      // don't allow other users to mark answers as best.
+      $vars['link_href'] = FALSE;
+      $vars['flag_classes'] .= $vars['flag']->is_flagged($vars['entity_id'], $question->uid) ? ' best-answer-marked' : ' best-answer-hidden';
     }
   }
 }

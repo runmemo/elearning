@@ -206,18 +206,6 @@ function common_tools_username_alter(&$name, $account) {
 }
 
 /**
- * Implementation of hook_fivestar_widgets().
- */
-function common_tools_fivestar_widgets() {
-  // Letting fivestar know about our custom Stars widget.
-  $widgets = array(
-    drupal_get_path('module', 'common_tools') . '/widgets/elearning_fivestar_widget.css' => 'Elearning Stars',
-  );
-
-  return $widgets;
-}
-
-/**
  * Helper function for collecting messages of the given type
  * and returning them as item list.
  * @param string $type
@@ -274,22 +262,4 @@ function common_tools_theme() {
  */
 function theme_menu_link__superfish_link_parent($variables) {
   return '<a href="' . check_plain(url($variables['path'], $variables['options'])) . '"' . drupal_attributes($variables['options']['attributes']) . '>' . $variables['text'] . '</a><div class="arrow-up"></div>';
-}
-
-/**
- * Implementation of hook_menu_alter().
- * @param type $items
- */
-function common_tools_menu_alter(&$items) {
-  $items['user']['title callback'] = 'common_tools_user_menu_title';
-}
-
-/**
- * Custom menu title callback in order to show proper title for anonymous users.
- * @global object $user
- * @return string
- */
-function common_tools_user_menu_title() {
-  global $user;
-  return $user->uid > 0 ? $user->name : t('Login');
 }

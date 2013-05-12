@@ -7,6 +7,88 @@
 include_once 'user_extra.features.inc';
 
 /**
+ * Implements hook_menu_alter().
+ * @param type $items
+ */
+function user_extra_menu_alter(&$items) {
+  $items['user/login']['type'] = MENU_NORMAL_ITEM;
+  $items['user/login']['page callback'] = 'drupal_get_form';
+  $items['user/login']['page arguments'][] = 'user_login';
+  $items['user/login']['file'] = 'user.pages.inc';
+  $items['user/login']['modal'] = TRUE;
+  $items['user/register']['modal'] = TRUE;
+  $items['user/password']['modal'] = TRUE;
+  $items['user']['title callback'] = 'user_extra_user_menu_title';
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function user_extra_form_alter(&$form, &$form_state, $form_id) {
+  if ($form_id == 'user_login') {
+    $form['#attributes']['class'][] = 'login-form';
+    $form['#attributes']['class'][] = 'login-system-form';
+    $form['name']['#prefix'] = '<div class="login-form-registration">' . l(t('Create new account'), 'user/register', array('attributes' => array('class' => array('login-form-additional-link')))) . '</div>';
+    $form['name']['#attributes']['class'][] = 'login-form-name-edit';
+    $form['name']['#description'] = $form['pass']['#description'] = t('');
+    $form['pass']['#prefix'] = '<div class="login-form-reset">' . l(t('Forgotten your password?'), 'user/password', array('attributes' => array('class' => array('login-form-additional-link')))) . '</div>';
+    $form['pass']['#attributes']['class'][] = 'login-form-pass-edit';
+    $form['actions']['submit']['#attributes']['class'][] = 'login-form-submit';
+    $form['actions']['fb_submit'] = array(
+      '#type' => 'submit',
+      '#value' => t('Login via Facebook'),
+      '#attributes' => array(
+        'class' => array(
+          'login-form-fb-submit',
+        ),
+      ),
+    );
+  } elseif ($form_id == 'user_register_form') {
+    $form['account']['mail']['#description'] = t('Please, use e-mail, provided by your college or university, e.g. vasya101@msu.ru');
+    $form['account']['mail']['#suffix'] = '<a class="register-form-popup-link popup-mail"></a><div class="popup-arrow-left popup-mail-arrow"></div>';
+    $form['account']['pass']['#suffix'] = '<a class="register-form-popup-link popup-pass"></a><div class="popup-arrow-left popup-pass-arrow"></div>';
+    $form['actions']['submit']['#ajax'] = array(
+      'callback' => 'user_extra_reg_submit_callback',
+      'wrapper' => 'user-register-form',
+      'progress' => array('type' => 'throbber'),
+    );
+    $form['#attributes']['class'][] = 'register-form';
+    $form['#attributes']['class'][] = 'login-system-form';
+    $form['field_name']['#weight'] = -12;
+    $form['field_surname']['#weight'] = -11;
+    $form['field_name']['#prefix'] = '<div class="register-form-name-wrapper">';
+    $form['field_surname']['#suffix'] = '</div>';
+    // @todo Ilya provide real path to the license agreement page.
+    $form['message'] = array(
+      '#markup' => t('Registering, you are accepting the !license_agreement', array('!license_agreement' => l(t('license agreement'), '', array('attributes' => array('target' => '_blank'))))),
+      '#weight' => 20,
+      '#prefix' => '<div class="register-form-license-text">',
+      '#suffix' => '</div>',
+      );
+    drupal_set_title(t('Create new account'));
+  } elseif ($form_id == 'user_pass') {
+    $form['#attributes']['class'][] = 'password-form';
+    $form['#attributes']['class'][] = 'login-system-form';
+    drupal_set_title(t('Request new passowrd'));
+  }
+}
+
+/**
+ * Implements hook_preprocess_link().
+ */
+function user_extra_preprocess_link(&$variables) {
+  if ($variables['text'] == t('Login') || $variables['text'] == t('Forgotten your password?') || $variables['text'] == t('Create new account')) {
+    $variables['options']['attributes']['class'][] = 'ctools-modal-common-modal-style';
+    if ($variables['text'] == t('Login')) {
+      $class = 'ctools-modal-login-form';
+    } else {
+      $class = 'ctools-modal-register-form';
+    }
+    drupal_add_js(array('user_forms' => array('class' => $class)), 'setting');
+  }
+}
+
+/**
  * Process variables for user-profile.tpl.php.
  * @param array $variables
  * @see user-profile.tpl.php
@@ -17,6 +99,16 @@ function user_extra_preprocess_user_profile(&$variables) {
   if (user_edit_access($account)) {
     $variables['upload_form'] = drupal_get_form('profile_pic_update_form');
   }
+}
+
+/**
+ * Custom menu title callback in order to show proper title for anonymous users.
+ * @global object $user
+ * @return string
+ */
+function user_extra_user_menu_title() {
+  global $user;
+  return $user->uid > 0 ? $user->name : t('Login');
 }
 
 /**
@@ -186,87 +278,6 @@ function user_pic_update_delete_callback($form, &$form_state) {
   $commands[] = ajax_command_replace('#user-picture-upload-wrapper', render($form));
   $commands[] = ajax_command_replace('#user-profile-picture', '<div id="user-profile-picture">' . $form_state['storage']['picture'] . '</div>');
   return array('#type' => 'ajax', '#commands' => $commands);
-}
-
-/**
- * Implements hook_menu_alter().
- * @param type $items
- */
-function user_extra_menu_alter(&$items) {
-  $items['user/login']['type'] = MENU_NORMAL_ITEM;
-  $items['user/login']['page callback'] = 'drupal_get_form';
-  $items['user/login']['page arguments'][] = 'user_login';
-  $items['user/login']['file'] = 'user.pages.inc';
-  $items['user/login']['modal'] = TRUE;
-  $items['user/register']['modal'] = TRUE;
-  $items['user/password']['modal'] = TRUE;
-}
-
-/**
- * Implements hook_preprocess_link().
- */
-function user_extra_preprocess_link(&$variables) {
-  if ($variables['text'] == t('Login') || $variables['text'] == t('Forgotten your password?') || $variables['text'] == t('Create new account')) {
-    $variables['options']['attributes']['class'][] = 'ctools-modal-common-modal-style';
-    if ($variables['text'] == t('Login')) {
-      $class = 'ctools-modal-login-form';
-    } else {
-      $class = 'ctools-modal-register-form';
-    }
-    drupal_add_js(array('user_forms' => array('class' => $class)), 'setting');
-  }
-}
-
-/**
- * Implements hook_form_alter().
- */
-function user_extra_form_alter(&$form, &$form_state, $form_id) {
-  if ($form_id == 'user_login') {
-    $form['#attributes']['class'][] = 'login-form';
-    $form['#attributes']['class'][] = 'login-system-form';
-    $form['name']['#prefix'] = '<div class="login-form-registration">' . l(t('Create new account'), 'user/register', array('attributes' => array('class' => array('login-form-additional-link')))) . '</div>';
-    $form['name']['#attributes']['class'][] = 'login-form-name-edit';
-    $form['name']['#description'] = $form['pass']['#description'] = t('');
-    $form['pass']['#prefix'] = '<div class="login-form-reset">' . l(t('Forgotten your password?'), 'user/password', array('attributes' => array('class' => array('login-form-additional-link')))) . '</div>';
-    $form['pass']['#attributes']['class'][] = 'login-form-pass-edit';
-    $form['actions']['submit']['#attributes']['class'][] = 'login-form-submit';
-    $form['actions']['fb_submit'] = array(
-      '#type' => 'submit',
-      '#value' => t('Login via Facebook'),
-      '#attributes' => array(
-        'class' => array(
-          'login-form-fb-submit',
-        ),
-      ),
-    );
-  } elseif ($form_id == 'user_register_form') {
-    $form['account']['mail']['#description'] = t('Please, use e-mail, provided by your college or university, e.g. vasya101@msu.ru');
-    $form['account']['mail']['#suffix'] = '<a class="register-form-popup-link popup-mail"></a><div class="popup-arrow-left popup-mail-arrow"></div>';
-    $form['account']['pass']['#suffix'] = '<a class="register-form-popup-link popup-pass"></a><div class="popup-arrow-left popup-pass-arrow"></div>';
-    $form['actions']['submit']['#ajax'] = array(
-      'callback' => 'user_extra_reg_submit_callback',
-      'wrapper' => 'user-register-form',
-      'progress' => array('type' => 'throbber'),
-    );
-    $form['#attributes']['class'][] = 'register-form';
-    $form['#attributes']['class'][] = 'login-system-form';
-    $form['field_name']['#weight'] = -12;
-    $form['field_surname']['#weight'] = -11;
-    $form['field_name']['#prefix'] = '<div class="register-form-name-wrapper">';
-    $form['field_surname']['#suffix'] = '</div>';
-    // @todo Ilya provide real path to the license agreement page.
-    $form['message'] = array(
-      '#markup' => t('Registering, you are accepting the !license_agreement', array('!license_agreement' => l(t('license agreement'), '', array('attributes' => array('target' => '_blank'))))),
-      '#weight' => 20,
-      '#prefix' => '<div class="register-form-license-text">',
-      '#suffix' => '</div>',
-      );
-    drupal_set_title(t('Create new account'));
-  } elseif ($form_id == 'user_pass') {
-    $form['#attributes']['class'][] = 'password-form';
-    $form['#attributes']['class'][] = 'login-system-form';
-    drupal_set_title(t('Request new passowrd'));
-  }
 }
 
 /**
