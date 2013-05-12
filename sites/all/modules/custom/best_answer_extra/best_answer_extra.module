@@ -46,15 +46,19 @@ function best_answer_extra_flag_flag($flag, $entity_id, $account, $flagging) {
 
 /**
  * Implements hook_preprocess_flag().
- * @param array $vars
+ * 
+ * Remove flag link if user is not an author of the question.
  */
 function best_answer_extra_preprocess_flag(&$vars) {
-  if ($vars['flag']->name == 'best_answer') {
-    $question = entity_metadata_wrapper('node', $vars['entity_id'])->field_answer_question->value();
+  $flag = $vars['flag'];
+  if ($flag->name == 'best_answer') {
+    $nid = $vars['entity_id'];
+    $question = entity_metadata_wrapper('node', $nid)->field_answer_question->value();
     if ($question && $question->uid != $vars['user']->uid) {
       // don't allow other users to mark answers as best.
       $vars['link_href'] = FALSE;
-      $vars['flag_classes'] .= $vars['flag']->is_flagged($vars['entity_id'], $question->uid) ? ' best-answer-marked' : ' best-answer-hidden';
+      $is_flagged = $flag->is_flagged($nid, $question->uid);
+      $vars['flag_classes'] .= $is_flagged ? ' best-answer-marked' : ' best-answer-hidden';
     }
   }
 }
