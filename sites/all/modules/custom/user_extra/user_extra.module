@@ -44,7 +44,7 @@ function user_extra_form_alter(&$form, &$form_state, $form_id) {
       ),
     );
   } elseif ($form_id == 'user_register_form') {
-    $form['account']['mail']['#description'] = t('Please, use e-mail, provided by your college or university, e.g. vasya101@msu.ru');
+    $form['account']['mail']['#description'] = t('Email should be unique on @sitename and will used as your username.', array('@sitename' => variable_get('site_name', 'CourseHub')));
     $form['account']['mail']['#suffix'] = '<a class="register-form-popup-link popup-mail"></a><div class="popup-arrow-left popup-mail-arrow"></div>';
     $form['account']['pass']['#suffix'] = '<a class="register-form-popup-link popup-pass"></a><div class="popup-arrow-left popup-pass-arrow"></div>';
     $form['actions']['submit']['#ajax'] = array(

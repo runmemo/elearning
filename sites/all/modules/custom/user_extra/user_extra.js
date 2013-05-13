@@ -69,14 +69,15 @@
         },
         function() {
           $('.upload-link').removeClass('active');
-        });
+      });
+      
       $('input#edit-delete').hover(
         function() {
           $('.remove-link').addClass('active');
         },
         function() {
           $('.remove-link').removeClass('active');
-        });
+      });
     }
   };
 })(jQuery);
