@@ -28,17 +28,28 @@ function best_answer_extra_flag_flag($flag, $entity_id, $account, $flagging) {
 
     $query = new EntityFieldQuery();
     $entities = $query
-        ->entityCondition('entity_type', 'node')
-        ->entityCondition('bundle', 'answer')
-        ->propertyCondition('nid', $entity_id, '<>')
-        ->fieldCondition('field_answer_question', 'nid', $question->nid, '=')
-        ->execute();
-
-
+      ->entityCondition('entity_type', 'node')
+      ->entityCondition('bundle', 'answer')
+      ->propertyCondition('nid', $entity_id, '<>')
+      ->fieldCondition('field_answer_question', 'nid', $question->nid, '=')
+      ->addTag('best_answer_flagging')
+      ->execute();
+  
     foreach ($entities['node'] as $nid => $answer) {
       $flag->flag('unflag', $nid);
-    }
+    } 
   }
+}
+
+/**
+ * Implements hook_query_TAG_alter() for best_answer_flagging tag.
+ * 
+ * @see best_answer_extra_flag_flag
+ */
+function best_answer_extra_query_best_answer_flagging_alter(QueryAlterableInterface  $query) {
+  $query->join('flagging', 'f', 'node.nid = f.entity_id');
+  $flag = flag_get_flag('best_answer');
+  $query->condition('f.fid', $flag->fid);
 }
 
 /**
