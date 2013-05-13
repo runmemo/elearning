@@ -55,25 +55,3 @@ function elearning_alpha_preprocess_node_certificate(&$vars) {
   }
 }
 
-function elearning_alpha_preprocess_node_answer(&$vars) {
-  if ($vars['page']) {
-    $q_nid = $vars['field_answer_question'][0]['nid'];
-    drupal_goto("node/{$q_nid}", array('fragment' => "answer-{$vars['nid']}"), '302');
-  }
-}
-
-function elearning_alpha_preprocess_node_open_question_answer(&$vars) {
-  if ($vars['page']) {
-    $oq_nid = $vars['field_open_question'][0]['target_id'];
-    //@todo barinder : Find a way to open 2nd quicktab by default.
-    drupal_goto("node/{$oq_nid}", array('fragment' => "answer-{$vars['nid']}"), '302');
-  }
-}
-
-function elearning_alpha_preprocess_node_open_question_feedback(&$vars) {
-  if ($vars['page']) {
-    $oqa_nid = $vars['field_open_question_answer'][0]['target_id'];
-    //@todo barinder : Find a way to open 2nd quicktab by default.
-    drupal_goto("node/{$oqa_nid}", array(), '302');
-  }
-}
