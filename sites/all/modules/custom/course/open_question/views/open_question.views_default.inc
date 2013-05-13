@@ -419,7 +419,7 @@ function open_question_views_default_views() {
   $handler->display->display_options['fields']['nothing']['table'] = 'views';
   $handler->display->display_options['fields']['nothing']['field'] = 'nothing';
   $handler->display->display_options['fields']['nothing']['label'] = '';
-  $handler->display->display_options['fields']['nothing']['alter']['text'] = '<div class="views-other-answer-picture">
+  $handler->display->display_options['fields']['nothing']['alter']['text'] = '<a name="answer-[nid]" /> </a><div class="views-other-answer-picture">
     <div class="views-field-picture">[picture]</div>
     <div class="author-points">[points]</div>
   </div>
