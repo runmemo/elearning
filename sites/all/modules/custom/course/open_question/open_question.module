@@ -6,6 +6,24 @@
  */
 include_once 'open_question.features.inc';
 
+/**
+ * Implements hook_init()
+ */
+function open_question_init() {
+  $node = menu_get_object('node', 1);
+  if($node) {
+    switch($node->type) {
+      case 'open_question_answer': 
+        $open_question = entity_metadata_wrapper('node', $node);
+        drupal_goto("node/".$open_question->field_open_question->value()->nid, array('fragment' => "answer-".$node->nid), '302');   
+        break;
+      case 'open_question_feedback':
+        $open_question_answer = entity_metadata_wrapper('node', $node);
+        drupal_goto("node/".$open_question_answer->field_open_question_answer->value()->nid, array('fragment' => "answer-".$node->nid), '302');   
+        break;
+    }
+  }
+}
 
 
 /**

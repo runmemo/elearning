@@ -5,6 +5,16 @@
  * answers_extra.module
  */
 
+/**
+ * Implements hook_init()
+ */
+function answers_extra_init() {
+  $node = menu_get_object('node', 1);
+  if($node && $node->type == 'answer') {
+    $question = entity_metadata_wrapper('node', $node);
+    drupal_goto("node/".$question->field_answer_question->value()->nid, array('fragment' => "answer-".$node->nid), '302');   
+  }
+}
 
 /**
  * Implements hook_ctools_plugin_api().
