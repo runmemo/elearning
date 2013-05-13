@@ -45,6 +45,7 @@ function elearning_alpha_preprocess_node_question(&$vars) {
 function elearning_alpha_preprocess_node_open_question(&$vars) {
   $vars['display_submitted'] = FALSE;
   $vars['user_picture'] = elearning_get_user_picture($vars['uid'], 'question_author', 'node-question');
+  drupal_add_css(drupal_get_path('theme', 'elearning') . '/widgets/elearning_fivestar/elearning_fivestar_widget.css');
 }
 
 

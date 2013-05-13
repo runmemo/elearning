@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * best_answer_extra.features.field_instance.inc
+ * answers_extra.features.field_instance.inc
  */
 
 /**

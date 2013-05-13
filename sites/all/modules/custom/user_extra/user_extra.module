@@ -85,6 +85,7 @@ function user_extra_preprocess_link(&$variables) {
       $class = 'ctools-modal-register-form';
     }
     drupal_add_js(array('user_forms' => array('class' => $class)), 'setting');
+    drupal_add_js(drupal_get_path('module', 'user_extra') . '/user_extra.js');
   }
 }
 

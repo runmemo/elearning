@@ -3,6 +3,29 @@
  */
 
 (function($) {
+  Drupal.behaviors.user_login_system_forms = {
+    attach: function(context, settings) {
+      if (Drupal.settings.user_forms && Drupal.settings.user_forms.class) {
+        var _class = Drupal.settings.user_forms.class;
+        if ($.isArray(_class)) {
+          _class = _class[0];
+        }
+        $('.ctools-common-modal-content').addClass('ctools-modal-user-forms').addClass(_class);
+      }
+      function toggle_popup(element) {
+        $('.form-item-' + element + ' .description').fadeToggle();
+        $('.popup-' + element + '-arrow').fadeToggle();
+      }
+      $('.messages').insertBefore('.form-actions');
+      // popup behaviour for register form
+      $('.popup-mail').hover(function() {
+        toggle_popup('mail');
+      });
+      $('.popup-pass').hover(function() {
+        toggle_popup('pass');
+      });
+    }
+  };
   Drupal.behaviors.user_profile_edit = {
     attach: function(context, settings) {
       // show/hide "Choose photo link"
