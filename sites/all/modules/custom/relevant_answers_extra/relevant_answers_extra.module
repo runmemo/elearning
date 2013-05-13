@@ -106,12 +106,10 @@ function quick_question_form($form, &$form_state) {
     '#suffix' => '</div>',
     '#title' => t('Ask Question')
   );
-  $original_path = implode('/', arg());
-  
-  $form['original_path'] = array(
-    '#type' => 'hidden',
-    '#value' => $original_path,
-  );
+
+  if(empty($form_state['storage']['original_path'])) { 
+    $form_state['storage']['original_path'] = implode('/', arg());
+  }
   
   $form['fields']['question'] = array(
     '#type' => 'textfield',
@@ -159,7 +157,7 @@ function quick_question_form_validate($form, &$form_state) {
 function quick_question_form_submit($form, &$form_state) {
 
   global $user;
-  $original_path = $form_state['values']['original_path'];
+  $original_path = $form_state['storage']['original_path'];
 
   $node = new stdClass();
   $node->type = 'question';
@@ -193,9 +191,7 @@ function quick_question_submit_callback($form, &$form_state) {
   // values were saved, we can clean the form
   unset($form['fields']['question']['#value']);
   unset($form['fields']['description']['#value']);
-  // @todo store it in $form_state
-  $original_path = $form_state['values']['original_path'];
-  //get related question its require to $original_path otherwise ajax call pass ajax/system path instead of current node.
+  $original_path = $form_state['storage']['original_path'];
   $commands[] = ajax_command_replace('#message-placeholder', _get_completion_text());
   $commands[] = ajax_command_replace('.view-questions-list', _get_relevant_questions_list($original_path));
   $commands[] = ajax_command_replace('#quick-question-wrapper', render($form));
