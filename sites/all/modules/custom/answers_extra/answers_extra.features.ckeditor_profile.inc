@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * best_answer_extra.features.ckeditor_profile.inc
+ * answers_extra.features.ckeditor_profile.inc
  */
 
 /**
  * Implements hook_ckeditor_profile_defaults().
  */
-function best_answer_extra_ckeditor_profile_defaults() {
+function answers_extra_ckeditor_profile_defaults() {
   $data = array(
     'Advanced' => array(
       'name' => 'Advanced',

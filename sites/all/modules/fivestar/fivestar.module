@@ -485,15 +485,16 @@ function fivestar_expand($element) {
   if ($element['#allow_clear'] == TRUE) {
     $options[0] = t('Cancel rating');
   }
-
+  
   $element['vote'] = array(
     '#type' => 'select',
     '#options' => $options,
     '#required' => $element['#required'],
     '#theme' => 'fivestar_select',
+    '#attributes' => $element['#attributes'],
     '#default_value' => _fivestar_get_element_default_value($element),
   );
-
+  
   if (isset($element['#parents'])) {
     $element['vote']['#parents'] = $element['#parents'];
   }

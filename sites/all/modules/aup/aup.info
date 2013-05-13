@@ -6,7 +6,6 @@ php = 5.2.4
 version = 7.x-1.x
 project = aup
 dependencies[] = answers
-dependencies[] = best_answer
 dependencies[] = php
 dependencies[] = rate
 dependencies[] = rules

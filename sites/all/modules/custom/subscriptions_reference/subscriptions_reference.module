@@ -5,7 +5,7 @@
  * subscriptoins_reference.module
  */
 
-define('REFERENCE_MODULE', 'node');
+define('SUBSCRIPTIONS_REFERENCE_MODULE', 'node');
 
 /**
  * Implements hook_subscriptions()
@@ -18,7 +18,7 @@ function subscriptions_reference_subscriptions($op, $arg0 = NULL, $arg1 = NULL, 
   
   static $stypes = array(); // why is it static?
   foreach (_subscriptions_reference_available_fields() as $key => $info) {
-    $stypes[$key] = array(REFERENCE_MODULE, $info['field']);
+    $stypes[$key] = array(SUBSCRIPTIONS_REFERENCE_MODULE, $info['field']);
   }
   
   switch ($op) {
@@ -26,7 +26,7 @@ function subscriptions_reference_subscriptions($op, $arg0 = NULL, $arg1 = NULL, 
       subscriptions_reference_queue_send($arg0); // $arg0 is $event array.
       return NULL;
     case 'fields': // $arg0 is module.
-      if ($arg0 == REFERENCE_MODULE) {
+      if ($arg0 == SUBSCRIPTIONS_REFERENCE_MODULE) {
         $fields = array();
         foreach (_subscriptions_reference_available_fields() as $key => $info) {
           $fields[$info['field']] = array(
@@ -73,7 +73,7 @@ function subscriptions_reference_get_maikey($field) {
  * @see subscriptions_reference_node_insert()
  */
 function subscriptions_reference_queue_send($event) {
-  if ($event['module'] == REFERENCE_MODULE) {
+  if ($event['module'] == SUBSCRIPTIONS_REFERENCE_MODULE) {
     if (!isset($event['ref_item']))
       return; // this is not our event
     $node = $event['node'];
@@ -85,7 +85,7 @@ function subscriptions_reference_queue_send($event) {
 // @todo for entity reference we will want to get 'target_id' field
     $ref_nid = $ref_nids[0][$event['ref_item']];
     $subscriptions = subscriptions_get(array(
-      'module' => REFERENCE_MODULE,
+      'module' => SUBSCRIPTIONS_REFERENCE_MODULE,
       'field' => $field_name,
       'value' => $ref_nid,
     ));
@@ -96,7 +96,7 @@ function subscriptions_reference_queue_send($event) {
             'uid' => $uid,
             // 'name' => $userrow->name, @todo do we need this?
             'language' => '',
-            'module' => REFERENCE_MODULE,
+            'module' => SUBSCRIPTIONS_REFERENCE_MODULE,
             'field' => $field_name,
             'value' => $ref_nid,
             'send_interval' => 1,
@@ -126,7 +126,7 @@ function subscriptions_reference_node_insert($node) {
   }
   
   $event = array(
-    'module' => REFERENCE_MODULE,
+    'module' => SUBSCRIPTIONS_REFERENCE_MODULE,
     'uid' => $node->uid,
     'load_function' => 'subscriptions_content_load_node',
     'load_args' => $node->nid,
@@ -173,7 +173,7 @@ function _subscriptions_reference_node_options($account, $node) {
   if ($field_name) {
     $options['reference'][] = array(
       'name' => t('Subscribe to this node'),
-      'params' => array('module' => REFERENCE_MODULE, 'field' => $field_name, 'value' => $node->nid),
+      'params' => array('module' => SUBSCRIPTIONS_REFERENCE_MODULE, 'field' => $field_name, 'value' => $node->nid),
       'link' => 'node/' . $node->nid,
     );
     $options['reference']['weight'] = -4;
@@ -233,7 +233,7 @@ function _subscriptions_reference_types() {
     $types[$key] = array(
       'title' => 'Reference ' . $field['child'] . '->' . $field['parent'],
       'page' => 'subscriptions_reference_page_admin',
-      'fields' => array(REFERENCE_MODULE, $field['field']),
+      'fields' => array(SUBSCRIPTIONS_REFERENCE_MODULE, $field['field']),
       'weight' => -20,
       'access' => subscriptions_reference_permission_string($field['parent']),
       'permission' => array(
@@ -265,7 +265,7 @@ function subscriptions_reference_disable() {
   //  exposed via hook_subscriptions_reference_info()
   foreach (_subscriptions_reference_available_fields() as $key => $info) {
     db_delete('subscriptions_queue')
-        ->condition('module', REFERENCE_MODULE)
+        ->condition('module', SUBSCRIPTIONS_REFERENCE_MODULE)
         ->condition('field', $info['field'])
         ->execute();
   }
@@ -294,7 +294,7 @@ function subscriptions_reference_subscribe($node, $user) {
   if (!$reference_field)
     return;
   // write subscription to database
-  subscriptions_write_subscription(REFERENCE_MODULE, $reference_field, $node->nid, -1, $user->uid);
+  subscriptions_write_subscription(SUBSCRIPTIONS_REFERENCE_MODULE, $reference_field, $node->nid, -1, $user->uid);
 }
 
 
@@ -306,7 +306,7 @@ function subscriptions_reference_unsubscribe($node, $user) {
   if (!$reference_field) return;
   
   db_delete('subscriptions')
-      ->condition('module', REFERENCE_MODULE)
+      ->condition('module', SUBSCRIPTIONS_REFERENCE_MODULE)
       ->condition('field', $reference_field)
       ->condition('value', $node->nid)
       ->condition('author_uid', -1)  // DEBUG $node->uid,

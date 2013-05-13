@@ -2,30 +2,8 @@
 
 /**
  * @file
- * Additional functionality to Best Answer module.
+ * Provides functionality to Best Answer selecting process.
  */
-
-/**
- * Implements hook_flag_access_multiple().
- */
-function best_answer_extra_flag_access_multiple($flag, $content_ids, $account) {
-  // @todo Ilya: find a better way to show best answer to others
-  $access = array();
-  if ($flag->name == 'best_answer') {
-    $node = menu_get_object('node');
-    if ($node && $node->uid != $account->uid) {
-      $lang = field_language('node', $node, 'field_best_answer');
-      $best = isset($node->field_best_answer[$lang][0]['nid']) ? $node->field_best_answer[$lang][0]['nid'] : FALSE;
-      if ($best) {
-        drupal_add_js(array('best_answer' => array('nid' => $best)), 'setting');
-      }
-      foreach ($content_ids as $id => $action) {
-        $access[$id] = FALSE;
-      }
-    }
-  }
-  return $access;
-}
 
 /**
  * Implements hook_node_view().
@@ -37,71 +15,50 @@ function best_answer_extra_node_view($node, $view_mode, $langcode) {
 }
 
 /**
- * Implements hook_flag().
+ * Implements hook_flag_flag().
  *
- * @param $op
- *  The operation being performed: one of 'flag' or 'unflag'.
- * @param $flag
- *  The flag object.
- * @param $content_id
- *  The id of the content (aka entity) the flag is on.
- * @param $account
- *  The user account performing the action.
- * @param $fcid
- *  The id of the flagging in the {flag_content} table.
+ * Fires on flag event to control that there is only one best answer per question.
+ * TODO: Create test for this hook to ensure that when flagged an answer as best the rest of 
+ * answers are unflagged and the answers of other questions remain flagged (at least one answer flagged)
  */
-function best_answer_extra_flag($op, $flag, $content_id, $account, $fcid) {
+function best_answer_extra_flag_flag($flag, $entity_id, $account, $flagging) {
+ 
+  if ($flag->name == "best_answer") {
+    $question = entity_metadata_wrapper('node', $entity_id)->field_answer_question->value();
+    
+    $query = new EntityFieldQuery();
+    $entities = $query
+      ->entityCondition('entity_type', 'node')
+      ->entityCondition('bundle', 'answer')
+      ->propertyCondition('nid', $entity_id, '<>')
+      ->fieldCondition('field_answer_question', 'nid', $question->nid, '=')
+      ->execute();
+    
+    foreach ($entities as $type => $answers) {
+      foreach ($answers as $nid => $answer) {
+        if ($flag->is_flagged($nid)) {
+          $flag->flag('unflag', $nid);
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_flag().
+ * 
+ * Remove flag link if user is not an author of the question.
+ */
+function best_answer_extra_preprocess_flag(&$vars) {
+  $flag = $vars['flag'];
   if ($flag->name == 'best_answer') {
-    $answer_node = node_load($content_id);
-    $question = answers_field_get_node_reference($answer_node, 'field_answer_question');
-    if ($op == 'flag') {
-      _best_answer_update_best_answer($question, $content_id);
+    $nid = $vars['entity_id'];
+    $question = entity_metadata_wrapper('node', $nid)->field_answer_question->value();
+    if ($question && $question->uid != $vars['user']->uid) {
+      // don't allow other users to mark answers as best.
+      $vars['link_href'] = FALSE;
+      $is_flagged = $flag->is_flagged($nid, $question->uid);
+      $vars['flag_classes'] .= $is_flagged ? ' best-answer-marked' : ' best-answer-hidden';
     }
-    elseif ($op == 'unflag') {
-      best_answer_extra_remove_best_answer($question, $content_id);
-    }
-  }
-}
-
-/**
- * Unsets best answer and emties referencing field on question node
- * @param object $question
- * @param integer $answer_nid
- */
-function best_answer_extra_remove_best_answer($question, $answer_nid) {
-  $lang = field_language('node', $question, 'field_best_answer');
-  if (isset($question->field_best_answer[$lang]) 
-        && $answer_nid == $question->field_best_answer[$lang][0]['nid']) {
-
-    // clear the reference to best answer from question
-    unset($question->field_best_answer[$lang]);
-    node_save($question);
-    // reset the flag on the answer
-    best_answer_remove_flag($answer_nid);
-    // trigger rule event 
-    if (module_exists('rules')) {
-      $answer_node = node_load($answer_nid);
-      rules_invoke_event('best_answer_unset', $question, $answer_node);
-    }
-  }
-  else { // question does not have best answer or it has different answer selected as best
-    // reset the flag on the answer
-    best_answer_remove_flag($answer_nid);
-    watchdog('best answer', 
-        'Answer was with %answer_nid was not set as best on the question node with id %quesion_nid.', 
-        array('%answer_nid' => $answer_nid, '%question_nid' => $question->nid,));
-  }
-}
-
-/**
- * Sets field_best_answer_p from best answers module to zero
- * @param integer $answer_nid
- */
-function best_answer_remove_flag($answer_nid) {
-  $answer = node_load($answer_nid);
-  if ($answer) {
-    $lang = field_language('node', $answer, 'field_best_answer_p');
-    $answer->field_best_answer_p[$lang][0]['value'] = 0;
-    node_save($answer);   
   }
 }

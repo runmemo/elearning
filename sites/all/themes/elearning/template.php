@@ -99,4 +99,17 @@ function elearning_css_alter(&$css) {
   }
   // delete system.menus.css
   unset($css[drupal_get_path('module', 'system') . '/system.menus.css']);
+  // Remove fivestar.css file because we use our own widget.
+  unset($css[drupal_get_path('module', 'fivestar') . '/css/fivestar.css']);
+}
+
+/**
+ * Implementation of hook_fivestar_widgets().
+ */
+function elearning_fivestar_widgets() {
+  // Letting fivestar know about our custom Stars widget.
+  $widgets = array(
+    drupal_get_path('theme', 'elearning') . '/widgets/elearning_fivestar/elearning_fivestar_widget.css' => 'Elearning Stars',
+  );
+  return $widgets;
 }

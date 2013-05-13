@@ -1,0 +1,12 @@
+diff --git a/fivestar.module b/fivestar.module
+index 1b9db2c..cfd2deb 100644
+--- a/fivestar.module
++++ b/fivestar.module
+@@ -510,6 +510,7 @@ function fivestar_expand($element) {
+     '#options' => $options,
+     '#required' => $element['#required'],
+     '#theme' => 'fivestar_select',
++    '#attributes' => $element['#attributes'], 
+     '#default_value' => _fivestar_get_element_default_value($element),
+     '#weight' => -2,
+   );

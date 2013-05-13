@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * best_answer_extra.features.filter.inc
+ * answers_extra.features.filter.inc
  */
 
 /**
  * Implements hook_filter_default_formats().
  */
-function best_answer_extra_filter_default_formats() {
+function answers_extra_filter_default_formats() {
   $formats = array();
 
   // Exported format: Full HTML.

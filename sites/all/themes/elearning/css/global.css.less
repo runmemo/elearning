@@ -85,35 +85,71 @@ h2 {
     }
 }
 
+.user-menu-userpoints {
+  .bg-img('user-crown.png');
+  background-position: top center;
+  background-repeat: no-repeat;
+  padding-top: 11px;
+  margin-left: 2px;
+}
+
+.user-menu-userpoints:hover {
+  .bg-img('user-crown-hover.png');
+  background-position: top center;
+  background-repeat: no-repeat;
+}
+
+a.user-menu-parent:hover .user-menu-userpoints {
+  .bg-img('user-crown-hover.png');
+  background-position: top center;
+  background-repeat: no-repeat;
+}
+
+.arrow-up {
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 5px solid white;
+  margin: 10px auto;
+  .show(none);
+}
+
+.sf-user-menu .middle .sf-depth-2 {
+  .border-bottom-dotted(); 
+}
+
 .block-superfish {
   .right();
   .width-auto();
   .content {
     .bg-img('superfish-menu-triangle-small.png');
-    background-position: 50% 100%;
+    background-position: 49% 100%;
       ul.sf-menu {
         .width-auto();
         li.menuparent {
           .main-menu-border();
           .width-auto();
-          .bg-img('user-crown-tr.png');
-          background-position: top right;
-            a.menuparent:link, a.menuparent:visited {
-              .bold(14px);
-              .main-menu-link();
-            }
-            a.menuparent:hover {
-              color: #ffffff;
-              .link();
-            }
-            a.menuparent:active {
-              .link();
-            }
+          a.menuparent:link, a.menuparent:visited {
+            .bold(14px);
+            .main-menu-link();
+          }
+          a.menuparent:hover {
+            color: #ffffff;
+            .link();
+          }
+          a.menuparent:active {
+            .link();
+          }
+        }
+        li.menuparent.sfHover .arrow-up {
+          .show(block);
         }
         ul {
           background: white;
           border-radius: 2px;
-          margin: 7px 0px 0px -84px;
+          margin: 7px 0px 0px -54px;
+          /* use !important in order to override superfish css */
           padding: 0 !important;
           -moz-box-shadow: 0px 1px 3px 0px #888;
           -webkit-box-shadow: 0px 1px 3px 0px #888;
@@ -136,9 +172,6 @@ h2 {
               .bold(14px);
               padding: 5px 5px 10px 10px;
               margin: 0px 5px 5px 5px;
-            }
-            li.middle a.sf-depth-2 {
-              .border-bottom-dotted();
             }
             li.first a.sf-depth-2 {
               margin-top: 5px;
@@ -388,10 +421,14 @@ h2 {
     }
   }
   .form-submit {
-    .button-submit();
     left: -8px;
     top: -49px;
     margin-top: 0px;
+  }
+  .form-submit:hover {
+    .gradient-submit-button-hover();
+    .border-sumbit-hover();
+    padding: 4px 19px;
   }
   fieldset {
     margin-bottom: 0;
@@ -416,7 +453,7 @@ h2 {
   .page-previous {
     .button-submit();
       float: left;
-    padding: 8px 0;
+    padding: 8px 1px;
     text-align: center;
     @media @narrow {
       .grid-narrow-2();
@@ -427,6 +464,12 @@ h2 {
     @media @wide {
       .grid-wide-2();
     }
+  }
+  .page-next:hover,
+  .page-previous:hover {
+    .gradient-submit-button-hover();
+    .border-sumbit-hover();
+    padding: 7px 0;
   }
 
    .page-next {
@@ -652,11 +695,15 @@ h2 {
 }
 
 #course-registration-form .form-submit {
-  .button-submit();
   float: none;
   width: 100%;
   padding: 10px 0px;
   margin-top: 4px;
+}
+#course-registration-form .form-submit:hover {
+  .gradient-submit-button-hover();
+  .border-sumbit-hover();
+  padding: 9px 0px;
 }
 
 
@@ -806,7 +853,7 @@ h2 {
       .user-picture-edit {
         .bold(11px);
         .link();
-        color: #333333 !important;
+        color: #333333;
         position: absolute;
         top: 84px;
         left: 6px;
@@ -996,7 +1043,7 @@ h2 {
       .views-field-title {
         .left();
         a:hover {
-          color: #333333 !important;
+          color: #333333;
         }
       }
       .views-field-link-continue {
@@ -1380,15 +1427,20 @@ body.page-home {
   legend, 
   .ckeditor_links, 
   .filter-wrapper {
+  /* use !important in order to override style, that assigned to the elements by ckeditor js */
     .show(none) !important;
   }
   .fieldset-wrapper {
       background: #ffffff;
   }
-  .form-submit {
-    .button-submit();
+  .oq-answer-edit-submit {
     margin-top: 9px;
     padding: 13px 16px;
+  }
+  .oq-answer-edit-submit:hover {
+    .gradient-submit-button-hover();
+    .border-sumbit-hover();
+    padding: 12px 15px;
   }
 }
 
@@ -1415,6 +1467,15 @@ body.page-home {
     }
     .cke_toolbar_separator {
       background: #e2e8ed;
+    }
+    .form-submit {
+      margin-top: 9px;
+      padding: 13px 16px;
+    }
+    .form-submit:hover {
+      .gradient-submit-button-hover();
+      .border-sumbit-hover();
+      padding: 12px 15px;
     }
   }
 }
@@ -1473,7 +1534,7 @@ body.page-home {
 
 .views-field-flag-thumbs-up {
   .left();
-  a, .best-answer-others {
+  a, .best-answer-marked {
     .show(block);
     .left();
     overflow: hidden;
@@ -1489,7 +1550,7 @@ body.page-home {
   a.flag-action:hover {
     background-position: 0px 0px;
   }
-  .flag-waiting .flag-throbber {
+  .flag-waiting .flag-throbber, .best-answer-hidden {
     .show(none);
   }
 }
@@ -1604,9 +1665,14 @@ body.page-home {
 }
 
 .oq-review-form-submit {
-  .button-submit();
   margin-bottom: 10px;
   padding: 13px 16px;
+}
+
+.oq-review-form-submit:hover {
+  .gradient-submit-button-hover();
+  .border-sumbit-hover();
+  padding: 12px 15px;
 }
 
 .oq-review-form-submit[disabled] {
@@ -1614,8 +1680,9 @@ body.page-home {
   .gradient-disabled();
 }
 
-.oq-review-form-skip {
-  .button-cancel();
+.oq-review-form-skip, .oq-review-form-skip:hover {
+  .action-cancel();
+  .bold(14px);
 }
 
 .oq-form-fieldset-toggle {
@@ -1628,7 +1695,7 @@ body.page-home {
   }
 }
 
-.oq-review-form-edit {
+.oq-review-form-edit, .oq-review-form-edit:hover {
   .button-icon();
   .bg-img('answer-edit.png');
   margin-top: 60px;
@@ -1694,9 +1761,13 @@ body.page-home {
       width: 100%;
     }
     .form-submit {
-      .button-submit();
       margin: 0;
       height: 30px;
+    }
+    .form-submit:hover {
+      .gradient-submit-button-hover();
+      .border-sumbit-hover();
+      padding: 5px 19px;
     }
   }
   .comment-group, .comment-form {
@@ -1706,6 +1777,7 @@ body.page-home {
     margin-bottom: 10px;
   }
   .comment-group {
+    /* use !important in order to override inline comments js */
     .show(block) !important;
     clear: both;
   }
@@ -1745,7 +1817,7 @@ body.page-home {
 
 .view-feedback-comments {
   .views-row {
-    padding: 0 !important;
+    padding: 0;
   }
   .feedback-body, .views-field-comment-count {
     .left();
@@ -1895,7 +1967,7 @@ body.page-home {
     .right();
     margin: 2px 6px 0px 0px;
   }
-  .oq-answer-form-submit {
+  .oq-answer-form-submit, .oq-answer-form-submit:hover {
     border: 0;
     margin: 0px 5px 18px 0px;
     padding: 0;
@@ -1954,6 +2026,7 @@ body.page-home {
 .ctools-modal-user-forms {
   .popups-body {
     padding: 0px 14px 14px 14px;
+    /* use !important in order to override modal js style for user forms */
     width: auto !important;
     position: initial;
   }
@@ -1982,11 +2055,14 @@ body.page-home {
       color: #e24110;
     }
   }
-  .form-submit, 
+  .form-submit {
+    padding: 9px 20px;
+    font-size: 14px;
+  }
   .form-submit:hover {
-    .button-submit();
-    padding: 9px 20px !important;
-    font-size: 14px !important;
+    .gradient-submit-button-hover();
+    padding: 8px 19px;
+    .border-sumbit-hover();
   }
   .messages.error {
     background-color: #e64412;
@@ -1999,11 +2075,15 @@ body.page-home {
       list-style: none;
       margin: 0;
     }
+    a:link, a:visited {
+      color: #fff;
+    }
   }
-  .form-actions.form-wrapper {
-    padding-top: 16px !important;
-    margin-top: 29px;
-  }
+}
+
+.ctools-modal-login-form .login-form .form-actions.form-wrapper {
+  padding-top: 16px;
+  margin-top: 29px;
 }
 
 .login-form {
@@ -2045,6 +2125,7 @@ body.page-home {
 
 
 .ctools-modal-register-form {
+  /* use !important in order to override modal js style for user forms */
   width: 440px !important;
 }
 
@@ -2053,6 +2134,7 @@ body.page-home {
     .show(none);
   }
   .password-suggestions {
+    /* use !important in order to override default js style for user register form */
     .show(none) !important;
   }
   .register-form-name-wrapper {
@@ -2111,7 +2193,7 @@ body.page-home {
     }
   }
   .ajax-progress.ajax-progress-throbber {
-    right: 208px !important;
+    right: 208px;
   }
   .register-form-popup-link {
     position: absolute;

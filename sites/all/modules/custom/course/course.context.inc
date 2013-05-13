@@ -42,16 +42,22 @@ function course_context_default_contexts() {
       'blocks' => array(
         'course_outline-book_outline' => array(
           'module' => 'course_outline',
-          'delta' => 'book_outline',
+          'delta' => 'course_outline',
           'region' => 'sidebar_first',
           'weight' => '-10',
         ),
-      ),
-      'course-book_header' => array(
-        'module' => 'course',
-        'delta' => 'book_header',
-        'region' => 'preface_first',
-        'weight' => '-10',
+        'course_outline-course_certificate' => array(
+          'module' => 'course_outline',
+          'delta' => 'course_certificate',
+          'region' => 'sidebar_first',
+          'weight' => '-9',
+        ),
+        'course-book_header' => array(
+          'module' => 'course',
+          'delta' => 'book_header',
+          'region' => 'preface_first',
+          'weight' => '-10',
+        ),
       ),
     ),
   );

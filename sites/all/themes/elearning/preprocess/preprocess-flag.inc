@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Implements hook_preprocess_block
+ * Implements hook_preprocess_flag
  * Function redirects processing to functions that are buld of hook plus flag name
  * @see elearning_preprocess_flag__abuse_content
  */
