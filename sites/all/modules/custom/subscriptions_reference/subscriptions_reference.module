@@ -182,10 +182,15 @@ function _subscriptions_reference_node_options($account, $node) {
 }
 
 /**
- * Gets the name of the reference field for the node
- * @param object $node we will check if other nodes expose refs for this node type
- * @param string $op can be either child or parent
- * @return name of the reference field
+ * Gets the name of the reference field for the node.
+ * 
+ * @param object $node we 
+ *   will check if other nodes expose refs for this node type.
+ * @param string $op 
+ *   can be either child or parent
+ * 
+ * @return array
+ *   properties of the reference field
  */
 function subscriptions_get_reference_info($node, $op = 'child') {
   foreach (_subscriptions_reference_available_fields() as $key => $info) {
@@ -202,7 +207,8 @@ function subscriptions_reference_get_field_name($node, $op = 'child') {
 }
 
 /**
- * Gets all reference fields from modules that implement subscriptions_reference_info
+ * Gets all reference fields from modules 
+ * that implement subscriptions_reference_info.
  */
 function _subscriptions_reference_available_fields() {
   // @todo implement cache
@@ -248,9 +254,12 @@ function _subscriptions_reference_types() {
 }
 
 /**
- * Builds permission string for given content type
- * @param sting $type content type
- * @return string permission string
+ * Builds permission string for given content type.
+ * @param sting $type 
+ *   content type
+ * 
+ * @return string 
+ *   permission string
  */
 function subscriptions_reference_permission_string($type) {
   $type_name = node_type_get_name($type);
@@ -287,22 +296,27 @@ function subscriptions_reference_page_admin(array $form, $uid) {
 }
 
 /**
- * Rules subscribe action callback
+ * Rules subscribe action callback.
  */
 function subscriptions_reference_subscribe($node, $user) {
   $reference_field = subscriptions_reference_get_field_name($node, 'parent');
   if (!$reference_field)
+  {
     return;
-  // write subscription to database
+  }
+  // Write subscription to database.
   subscriptions_write_subscription(SUBSCRIPTIONS_REFERENCE_MODULE, $reference_field, $node->nid, -1, $user->uid);
 }
 
 
 /**
- * Rules unsubscribe action callback
+ * Rules unsubscribe action callback.
  */
 function subscriptions_reference_unsubscribe($node, $user) {
   $reference_field = subscriptions_reference_get_field_name($node, 'parent');
-  if (!$reference_field) return;
+  if (!$reference_field) {
+    return;
+  }
+  // Delete subscription from database.
   subscriptions_delete($user->uid, SUBSCRIPTIONS_REFERENCE_MODULE, $reference_field, $node->nid);  
 }
