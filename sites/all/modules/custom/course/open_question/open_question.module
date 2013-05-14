@@ -228,7 +228,7 @@ function open_question_answer_form($form, &$form_state, $answered) {
         '#ajax' => array(
           'callback' => 'open_question_answer_submit_js',
           'wrapper' => 'oq-answer-form-wrapper',
-          'progress' => array('message' => t('')),
+          'progress' => array('message' => ''),
         ),
         '#attributes' => array('class' => array('oq-answer-edit-submit')),
       );
@@ -265,7 +265,7 @@ function open_question_answer_form($form, &$form_state, $answered) {
         '#ajax' => array(
           'callback' => 'open_question_answer_submit_js',
           'wrapper' => 'oq-answer-form-wrapper',
-          'progress' => array('message' => t('')),
+          'progress' => array('message' => ''),
         ),
         '#attributes' => array('class' => array('oq-answer-form-submit')),
         '#suffix' => '<div class="oq-answer-submit-sign"></div>',

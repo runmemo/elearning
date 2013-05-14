@@ -1,5 +1,5 @@
 name = Credit
-description = Provides credit functionality for course.
+description = Provides credit functionality for a course.
 core = 7.x
 package = Course
 version = 7.x-1.0

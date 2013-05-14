@@ -1,0 +1,701 @@
+# $Id$
+#
+# Russian translation of Drupal (general)
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+# Generated from files:
+#  course.context.inc: n/a
+#  lesson/lesson.context.inc: n/a
+#  registration/views/registration.views.inc: n/a
+#  course.features.field_instance.inc: n/a
+#  lesson/lesson.features.field.inc: n/a
+#  open_question/open_question.features.field_instance.inc: n/a
+#  course.features.inc: n/a
+#  lesson/lesson.features.inc: n/a
+#  open_question/open_question.features.inc: n/a
+#  course.info: n/a
+#  lesson/lesson.info: n/a
+#  open_question/open_question.info: n/a
+#  course.features.menu_custom.inc: n/a
+#  course.features.menu_links.inc: n/a
+#  course.pages.inc: n/a
+#  registration/registration.admin.inc: n/a
+#  course.module: n/a
+#  course_points/course_points.module: n/a
+#  course_points/course_points.info: n/a
+#  registration/registration.info: n/a
+#  lesson/lesson.module: n/a
+#  open_question/open_question.module: n/a
+#  open_question/open_question.context.inc: n/a
+#  open_question/open_question.quicktabs.inc: n/a
+#  registration/registration.context.inc: n/a
+#  registration/registration.module: n/a
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2013-05-14 04:22-0500\n"
+"PO-Revision-Date: 2013-05-14 11:14-0000\n"
+"Last-Translator: bulat <byapparov@gmail.com>\n"
+"Language-Team: Russian <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=((((n%10)==1)&&((n%100)!=11))?(0):(((((n%10)"
+">=2)&&((n%10)<=4))&&(((n%100)<10)||((n%100)>=20)))?(1):2));\n"
+"X-Generator: Poedit 1.5.5\n"
+
+#: course.context.inc:105 lesson/lesson.context.inc:52
+#: registration/views/registration.views.inc:22
+msgid "Node"
+msgstr "Материал"
+
+#: course.context.inc:106
+msgid "When teacher is viewing course item"
+msgstr "Когда лектор смотрит на объект курса"
+
+#: course.features.field_instance.inc:546
+msgid "A field replacing node title."
+msgstr "Поле заменяющее название контента"
+
+#: course.features.field_instance.inc:547 lesson/lesson.features.field.inc:409
+#: open_question/open_question.features.field_instance.inc:404
+msgid "Body"
+msgstr "Основная часть"
+
+#: course.features.field_instance.inc:548
+msgid "Course load"
+msgstr "Нагрузка"
+
+#: course.features.field_instance.inc:549
+msgid "Discipline"
+msgstr "Дисциплина"
+
+#: course.features.field_instance.inc:550
+msgid "Duration"
+msgstr "Продолжительность"
+
+#: course.features.field_instance.inc:551
+msgid "Home Page Image"
+msgstr "Изображение для Домашней Страницы"
+
+#: course.features.field_instance.inc:552
+msgid "Grade Score"
+msgstr "Баллы Степени"
+
+#: course.features.field_instance.inc:553
+msgid "Grade Name"
+msgstr "Название Степени"
+
+#: course.features.field_instance.inc:554
+msgid "Grades"
+msgstr "Степени"
+
+#: course.features.field_instance.inc:555 course.features.inc:63
+msgid "Provider"
+msgstr "Организация"
+
+#: course.features.field_instance.inc:556
+msgid "Teacher"
+msgstr "Лектор"
+
+#: course.features.field_instance.inc:557 course.features.inc:51;59;67;75
+#: lesson/lesson.features.inc:13;21
+#: open_question/open_question.features.inc:91;99;107
+msgid "Title"
+msgstr "Заголовок"
+
+#: course.features.field_instance.inc:558 lesson/lesson.features.field.inc:410
+msgid "Video"
+msgstr "Видео"
+
+#: course.features.inc:47 course.info:0;0 lesson/lesson.info:0
+#: open_question/open_question.info:0
+msgid "Course"
+msgstr "Курс"
+
+#: course.features.inc:49
+msgid "Represent the full course."
+msgstr "Представляет весь курс"
+
+#: course.features.inc:55
+msgid "Unit"
+msgstr "Глава курса"
+
+#: course.features.inc:57
+msgid ""
+"Unit is a large section of course that consists of lessons, quizzes and "
+"other content."
+msgstr ""
+"Глава курса - это большая секция курса, которая состоит и уроков, тестов и "
+"другого материала."
+
+#: course.features.inc:65
+msgid "Provider of course content, e.g. university or company."
+msgstr ""
+"Производитель материалов для курса, например, университет или частная "
+"компания."
+
+#: course.features.inc:71
+msgid "Front Page Slide"
+msgstr "Слайды для главной страницы"
+
+#: course.features.inc:73
+msgid "Content type for slider on the home page."
+msgstr "Тип контента для слайдов на главной странице."
+
+#: course.features.inc:176
+msgid "Determines wether course item was complete by student"
+msgstr "Определяет был ли элемент курса завершен студентом."
+
+#: course.features.menu_custom.inc:33
+msgid "Footer Menu"
+msgstr "Меню внизу страницы"
+
+#: course.features.menu_custom.inc:34
+msgid "Footer links"
+msgstr "Ссылки внизу страницы"
+
+#: course.features.menu_custom.inc:35
+msgid "Main menu"
+msgstr "Главное меню"
+
+#: course.features.menu_custom.inc:36
+msgid ""
+"The <em>Main</em> menu is used on many sites to show the major sections of "
+"the site, often in a top navigation bar."
+msgstr ""
+"<em>Главное</em>меню используется на многих сайтах чтобы показать основные "
+"секция сайта, часто вверху страницы."
+
+#: course.features.menu_custom.inc:37
+msgid ""
+"The <em>User</em> menu contains links related to the user's account, as well "
+"as the 'Log out' link."
+msgstr ""
+"Меню <em>Пользователя</em> содержит ссылки имеющие отношение к учетной "
+"записи пользователя, в том числе ссылку 'Выйти из системы'."
+
+#: course.features.menu_custom.inc:38
+msgid "User menu"
+msgstr "Меню пользователя"
+
+#: course.features.menu_links.inc:135
+msgid "About"
+msgstr "О Нас"
+
+#: course.features.menu_links.inc:136
+msgid "Log out"
+msgstr "Выйти"
+
+#: course.features.menu_links.inc:137
+msgid "My !points"
+msgstr "Мои !points"
+
+#: course.features.menu_links.inc:138
+msgid "Profile"
+msgstr "Профиль"
+
+#: course.features.menu_links.inc:139
+msgid "User Agreement"
+msgstr "Пользовательское Соглашение"
+
+#: course.features.menu_links.inc:140
+msgid "User account"
+msgstr "Вход в аккаунт"
+
+#: course.features.menu_links.inc:141
+msgid "Login"
+msgstr "Войти"
+
+#: course.pages.inc:40
+msgid "Return to class"
+msgstr "Вернуться в класс"
+
+#: course.pages.inc:47
+msgid "Blog"
+msgstr "Блог"
+
+#: course.pages.inc:48
+msgid "Forum"
+msgstr "Форум"
+
+#: course.pages.inc:69
+msgid "Are you sure you wants to leave this course : @course_title?"
+msgstr "Вы уверены, что хотите покинуть курс: @course_title?"
+
+#: course.pages.inc:72
+msgid "Yes, leave"
+msgstr "Да, уйти"
+
+#: course.pages.inc:72
+msgid "Yes"
+msgstr "Да"
+
+#: course.pages.inc:73;73 registration/registration.admin.inc:226;302
+msgid "Cancel"
+msgstr "Отменить"
+
+#: course.module:52
+msgid "Course registertion form"
+msgstr "Форма регистрации на курс"
+
+#: course.module:56
+msgid "User notifications count"
+msgstr "Счетчик уведомлений пользователя"
+
+#: course.module:60
+msgid "Course Header"
+msgstr "Шапка Курса"
+
+#: course.module:64
+msgid "Course Links"
+msgstr "Ссылки Курса"
+
+#: course.module:318
+msgid "Continue"
+msgstr "Продолжить"
+
+#: course.module:319;440
+msgid "Exit Course"
+msgstr "Покинуть Курс"
+
+#: course.module:476
+msgid "Successful de-registered from course."
+msgstr "Успешная отмена регистрации на курс"
+
+#: course.module:479
+msgid "No registration was found, looks like list of cousrse is wrong"
+msgstr "Регистрация не найдена, что-то не так со списком ваших курсов ("
+
+#: course.module:503
+msgid "Confirmation"
+msgstr "Подтверждение"
+
+#: course.module:554
+msgid "Provider Logo"
+msgstr "Логотип организации"
+
+#: course.module:555
+msgid "Logo of course provider"
+msgstr "Логотип организации, создавшей курс"
+
+#: course.module:243
+msgid "block header"
+msgstr "шапка блока"
+
+#: course.module:243
+msgid "Block with header of the course was shown in the wrong place."
+msgstr "Блок с шапкой курса был выведен на неправильной странице."
+
+#: course.module:448
+msgid "Action"
+msgstr "Действие"
+
+#: course.info:0
+msgid "Contains definitions for main objects of the course."
+msgstr "Определяет основные элементы курса."
+
+#: course_points/course_points.module:14
+msgid "User total points"
+msgstr "Общая карма"
+
+#: course_points/course_points.module:28
+msgid "User points"
+msgstr "Карма"
+
+#: course_points/course_points.info:0
+msgid "Course points"
+msgstr "Баллы курса"
+
+#: course_points/course_points.info:0
+msgid "Contains course points functionality."
+msgstr "Содержит функционал для баллов курса."
+
+#: course_points/course_points.info:0 registration/registration.info:0
+msgid "Custom"
+msgstr "Собственная"
+
+#: lesson/lesson.context.inc:51
+msgid "Lesson Node"
+msgstr "Урок"
+
+#: lesson/lesson.features.field.inc:411 lesson/lesson.features.inc:17
+#: lesson/lesson.module:304
+msgid "Notes"
+msgstr "Заметки"
+
+#: lesson/lesson.features.field.inc:412 lesson/lesson.features.inc:9
+msgid "Lesson"
+msgstr "Урок"
+
+#: lesson/lesson.features.inc:19
+msgid "Student notes on lessons."
+msgstr "Заметки студента к уроку."
+
+#: lesson/lesson.module:29
+msgid "Lesson Notes : Lecturer"
+msgstr "Заметки к уроку: Лектор"
+
+#: lesson/lesson.module:33
+msgid "Lesson Notes : Student"
+msgstr "Заметки к уроку: Студент"
+
+#: lesson/lesson.module:162;221;319;346
+#: open_question/open_question.module:227;311
+msgid "Save"
+msgstr "Сохранить"
+
+#: lesson/lesson.module:185;247;335;359
+#: open_question/open_question.module:263;339
+msgid "Edit"
+msgstr "Изменить"
+
+#: lesson/lesson.module:204 open_question/open_question.module:295
+msgid "State @mode is not supported by this form."
+msgstr "Состояние @mode не поддерживается этой формой."
+
+#: lesson/lesson.module:349
+msgid "Notes field is required"
+msgstr "Поле для заметки обязательно для заполнения."
+
+#: lesson/lesson.module:379
+msgid "Lesson complete"
+msgstr "Урок завершен"
+
+#: lesson/lesson.module:383
+msgid "The current logged in user."
+msgstr "Текущий зарегистрированный пользователь"
+
+#: lesson/lesson.module:384
+msgid "The lesson node."
+msgstr "Урок"
+
+#: lesson/lesson.module:397
+msgid "AJAX callback - Lesson complete action"
+msgstr "AJAX функция - Урок завершен"
+
+#: lesson/lesson.info:0
+msgid "Course Lesson"
+msgstr "Урок курса"
+
+#: lesson/lesson.info:0
+msgid ""
+"Module provides content type for presenting information units of the course"
+msgstr "Модуль предоставляет тип контента для создания Глав курса"
+
+#: open_question/open_question.context.inc:50
+#: open_question/open_question.features.field_instance.inc:406
+#: open_question/open_question.features.inc:87
+#: open_question/open_question.info:0
+msgid "Open Question"
+msgstr "Открытый Вопрос"
+
+#: open_question/open_question.features.field_instance.inc:403
+msgid "Answer"
+msgstr "Ответ"
+
+#: open_question/open_question.features.field_instance.inc:405
+msgid "Course Credit"
+msgstr "Кредит Курса"
+
+#: open_question/open_question.features.field_instance.inc:407
+#: open_question/open_question.features.inc:95
+msgid "Open Question Answer"
+msgstr "Ответ на  Открытый Вопрос"
+
+#: open_question/open_question.features.field_instance.inc:408
+msgid "Proposed Answer"
+msgstr "Ожидаемый Ответ"
+
+#: open_question/open_question.features.field_instance.inc:409
+msgid "Question"
+msgstr "Вопрос"
+
+#: open_question/open_question.features.field_instance.inc:410
+#: open_question/open_question.module:452;495;718
+msgid "Rating"
+msgstr "Баллы"
+
+#: open_question/open_question.features.field_instance.inc:411
+msgid "Rating Widget"
+msgstr "Елемент для  Рейтингования"
+
+#: open_question/open_question.features.inc:89
+msgid ""
+"Represents open questions that can be part of the course and can be answered "
+"by a student."
+msgstr "Представляет открытый вопрос, который может быть частью курса."
+
+#: open_question/open_question.features.inc:103
+msgid "Open Question Feedback"
+msgstr "Отзыв на Ответ к Открытому Вопросу"
+
+#: open_question/open_question.features.inc:105
+msgid ""
+"Feedback provided to the user by other students on the Open Questions page."
+msgstr "Отзывы для студента от одноклассников на странице Открытого Вопроса."
+
+#: open_question/open_question.quicktabs.inc:45
+msgid "My Answer"
+msgstr "Мой Ответ"
+
+#: open_question/open_question.quicktabs.inc:46
+msgid "Open Question Tabs"
+msgstr "Вкладки Открытого Вопроса"
+
+#: open_question/open_question.quicktabs.inc:47
+msgid "Review Answers"
+msgstr "Проверить Ответы"
+
+#: open_question/open_question.module:34
+msgid "OQ Answer Form Block"
+msgstr ""
+
+#: open_question/open_question.module:37
+msgid "OQ Answers Review List"
+msgstr ""
+
+#: open_question/open_question.module:48
+msgid "Create open question"
+msgstr "Создать открытый вопрос"
+
+#: open_question/open_question.module:49
+msgid "Allows user to create open questions."
+msgstr "Позволяет пользователю создать открытый вопрос."
+
+#: open_question/open_question.module:81
+msgid "You need to register to answer this question."
+msgstr "Вам необходимо зарегистрироваться, чтобы ответить на данный вопрос."
+
+#: open_question/open_question.module:108
+msgid ""
+"You need to answer question before you can review answers of other students."
+msgstr ""
+"Вам необходимо ответить на вопрос, чтобы иметь возможность оценивать ответы "
+"других студентов."
+
+#: open_question/open_question.module:136
+msgid "Open question complete"
+msgstr "Открытый вопрос завершен"
+
+#: open_question/open_question.module:140
+msgid "User who answered the open question."
+msgstr "Пользователь ответивший на открытый вопрос."
+
+#: open_question/open_question.module:141
+msgid "The open question that was answered."
+msgstr "Открытый вопрос, на который получен ответ."
+
+#: open_question/open_question.module:238
+msgid ""
+"Please, answer the question, and other participants of the course will "
+"review your answer."
+msgstr "Ответьте на вопрос и ваши одноклассники по курсу оценят его."
+
+#: open_question/open_question.module:279
+msgid "Reviews with comments"
+msgstr "Оценок с обоснованием:"
+
+#: open_question/open_question.module:286
+msgid "Your average score: !average"
+msgstr "Ваш средний балл: !average"
+
+#: open_question/open_question.module:287
+msgid "(out of !count)"
+msgstr "(из !count)"
+
+#: open_question/open_question.module:487;513
+msgid "Review"
+msgstr "Обоснование"
+
+#: open_question/open_question.module:524;607
+msgid "Add review"
+msgstr "Добавить обоснование"
+
+#: open_question/open_question.module:535
+msgid "Skip review"
+msgstr "Не добавлять"
+
+#: open_question/open_question.module:594
+msgid "Review field is required."
+msgstr "Поле обоснования обязательно для заполнения."
+
+#: open_question/open_question.module:598
+msgid "Please, provide text along with your mark."
+msgstr "Пожалуйста предоставьте обоснование в месте с оценкой."
+
+#: open_question/open_question.module:607
+msgid "Don't add"
+msgstr "Не добавлять"
+
+#: open_question/open_question.module:707
+msgid "Feedback formatter"
+msgstr ""
+
+#: open_question/open_question.module:64;545
+msgid "open question"
+msgstr "открытый вопрос"
+
+#: open_question/open_question.module:64
+msgid "Open question block %delta is displayed on non question page: %path"
+msgstr ""
+
+#: open_question/open_question.module:545
+msgid "Step %step is not defined for open question feedback form."
+msgstr "Шаг %step не определен для формы оценки открытого вопроса."
+
+#: open_question/open_question.info:0
+msgid "Module allows to add open ended questions to a course"
+msgstr "Модуль позволяет добавлять открытые вопросы к курсу"
+
+#: registration/registration.admin.inc:184
+msgid "Registration Name"
+msgstr "Имя"
+
+#: registration/registration.admin.inc:194
+msgid "An interesting registration switch"
+msgstr ""
+
+#: registration/registration.admin.inc:218
+msgid "Save registration"
+msgstr "Сохранить регистрацию"
+
+#: registration/registration.admin.inc:225
+msgid "Delete registration"
+msgstr "Удалить регистрацию"
+
+#: registration/registration.admin.inc:298
+msgid "Are you sure you want to delete registration %name?"
+msgstr ""
+
+#: registration/registration.admin.inc:300
+msgid "This action cannot be undone."
+msgstr "Это действие нельзя отменить."
+
+#: registration/registration.admin.inc:301
+msgid "Delete"
+msgstr "Удалить"
+
+#: registration/registration.admin.inc:317
+msgid "The registration %name has been deleted."
+msgstr "Регистрация %name была удалена."
+
+#: registration/registration.admin.inc:341
+msgid "Home"
+msgstr "Главная"
+
+#: registration/registration.admin.inc:342
+msgid "Administration"
+msgstr "Управление"
+
+#: registration/registration.admin.inc:343
+msgid "Content"
+msgstr "Содержимое"
+
+#: registration/registration.admin.inc:344
+msgid "Registrations"
+msgstr "Регистрации"
+
+#: registration/registration.admin.inc:318
+msgid "registration"
+msgstr "регистрация"
+
+#: registration/registration.admin.inc:318
+msgid "Deleted registration %name."
+msgstr "Удалить регистрацию %name."
+
+#: registration/registration.context.inc:43
+msgid "User tries to open course item without registration"
+msgstr "Пользователь пытается открыть элемент курса без регистрации"
+
+#: registration/registration.context.inc:44
+msgid "access"
+msgstr "доступ"
+
+#: registration/registration.module:16 registration/registration.info:0
+msgid "Registration"
+msgstr "Регистрация"
+
+#: registration/registration.module:62
+msgid "Administer registrations"
+msgstr "Администрирование регистраций"
+
+#: registration/registration.module:63
+msgid "Edit and delete all registrations"
+msgstr "Изменить и удалить все регистрации"
+
+#: registration/registration.module:231
+msgid "Course registration"
+msgstr "Регистрация на курс"
+
+#: registration/registration.module:264
+msgid "Course Access"
+msgstr "Доступ к курсу"
+
+#: registration/registration.module:265
+msgid "Determins whether user has access to a course item."
+msgstr "Определяет наличие доступа у пользователя к элементу курса."
+
+#: registration/registration.module:275;312
+msgid "Go to class"
+msgstr "Перейти в класс"
+
+#: registration/registration.module:320
+msgid "Enroll"
+msgstr "Зарегистрироваться"
+
+#: registration/registration.module:439
+msgid "Date created"
+msgstr "Дата создания"
+
+#: registration/registration.module:441
+msgid "The date of registration."
+msgstr "Дата регистрации"
+
+#: registration/registration.module:445
+msgid "Date cancelled"
+msgstr "Дата отмены регистрации"
+
+#: registration/registration.module:448
+msgid "The date the node was most recently updated."
+msgstr "Дата создания материала была изменена."
+
+#: registration/registration.module:451
+msgid "Student"
+msgstr "Студент"
+
+#: registration/registration.module:453
+msgid "User registered to course."
+msgstr "Пользователь зарегистрированный на курс"
+
+#: registration/registration.module:294
+msgid "Callback"
+msgstr ""
+
+#: registration/registration.module:294
+msgid "Registration button is visible in a wrong place."
+msgstr "Кнопка регистрации не отображается на данной странице."
+
+#: registration/registration.info:0
+msgid "Contains course registration functionality."
+msgstr "Содержит функционал для регистрации на курс."
+
+#: registration/views/registration.views.inc:10
+msgid "User"
+msgstr "Пользователь"
+
+#: registration/views/registration.views.inc:11
+msgid "Registered user"
+msgstr "Зарегистрированный пользователь"
+
+#: registration/views/registration.views.inc:17
+msgid "user"
+msgstr "user"
+
+#: registration/views/registration.views.inc:23
+msgid "Node to which user registered"
+msgstr "Материал, на который регистрируется пользователь"
+
+#: registration/views/registration.views.inc:29
+msgid "node"
+msgstr "материал"

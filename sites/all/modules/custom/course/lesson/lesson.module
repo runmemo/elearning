@@ -163,7 +163,7 @@ function student_notes($form, &$form_state) {
                 '#ajax' => array(
                     'callback' => 'student_notes_submit_js',
                     'wrapper' => 'student-notes-form-wrapper',
-                    'progress' => array('message' => t('')),
+                    'progress' => array('message' => ''),
                 ),
             );
             if (!empty($form_state['note_value'])) {
@@ -187,7 +187,7 @@ function student_notes($form, &$form_state) {
                 '#ajax' => array(
                     'callback' => 'student_notes_submit_js',
                     'wrapper' => 'student-notes-form-wrapper',
-                    'progress' => array('message' => t('')),
+                    'progress' => array('message' => ''),
                 ),
             );
             $form['view']['note'] = array(

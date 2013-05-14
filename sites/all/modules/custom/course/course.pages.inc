@@ -48,7 +48,7 @@ function template_preprocess_course_header(&$vars) {
       l(t('Forum'), 'forum', array('attributes' => array('class' => array('open-question-forum-link')))),
     );
     $variables = array(
-      'title' => t(''),
+      'title' => '',
       'items' => $items,
       'type' => 'ul',
       'attributes' => array('class' => array('open-question-links')),

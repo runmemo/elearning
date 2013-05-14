@@ -1,0 +1,42 @@
+# $Id$
+#
+# Russian translation of Drupal (general)
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+# Generated from files:
+#  credit.features.field_instance.inc: n/a
+#  credit.module: n/a
+#  credit.info: n/a
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2013-05-14 06:10-0500\n"
+"PO-Revision-Date: 2013-05-14 12:12-0000\n"
+"Last-Translator: bulat <byapparov@gmail.com>\n"
+"Language-Team: Russian <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=((((n%10)==1)&&((n%100)!=11))?(0):(((((n%10)"
+">=2)&&((n%10)<=4))&&(((n%100)<10)||((n%100)>=20)))?(1):2));\n"
+"X-Generator: Poedit 1.5.5\n"
+
+#: credit.features.field_instance.inc:59
+msgid "Pass Credit"
+msgstr "Проходной балл"
+
+#: credit.module:78
+msgid "This is not a course, certificate is not available."
+msgstr "Это не курс, сертификат недоступен."
+
+#: credit.info:0
+msgid "Credit"
+msgstr "Баллы"
+
+#: credit.info:0
+msgid "Provides credit functionality for a course."
+msgstr "Предоставляет функционал для баллов в курсе."
+
+#: credit.info:0
+msgid "Course"
+msgstr "Курс"

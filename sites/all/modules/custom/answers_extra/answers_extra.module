@@ -40,7 +40,7 @@ function answers_extra_views_api() {
  */
 function answers_extra_block_info() {
   $block['question_answers'] = array(
-    'info' => t('Answers for Lesson Questions'),
+    'info' => t('List of Question Answers'),
     'cache' => DRUPAL_CACHE_PER_PAGE,
   );
   return $block;
@@ -145,7 +145,7 @@ function quick_answer_submit($form, &$form_state) {
    global $user;
   //validations
   if (!$form_state['values']['answer']['value']) {
-    $message = t('Text field is required');
+    $message = t('Answer cannot be empty.'); // @todo add js to disable button if field is empty.
     $commands[] = ajax_command_replace('#message-placeholder', _get_completion_text($message));
     return array('#type' => 'ajax', '#commands' => $commands);
   }
