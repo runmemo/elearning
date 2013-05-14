@@ -22,7 +22,7 @@ function lesson_quicktabs_default_quicktabs() {
     $quicktabs->tabs[0] = array(
         'bid' => 'relevant_answers_extra_delta_relevant_questions_list',
         'hide_title' => 1,
-        'title' => 'Questions',
+        'title' => t('Questions'),
         'weight' => '0',
         'type' => 'block',
     );
@@ -30,7 +30,7 @@ function lesson_quicktabs_default_quicktabs() {
   $quicktabs->tabs[1]  = array(
       'bid' => 'lesson_delta_lesson_lecturer_notes',
       'hide_title' => 1,
-      'title' => 'Notes',
+      'title' => t('Lesson notes'),
       'weight' => '1',
       'type' => 'block',
   );
@@ -38,7 +38,7 @@ function lesson_quicktabs_default_quicktabs() {
   $quicktabs->tabs[2] = array(
     'bid' => 'lesson_delta_lesson_student_notes',
     'hide_title' => 1,
-    'title' => 'Student Notes',
+    'title' => t('My notes'),
     'weight' => '2',
     'type' => 'block',
   );
