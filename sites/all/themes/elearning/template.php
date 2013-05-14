@@ -88,7 +88,7 @@ function elearning_preprocess_book_navigation(&$vars) {
 }
 
 /**
- * Implements hook_css_alter() 
+ * Implements hook_css_alter().
  */
 function elearning_css_alter(&$css) {
   // Get current themes path.
@@ -104,7 +104,7 @@ function elearning_css_alter(&$css) {
 }
 
 /**
- * Implementation of hook_fivestar_widgets().
+ * Implements of hook_fivestar_widgets().
  */
 function elearning_fivestar_widgets() {
   // Letting fivestar know about our custom Stars widget.

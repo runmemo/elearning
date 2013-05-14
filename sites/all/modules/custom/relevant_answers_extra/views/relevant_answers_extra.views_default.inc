@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * relevant_answers_extra.views_default.inc
@@ -104,7 +105,7 @@ function relevant_answers_extra_views_default_views() {
   $handler->display->display_options['arguments']['field_question_path_value']['field'] = 'field_question_path_value';
   $handler->display->display_options['arguments']['field_question_path_value']['default_action'] = 'default';
   $handler->display->display_options['arguments']['field_question_path_value']['default_argument_type'] = 'php';
-  $handler->display->display_options['arguments']['field_question_path_value']['default_argument_options']['code'] =   'return relevant_answers_get_path();';
+  $handler->display->display_options['arguments']['field_question_path_value']['default_argument_options']['code'] = 'return relevant_answers_get_path();';
   $handler->display->display_options['arguments']['field_question_path_value']['summary']['number_of_records'] = '0';
   $handler->display->display_options['arguments']['field_question_path_value']['summary']['format'] = 'default_summary';
   $handler->display->display_options['arguments']['field_question_path_value']['summary_options']['items_per_page'] = '25';
@@ -124,10 +125,10 @@ function relevant_answers_extra_views_default_views() {
     'question' => 'question',
   );
 
-  /* Display: Block */ 
+  /* Display: Block */
   $handler = $view->new_display('block', 'Block', 'block');
   $handler->display->display_options['defaults']['title'] = FALSE;
-  $handler->display->display_options['title'] = 'Popular Questions';
+  $handler->display->display_options['title'] = 'Relevant Questions';
   $handler->display->display_options['defaults']['use_ajax'] = FALSE;
   $handler->display->display_options['use_ajax'] = TRUE;
   $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
@@ -143,6 +144,8 @@ function relevant_answers_extra_views_default_views() {
   $handler->display->display_options['defaults']['style_options'] = FALSE;
   $handler->display->display_options['defaults']['row_plugin'] = FALSE;
   $handler->display->display_options['row_plugin'] = 'fields';
+ // @todo check if needed.
+  $handler->display->display_options['row_options']['default_field_elements'] = FALSE;
   $handler->display->display_options['defaults']['row_options'] = FALSE;
   $handler->display->display_options['defaults']['header'] = FALSE;
   $handler->display->display_options['defaults']['fields'] = FALSE;
@@ -151,12 +154,8 @@ function relevant_answers_extra_views_default_views() {
   $handler->display->display_options['fields']['field_answer_count']['table'] = 'field_data_field_answer_count';
   $handler->display->display_options['fields']['field_answer_count']['field'] = 'field_answer_count';
   $handler->display->display_options['fields']['field_answer_count']['label'] = '';
-  $handler->display->display_options['fields']['field_answer_count']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['field_answer_count']['alter']['alter_text'] = TRUE;
-  $handler->display->display_options['fields']['field_answer_count']['alter']['text'] = '[field_answer_count] <div class="title">' . t('Answers') . '</div>';
   $handler->display->display_options['fields']['field_answer_count']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['field_answer_count']['empty'] = '<div class="zero">0<div class="title">'. t('Answers') . '</div></div>';
-  $handler->display->display_options['fields']['field_answer_count']['empty_zero'] = TRUE;
+  $handler->display->display_options['fields']['field_answer_count']['element_default_classes'] = FALSE;
   $handler->display->display_options['fields']['field_answer_count']['type'] = 'nodereference_count_default';
   /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
@@ -190,13 +189,7 @@ function relevant_answers_extra_views_default_views() {
   $handler->display->display_options['fields']['created']['field'] = 'created';
   $handler->display->display_options['fields']['created']['label'] = '';
   $handler->display->display_options['fields']['created']['alter']['alter_text'] = TRUE;
-  $handler->display->display_options['fields']['created']['alter']['text'] = '<div class="left">
-    <div class="answer-count">
-      [field_answer_count]
-    </div>
-  </div>
-
-  <div class="center">
+  $handler->display->display_options['fields']['created']['alter']['text'] = '<div class="center">
     <div class="title">
       [title]
     </div>
@@ -226,8 +219,32 @@ function relevant_answers_extra_views_default_views() {
   $handler->display->display_options['sorts']['totalcount']['table'] = 'node_counter';
   $handler->display->display_options['sorts']['totalcount']['field'] = 'totalcount';
   $handler->display->display_options['sorts']['totalcount']['order'] = 'DESC';
-  $handler->display->display_options['block_description'] = 'Popular Relevant Questions';
+  $handler->display->display_options['block_description'] = 'Relevant contains relevant questions for current page.';
+  $translatables['relevant_questions_list'] = array(
+    t('Master'),
+    t('More'),
+    t('Apply'),
+    t('Reset'),
+    t('Sort by'),
+    t('Asc'),
+    t('Desc'),
+    t('Items per page'),
+    t('- All -'),
+    t('Offset'),
+    t('« first'),
+    t('‹ previous'),
+    t('next ›'),
+    t('last »'),
+    t('<em>No questions yet ... </em>'),
+    t('author'),
+    t('Post date'),
+    t('All'),
+    t('Block'),
+    t('Relevant Questions'),
+    t('more'),
+    t('Relevant contains relevant questions for current page.'),
+  );
   $export[$view->name] = $view;
-
+  
   return $export;
 }
