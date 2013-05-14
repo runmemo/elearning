@@ -1,8 +1,7 @@
 <?php
-
 /**
  * @file
- * Default print module template
+ * Course certificate print module template
  *
  * @ingroup print
  */
@@ -18,22 +17,59 @@
     <?php print $print['robots_meta']; ?>
     <?php print $print['favicon']; ?>
     <?php print $print['css']; ?>
+    <style type="text/css" media="all">
+      @import url("<?php print $base_url ?>/sites/all/themes/elearning/css/print.css");
+    </style>
   </head>
   <body>
-     <?php if (!empty($print['message'])) {
-     // print '<div class="print-message">'. $print['message'] .'</div><p />';
-    } ?>
-    <div class="print-logo"><?php print $print['logo']; ?></div>
-    <div class="print-site_name"><?php print $print['site_name']; ?></div>
-    <div class="brand-name">CourseHub</div>
-    <p />
-    <div class="print-breadcrumb"><?php print $print['breadcrumb']; ?></div>
-    <hr class="print-hr" />
-    <div class="print-content"><?php print $print['content']; ?></div>
-    <div class="print-footer"><?php print $print['footer_message']; ?></div>
-    <hr class="print-hr" />
-    <div class="print-source_url"><?php // print $print['source_url']; ?></div>
-    <div class="print-links"><?php print $print['pfp_links']; ?></div>
-    <?php print $print['footer_scripts']; ?>
+    <div class="node-certificate-wrapper">
+      <div class="node-certificate-title">
+        <?php print t('Coursehub'); ?>
+        <span class="node-certificate-registered"><?php print '&reg;'; ?></span>
+      </div>
+      <?php if (isset($student['name'])) : ?>
+        <div class="node-certificate-body">
+          <div class="node-certificate-desc">
+            <div class="desc-text"><?php print t('This certificate confirms that'); ?></div>
+          </div>
+          <div class="node-certificate-course-info">
+            <div class="inner-text"><?php if (isset($student['name'])) print $student['name']; ?></div>
+          </div>
+          <div class="node-certificate-desc">
+            <div class="desc-text"><?php print t('successfully attended a course'); ?></div>
+          </div>
+          <?php if (isset($course['title'])) : ?>
+            <div class="node-certificate-course-info">
+              <div class="inner-text"><?php print $course['title']; ?></div>
+            </div>
+          <?php endif; ?>
+          <div class="node-certificate-desc">
+            <div class="desc-text"><?php print t('with result'); ?></div>
+          </div>
+          <?php if (isset($course['grade_score'])) : ?>
+            <div class="node-certificate-course-info certificate-grade">
+              <div class="grade-name"><?php print $course['grade_score'] . ' ' . t('(out of !count)', array('!count' => 100)); ?></div>
+              <div class="grade-score"><?php print $course['grade_name']; ?></div>
+            </div>
+          <?php endif; ?>
+        </div>
+      <?php endif; ?>
+      <ul class="node-certificate-bottom">
+        <li class="node-certificate-provider-logo">
+          <?php if (isset($course['provider_logo'])) print $course['provider_logo']; ?>
+        </li>
+        <li class="node-certificate-signature-wrapper">
+          <ul class="node-certificate-signature">
+            <li class="node-certificate-teacher-name">
+              <?php if (isset($course['teacher_name'])) print $course['teacher_name']; ?>
+              <?php if (isset($course['teacher_surname'])) print $course['teacher_surname']; ?>
+            </li>
+            <li class="node-certificate-teacher-signature">
+              <?php if (isset($course['teacher_signature'])) print $course['teacher_signature']; ?>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
   </body>
 </html>
