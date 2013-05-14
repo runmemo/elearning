@@ -77,7 +77,8 @@ function user_extra_form_alter(&$form, &$form_state, $form_id) {
  * Implements hook_preprocess_link().
  */
 function user_extra_preprocess_link(&$variables) {
-  if ($variables['text'] == t('Login') || $variables['text'] == t('Forgotten your password?') || $variables['text'] == t('Create new account')) {
+  $paths = array('user/login/nojs', 'user/register/nojs', 'user/password/nojs');
+  if (in_array($variables['path'], $paths)) {
     $variables['options']['attributes']['class'][] = 'ctools-modal-common-modal-style';
     if ($variables['text'] == t('Login')) {
       $class = 'ctools-modal-login-form';
