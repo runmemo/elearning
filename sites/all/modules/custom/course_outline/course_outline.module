@@ -101,7 +101,8 @@ function course_outline_block_view($delta = '') {
         if ($certificate['user_credit'] > $certificate['pass_credit']) {
           $certificate['class'] = 'certificate-enabled';
           $link_text = t('Download certificate');
-          $certificate['link'] = l($link_text, 'node/' . $course_node->nid . '/certificate');
+          $certificate_nid = isset($course_node->certificate['node_settings']['manual']['manual']) ? $course_node->certificate['node_settings']['manual']['manual'] : 0;
+          $certificate['link'] = l($link_text, 'printpdf/' . $certificate_nid, array('query' => array('course' => $course_node->nid)));
         }
         else {
           $text = t('Certificate unavailable');
