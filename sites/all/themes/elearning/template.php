@@ -18,10 +18,11 @@
  * @return string HTML for the picture.
  */
 function elearning_get_user_picture($user, $style_name, $type) {
-  $user_picture = '<div class="' . $type. '-default-picture"></div>';  
+  $user_picture = '<div class="' . $type . '-default-picture"></div>';
   if (!is_object($user)) {
     $user = user_load($user);
-  } else {
+  }
+  else {
     $user_picture_test = theme('user_picture', array('account' => $user));
     return $user_picture_test == '' ? $user_picture : $user_picture_test;
   }
@@ -72,7 +73,6 @@ function elearning_preprocess_user_profile(&$variables) {
   $variables['userpoints_count'] = userpoints_get_current_points($account->uid, 'all');
   $view = views_get_view('user_courses');
   $variables['user_courses_view'] = $view->preview('block', array($account->uid));
-  
 }
 
 /**
@@ -84,7 +84,7 @@ function elearning_preprocess_book_navigation(&$vars) {
   if (in_array($node->type, array('lesson', 'open_question'))) {
     $vars['prev_title'] = t('Previous');
     $vars['next_title'] = t('Next');
-  } 
+  }
 }
 
 /**
@@ -112,4 +112,58 @@ function elearning_fivestar_widgets() {
     drupal_get_path('theme', 'elearning') . '/widgets/elearning_fivestar/elearning_fivestar_widget.css' => 'Elearning Stars',
   );
   return $widgets;
+}
+
+function elearning_preprocess_certificate_certificate(&$variables) {
+  
+  $node = $variables['node'];
+  $node_wrapper = entity_metadata_wrapper('node', $node);
+  $user = $variables['account'];
+  $template = $variables['template']; 
+  
+  $variables['student']['name'] = format_username($user);
+  $variables['course']['title'] = $node_wrapper->title->raw();
+  $credits = credit_calculate($node, $user);
+
+  
+  $grade_name = '';
+  
+  foreach ($node_wrapper->field_grades as $key => $grade) {
+  // @todo Ilya: refactor foreach block in 1-3 lines of code
+  // make similar code from other place reusable.
+    $next = $key + 1;
+    $grade_score_current = $node_wrapper->field_grades[$key]->field_grade_score->raw();
+    $grade_score_next = isset($node_wrapper->field_grades[$next]) ? $node_wrapper->field_grades[$next]->field_grade_score->raw() : 0;
+    if ($grade_score_next != 0) {
+      if ($credits >= $grade_score_current && $credits < $grade_score_next) {
+        $grade_name = $grade->field_grade_name->raw();
+      }
+    }
+    else {
+      if ($credits >= $grade_score_current) {
+        $grade_name = $grade->field_grade_name->raw();
+      }
+    }
+  }
+  $variables['course']['grade_name'] = $grade_name;
+  $variables['course']['grade_score'] = $credits;
+  $variables['course']['teacher_name'] = $node_wrapper->field_teacher->field_name->raw();
+  $variables['course']['teacher_surname'] = $node_wrapper->field_teacher->field_surname->raw();
+  
+  // Get logo of course provider.
+  // @todo Ilya: make sure it works if field is empty
+  $logo_file = $node_wrapper->field_provider->field_logo->file->value();
+  $logo_image = theme_image_style(array('style_name' => 'provider_logo', 'path' => $logo_file->uri, 'width' => $logo_file->image_dimensions['width'], 'height' => $logo_file->image_dimensions['height']));
+  $variables['course']['provider_logo'] = render($logo_image);
+ 
+  // Get signature from certificate's template.
+  // @todo add signature field to the certificate.
+  $template_wrapper = entity_metadata_wrapper('node', $template);
+  if(isset($template_wrapper->field_signature)) {
+    $signature_file = $template_wrapper->field_signature->value();
+    $field_signature = !empty($signature_file) ? theme_image_style(array('style_name' => 'certificate_signature', 'path' => $signature_file->uri, 'width' => $signature_file->image_dimensions['width'], 'height' => $signature_file->image_dimensions['height'])) : '';
+    $variables['course']['teacher_signature'] = !empty($field_signature) ? render($field_signature) : '';
+  }
+  global $base_url;
+  $variables['base_url'] = $base_url;
 }

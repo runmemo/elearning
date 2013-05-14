@@ -48,11 +48,3 @@ function elearning_alpha_preprocess_node_open_question(&$vars) {
   drupal_add_css(drupal_get_path('theme', 'elearning') . '/widgets/elearning_fivestar/elearning_fivestar_widget.css');
 }
 
-
-function elearning_alpha_preprocess_node_certificate(&$vars) {
-  if (($vars['elements']['#view_mode'] == 'print') 
-      && isset($vars['elements']['#print_format'])) {
-     // $vars['node_title_custom'] = $vars['node']->title;
-  }
-}
-

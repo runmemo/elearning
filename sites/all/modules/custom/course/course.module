@@ -237,89 +237,9 @@ function course_node_view($node, $view_mode) {
  * Prepares variables for print--node--certificate.tpl.php
  */
 function course_preprocess_print(&$variables) {
-  $node = $variables['node'];
-  if ($node->type == 'certificate') {
-    global $user;
-    $course_nid = isset($_GET['course']) ? $_GET['course'] : 0;
-    if ($user->uid > 0 && (is_numeric($course_nid) && $course_nid > 0)) {
-      $user = user_load($user->uid);
-      $course_info = course_get_certificate_course($node->nid, $course_nid);
-      if ($course_info) {
-        $course_node = node_load($course_info->nid);
-        $access = module_invoke_all('access_certificate', $course_node, $user);
-        if (isset($access[0]) && $access[0] === TRUE) {
-          $name = '';
-          common_tools_username_alter($name, $user);
-          $variables['student']['name'] = $name;
-          $variables['course']['title'] = isset($course_info->title) ? $course_info->title : '';
-          $credits = credit_calculate($course_node, $user);
-          $node_wrapper = entity_metadata_wrapper('node', $course_node);
-          $grade_name = '';
-          foreach ($node_wrapper->field_grades as $key => $grade) {
-            $next = $key + 1;
-            $grade_score_current = $node_wrapper->field_grades[$key]->field_grade_score->raw();
-            $grade_score_next = isset($node_wrapper->field_grades[$next]) ? $node_wrapper->field_grades[$next]->field_grade_score->raw() : 0;
-            if ($grade_score_next != 0) {
-              if ($credits >= $grade_score_current && $credits < $grade_score_next) {
-                $grade_name = $grade->field_grade_name->raw();
-              }
-            } else {
-              if ($credits >= $grade_score_current) {
-                $grade_name = $grade->field_grade_name->raw();
-              }
-            }
-          }
-          $variables['course']['grade_name'] = $grade_name;
-          $variables['course']['grade_score'] = $credits;
-          $variables['course']['teacher_name'] = isset($course_info->field_name_value) ? $course_info->field_name_value : '';
-          $variables['course']['teacher_surname'] = isset($course_info->field_surname_value) ? $course_info->field_surname_value : '';
-          if (isset($course_info->field_logo_fid)) {
-            $logo_file = file_load($course_info->field_logo_fid);
-            $logo_image = theme_image_style(array('style_name' => 'provider_logo', 'path' => $logo_file->uri, 'width' => $logo_file->image_dimensions['width'], 'height' => $logo_file->image_dimensions['height']));
-            $variables['course']['provider_logo'] = render($logo_image);
-          } else {
-            $variables['course']['provider_logo'] = '';
-          }
-          $signature_file = (isset($node->field_signature) && !empty($node->field_signature)) ? file_load($node->field_signature[$node->language][0]['fid']) : '';
-          $field_signature = !empty($signature_file) ? theme_image_style(array('style_name' => 'certificate_signature', 'path' => $signature_file->uri, 'width' => $signature_file->image_dimensions['width'], 'height' => $signature_file->image_dimensions['height'])) : '';
-          $variables['course']['teacher_signature'] = !empty($field_signature) ? render($field_signature) : '';
-          global $base_url;
-          $variables['base_url'] = $base_url;
-        }
-      }
-    } else {
-      $variables['access'] = FALSE;
-    }
-  }
+  
 }
 
-/**
- * Collects basic info about course.
- * @param integer $certificate_id node ID of the template
- * @param integer $course_id node ID of the course
- * @return array array with course info
- */
-function course_get_certificate_course($certificate_id, $course_id) {
-  $query = db_select('certificate_node', 'cn');
-  $query->join('node', 'n', 'cn.nid = n.nid');
-  $query->join('field_data_field_teacher', 'teacher', 'cn.nid = teacher.entity_id');
-  $query->join('field_data_field_provider', 'provider', 'cn.nid = provider.entity_id');
-  $query->join('field_data_field_name', 'teacher_name', 'teacher.field_teacher_uid = teacher_name.entity_id');
-  $query->join('field_data_field_surname', 'teacher_surname', 'teacher.field_teacher_uid = teacher_surname.entity_id');
-  $query->join('field_data_field_logo', 'provider_logo', 'provider.field_provider_target_id = provider_logo.entity_id');
-  $query->fields('n', array('nid', 'title'));
-  $query->fields('teacher_name', array('field_name_value'));
-  $query->fields('teacher_surname', array('field_surname_value'));
-  $query->fields('provider_logo', array('field_logo_fid'));
-  $query->condition('cn.template', $certificate_id);
-  $query->condition('cn.nid', $course_id);
-  $result = $query->execute()->fetchObject();
-  if (!$result) {
-    return FALSE;
-  } else {
-    return $result;
-  }
-}
 
 /**
  * Gets corresponding book for a node.
