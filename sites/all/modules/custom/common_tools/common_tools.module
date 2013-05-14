@@ -9,11 +9,6 @@
  */
 
 function common_tools_init() {
-  //@todo barinder : Only load this files were needed
-  // Include the CTools modal js before loading custom js, required to override default ctools js
-  ctools_include('modal');
-  // Add CTools' javascript to the page.
-  ctools_modal_add_js();
   //Add common ctools modal style
   common_modal_style();
 }
