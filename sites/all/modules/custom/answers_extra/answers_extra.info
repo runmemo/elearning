@@ -9,6 +9,8 @@ dependencies[] = features
 dependencies[] = context
 dependencies[] = rules
 dependencies[] = mail_edit_features
+dependencies[] = userpoints_rules
+dependencies[] = voting_rules
 
 features[ckeditor_profile][] = Advanced
 features[ckeditor_profile][] = CKEditor Global Profile
@@ -26,3 +28,7 @@ features[user_permission][] = use vote up/down
 features[filter][] = full_html
 features[filter][] = plain_text
 features_exclude[dependencies][ckeditor] = ckeditor
+features[rules_config][] = rules_answer_voting_points
+features[rules_config][] = rules_answer_voting_points_revert
+features[rules_config][] = rules_question_voting_points
+features[rules_config][] = rules_question_voting_points_revert
