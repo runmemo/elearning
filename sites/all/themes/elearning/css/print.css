@@ -1,0 +1,81 @@
+/* CSS for Course Certificate PDF page */
+
+.node-certificate-wrapper {
+  width: 95%;
+  margin: 0 auto;
+}
+
+.node-certificate-title {
+  font: bold 60pt myriadpro;
+  color: #d0471b;
+  margin: 85px 0px 120px 0px;
+  text-align: center;
+}
+
+.node-certificate-registered {
+  font: normal 40pt myriadpro;
+  vertical-align: text-top;
+  margin-left: -25px;
+}
+
+.node-certificate-body {
+  text-align: center;
+  font: bold 12px Helvetica;
+  margin-bottom: 148px;
+}
+
+.node-certificate-desc {
+  border-bottom: 1px solid #cacaca;
+  line-height: 0px;
+}
+
+.node-certificate-desc .desc-text {
+  background-color: #fff;
+  display: inline;
+  padding: 0px 5px;
+}
+
+.node-certificate-course-info {
+  color: #d0471b;
+  font-size: 24px;
+}
+
+.node-certificate-course-info .inner-text {
+  padding: 52px;
+}
+
+.node-certificate-course-info.certificate-grade .grade-name {
+  padding: 52px 0px 32px 0px;
+}
+
+.node-certificate-bottom {
+  list-style: none;
+}
+
+.node-certificate-bottom li {
+  display: inline;
+}
+
+.node-certificate-signature {
+  list-style: none;
+  display: inline;
+}
+
+.node-certificate-signature-wrapper {
+  position: relative;
+  bottom: 28px;
+  margin-left: 26px;
+}
+
+.node-certificate-teacher-name {
+  font: bold 13px Helvetica;
+  padding-right: 20px;
+  border-bottom: solid 1px #cacaca;
+}
+
+.node-certificate-teacher-signature img {
+  vertical-align: baseline;
+  border-bottom: solid 1px #cacaca;
+  width: 100px;
+  height: 42px;
+}

@@ -108,4 +108,9 @@
     'italic' => DOMPDF_FONT_DIR . 'DejaVuSerifCondensed-Italic',
     'normal' => DOMPDF_FONT_DIR . 'DejaVuSerifCondensed',
   ),
+  'myriadpro' => 
+  array (
+    'bold' => DOMPDF_FONT_DIR . 'MyriadPro-Bold',
+    'normal' => DOMPDF_FONT_DIR . 'MyriadPro-Regular',
+  ),
 ) ?>
