@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Certificate Extra feature.
+ */
+
+include_once 'certificate_extra.features.inc';

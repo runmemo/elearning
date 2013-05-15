@@ -104,7 +104,7 @@ function elearning_css_alter(&$css) {
 }
 
 /**
- * Implements of hook_fivestar_widgets().
+ * Implements hook_fivestar_widgets().
  */
 function elearning_fivestar_widgets() {
   // Letting fivestar know about our custom Stars widget.
@@ -114,56 +114,39 @@ function elearning_fivestar_widgets() {
   return $widgets;
 }
 
+/**
+ * Prepares variables for certificate-certificate.tpl.php
+ */
 function elearning_preprocess_certificate_certificate(&$variables) {
-  
+  global $base_url, $language;
+  // Get basic information.
+  $variables['language'] = $language->language;
+  $variables['head'] = drupal_get_html_head();
+  $variables['base_url'] = $base_url;
   $node = $variables['node'];
   $node_wrapper = entity_metadata_wrapper('node', $node);
   $user = $variables['account'];
-  $template = $variables['template']; 
-  
-  $variables['student']['name'] = format_username($user);
+  $template = $variables['template'];
+  $variables['url'] = $base_url . '/node/' . $node->nid . '/certificate';
+  $variables['student_name'] = format_username($user);
+  // Get course information.
   $variables['course']['title'] = $node_wrapper->title->raw();
   $credits = credit_calculate($node, $user);
-
-  
-  $grade_name = '';
-  
-  foreach ($node_wrapper->field_grades as $key => $grade) {
-  // @todo Ilya: refactor foreach block in 1-3 lines of code
-  // make similar code from other place reusable.
-    $next = $key + 1;
-    $grade_score_current = $node_wrapper->field_grades[$key]->field_grade_score->raw();
-    $grade_score_next = isset($node_wrapper->field_grades[$next]) ? $node_wrapper->field_grades[$next]->field_grade_score->raw() : 0;
-    if ($grade_score_next != 0) {
-      if ($credits >= $grade_score_current && $credits < $grade_score_next) {
-        $grade_name = $grade->field_grade_name->raw();
-      }
-    }
-    else {
-      if ($credits >= $grade_score_current) {
-        $grade_name = $grade->field_grade_name->raw();
-      }
-    }
-  }
-  $variables['course']['grade_name'] = $grade_name;
+  $variables['course']['grade_name'] = course_outline_process_grades($node, 'certificate', $credits);
   $variables['course']['grade_score'] = $credits;
   $variables['course']['teacher_name'] = $node_wrapper->field_teacher->field_name->raw();
   $variables['course']['teacher_surname'] = $node_wrapper->field_teacher->field_surname->raw();
-  
+
   // Get logo of course provider.
-  // @todo Ilya: make sure it works if field is empty
-  $logo_file = $node_wrapper->field_provider->field_logo->file->value();
-  $logo_image = theme_image_style(array('style_name' => 'provider_logo', 'path' => $logo_file->uri, 'width' => $logo_file->image_dimensions['width'], 'height' => $logo_file->image_dimensions['height']));
-  $variables['course']['provider_logo'] = render($logo_image);
- 
+  $logo_file = $node_wrapper->field_provider->field_logo->value() ? $node_wrapper->field_provider->field_logo->file->value() : '';
+  $logo_image = !empty($logo_file) ? theme_image_style(array('style_name' => 'provider_logo', 'path' => $logo_file->uri, 'width' => $logo_file->image_dimensions['width'], 'height' => $logo_file->image_dimensions['height'])) : '';
+  $variables['course']['provider_logo'] = !empty($logo_image) ? render($logo_image) : '';
+
   // Get signature from certificate's template.
-  // @todo add signature field to the certificate.
   $template_wrapper = entity_metadata_wrapper('node', $template);
-  if(isset($template_wrapper->field_signature)) {
+  if (isset($template_wrapper->field_signature)) {
     $signature_file = $template_wrapper->field_signature->value();
-    $field_signature = !empty($signature_file) ? theme_image_style(array('style_name' => 'certificate_signature', 'path' => $signature_file->uri, 'width' => $signature_file->image_dimensions['width'], 'height' => $signature_file->image_dimensions['height'])) : '';
+    $field_signature = !empty($signature_file) ? theme_image_style(array('style_name' => 'certificate_signature', 'path' => $signature_file['uri'], 'width' => $signature_file['image_dimensions']['width'], 'height' => $signature_file['image_dimensions']['height'])) : '';
     $variables['course']['teacher_signature'] = !empty($field_signature) ? render($field_signature) : '';
   }
-  global $base_url;
-  $variables['base_url'] = $base_url;
 }
