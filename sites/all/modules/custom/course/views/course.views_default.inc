@@ -95,11 +95,11 @@ function course_views_default_views() {
   $handler->display->display_options['style_options']['row_class_special'] = FALSE;
   $handler->display->display_options['style_options']['fill_single_line'] = FALSE;
   $handler->display->display_options['row_plugin'] = 'fields';
-  /* Header: Global: Result summary */
-  $handler->display->display_options['header']['result']['id'] = 'result';
-  $handler->display->display_options['header']['result']['table'] = 'views';
-  $handler->display->display_options['header']['result']['field'] = 'result';
-  $handler->display->display_options['header']['result']['content'] = '<div class="header-left">Students</div><div class="header-right">@total</div>';
+  /* Header: Global: PHP */
+  $handler->display->display_options['header']['php']['id'] = 'php';
+  $handler->display->display_options['header']['php']['table'] = 'views';
+  $handler->display->display_options['header']['php']['field'] = 'php';
+  $handler->display->display_options['header']['php']['php_output'] = '<div class="header-left"><?php print t(\'Students\');?></div><div class="header-right"><?php print count($results) ?></div>';
   /* Relationship: Registration: Node */
   $handler->display->display_options['relationships']['nid']['id'] = 'nid';
   $handler->display->display_options['relationships']['nid']['table'] = 'registration';

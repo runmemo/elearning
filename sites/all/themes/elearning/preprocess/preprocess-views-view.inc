@@ -19,7 +19,6 @@ function elearning_alpha_preprocess_views_view(&$vars) {
  * @param array $vars
  */
 function elearning_alpha_preprocess_views_view__course_students(&$vars) {
-  $vars['classes_array'][] = 'grid-4';
   $vars['classes_array'][] = 'omega';
 }
 

@@ -52,9 +52,12 @@ h2 {
 
 .section-header {
   .gradient-main-panel();
-    border-top: #9e2600 @border-1;
-    border-bottom: #9e2600 @border-1;
-    height: 45px;
+  border-top: #9e2600 @border-1;
+  border-bottom: #9e2600 @border-1;
+  height: 45px;
+  @media @mobile { 
+    height: auto;
+  }   
 }
 
 #region-branding {
@@ -121,31 +124,51 @@ a.user-menu-parent:hover .user-menu-userpoints {
 
 .block-superfish {
   .right();
+  @media @mobile { 
+    .left();
+  } 
   .width-auto();
-  .content {
-    .bg-img('superfish-menu-triangle-small.png');
-    background-position: 49% 100%;
-      ul.sf-menu {
+    .content {
+      select {
+        .main-menu-border();
         .width-auto();
-        li.menuparent {
+        .bold(14px);
+        .main-menu-link();
+        background: 0;
+        height: auto;
+        option {
+          color: #000;
+        }
+      }
+      select:hover {
+        color: #ffffff;
+        .bold(14px);
+      }
+      ul.menu {
+        .width-auto();
+        > li.menuparent, > li.sf-no-children {
           .main-menu-border();
           .width-auto();
-          a.menuparent:link, a.menuparent:visited {
+          > a:link, a:visited {
             .bold(14px);
             .main-menu-link();
           }
-          a.menuparent:hover {
+          > a:hover {
             color: #ffffff;
             .link();
           }
-          a.menuparent:active {
+          > a:active {
             .link();
           }
+        }
+        li.menuparent {
+          .bg-img('superfish-menu-triangle-small.png');
+          background-position: 49% 100%;
         }
         li.menuparent.sfHover .arrow-up {
           .show(block);
         }
-        ul {
+        li.menuparent ul {
           background: white;
           border-radius: 2px;
           margin: 7px 0px 0px -54px;
@@ -608,6 +631,18 @@ a.user-menu-parent:hover .user-menu-userpoints {
 .node-course {
   .view-course-students {
     .right();
+    @media @narrow {
+      width: 250px;
+    }
+    @media @normal {
+      width: 250px;
+    }
+    @media @wide {
+      width: 280px;
+    }
+    @media @mobile {
+      width: 250px;
+    }
     .view-header {
       .view-block-header();
       .header-left {
