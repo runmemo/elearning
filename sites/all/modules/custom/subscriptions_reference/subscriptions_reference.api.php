@@ -23,7 +23,6 @@
  */
 function hook_subscriptions_reference_info() {
    return array(
-     // 
     'reference_id' => array( 
       'parent' => 'parent_content_type',  
       'child' => 'child_content_type',
