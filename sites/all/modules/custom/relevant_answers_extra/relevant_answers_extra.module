@@ -197,3 +197,32 @@ function quick_question_submit_callback($form, &$form_state) {
   $commands[] = ajax_command_replace('#quick-question-wrapper', render($form));
   return array('#type' => 'ajax', '#commands' => $commands);
 }
+
+/**
+ *  Implements hook_preprocess_views_view_fields 
+ *  for relevant_questions_list view.
+ */
+function relevant_answers_extra_preprocess_views_view_fields(&$vars) {
+  $view = $vars['view'];
+  if ($view->name !== 'relevant_questions_list') {
+    return;
+  }
+  if (isset($vars['fields']['field_answer_count'])) {
+    // Here we preprocess field that shows number of answers
+    $answers_count_field = $vars['fields']['field_answer_count'];
+    // Get origitnal field value. @todo get value instead of content.
+    $answers = $answers_count_field->content;
+    $ccs_classes = 'answer-count';
+    if (!$answers) {
+      $ccs_classes = $ccs_classes . ' zero';
+    }
+    $output = 
+    '<div class="left">
+      <div class="' . $ccs_classes .  '">' .
+       format_plural($answers, '1 <br />Answer', '@count <br />Answers') . 
+     '</div>
+    </div>';
+    // Replace content of the field.
+    $answers_count_field->content = $output;
+  }  
+}
