@@ -35,4 +35,4 @@ features[rules_config][] = rules_question_voting_points
 features[rules_config][] = rules_question_voting_points_revert
 
 features[ctools][] = strongarm:strongarm:1
-features[variable][] = pathauto_node_answer_pattern
+features[variable][] = pathauto_node_question_pattern 
