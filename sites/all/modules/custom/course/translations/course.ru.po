@@ -24,28 +24,27 @@
 #  course_points/course_points.info: n/a
 #  registration/registration.info: n/a
 #  lesson/lesson.module: n/a
+#  lesson/lesson.quicktabs.inc: n/a
 #  open_question/open_question.module: n/a
 #  open_question/open_question.context.inc: n/a
 #  open_question/open_question.quicktabs.inc: n/a
 #  registration/registration.context.inc: n/a
 #  registration/registration.module: n/a
 #
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2013-05-14 04:22-0500\n"
-"PO-Revision-Date: 2013-05-14 11:14-0000\n"
-"Last-Translator: bulat <byapparov@gmail.com>\n"
-"Language-Team: Russian <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-05-15 11:02-0500\n"
+"PO-Revision-Date: 2013-05-15 11:02-0500\n"
+"Last-Translator: bulat <bulat@coursehub.ru>\n"
+"Language-Team: Russian <bulat@coursehub.ru>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=((((n%10)==1)&&((n%100)!=11))?(0):(((((n%10)"
-">=2)&&((n%10)<=4))&&(((n%100)<10)||((n%100)>=20)))?(1):2));\n"
-"X-Generator: Poedit 1.5.5\n"
+"Plural-Forms: nplurals=3; plural=((((n%10)==1)&&((n%100)!=11))?(0):(((((n%10)>=2)&&((n%10)<=4))&&(((n%100)<10)||((n%100)>=20)))?(1):2));\n"
 
-#: course.context.inc:105 lesson/lesson.context.inc:52
-#: registration/views/registration.views.inc:22
+#: course.context.inc:105 lesson/lesson.context.inc:52 registration/views/registration.views.inc:22
 msgid "Node"
 msgstr "Материал"
 
@@ -56,11 +55,6 @@ msgstr "Когда лектор смотрит на объект курса"
 #: course.features.field_instance.inc:546
 msgid "A field replacing node title."
 msgstr "Поле заменяющее название контента"
-
-#: course.features.field_instance.inc:547 lesson/lesson.features.field.inc:409
-#: open_question/open_question.features.field_instance.inc:404
-msgid "Body"
-msgstr "Основная часть"
 
 #: course.features.field_instance.inc:548
 msgid "Course load"
@@ -98,9 +92,7 @@ msgstr "Организация"
 msgid "Teacher"
 msgstr "Лектор"
 
-#: course.features.field_instance.inc:557 course.features.inc:51;59;67;75
-#: lesson/lesson.features.inc:13;21
-#: open_question/open_question.features.inc:91;99;107
+#: course.features.field_instance.inc:557 course.features.inc:51;59;67;75 lesson/lesson.features.inc:13;21 open_question/open_question.features.inc:91;99;107
 msgid "Title"
 msgstr "Заголовок"
 
@@ -108,8 +100,7 @@ msgstr "Заголовок"
 msgid "Video"
 msgstr "Видео"
 
-#: course.features.inc:47 course.info:0;0 lesson/lesson.info:0
-#: open_question/open_question.info:0
+#: course.features.inc:47 course.info:0;0 lesson/lesson.info:0 open_question/open_question.info:0
 msgid "Course"
 msgstr "Курс"
 
@@ -122,18 +113,12 @@ msgid "Unit"
 msgstr "Глава курса"
 
 #: course.features.inc:57
-msgid ""
-"Unit is a large section of course that consists of lessons, quizzes and "
-"other content."
-msgstr ""
-"Глава курса - это большая секция курса, которая состоит и уроков, тестов и "
-"другого материала."
+msgid "Unit is a large section of course that consists of lessons, quizzes and other content."
+msgstr "Глава курса - это большая секция курса, которая состоит и уроков, тестов и другого материала."
 
 #: course.features.inc:65
 msgid "Provider of course content, e.g. university or company."
-msgstr ""
-"Производитель материалов для курса, например, университет или частная "
-"компания."
+msgstr "Производитель материалов для курса, например, университет или частная компания."
 
 #: course.features.inc:71
 msgid "Front Page Slide"
@@ -160,19 +145,13 @@ msgid "Main menu"
 msgstr "Главное меню"
 
 #: course.features.menu_custom.inc:36
-msgid ""
-"The <em>Main</em> menu is used on many sites to show the major sections of "
-"the site, often in a top navigation bar."
-msgstr ""
-"<em>Главное</em>меню используется на многих сайтах чтобы показать основные "
+msgid "The <em>Main</em> menu is used on many sites to show the major sections of the site, often in a top navigation bar."
+msgstr "<em>Главное</em>меню используется на многих сайтах чтобы показать основные "
 "секция сайта, часто вверху страницы."
 
 #: course.features.menu_custom.inc:37
-msgid ""
-"The <em>User</em> menu contains links related to the user's account, as well "
-"as the 'Log out' link."
-msgstr ""
-"Меню <em>Пользователя</em> содержит ссылки имеющие отношение к учетной "
+msgid "The <em>User</em> menu contains links related to the user's account, as well as the 'Log out' link."
+msgstr "Меню <em>Пользователя</em> содержит ссылки имеющие отношение к учетной "
 "записи пользователя, в том числе ссылку 'Выйти из системы'."
 
 #: course.features.menu_custom.inc:38
@@ -251,43 +230,43 @@ msgstr "Шапка Курса"
 msgid "Course Links"
 msgstr "Ссылки Курса"
 
-#: course.module:318
+#: course.module:327
 msgid "Continue"
 msgstr "Продолжить"
 
-#: course.module:319;440
+#: course.module:328;449
 msgid "Exit Course"
 msgstr "Покинуть Курс"
 
-#: course.module:476
+#: course.module:485
 msgid "Successful de-registered from course."
 msgstr "Успешная отмена регистрации на курс"
 
-#: course.module:479
+#: course.module:488
 msgid "No registration was found, looks like list of cousrse is wrong"
 msgstr "Регистрация не найдена, что-то не так со списком ваших курсов ("
 
-#: course.module:503
+#: course.module:512
 msgid "Confirmation"
 msgstr "Подтверждение"
 
-#: course.module:554
+#: course.module:563
 msgid "Provider Logo"
 msgstr "Логотип организации"
 
-#: course.module:555
+#: course.module:564
 msgid "Logo of course provider"
 msgstr "Логотип организации, создавшей курс"
 
-#: course.module:243
+#: course.module:252
 msgid "block header"
 msgstr "шапка блока"
 
-#: course.module:243
+#: course.module:252
 msgid "Block with header of the course was shown in the wrong place."
 msgstr "Блок с шапкой курса был выведен на неправильной странице."
 
-#: course.module:448
+#: course.module:457
 msgid "Action"
 msgstr "Действие"
 
@@ -319,8 +298,7 @@ msgstr "Собственная"
 msgid "Lesson Node"
 msgstr "Урок"
 
-#: lesson/lesson.features.field.inc:411 lesson/lesson.features.inc:17
-#: lesson/lesson.module:304
+#: lesson/lesson.features.field.inc:411 lesson/lesson.features.inc:17 lesson/lesson.module:304
 msgid "Notes"
 msgstr "Заметки"
 
@@ -332,6 +310,18 @@ msgstr "Урок"
 msgid "Student notes on lessons."
 msgstr "Заметки студента к уроку."
 
+#: lesson/lesson.quicktabs.inc:25
+msgid "Questions"
+msgstr "Вопросы"
+
+#: lesson/lesson.quicktabs.inc:33
+msgid "Lesson notes"
+msgstr "Заметки к уроку"
+
+#: lesson/lesson.quicktabs.inc:41
+msgid "My notes"
+msgstr "Мои заметки"
+
 #: lesson/lesson.module:29
 msgid "Lesson Notes : Lecturer"
 msgstr "Заметки к уроку: Лектор"
@@ -340,13 +330,11 @@ msgstr "Заметки к уроку: Лектор"
 msgid "Lesson Notes : Student"
 msgstr "Заметки к уроку: Студент"
 
-#: lesson/lesson.module:162;221;319;346
-#: open_question/open_question.module:227;311
+#: lesson/lesson.module:162;221;319;346 open_question/open_question.module:227;311
 msgid "Save"
 msgstr "Сохранить"
 
-#: lesson/lesson.module:185;247;335;359
-#: open_question/open_question.module:263;339
+#: lesson/lesson.module:185;247;335;359 open_question/open_question.module:263;339
 msgid "Edit"
 msgstr "Изменить"
 
@@ -379,14 +367,10 @@ msgid "Course Lesson"
 msgstr "Урок курса"
 
 #: lesson/lesson.info:0
-msgid ""
-"Module provides content type for presenting information units of the course"
+msgid "Module provides content type for presenting information units of the course"
 msgstr "Модуль предоставляет тип контента для создания Глав курса"
 
-#: open_question/open_question.context.inc:50
-#: open_question/open_question.features.field_instance.inc:406
-#: open_question/open_question.features.inc:87
-#: open_question/open_question.info:0
+#: open_question/open_question.context.inc:50 open_question/open_question.features.field_instance.inc:406 open_question/open_question.features.inc:87 open_question/open_question.info:0
 msgid "Open Question"
 msgstr "Открытый Вопрос"
 
@@ -398,8 +382,7 @@ msgstr "Ответ"
 msgid "Course Credit"
 msgstr "Кредит Курса"
 
-#: open_question/open_question.features.field_instance.inc:407
-#: open_question/open_question.features.inc:95
+#: open_question/open_question.features.field_instance.inc:407 open_question/open_question.features.inc:95
 msgid "Open Question Answer"
 msgstr "Ответ на  Открытый Вопрос"
 
@@ -411,8 +394,7 @@ msgstr "Ожидаемый Ответ"
 msgid "Question"
 msgstr "Вопрос"
 
-#: open_question/open_question.features.field_instance.inc:410
-#: open_question/open_question.module:452;495;718
+#: open_question/open_question.features.field_instance.inc:410 open_question/open_question.module:452;495;718
 msgid "Rating"
 msgstr "Баллы"
 
@@ -421,9 +403,7 @@ msgid "Rating Widget"
 msgstr "Елемент для  Рейтингования"
 
 #: open_question/open_question.features.inc:89
-msgid ""
-"Represents open questions that can be part of the course and can be answered "
-"by a student."
+msgid "Represents open questions that can be part of the course and can be answered by a student."
 msgstr "Представляет открытый вопрос, который может быть частью курса."
 
 #: open_question/open_question.features.inc:103
@@ -431,8 +411,7 @@ msgid "Open Question Feedback"
 msgstr "Отзыв на Ответ к Открытому Вопросу"
 
 #: open_question/open_question.features.inc:105
-msgid ""
-"Feedback provided to the user by other students on the Open Questions page."
+msgid "Feedback provided to the user by other students on the Open Questions page."
 msgstr "Отзывы для студента от одноклассников на странице Открытого Вопроса."
 
 #: open_question/open_question.quicktabs.inc:45
@@ -468,8 +447,7 @@ msgid "You need to register to answer this question."
 msgstr "Вам необходимо зарегистрироваться, чтобы ответить на данный вопрос."
 
 #: open_question/open_question.module:108
-msgid ""
-"You need to answer question before you can review answers of other students."
+msgid "You need to answer question before you can review answers of other students."
 msgstr ""
 "Вам необходимо ответить на вопрос, чтобы иметь возможность оценивать ответы "
 "других студентов."
@@ -487,9 +465,7 @@ msgid "The open question that was answered."
 msgstr "Открытый вопрос, на который получен ответ."
 
 #: open_question/open_question.module:238
-msgid ""
-"Please, answer the question, and other participants of the course will "
-"review your answer."
+msgid "Please, answer the question, and other participants of the course will review your answer."
 msgstr "Ответьте на вопрос и ваши одноклассники по курсу оценят его."
 
 #: open_question/open_question.module:279

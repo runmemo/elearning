@@ -9,9 +9,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2013-04-22 13:43-0500\n"
-"PO-Revision-Date: 2013-04-22 19:46-0000\n"
-"Last-Translator: bulat <byapparov@gmail.com>\n"
+"POT-Creation-Date: 2013-05-15 11:20-0500\n"
+"PO-Revision-Date: 2013-05-15 17:24-0000\n"
+"Last-Translator: bulat <bulat@coursehub.ru>\n"
 "Language-Team: Russian <EMAIL@ADDRESS>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
@@ -20,13 +20,41 @@ msgstr ""
 ">=2)&&((n%10)<=4))&&(((n%100)<10)||((n%100)>=20)))?(1):2));\n"
 "X-Generator: Poedit 1.5.5\n"
 
-#: course_outline.module:10 course_outline.info:0
+#: course_outline.module:13 course_outline.info:0
 msgid "Course Outline"
 msgstr "Программа курса"
 
-#: course_outline.module:128
+#: course_outline.module:17
+msgid "Course Certificate"
+msgstr "Сертификат"
+
+#: course_outline.module:99
+msgid "@num points"
+msgstr "@num баллов"
+
+#: course_outline.module:103
+msgid "Download certificate"
+msgstr "Загрузить сертификат"
+
+#: course_outline.module:107
+msgid "Certificate unavailable"
+msgstr "Сертификат не доступен"
+
+#: course_outline.module:174
 msgid "Lesson @i."
 msgstr "Лекция @i."
+
+#: course_outline.module:203
+msgid "Compliance scores and marks for the certificate"
+msgstr "Соответствие баллов и категорий сертификата"
+
+#: course_outline.module:254
+msgid "Certificate is not available"
+msgstr "Сертификат не доступен"
+
+#: course_outline.module:255
+msgid "!range points"
+msgstr "!range баллов"
 
 #: course_outline.info:0
 msgid "Provides a block containing an outline of the current book."
