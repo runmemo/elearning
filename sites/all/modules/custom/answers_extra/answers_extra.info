@@ -11,6 +11,7 @@ dependencies[] = rules
 dependencies[] = mail_edit_features
 dependencies[] = userpoints_rules
 dependencies[] = voting_rules
+dependencies[] = strongarm
 
 features[ckeditor_profile][] = Advanced
 features[ckeditor_profile][] = CKEditor Global Profile
@@ -32,3 +33,6 @@ features[rules_config][] = rules_answer_voting_points
 features[rules_config][] = rules_answer_voting_points_revert
 features[rules_config][] = rules_question_voting_points
 features[rules_config][] = rules_question_voting_points_revert
+
+features[ctools][] = strongarm:strongarm:1
+features[variable][] = pathauto_node_answer_pattern
