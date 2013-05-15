@@ -73,6 +73,13 @@ function relevant_answers_extra_block_view($delta = '') {
 /**
  * Helper Function : Returns status message to user after creating question.
  */
+function _get_quick_question_completion_text($message = NULL) {
+  if (!$message) {
+    $message = t('Your question was added to the list below.');
+  }
+  return '<div id="message-placeholder"><div class="text">' . $message . '<span class="close" title="close">X</span></div></div>';
+}
+
 function _get_completion_text($message = NULL) {
   if (!$message) {
     $message = t('Your message was added to the list below.');
@@ -192,7 +199,7 @@ function quick_question_submit_callback($form, &$form_state) {
   unset($form['fields']['question']['#value']);
   unset($form['fields']['description']['#value']);
   $original_path = $form_state['storage']['original_path'];
-  $commands[] = ajax_command_replace('#message-placeholder', _get_completion_text());
+  $commands[] = ajax_command_replace('#message-placeholder', _get_quick_question_completion_text());
   $commands[] = ajax_command_replace('.view-questions-list', _get_relevant_questions_list($original_path));
   $commands[] = ajax_command_replace('#quick-question-wrapper', render($form));
   return array('#type' => 'ajax', '#commands' => $commands);
