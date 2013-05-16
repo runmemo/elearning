@@ -45,7 +45,7 @@ function user_extra_field_default_field_instances() {
     ),
     'entity_type' => 'user',
     'field_name' => 'field_birthday',
-    'label' => 'Date of birth',
+    'label' => t('Date of birth'),
     'required' => 0,
     'settings' => array(
       'default_value' => 'now',
@@ -94,7 +94,7 @@ function user_extra_field_default_field_instances() {
     ),
     'entity_type' => 'user',
     'field_name' => 'field_name',
-    'label' => 'Name',
+    'label' => ('First Name'),
     'required' => 1,
     'settings' => array(
       'text_processing' => 0,
@@ -135,7 +135,7 @@ function user_extra_field_default_field_instances() {
     ),
     'entity_type' => 'user',
     'field_name' => 'field_phone_number',
-    'label' => 'Phone number',
+    'label' => t('Phone number'),
     'required' => 0,
     'settings' => array(
       'text_processing' => 0,
@@ -176,7 +176,7 @@ function user_extra_field_default_field_instances() {
     ),
     'entity_type' => 'user',
     'field_name' => 'field_surname',
-    'label' => 'Surname',
+    'label' => t('Surname'),
     'required' => 1,
     'settings' => array(
       'text_processing' => 0,

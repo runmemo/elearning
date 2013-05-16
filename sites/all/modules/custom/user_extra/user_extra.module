@@ -60,7 +60,7 @@ function user_extra_form_alter(&$form, &$form_state, $form_id) {
     $form['field_surname']['#suffix'] = '</div>';
     // @todo Ilya provide real path to the license agreement page.
     $form['message'] = array(
-      '#markup' => t('Registering, you are accepting the !license_agreement.', array('!license_agreement' => l(t('license agreement'), '', array('attributes' => array('target' => '_blank'))))),
+      '#markup' => t('Registering, you are accepting the !license_agreement', array('!license_agreement' => l(t('license agreement'), '', array('attributes' => array('target' => '_blank'))))),
       '#weight' => 20,
       '#prefix' => '<div class="register-form-license-text">',
       '#suffix' => '</div>',
@@ -196,6 +196,8 @@ function profile_pic_update_form_validate($form, &$form_state) {
       'file_validate_is_image' => array(),
       'file_validate_extensions' => array('png gif jpg jpeg'),
     ));
+    // @todo Ilya: create watchdog messages when there are problems
+    // with file operations.
     if ($file) {
       if ($file = file_move($file, 'public://')) {
         // if succes store file object in $form_state['values']

@@ -22,7 +22,7 @@ function user_extra_quicktabs_default_quicktabs() {
     0 => array(
       'bid' => 'views_delta_user_questions_list-block',
       'hide_title' => 1,
-      'title' => t('Questions'),
+      'title' => t('My questions'),
       'weight' => '-100',
       'type' => 'block',
     ),

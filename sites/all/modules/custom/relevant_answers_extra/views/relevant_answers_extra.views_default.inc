@@ -189,20 +189,20 @@ function relevant_answers_extra_views_default_views() {
   $handler->display->display_options['fields']['created']['field'] = 'created';
   $handler->display->display_options['fields']['created']['label'] = '';
   $handler->display->display_options['fields']['created']['alter']['alter_text'] = TRUE;
-  $handler->display->display_options['fields']['created']['alter']['text'] = '<div class="center">
-    <div class="title">
+  $handler->display->display_options['fields']['created']['alter']['text'] = '<div class="field-group-question">
+    <div class="field-title">
       [title]
     </div>
-    <div class="body">
+    <div class="field-body">
       [body]
     </div>
   </div>
 
-  <div class="right">
-    <div class="name">
+  <div class="field-group-signature">
+    <div class="field-name">
       [name]
     </div>
-    <div class="created">
+    <div class="field-created">
       [created]
     </div>
   </div>
