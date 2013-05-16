@@ -427,7 +427,7 @@ function course_item_node_types() {
       'quiz' => 'quiz',
       'open_question' => 'open_question',
       'closedquestion' => 'closedquestion',
-      'certificate' => 'certificate');
+    );
     $items = array();
 
     // add content types provided by modules
@@ -570,31 +570,66 @@ function course_field_extra_field() {
 }
 
 /**
- * Processes course grades and returns array with grades data.
- * @param object $course course node
- * @return array Array with grades information
+ * Gets course grades as an array from field_grades on Course node.
+ * 
+ * @param object $course 
+ *   Course node.
+ * 
+ * @return array 
+ *   Grades array sorted by score or FALSE if field does not exist or is empty.
  */
-function course_process_grades($course) {
+function course_get_course_grades($course) {
   $node_wrapper = entity_metadata_wrapper('node', $course);
-  if (!$node_wrapper->field_grades->value()) {
-    return '';
+  if (!isset($node_wrapper->field_grades)) {
+    return FALSE;
   }
-  $items = array();
+  // Populate grades with values from the field.
+  $grades = array();
   foreach ($node_wrapper->field_grades as $key => $grade) {
-    $next = $key + 1;
-    $grade_score_current = $node_wrapper->field_grades[$key]->field_grade_score->raw();
-    $grade_score_next = isset($node_wrapper->field_grades[$next]) ? $node_wrapper->field_grades[$next]->field_grade_score->raw() : 0;
-    if ($grade_score_next != 0) {
-      $type = $key == 0 ? 'first' : 'middle';
-    } else {
-      $type = 'last';
-    }
-    $items[] = array(
-      'type' => $type,
-      'desc' => $key == 0 ? t('Certificate is not available') : $grade->field_grade_name->raw(),
-      'score' => $grade_score_current,
-      'next_score' => $grade_score_next,
-    );
+    $score = $grade->field_grade_score->raw();
+    $description = $grade->field_grade_name->raw();
+    $grades[$score] = $description;
   }
-  return $items;
+  if (empty($grades)) {
+    return FALSE;
+  }
+  ksort($grades, SORT_NUMERIC);
+  return $grades;
+}
+
+/**
+ * Gets pass rate for the course from the grades field. 
+ * 
+ * Pass value equals to the minimum score of all grades.
+ * 
+ * @param object $course
+ *   Course node.
+ * 
+ * @return int
+ *   Minim score required to qualify for certificate or pass.
+ */
+function course_get_course_pass_score($course) {
+  $grades = course_get_course_grades($course);
+  if ($grades) {
+    reset($grades);
+    return key($grades);
+  }
+  else {
+    return 0;
+  }
+}
+
+/**
+ * Implements hook_access_certificate() from certificate module.
+ */
+function course_access_certificate($node, $user) {
+  if ($node->type !== 'course') {
+    return t('This is not a course, certificate is not available.');
+  }
+ 
+  $pass_score = course_get_course_pass_score($node);
+  $user_credit = credit_calculate($node, $user);
+  $pass_credit = array_shift(array_values($grades));
+  // User must have more credit poits than a pass value on the course.
+  return $user_credit > $pass_credit;
 }

@@ -132,19 +132,12 @@ function elearning_preprocess_certificate_certificate(&$variables) {
   // Get course information.
   $variables['course']['title'] = $node_wrapper->title->raw();
   $credits = credit_calculate($node, $user);
-  $grades = course_process_grades($node);
+  $grades = course_get_course_grades($node);
   $grade_name = '';
-  if (!empty($grades)) {
-    foreach ($grades as $grade) {
-      if ($grade['next_score'] != 0) {
-        if ($credits >= $grade['score'] && $credits < $grade['next_score']) {
-          $grade_name = $grade['desc'];
-          break;
-        }
-      } else {
-        if ($credits >= $grade['score']) {
-          $grade_name = $grade['desc'];
-        }
+  if ($grades) {
+    foreach ($grades as $score => $name) {
+      if ($credits >= $score) {
+        $grade_name = $name;
       }
     }
   }

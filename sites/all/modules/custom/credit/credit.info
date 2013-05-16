@@ -10,7 +10,5 @@ dependencies[] = course
 
 features[features_api][] = api:1
 features[field_base][] = field_course_credit
-features[field_base][] = field_pass_credit
-features[field_instance][] = node-course-field_pass_credit
 
 files[] = tests/credit.test

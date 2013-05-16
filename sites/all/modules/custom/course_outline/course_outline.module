@@ -97,7 +97,7 @@ function course_outline_block_view($delta = '') {
         $certificate['popup_description'] = course_outline_generate_grades_description($course_node);
         $certificate['user_credit'] = credit_calculate($course_node, $user);
         $certificate['points'] = format_plural($certificate['user_credit'], '1 point', '@count points');
-        $certificate['pass_credit'] = credit_get_field_integer_value($course_node, 'field_pass_credit');
+        $certificate['pass_credit'] = course_get_course_pass_score($course_node);
         if ($certificate['user_credit'] > $certificate['pass_credit']) {
           $certificate['class'] = 'certificate-enabled';
           $certificate['link'] = l(t('Download certificate'), 'node/' . $course_node->nid . '/certificate');
@@ -190,37 +190,46 @@ function course_outline_generate_grades_description($course) {
       return $output;
     }
   }
-  $grades_items = course_process_grades($course);
-  if (!empty($grades_items)) {
-    $list_items = array();
-    foreach ($grades_items as $key => $item) {
-      $list_item = '';
-      if ($item['type'] == 'first') {
-        $range = '0-' . $item['score'];
-      } elseif ($item['type'] == 'middle') {
-        $range = $item['score'] . '-' . $item['next_score'];
-      } else {
-        $range = '&gt; ' . $item['score'];
-      }
-      $list_item = '<span class="points-range">' . t('!range points', array('!range' => $range)) . '</span>';
-      $list_item .= '<span class="points-desc"> - ' . $item['desc'] . '</span>';
-      $list_items[] = $list_item;
-    }
-    $vars = array(
-      'title' => t(''),
-      'items' => $list_items,
-      'type' => 'ul',
-      'attributes' => array(),
-    );
-    $list = theme_item_list($vars);
-    $output = '<div class="outline-certificate-description">
+  $grades = course_get_course_grades($course);
+  if (!$grades) {
+    return;
+  }
+  $scores = array_keys($grades);
+  $max_score = end($scores);
+  $grade_ranges = array();
+  $prev_score = 0;
+  $prev_desc = t('Certificate is not availabe');
+  
+  // Create array of score ranges with grade names.
+  foreach ($grades as $score => $grade_name) {
+    $range = $prev_score . '-' . $score;
+    $grade_ranges[$range] = $prev_desc;
+    $prev_score = $score;
+    $prev_desc = $grade_name;
+  }
+  $range = '&gt; ' . $max_score;
+  $grade_ranges[$range] =  $grades[$max_score];
+  // Wrap ranges in html.
+  foreach ($grade_ranges as $range => $name) {
+    $list_item = '';
+    $list_item = '<span class="points-range">' . t('!range points', array('!range' => $range)) . '</span>';
+    $list_item .= '<span class="points-desc"> - ' . $name . '</span>';
+    $list_items[] = $list_item;
+  }
+  
+  $vars = array(
+    'title' => t(''),
+    'items' => $list_items,
+    'type' => 'ul',
+    'attributes' => array(),
+  );
+  $list = theme_item_list($vars);
+  $output = '<div class="outline-certificate-description">
     <div class="header">' . t('Compliance scores and marks for the certificate') . '</div>' .
       $list .
       '</div>';
-    cache_set('course_grades_' . $course->nid, $output, 'cache', 24 * 60 * 60); //1 hour
-  } else {
-    $output = '';
-  }
+  cache_set('course_grades_' . $course->nid, $output, 'cache', 24 * 60 * 60); //1 hour
+
   return $output;
 }
 
