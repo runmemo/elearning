@@ -7,7 +7,7 @@
 /**
  * Implements hook_strongarm().
  */
-function lesson_strongarm() {
+function answers_extra_strongarm() {
   $export = array();
 
   // Provides default url alias for Question nodes.
