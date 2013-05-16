@@ -48,7 +48,7 @@
           </div>
           <?php if (isset($course['grade_score'])) : ?>
             <div class="certificate-course-info certificate-grade">
-              <div class="grade-name"><?php print $course['grade_score'] . ' ' . t('(out of !count)', array('!count' => 100)); ?></div>
+              <div class="grade-name"><?php print $course['grade_score'] ?></div>
               <div class="grade-score"><?php print $course['grade_name']; ?></div>
             </div>
           <?php endif; ?>

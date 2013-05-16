@@ -568,3 +568,33 @@ function course_field_extra_field() {
   );
   return $extra;
 }
+
+/**
+ * Processes course grades and returns array with grades data.
+ * @param object $course course node
+ * @return array Array with grades information
+ */
+function course_process_grades($course) {
+  $node_wrapper = entity_metadata_wrapper('node', $course);
+  if (!$node_wrapper->field_grades->value()) {
+    return '';
+  }
+  $items = array();
+  foreach ($node_wrapper->field_grades as $key => $grade) {
+    $next = $key + 1;
+    $grade_score_current = $node_wrapper->field_grades[$key]->field_grade_score->raw();
+    $grade_score_next = isset($node_wrapper->field_grades[$next]) ? $node_wrapper->field_grades[$next]->field_grade_score->raw() : 0;
+    if ($grade_score_next != 0) {
+      $type = $key == 0 ? 'first' : 'middle';
+    } else {
+      $type = 'last';
+    }
+    $items[] = array(
+      'type' => $type,
+      'desc' => $key == 0 ? t('Certificate is not available') : $grade->field_grade_name->raw(),
+      'score' => $grade_score_current,
+      'next_score' => $grade_score_next,
+    );
+  }
+  return $items;
+}
