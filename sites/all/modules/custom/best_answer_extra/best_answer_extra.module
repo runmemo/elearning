@@ -5,6 +5,8 @@
  * Provides functionality to Best Answer selecting process.
  */
 
+include_once 'best_answer_extra.features.inc';
+
 /**
  * Implements hook_node_view().
  */

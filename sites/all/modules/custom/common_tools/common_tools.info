@@ -3,4 +3,23 @@ description = Contains functions that can be used by custom modules
 package = Custom
 core = 7.x
 
+dependencies[] = beautytips
+dependencies[] = ctools
+dependencies[] = strongarm
+
 files[] = common_tools.module
+
+features[ctools][] = strongarm:strongarm:1
+features[features_api][] = api:1
+features[variable][] = beautytips_added_selectors_array
+features[variable][] = beautytips_added_selectors_string
+features[variable][] = beautytips_always_add
+features[variable][] = beautytips_custom_style
+features[variable][] = beautytips_default_style
+features[variable][] = beautytips_defaults
+features[variable][] = beautytips_drupal_help
+features[variable][] = beautytips_form_id
+features[variable][] = beautytips_ltr
+features[variable][] = beautytips_position
+features[variable][] = beautytips_show_form
+features[variable][] = beautytips_text_input
