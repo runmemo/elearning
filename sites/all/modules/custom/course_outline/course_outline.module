@@ -94,7 +94,8 @@ function course_outline_block_view($delta = '') {
       global $user;
       $course_node = node_load($book['bid']);
       if ($course_node) {
-        $certificate['popup_description'] = course_outline_generate_grades_description($course_node);
+        $grades = course_get_course_grades($course_node);
+        $certificate['popup_description'] = course_outline_generate_grades_description($grades, $course_node->nid);
         $certificate['user_credit'] = credit_calculate($course_node, $user);
         $certificate['points'] = format_plural($certificate['user_credit'], '1 point', '@count points');
         $certificate['pass_credit'] = course_get_course_pass_score($course_node);
@@ -180,35 +181,25 @@ function course_outline_item_title($node) {
 
 /**
  * Processes course node, collects grades info and build HTML with grades popup.
- * @param object $course
- * @return string HTML for popup description block
+ * 
+ * @param object $grades
+ *   Associative array of grades where key is score.
+ * 
+ * @param integer $nid
+ *   Course node's nid for caching purpsoses.
+ * 
+ * @return string
+ *   HTML for popup description block.
  */
-function course_outline_generate_grades_description($course) {
-  if ($cached = cache_get('course_grades_' . $course->nid, 'cache')) {
+function course_outline_generate_grades_description($grades, $nid) {
+  if ($cached = cache_get('course_grades_' . $nid, 'cache')) {
     $output = $cached->data;
     if ($output) {
       return $output;
     }
   }
-  $grades = course_get_course_grades($course);
-  if (!$grades) {
-    return;
-  }
-  $scores = array_keys($grades);
-  $max_score = end($scores);
-  $grade_ranges = array();
-  $prev_score = 0;
-  $prev_desc = t('Certificate is not availabe');
-  
-  // Create array of score ranges with grade names.
-  foreach ($grades as $score => $grade_name) {
-    $range = $prev_score . '-' . $score;
-    $grade_ranges[$range] = $prev_desc;
-    $prev_score = $score;
-    $prev_desc = $grade_name;
-  }
-  $range = '&gt; ' . $max_score;
-  $grade_ranges[$range] =  $grades[$max_score];
+ 
+  $grade_ranges = course_get_grade_ranges($grades);
   // Wrap ranges in html.
   foreach ($grade_ranges as $range => $name) {
     $list_item = '';
@@ -228,7 +219,7 @@ function course_outline_generate_grades_description($course) {
     <div class="header">' . t('Compliance scores and marks for the certificate') . '</div>' .
       $list .
       '</div>';
-  cache_set('course_grades_' . $course->nid, $output, 'cache', 24 * 60 * 60); //1 hour
+  cache_set('course_grades_' . $nid, $output, 'cache', 24 * 60 * 60); //1 hour
 
   return $output;
 }

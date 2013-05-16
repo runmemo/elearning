@@ -598,6 +598,35 @@ function course_get_course_grades($course) {
 }
 
 /**
+ * Gets associative array of grade ranges for the course e.g.:
+ *   - 0-50 => Certificate is not availabe
+ *   - 50-70 => Pass
+ *   - > 70 => Distinction
+ * 
+ * @param object $course
+ * 
+ * @return array
+ *   Array as described above.
+ */
+function course_get_grade_ranges($grades) {
+  $grade_ranges = array();
+  $prev_score = 0;
+  $prev_desc = t('Certificate is not availabe');
+  
+  // Create array of score ranges with grade names.
+  foreach ($grades as $score => $grade_name) {
+    $range = $prev_score . '-' . $score;
+    $grade_ranges[$range] = $prev_desc;
+    $prev_score = $score;
+    $prev_desc = $grade_name;
+  }
+  $max_score = $prev_score;
+  $range = '&gt; ' . $max_score;
+  $grade_ranges[$range] =  $grades[$max_score];
+  return $grade_ranges;
+}
+
+/**
  * Gets pass rate for the course from the grades field. 
  * 
  * Pass value equals to the minimum score of all grades.
@@ -626,10 +655,8 @@ function course_access_certificate($node, $user) {
   if ($node->type !== 'course') {
     return t('This is not a course, certificate is not available.');
   }
- 
   $pass_score = course_get_course_pass_score($node);
   $user_credit = credit_calculate($node, $user);
-  $pass_credit = array_shift(array_values($grades));
   // User must have more credit poits than a pass value on the course.
-  return $user_credit > $pass_credit;
+  return $user_credit > $pass_score;
 }
