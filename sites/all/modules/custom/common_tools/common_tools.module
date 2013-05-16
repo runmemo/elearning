@@ -249,3 +249,22 @@ function common_tools_theme() {
 function theme_menu_link__superfish_link_parent($variables) {
   return '<a href="' . check_plain(url($variables['path'], $variables['options'])) . '"' . drupal_attributes($variables['options']['attributes']) . '>' . $variables['text'] . '</a><div class="arrow-up"></div>';
 }
+
+
+/**
+ * Implements hook_define_beautytips_styles().
+ */
+function common_tools_define_beautytips_styles() {
+  $styles['common-tooltip'] = array(
+    'fill' => '#fdfdfd',
+    'padding' => 15,
+    'strokeStyle' => 'transparent',
+    'cornerRadius' => 0,
+    'shadow' => TRUE,
+    'shadowBlur' => 2,
+    'cssStyles' => array(
+      'color' => '#6A6A6A', 
+    ),
+  );
+  return $styles;
+}
