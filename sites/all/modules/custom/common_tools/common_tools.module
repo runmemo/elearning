@@ -8,6 +8,8 @@
  * custom modules.
  */
 
+include_once 'common_tools.features.inc';
+
 function common_tools_init() {
   //Add common ctools modal style
   common_modal_style();
