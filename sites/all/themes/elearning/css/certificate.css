@@ -1,35 +1,41 @@
 /* CSS for Course Certificate PDF page */
 
-.certificate-wrapper {
+body {
+  font-family: "DejaVu Sans", sans-serif;
+}
+
+.wrapper {
   width: 95%;
   margin: 0 auto;
 }
 
-.certificate-title {
+.title {
   font: bold 60pt myriadpro;
   color: #d0471b;
   margin: 85px 0px 120px 0px;
   text-align: center;
 }
 
-.certificate-registered {
+.registered {
   font: normal 40pt myriadpro;
   vertical-align: text-top;
   margin-left: -25px;
 }
 
-.certificate-body {
+.body {
   text-align: center;
-  font: bold 12px Helvetica;
+  /* font: bold 12px Helvetica;
+    @todo Ilya: Helvetica that you use does not seem to have Russian symbols.
+  */
   margin-bottom: 148px;
 }
 
-.certificate-desc {
+.desc {
   border-bottom: 1px solid #cacaca;
   line-height: 0px;
 }
 
-.certificate-desc .desc-text {
+.desc .desc-text {
   background-color: #fff;
   display: inline;
   padding: 0px 5px;
@@ -37,44 +43,44 @@
   top: 5px;
 }
 
-.certificate-course-info {
+.info {
   color: #d0471b;
   font-size: 24px;
 }
 
-.certificate-course-info .inner-text {
+.info .inner-text {
   padding: 52px;
 }
 
-.certificate-course-info.certificate-grade .grade-name {
+.info.grade .grade-name {
   padding: 52px 0px 32px 0px;
 }
 
-.certificate-bottom {
+.bottom {
   list-style: none;
 }
 
-.certificate-bottom li {
+.bottom li {
   display: inline;
 }
 
-.certificate-signature {
+.signature {
   list-style: none;
   display: inline;
 }
 
-.certificate-signature-wrapper {
+.signature-wrapper {
   margin-left: 26px;
   border-bottom: solid 1px #cacaca;
 }
 
-.certificate-teacher-name {
+.teacher-name {
   font: bold 13px Helvetica;
   padding-right: 20px;
   /*border-bottom: solid 1px #cacaca;*/
 }
 
-.certificate-teacher-signature img {
+.teacher-signature img {
   vertical-align: text-bottom;
   /*border-bottom: solid 1px #cacaca;*/
 }

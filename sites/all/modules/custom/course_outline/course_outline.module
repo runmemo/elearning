@@ -96,7 +96,7 @@ function course_outline_block_view($delta = '') {
       if ($course_node) {
         $certificate['popup_description'] = course_outline_generate_grades_description($course_node);
         $certificate['user_credit'] = credit_calculate($course_node, $user);
-        $certificate['points'] = t('@num points', array('@num' => $certificate['user_credit']));
+        $certificate['points'] = format_plural($certificate['user_credit'], '1 point', '@count points');
         $certificate['pass_credit'] = credit_get_field_integer_value($course_node, 'field_pass_credit');
         if ($certificate['user_credit'] > $certificate['pass_credit']) {
           $certificate['class'] = 'certificate-enabled';
@@ -190,11 +190,25 @@ function course_outline_generate_grades_description($course) {
       return $output;
     }
   }
-  $grades_items = course_outline_process_grades($course);
+  $grades_items = course_process_grades($course);
   if (!empty($grades_items)) {
+    $list_items = array();
+    foreach ($grades_items as $key => $item) {
+      $list_item = '';
+      if ($item['type'] == 'first') {
+        $range = '0-' . $item['score'];
+      } elseif ($item['type'] == 'middle') {
+        $range = $item['score'] . '-' . $item['next_score'];
+      } else {
+        $range = '&gt; ' . $item['score'];
+      }
+      $list_item = '<span class="points-range">' . t('!range points', array('!range' => $range)) . '</span>';
+      $list_item .= '<span class="points-desc"> - ' . $item['desc'] . '</span>';
+      $list_items[] = $list_item;
+    }
     $vars = array(
       'title' => t(''),
-      'items' => $grades_items,
+      'items' => $list_items,
       'type' => 'ul',
       'attributes' => array(),
     );
@@ -208,56 +222,6 @@ function course_outline_generate_grades_description($course) {
     $output = '';
   }
   return $output;
-}
-
-/**
- * Processes course grades and returns array with HTML in case of
- * 'course_outline' mode and name of necessary grade in case of 'certificate' mode.
- * @param object $course course node
- * @param string $mode case of using this function
- * @param float $credits user credits for the course
- * @return array/string Array with HTML or grade name
- */
-function course_outline_process_grades($course, $mode = 'course_outline', $credits = 0) {
-  $node_wrapper = entity_metadata_wrapper('node', $course);
-  if (!$node_wrapper->field_grades->value()) {
-    return '';
-  }
-  if ($mode == 'course_outline') {
-    $items = array();
-  } elseif ($mode == '') {
-    $grade_name = 'certificate';
-  }
-  foreach ($node_wrapper->field_grades as $key => $grade) {
-    $next = $key + 1;
-    $grade_score_current = $node_wrapper->field_grades[$key]->field_grade_score->raw();
-    $grade_score_next = isset($node_wrapper->field_grades[$next]) ? $node_wrapper->field_grades[$next]->field_grade_score->raw() : 0;
-    if ($grade_score_next != 0) {
-      if ($mode == 'course_outline') {
-        $points = $key == 0 ? '0-' . $grade_score_current : $grade_score_current . '-' . $grade_score_next;
-      } elseif ($mode == 'certificate') {
-        if ($credits >= $grade_score_current && $credits < $grade_score_next) {
-          $grade_name = $grade->field_grade_name->raw();
-          break;
-        }
-      }
-    } else {
-      if ($mode == 'course_outline') {
-        $points = '&gt; ' . $grade_score_current;
-      } elseif ($mode == 'certificate') {
-        if ($credits >= $grade_score_current) {
-          $grade_name = $grade->field_grade_name->raw();
-        }
-      }
-    }
-    if ($mode == 'course_outline') {
-      $desc = $key == 0 ? t('Certificate is not available') : $grade->field_grade_name->raw();
-      $list_item = '<span class="points-range">' . t('!range points', array('!range' => $points)) . '</span>';
-      $list_item .= ' - <span class="points-desc">' . $desc . '</span>';
-      $items[] = $list_item;
-    }
-  }
-  return $mode == 'course_outline' ? $items : $grade_name;
 }
 
 /**
