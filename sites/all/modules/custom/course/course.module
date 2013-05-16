@@ -609,9 +609,12 @@ function course_get_course_grades($course) {
  *   Array as described above.
  */
 function course_get_grade_ranges($grades) {
+  if (!$grades || empty($grades)) {
+    return FALSE;
+  }
   $grade_ranges = array();
   $prev_score = 0;
-  $prev_desc = t('Certificate is not availabe');
+  $prev_desc = t('Certificate is not available');
   
   // Create array of score ranges with grade names.
   foreach ($grades as $score => $grade_name) {

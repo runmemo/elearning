@@ -272,4 +272,36 @@ class CourseUnitTestCase extends DrupalUnitTestCase {
         'below' => array(),
       );
   }
+  
+  function test_get_grade_ranges_empty() {
+    $grades = array();
+    $results = course_get_grade_ranges($grades);
+    $this->assertFalse($results, 'Empty grades array results in FALSE.');
+  }
+  
+  function test_get_grade_ranges_non_empty() {
+    $grades = array (
+      50 => 'Pass',
+      60 => 'Merit',
+      70 => 'Distinction',
+    );
+    
+    $results = course_get_grade_ranges($grades);
+   
+    foreach ($results as $range => $name) {
+      $ranges[] = $range;
+      $names[] = $name;
+    }
+    // Assert ranges.
+    $this->assertEqual($ranges[0], '0-50');
+    $this->assertEqual($ranges[1], '50-60');
+    $this->assertEqual($ranges[2], '60-70');
+    $this->assertEqual($ranges[3], '&gt; 70');
+    // Assert range descriptions.
+    $this->assertEqual($names[0], 'Certificate is not available');
+    $this->assertEqual($names[1], 'Pass');
+    $this->assertEqual($names[2], 'Merit');
+    $this->assertEqual($names[3], 'Distinction');
+    
+  }
 }
