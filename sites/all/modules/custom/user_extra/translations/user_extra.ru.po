@@ -1,0 +1,147 @@
+# $Id$
+#
+# Russian translation of Drupal (general)
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+# Generated from files:
+#  user_extra.context.inc: n/a
+#  user_extra.features.field_instance.inc: n/a
+#  user_extra.quicktabs.inc: n/a
+#  user_extra.module: n/a
+#  user_extra.info: n/a
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2013-05-16 03:13-0500\n"
+"PO-Revision-Date: 2013-05-16 10:21-0000\n"
+"Last-Translator: bulat <byapparov@gmail.com>\n"
+"Language-Team: Russian <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=((((n%10)==1)&&((n%100)!=11))?(0):(((((n%10)"
+">=2)&&((n%10)<=4))&&(((n%100)<10)||((n%100)>=20)))?(1):2));\n"
+"X-Generator: Poedit 1.5.5\n"
+
+#: user_extra.context.inc:45
+msgid "user"
+msgstr "пользователь"
+
+#: user_extra.context.inc:46
+msgid "user profile tabs"
+msgstr "табы на профиле пользователя"
+
+#: user_extra.features.field_instance.inc:198
+msgid "Date of birth"
+msgstr "День Рождения"
+
+#: user_extra.features.field_instance.inc:199
+msgid "Name"
+msgstr "Название"
+
+#: user_extra.features.field_instance.inc:200
+msgid "Phone number"
+msgstr "Телефон"
+
+#: user_extra.features.field_instance.inc:201
+msgid "Surname"
+msgstr "Фамилия"
+
+#: user_extra.quicktabs.inc:52
+msgid "History"
+msgstr "История"
+
+#: user_extra.quicktabs.inc:53
+msgid "Answers"
+msgstr "Ответы"
+
+#: user_extra.quicktabs.inc:54
+msgid "Questions"
+msgstr "Вопросы"
+
+#: user_extra.quicktabs.inc:55
+msgid "User Profile Tab"
+msgstr "Табы на профиле пользователя"
+
+#: user_extra.module:31;68
+msgid "Create new account"
+msgstr "Создать новую учетную запись"
+
+#: user_extra.module:34
+msgid "Forgotten your password?"
+msgstr "Забыли пароль?"
+
+#: user_extra.module:39
+msgid "Login via Facebook"
+msgstr "Войти через Facebook"
+
+#: user_extra.module:47
+msgid "Email should be unique on @sitename and will used as your username."
+msgstr ""
+"E-mail должен быть уникальным на @sitename и является именем пользователя."
+
+#: user_extra.module:63
+msgid "Registering, you are accepting the !license_agreement"
+msgstr "Регестрируясь, вы принимаете !license_agreement."
+
+#: user_extra.module:63
+msgid "license agreement"
+msgstr "условия использования сервиса"
+
+#: user_extra.module:72
+msgid "Request new passowrd"
+msgstr "Получить новый пароль"
+
+#: user_extra.module:83;113
+msgid "Login"
+msgstr "Войти"
+
+#: user_extra.module:137
+msgid "Photo editing"
+msgstr "Редактирование фото"
+
+#: user_extra.module:141
+msgid "Close"
+msgstr "Выбрать"
+
+#: user_extra.module:152
+msgid "Upload photo"
+msgstr "Загрузить"
+
+#: user_extra.module:162;163
+msgid "Remove photo"
+msgstr "Удалить фотку"
+
+#: user_extra.module:178
+msgid "Submit"
+msgstr "Отправить"
+
+#: user_extra.module:183
+msgid "Finish"
+msgstr "Готово"
+
+#: user_extra.module:204
+msgid "Failed to write the uploaded file the site's file folder."
+msgstr "Не удалось сохранить загруженный файл."
+
+#: user_extra.module:207
+msgid "No file was uploaded."
+msgstr "Не удалось сохранить файл."
+
+#: user_extra.module:213
+msgid "No file to remove."
+msgstr "Не файла для удаления."
+
+#: user_extra.info:0
+msgid "User Extra"
+msgstr "Пользователь (Расширение)"
+
+#: user_extra.info:0
+msgid ""
+"Provides additions to default user profile: a form for updating user "
+"picture, user tabs, fields."
+msgstr "Содержит дополнительный функционал к стандартному модулю User."
+
+#: user_extra.info:0
+msgid "Custom"
+msgstr "Собственная"
