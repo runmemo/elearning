@@ -251,7 +251,8 @@
   position: absolute;
   .show(none);
   z-index: 100;
-  width: 121%;
+  width: auto;
+  white-space: nowrap;
   .outline-certificate-desc-triangle {
     position: absolute;
     width: 0;
@@ -273,13 +274,12 @@
       border: 1px solid #fff;
       text-align: center;
     }
-    .item-list {
+    .grades-list {
       background-color: #fff;
-      ul {
-        margin: 0;
-        padding: 0;
-      }
+      margin: 0;
+      padding: 0;
       li {
+        .list-item();
         color: #444444;
         margin: 0 10px;
         padding: 15px 10px 13px 0px;

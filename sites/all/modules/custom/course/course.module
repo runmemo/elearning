@@ -579,6 +579,10 @@ function course_field_extra_field() {
  *   Grades array sorted by score or FALSE if field does not exist or is empty.
  */
 function course_get_course_grades($course) {
+  if ($cached = cache_get('course_grades_' . $course->nid, 'cache')) {
+    $grades = $cached->data;
+    return $grades;
+  }
   $node_wrapper = entity_metadata_wrapper('node', $course);
   if (!isset($node_wrapper->field_grades)) {
     return FALSE;
@@ -594,6 +598,7 @@ function course_get_course_grades($course) {
     return FALSE;
   }
   ksort($grades, SORT_NUMERIC);
+  cache_set('course_grades_' . $course->nid, $grades, 'cache', 24 * 60 * 60); //1 hour
   return $grades;
 }
 
