@@ -2238,3 +2238,76 @@ body.page-home {
 }
 
 /* Login/Registration forms styles END */
+
+/** Css for tooltips **/
+
+.oq-answer-form-submit,
+.down-active,
+.up-active,
+.down-inactive,
+.comment-link,
+.flag,
+.up-inactive{
+  display: inline !important;
+  position: relative;
+  overflow: visible !important;
+}
+
+.oq-answer-form-submit:hover:after,
+.down-active:hover:after,
+.up-active:hover:after,
+.down-inactive:hover:after,
+.comment-link:hover:after,
+.flag:hover:after,
+.up-inactive:hover:after{
+  background: #fdfdfd;
+  bottom: -21px;
+  content: attr(title);
+  left: 120%;
+  padding: 15px;
+  position: absolute;
+  color: #3d3d3d;
+  font-size: 12px;
+  z-index: 98;
+  width: auto;
+  moz-box-shadow: 2px 4px 23px 1px #888;
+  -webkit-box-shadow: 2px 4px 23px 1px #888;
+  box-shadow: 2px 4px 23px 1px #888;
+}
+
+.oq-answer-form-submit:hover:before,
+.down-active:hover:before,
+.up-active:hover:before,
+.down-inactive:hover:before,
+.comment-link:hover:before,
+.flag:hover:before,
+.up-inactive:hover:before{
+  border: solid;
+  border-color: transparent #fff transparent transparent;
+  border-width: 8px 8px 8px 0;
+  bottom: 20px;
+  content: "";
+  left: 110%;
+  position: absolute;
+  z-index: 99;
+  top: -2px;
+}
+
+.down-active:hover:after,
+.up-active:hover:after,
+.down-inactive:hover:after,
+.up-inactive:hover:after {
+  bottom: -25px;
+  left: 140%;
+}
+
+.flag:hover:after {
+  left: 152%;
+}
+
+.down-active:hover:before,
+.up-active:hover:before,
+.down-inactive:hover:before,
+.up-inactive:hover:before {
+  left: 108%;
+}
