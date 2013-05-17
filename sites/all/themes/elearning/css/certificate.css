@@ -8,24 +8,25 @@ body {
   width: 95%;
   margin: 0 auto;
 }
-
+/* Using font "Myriad Pro" as locally installed */
 .title {
-  font: bold 60pt myriadpro;
+  font: bold 60pt Myriad Pro;
   color: #d0471b;
   margin: 85px 0px 120px 0px;
   text-align: center;
 }
 
 .registered {
-  font: normal 40pt myriadpro;
+  font: normal 50pt Myriad Pro;
   vertical-align: text-top;
   margin-left: -25px;
+  position: relative;
+  top: -5px;
 }
 
 .body {
   text-align: center;
   font: bold 12px Helvetica;
-  /* @todo Ilya: Helvetica that you use does not seem to have Russian symbols. */
   margin-bottom: 148px;
 }
 
@@ -64,22 +65,20 @@ body {
 }
 
 .signature {
+  padding: 0;
   list-style: none;
   display: inline;
 }
 
 .signature-wrapper {
+  position: relative;
+  bottom: 25px;
   margin-left: 26px;
+  padding-bottom: 5px;
   border-bottom: solid 1px #cacaca;
 }
 
 .teacher-name {
   font: bold 13px Helvetica;
   padding-right: 20px;
-  /*border-bottom: solid 1px #cacaca;*/
-}
-
-.teacher-signature img {
-  vertical-align: text-bottom;
-  /*border-bottom: solid 1px #cacaca;*/
 }
