@@ -5,5 +5,7 @@ dependencies[] = features
 dependencies[] = filter
 dependencies[] = flag
 dependencies[] = vud_field
+
+features[flag][] = best_answer
 features[features_api][] = api:1
 features[rules_config][] = rules_user_unselects_best_answer_extra
