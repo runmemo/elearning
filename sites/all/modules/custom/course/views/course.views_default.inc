@@ -99,7 +99,7 @@ function course_views_default_views() {
   $handler->display->display_options['header']['php']['id'] = 'php';
   $handler->display->display_options['header']['php']['table'] = 'views';
   $handler->display->display_options['header']['php']['field'] = 'php';
-  $handler->display->display_options['header']['php']['php_output'] = '<div class="header-left"><?php print t(\'Students\');?></div><div class="header-right"><?php print count($results) ?></div>';
+  $handler->display->display_options['header']['php']['php_output'] = '<?php $count = count($results); ?><div class="header-left"><?php print format_plural($count, \'Student\', \'Students\');?></div><div class="header-right"><?php print $count; ?></div>';
   /* Relationship: Registration: Node */
   $handler->display->display_options['relationships']['nid']['id'] = 'nid';
   $handler->display->display_options['relationships']['nid']['table'] = 'registration';

@@ -201,6 +201,9 @@ function course_outline_generate_grades_description($grades, $nid) {
   }
  
   $grade_ranges = course_get_grade_ranges($grades);
+  if (!$grade_ranges) {
+    return '';
+  }
   // Wrap ranges in html.
   foreach ($grade_ranges as $range => $name) {
     $list_item = '';

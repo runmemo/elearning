@@ -148,7 +148,7 @@ function elearning_preprocess_certificate_certificate(&$variables) {
 
   // Get logo of course provider.
   $logo_file = $node_wrapper->field_provider->field_logo->value() ? $node_wrapper->field_provider->field_logo->file->value() : '';
-  $logo_image = !empty($logo_file) ? theme_image_style(array('style_name' => 'provider_logo', 'path' => $logo_file->uri, 'width' => $logo_file->image_dimensions['width'], 'height' => $logo_file->image_dimensions['height'])) : '';
+  $logo_image = !empty($logo_file) ? theme_image_style(array('style_name' => 'provider_logo_certificate', 'path' => $logo_file->uri, 'width' => $logo_file->image_dimensions['width'], 'height' => $logo_file->image_dimensions['height'])) : '';
   $variables['course']['provider_logo'] = !empty($logo_image) ? render($logo_image) : '';
 
   // Get signature from certificate's template.

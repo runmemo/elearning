@@ -89,7 +89,7 @@ function front_page_views_default_views() {
   $handler->display->display_options['fields']['field_provider']['label'] = '';
   $handler->display->display_options['fields']['field_provider']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_provider']['settings'] = array(
-    'link' => 1,
+    'link' => 0,
   );
   /* Field: Content: Dates */
   $handler->display->display_options['fields']['field_course_dates']['id'] = 'field_course_dates';

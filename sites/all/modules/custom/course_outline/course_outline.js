@@ -12,7 +12,7 @@
       });
       // open section with active page
       $('.block-course-outline .menu > ul').css('display', 'none');
-      $('.block-course-outline .active').closest('ul').css('display', 'block');;
+      $('.block-course-outline .active').closest('ul').css('display', 'inline-block');
       $('.block-course-outline .active').closest('ul').prev().toggleClass('active');
     }
   };
