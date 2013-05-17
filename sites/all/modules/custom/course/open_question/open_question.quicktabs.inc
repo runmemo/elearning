@@ -22,14 +22,14 @@ function open_question_quicktabs_default_quicktabs() {
     0 => array(
       'bid' => 'open_question_delta_oq_answer_form_block',
       'hide_title' => 1,
-      'title' => 'My Answer',
+      'title' => t('My answer'),
       'weight' => '-100',
       'type' => 'block',
     ),
     1 => array(
       'bid' => 'open_question_delta_oq_other_answers_block',
       'hide_title' => 1,
-      'title' => 'Review Answers',
+      'title' => t('Review answers'),
       'weight' => '-99',
       'type' => 'block',
     ),
