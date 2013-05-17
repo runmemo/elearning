@@ -34,7 +34,7 @@ function elearning_alpha_preprocess_node_course(&$vars) {
 function elearning_alpha_preprocess_node_question(&$vars) {
   $vars['userpoints_count'] = userpoints_get_current_points($vars['uid'], 'all');
   $vars['user_picture'] = elearning_get_user_picture($vars['uid'], 'question_author', 'node-question');
-  $vars['created_formatted'] = t('%time ago', array('%time' => format_interval(REQUEST_TIME - $vars['created'], 1)));
+  $vars['created_formatted'] = t('@time ago', array('@time' => format_interval(REQUEST_TIME - $vars['created'], 1)));
   $vars['subscribe_button'] =  render($vars['elements']['links']['flag']);
 }
 

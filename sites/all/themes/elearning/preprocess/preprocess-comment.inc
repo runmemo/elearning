@@ -5,5 +5,6 @@
  * @param array $vars
  */
 function elearning_alpha_preprocess_comment(&$vars) {
-  $vars['submitted'] = t('!username - !time ago', array('!username' => $vars['author'], '!time' => format_interval(REQUEST_TIME - $vars['comment']->created, 1)));
+  $username = $vars['author'];
+  $vars['submitted'] = $username . ' - ' .  t('@time ago', array('@time' => format_interval(REQUEST_TIME - $vars['comment']->created, 1)));
 }
