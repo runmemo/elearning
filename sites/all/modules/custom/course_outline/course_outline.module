@@ -39,8 +39,9 @@ function course_outline_theme() {
  */
 function theme_menu_link__course_outline_unit(array $variables) {
   $element = $variables['element'];
+  $classes = implode(' ', $variables['element']['#attributes']['class']);
   $sub_menu = '';
-  $output = '<h3 class="outline-unit js-outline-unit">' . $element['#title'] . '<span class="icon"></span></h3>';
+  $output = '<h3 class="' . $classes . ' outline-unit js-outline-unit">' . $element['#title'] . '<span class="icon"></span></h3>';
   if ($element['#below']) {
     $sub_menu = drupal_render($element['#below']);
   }
