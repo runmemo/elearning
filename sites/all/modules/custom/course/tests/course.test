@@ -173,6 +173,9 @@ class CourseNavigationTestCase extends CourseTestCase {
 
 }
 
+/**
+ * Contains unit tests for course functionality.
+ */
 class CourseUnitTestCase extends DrupalUnitTestCase {
   public static function getInfo() {
     return array(
@@ -273,12 +276,18 @@ class CourseUnitTestCase extends DrupalUnitTestCase {
       );
   }
   
+  /**
+   * Tests course_get_grade_ranges function with empty array.
+   */
   function test_get_grade_ranges_empty() {
     $grades = array();
     $results = course_get_grade_ranges($grades);
     $this->assertFalse($results, 'Empty grades array results in FALSE.');
   }
   
+  /**
+   * Tests course_get_grade_ranges function with non empty array of grades.
+   */
   function test_get_grade_ranges_non_empty() {
     $grades = array (
       50 => 'Pass',
@@ -302,6 +311,7 @@ class CourseUnitTestCase extends DrupalUnitTestCase {
     $this->assertEqual($names[1], 'Pass');
     $this->assertEqual($names[2], 'Merit');
     $this->assertEqual($names[3], 'Distinction');
+    $this->assertEqual(count($names), 4, 'Only 4 ranges exist.');
     
   }
 }
