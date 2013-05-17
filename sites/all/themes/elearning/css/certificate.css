@@ -24,9 +24,8 @@ body {
 
 .body {
   text-align: center;
-  /* font: bold 12px Helvetica;
-    @todo Ilya: Helvetica that you use does not seem to have Russian symbols.
-  */
+  font: bold 12px Helvetica;
+  /* @todo Ilya: Helvetica that you use does not seem to have Russian symbols. */
   margin-bottom: 148px;
 }
 
