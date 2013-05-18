@@ -6,11 +6,10 @@
   Drupal.behaviors.user_login_system_forms = {
     attach: function(context, settings) {
       if (Drupal.settings.user_forms && Drupal.settings.user_forms.class) {
-        var _class = Drupal.settings.user_forms.class;
-        if ($.isArray(_class)) {
-          _class = _class[0];
-        }
-        $('.ctools-common-modal-content').addClass('ctools-modal-user-forms').addClass(_class);
+        $('.ctools-common-modal-content').addClass('ctools-modal-user-forms').addClass('ctools-modal-login-form');
+        $('.login-form-additional-link').click(function() {
+          $('.ctools-common-modal-content').removeClass('ctools-modal-login-form').addClass('ctools-modal-register-form');
+        });
       }
       function toggle_popup(element) {
         $('.form-item-' + element + ' .description').fadeToggle();
@@ -69,15 +68,29 @@
         },
         function() {
           $('.upload-link').removeClass('active');
-      });
-      
+        });
+
       $('input#edit-delete').hover(
         function() {
           $('.remove-link').addClass('active');
         },
         function() {
           $('.remove-link').removeClass('active');
-      });
+        });
+      // if userpoints form is in use on "History" tab, activate this tab instead of default "My questions"
+      function urlparam(names) {
+        jQuery.each(names, function(index, item) {
+          var results = new RegExp('[\\?&]' + item + '=([^&#]*)').exec(window.location.href);
+          if (results) {
+            return 1;
+          }
+        });
+         return 0;
+      }
+      var names = ['page', 'sort', 'order'];
+      if (urlparam(names)) {
+        $('a[href="#qt-user_profile_tab-ui-tabs3"]').click();
+      }
     }
   };
 })(jQuery);
