@@ -106,6 +106,14 @@ function user_extra_form_alter(&$form, &$form_state, $form_id) {
     $form['#attributes']['class'][] = 'login-system-form';
     drupal_set_title(t('Request new passowrd'));
   }
+  elseif ($form_id == 'user_profile_form') {
+    $form['#attributes']['class'][] = 'profile-edit-form';
+    $form['picture']['#access'] = FALSE;
+    $form['timezone']['#access'] = FALSE;
+    $form['timezone']['#access'] = FALSE;
+    $form['locale']['#access'] = FALSE;
+    drupal_set_title(t('Editing profile'));
+  }
 }
 
 /**
@@ -128,6 +136,8 @@ function user_extra_preprocess_link(&$variables) {
 function user_extra_preprocess_user_profile(&$variables) {
   drupal_add_js(drupal_get_path('module', 'user_extra') . '/user_extra.js');
   $account = $variables['elements']['#account'];
+  // todo @Ilya: get rid of this after fixing issue with title from userpoints form.
+  drupal_set_title(format_username($account));
   if (user_edit_access($account)) {
     $variables['upload_form'] = drupal_get_form('profile_pic_update_form');
   }

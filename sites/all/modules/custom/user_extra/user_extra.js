@@ -25,7 +25,7 @@
       });
     }
   };
-  Drupal.behaviors.user_profile_edit = {
+  Drupal.behaviors.user_profile_picture_edit = {
     attach: function(context, settings) {
       // show/hide "Choose photo link"
       $('.user-profile-picture-edit').hover(
@@ -77,19 +77,25 @@
         function() {
           $('.remove-link').removeClass('active');
         });
+    }
+  };
+  Drupal.behaviors.user_profile_tabs = {
+    attach: function(context, settings) {
       // if userpoints form is in use on "History" tab, activate this tab instead of default "My questions"
       function urlparam(names) {
+        var result = 0;
         jQuery.each(names, function(index, item) {
           var results = new RegExp('[\\?&]' + item + '=([^&#]*)').exec(window.location.href);
           if (results) {
-            return 1;
+            result = 1;
+            return false;
           }
         });
-         return 0;
+        return result;
       }
       var names = ['page', 'sort', 'order'];
       if (urlparam(names)) {
-        $('a[href="#qt-user_profile_tab-ui-tabs3"]').click();
+        $('a[href="#qt-user_profile_tab-ui-tabs3"]', context)[0].click();
       }
     }
   };

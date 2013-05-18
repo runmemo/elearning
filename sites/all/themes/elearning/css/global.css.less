@@ -2026,7 +2026,7 @@ body.page-home {
   }
 }
 
-/* Login/Registration forms styles START */
+/* Login/Registration/Profile editing forms styles START */
 
 .not-logged-in 
 .ctools-modal-user-forms {
@@ -2038,7 +2038,8 @@ body.page-home {
   }
 }
 
-.login-system-form {
+.login-system-form,
+.profile-edit-form {
   margin-top: 27px;
   .form-item {
     margin-top: 0px;
@@ -2054,6 +2055,7 @@ body.page-home {
       border: 0;
       padding-left: 11px;
       width: 100%;
+      color: #505050;
     }
     input.error {
       border: 1px solid #e24110;
@@ -2135,14 +2137,39 @@ body.page-home {
   width: 440px !important;
 }
 
-.register-form {
-  .description, .password-strength, .password-strength-text, .password-strength-title, .password-indicator {
+.register-form,
+.profile-edit-form {
+  .description,
+  .password-strength,
+  .password-strength-text,
+  .password-strength-title,
+  .password-indicator {
     .show(none);
   }
   .password-suggestions {
     /* use !important in order to override default js style for user register form */
     .show(none) !important;
   }
+  .form-item-pass {
+    .password-parent {
+      margin-bottom: 27px;
+      width: 100%;
+    }
+    .confirm-parent {
+      width: 100%;
+    }
+  }
+  .password-confirm {
+    .bold(12px);
+    color: #505050;
+  }
+  .password-confirm {
+    margin: 0;
+    width: 49%;
+  }
+}
+
+.register-form {
   .register-form-name-wrapper {
     margin-bottom: 22px;
     .show(inline-block);
@@ -2177,20 +2204,10 @@ body.page-home {
     .description {
       top: 44%;
     }
-    .password-parent {
-      margin-bottom: 27px;
-      width: 100%;
-    }
-    .confirm-parent {
-      width: 100%;
-    }
   }
-  .password-confirm, .register-form-license-text {
+  .register-form-license-text {
     .bold(12px);
     color: #505050;
-  }
-  .password-confirm {
-    margin: 0px 0px 0px 0px;
   }
   .register-form-license-text {
     a:link, a:visited {
@@ -2236,6 +2253,45 @@ body.page-home {
     top: 251px;
   }
 }
+
+.profile-edit-form {
+  background: #f8f8f8;
+  .form-item {
+    margin-bottom: 25px;
+  }
+  .field-name-field-birthday {
+    margin-bottom: 25px;
+    .form-wrapper {
+      margin: 0;
+    }
+    .fieldset-legend {
+      .bold(12px);
+      color: #505050;
+    }
+    .fieldset-wrapper {
+      background: #f8f8f8;
+      padding: 0;
+      .container-inline-date {
+        width: 100%;
+        .form-item {
+          margin: 0;
+          width: 100%;
+        }
+        .date-padding {
+          padding: 0;
+          width: 100%;
+        }
+      }
+    }
+    label {
+      .show(none);
+    }
+  }
+  .form-actions {
+    margin-top: 37px;
+  }
+}
+
 
 /* Login/Registration forms styles END */
 
