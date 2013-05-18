@@ -2247,7 +2247,7 @@ body.page-home {
 .down-inactive,
 .comment-link,
 .flag,
-.up-inactive{
+.up-inactive {
   display: inline !important;
   position: relative;
   overflow: visible !important;
@@ -2262,18 +2262,13 @@ body.page-home {
 .up-inactive:hover:after{
   background: #fdfdfd;
   bottom: -21px;
-  white-space:nowrap;
   content: attr(title);
   left: 120%;
   padding: 15px;
   position: absolute;
   color: #3d3d3d;
   font-size: 12px;
-  z-index: 98;
-  width: auto;
-  moz-box-shadow: 2px 4px 23px 1px #888;
-  -webkit-box-shadow: 2px 4px 23px 1px #888;
-  box-shadow: 2px 4px 23px 1px #888;
+  .tooltip();
 }
 
 .oq-answer-form-submit:hover:before,
