@@ -2241,6 +2241,7 @@ body.page-home {
 
 /** Css for tooltips **/
 
+.star a,
 .oq-answer-form-submit,
 .down-active,
 .up-active,
@@ -2253,6 +2254,7 @@ body.page-home {
   overflow: visible !important;
 }
 
+.star a:hover:after,
 .oq-answer-form-submit:hover:after,
 .down-active:hover:after,
 .up-active:hover:after,
@@ -2272,6 +2274,7 @@ body.page-home {
   .tooltip();
 }
 
+.star a:hover:before,
 .oq-answer-form-submit:hover:before,
 .down-active:hover:before,
 .up-active:hover:before,
@@ -2302,9 +2305,19 @@ body.page-home {
   left: 152%;
 }
 
+.star a:hover:after {
+  left: 150%;
+}
+
 .down-active:hover:before,
 .up-active:hover:before,
 .down-inactive:hover:before,
 .up-inactive:hover:before {
   left: 108%;
+}
+
+div.fivestar-widget .cancel, 
+div.fivestar-widget .star {
+  overflow: visible;
+  text-indent: 0;
 }
