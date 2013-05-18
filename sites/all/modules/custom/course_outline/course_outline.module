@@ -96,7 +96,7 @@ function course_outline_block_view($delta = '') {
       $course_node = node_load($book['bid']);
       if ($course_node) {
         $grades = course_get_course_grades($course_node);
-        $certificate['popup_description'] = course_outline_generate_grades_description($grades, $course_node->nid);
+        $certificate['grade_ranges'] = course_get_grade_ranges($grades);
         $certificate['user_credit'] = credit_calculate($course_node, $user);
         $certificate['points'] = format_plural($certificate['user_credit'], '1 point', '@count points');
         $certificate['pass_credit'] = course_get_course_pass_score($course_node);
@@ -178,54 +178,6 @@ function course_outline_item_title($node) {
   }
   $title = '<div class="title-wrapper">' . $title . $node->title . '</div>';
   return $title;
-}
-
-/**
- * Processes course node, collects grades info and build HTML with grades popup.
- * 
- * @param object $grades
- *   Associative array of grades where key is score.
- * 
- * @param integer $nid
- *   Course node's nid for caching purpsoses.
- * 
- * @return string
- *   HTML for popup description block.
- */
-function course_outline_generate_grades_description($grades, $nid) {
-  if ($cached = cache_get('course_grades_' . $nid, 'cache')) {
-    $output = $cached->data;
-    if ($output) {
-      return $output;
-    }
-  }
- 
-  $grade_ranges = course_get_grade_ranges($grades);
-  if (!$grade_ranges) {
-    return '';
-  }
-  // Wrap ranges in html.
-  foreach ($grade_ranges as $range => $name) {
-    $list_item = '';
-    $list_item = '<span class="points-range">' . t('!range points', array('!range' => $range)) . '</span>';
-    $list_item .= '<span class="points-desc"> - ' . $name . '</span>';
-    $list_items[] = $list_item;
-  }
-  
-  $vars = array(
-    'title' => t(''),
-    'items' => $list_items,
-    'type' => 'ul',
-    'attributes' => array(),
-  );
-  $list = theme_item_list($vars);
-  $output = '<div class="outline-certificate-description">
-    <div class="header">' . t('Compliance scores and marks for the certificate') . '</div>' .
-      $list .
-      '</div>';
-  cache_set('course_grades_' . $nid, $output, 'cache', 24 * 60 * 60); //1 hour
-
-  return $output;
 }
 
 /**
