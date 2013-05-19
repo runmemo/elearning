@@ -19,6 +19,41 @@ function user_extra_menu_alter(&$items) {
   $items['user/register']['modal'] = TRUE;
   $items['user/password']['modal'] = TRUE;
   $items['user']['title callback'] = 'user_extra_user_menu_title';
+  $items['user/%user/edit']['modal'] = TRUE;
+}
+
+/**
+ *
+ * Implements hook_block_info()
+ */
+function user_extra_block_info() {
+  // Block for displaying userpoints form on "History" tab of user profile page.
+  $blocks['user_extra_userpoints_block'] = array(
+    'info' => t('User Profile History Tab'),
+  );
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view()
+ */
+function user_extra_block_view($delta = '') {
+  if ($delta == 'user_extra_userpoints_block') {
+    return user_extra_get_userpoints_form();
+  }
+}
+
+/**
+ * Gets usrepoints form and places it in a block's content
+ * @return array block array with userpoints form in its content
+ */
+function user_extra_get_userpoints_form() {
+  $block = array();
+  if (module_exists('userpoints')) {
+    include drupal_get_path('module', 'userpoints') . '/userpoints.pages.inc';
+    $block['content'][] = drupal_get_form('userpoints_list_transactions');
+  }
+  return $block;
 }
 
 /**
@@ -64,12 +99,20 @@ function user_extra_form_alter(&$form, &$form_state, $form_id) {
       '#weight' => 20,
       '#prefix' => '<div class="register-form-license-text">',
       '#suffix' => '</div>',
-      );
+    );
     drupal_set_title(t('Create new account'));
   } elseif ($form_id == 'user_pass') {
     $form['#attributes']['class'][] = 'password-form';
     $form['#attributes']['class'][] = 'login-system-form';
     drupal_set_title(t('Request new passowrd'));
+  }
+  elseif ($form_id == 'user_profile_form') {
+    $form['#attributes']['class'][] = 'profile-edit-form';
+    $form['picture']['#access'] = FALSE;
+    $form['timezone']['#access'] = FALSE;
+    $form['timezone']['#access'] = FALSE;
+    $form['locale']['#access'] = FALSE;
+    drupal_set_title(t('Editing profile'));
   }
 }
 
@@ -80,12 +123,7 @@ function user_extra_preprocess_link(&$variables) {
   $paths = array('user/login/nojs', 'user/register/nojs', 'user/password/nojs');
   if (in_array($variables['path'], $paths)) {
     $variables['options']['attributes']['class'][] = 'ctools-modal-common-modal-style';
-    if ($variables['text'] == t('Login')) {
-      $class = 'ctools-modal-login-form';
-    } else {
-      $class = 'ctools-modal-register-form';
-    }
-    drupal_add_js(array('user_forms' => array('class' => $class)), 'setting');
+    drupal_add_js(array('user_forms' => array('class' => TRUE)), 'setting');
     drupal_add_js(drupal_get_path('module', 'user_extra') . '/user_extra.js');
   }
 }
@@ -98,6 +136,8 @@ function user_extra_preprocess_link(&$variables) {
 function user_extra_preprocess_user_profile(&$variables) {
   drupal_add_js(drupal_get_path('module', 'user_extra') . '/user_extra.js');
   $account = $variables['elements']['#account'];
+  // todo @Ilya: get rid of this after fixing issue with title from userpoints form.
+  drupal_set_title(format_username($account));
   if (user_edit_access($account)) {
     $variables['upload_form'] = drupal_get_form('profile_pic_update_form');
   }
@@ -306,7 +346,6 @@ function user_extra_reg_submit_callback($form, &$form_state) {
   return $form;
 }
 
-
 /**
  * Implementation of hook_username_alter().
  */
@@ -317,6 +356,6 @@ function user_extra_username_alter(&$name, $account) {
     $field_name = isset($field_name_view[0]['#markup']) ? $field_name_view[0]['#markup'] : '';
     $field_surname_view = field_view_field('user', $user, 'field_surname');
     $field_surname = isset($field_surname_view[0]['#markup']) ? $field_surname_view[0]['#markup'] : '';
-    $name = (!empty($field_name) && !empty($field_surname)) ? $field_name . ' ' .$field_surname : $name;
+    $name = (!empty($field_name) && !empty($field_surname)) ? $field_name . ' ' . $field_surname : $name;
   }
 }

@@ -40,7 +40,7 @@
     </div>
     <?php if ($access) : ?>
     <div class="user-profile-edit-link grid-7 omega">
-      <h2><?php print l(t('Edit'), 'user/' . $user_uid . '/edit', array('attributes' => array('class' => array('profile-edit')))); ?></h2>
+      <h2><?php print l(t('Edit'), 'user/' . $user_uid . '/edit', array('attributes' => array('class' => array('profile-edit', 'ctools-modal-common-modal-style')))); ?></h2>
     </div>
     <?php endif; ?>
   </div>

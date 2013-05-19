@@ -423,7 +423,7 @@ a.user-menu-parent:hover .user-menu-userpoints {
       .grid-normal-14();
     }
     @media @wide {
-      .grid-wide-14();
+      width: 1010px;
     }
   }
 }
@@ -2026,7 +2026,7 @@ body.page-home {
   }
 }
 
-/* Login/Registration forms styles START */
+/* Login/Registration/Profile editing forms styles START */
 
 .not-logged-in 
 .ctools-modal-user-forms {
@@ -2038,7 +2038,13 @@ body.page-home {
   }
 }
 
-.login-system-form {
+.ctools-common-modal-content.ctools-modal-user-forms .popups-container,
+.ctools-common-modal-content.ctools-modal-user-forms .modal-content {
+  background: #f8f8f8;
+}
+
+.login-system-form,
+.profile-edit-form {
   margin-top: 27px;
   .form-item {
     margin-top: 0px;
@@ -2054,6 +2060,7 @@ body.page-home {
       border: 0;
       padding-left: 11px;
       width: 100%;
+      color: #505050;
     }
     input.error {
       border: 1px solid #e24110;
@@ -2135,14 +2142,43 @@ body.page-home {
   width: 440px !important;
 }
 
-.register-form {
-  .description, .password-strength, .password-strength-text, .password-strength-title, .password-indicator {
+.register-form,
+.profile-edit-form {
+  .description,
+  .password-strength,
+  .password-strength-text,
+  .password-strength-title,
+  .password-indicator {
     .show(none);
   }
   .password-suggestions {
     /* use !important in order to override default js style for user register form */
     .show(none) !important;
   }
+  .form-item-pass {
+    .password-parent {
+      margin-bottom: 27px;
+      width: 100%;
+    }
+    .confirm-parent {
+      width: 100%;
+    }
+    input.password-confirm,
+    input.password-field {
+      margin-bottom: 0px;
+    }
+  }
+  .password-confirm {
+    .bold(12px);
+    color: #505050;
+  }
+  .password-confirm {
+    margin: 0;
+    width: 49%;
+  }
+}
+
+.register-form {
   .register-form-name-wrapper {
     margin-bottom: 22px;
     .show(inline-block);
@@ -2177,22 +2213,10 @@ body.page-home {
     .description {
       top: 44%;
     }
-    .password-parent {
-      margin-bottom: 27px;
-      width: 100%;
-    }
-    .confirm-parent {
-      width: 100%;
-    }
-  }
-  .password-confirm, .register-form-license-text {
-    .bold(12px);
-    color: #505050;
-  }
-  .password-confirm {
-    margin: 0px 0px 0px 0px;
   }
   .register-form-license-text {
+    .bold(12px);
+    color: #505050;
     a:link, a:visited {
       .link();
       color: #e44100;
@@ -2237,10 +2261,144 @@ body.page-home {
   }
 }
 
-/* Login/Registration forms styles END */
+.profile-edit-form {
+  background: #f8f8f8;
+  .form-item {
+    margin-bottom: 25px;
+  }
+  .field-name-field-birthday {
+    margin-bottom: 25px;
+    .form-wrapper {
+      margin: 0;
+    }
+    .fieldset-legend {
+      .bold(12px);
+      color: #505050;
+    }
+    .fieldset-wrapper {
+      background: #f8f8f8;
+      padding: 0;
+      .container-inline-date {
+        width: 100%;
+        .form-item {
+          margin: 0;
+          width: 100%;
+        }
+        .date-padding {
+          padding: 0;
+          width: 100%;
+        }
+      }
+    }
+    label {
+      .show(none);
+    }
+    .date-padding input {
+      .bg-img('date-popup-link.png');
+      background-position: 97% 50%;
+      cursor: pointer;
+    }
+  }
+  .form-actions {
+    margin-top: 37px;
+  }
+}
+
+/* date popup section */
+.page-user .ui-datepicker {
+  border: 1px solid #e6e6e6;
+  border-radius: 0px;
+  background: #f6f6f6;
+  width: 190px;
+  .bold(11px);
+  padding: 3px;
+  .ui-datepicker-header {
+    border-radius: 0px;
+    background: #e24210;
+    border: 0;
+  }
+  .ui-datepicker-prev,
+  .ui-datepicker-next {
+    width: 17px;
+    height: 17px;
+    background: #ffffff;
+    .RoundedShape(50%);
+    top: 5px;
+    cursor: pointer;
+  }
+  .ui-datepicker-prev .ui-icon,
+  .ui-datepicker-next .ui-icon {
+    width: 6px;
+    height: 7px;
+  }
+
+  .ui-datepicker-prev {
+    left: 4px;
+    .ui-icon {
+      .bg-img('date-popup-prev.png');
+      margin: -3px;
+    }
+  }
+  .ui-datepicker-next {
+    right: 4px;
+    .ui-icon {
+      .bg-img('date-popup-next.png');
+      margin: -3px -2px;
+    }
+  }
+  .ui-datepicker-title {
+    margin: 0px 45px;
+    .ui-datepicker-month,
+    .ui-datepicker-year {
+      .bold(11px);
+      color: #ffffff;
+      background: #e24210;
+      border: 0;
+      padding: 0px;
+      width: auto;
+      height: 20px;
+    }
+  }
+  .ui-datepicker-calendar {
+    font-size: 11px;
+    border: 0;
+    td a:link,
+    td a:visited {
+      border: 1px solid #e8e8e8;
+      background: #ffffff;
+      color: #e24210;
+      font-weight: bold;
+    }
+    td a:hover,
+    td a:active,
+    td a.ui-state-active {
+      border-top: 1px solid #b8350c;
+      border-left: 1px solid #b8350c;
+      border-right: 1px solid #bf4c28;
+      border-bottom: 1px solid #bc421c;
+      color: #ffffff;
+    }
+    td a.ui-state-active {
+      background: #e24210;
+    }
+    td a:hover,
+    td a:active {
+      background: #fb6738;
+    }
+  }
+  th {
+    font-size: 10px;
+    font-weight: normal;
+    color: #e24210;
+    padding: 8px 0px 6px 9px;
+  }
+}
+
+/* Login/Registration/Profile editing forms styles END */
 
 /** Css for tooltips **/
 
+.star a,
 .oq-answer-form-submit,
 .down-active,
 .up-active,
@@ -2248,11 +2406,12 @@ body.page-home {
 .comment-link,
 .flag,
 .up-inactive {
-  display: inline !important;
+  display: inline;
   position: relative;
   overflow: visible !important;
 }
 
+.star a:hover:after,
 .oq-answer-form-submit:hover:after,
 .down-active:hover:after,
 .up-active:hover:after,
@@ -2268,9 +2427,11 @@ body.page-home {
   position: absolute;
   color: #3d3d3d;
   font-size: 12px;
+  font-weight: bold;
   .tooltip();
 }
 
+.star a:hover:before,
 .oq-answer-form-submit:hover:before,
 .down-active:hover:before,
 .up-active:hover:before,
@@ -2301,9 +2462,19 @@ body.page-home {
   left: 152%;
 }
 
+.star a:hover:after {
+  left: 150%;
+}
+
 .down-active:hover:before,
 .up-active:hover:before,
 .down-inactive:hover:before,
 .up-inactive:hover:before {
   left: 108%;
+}
+
+div.fivestar-widget .cancel, 
+div.fivestar-widget .star {
+  overflow: visible;
+  text-indent: 0;
 }

@@ -34,7 +34,7 @@ function user_extra_quicktabs_default_quicktabs() {
       'type' => 'block',
     ),
     2 => array(
-      'bid' => 'search_delta_form',
+      'bid' => 'user_extra_delta_user_extra_userpoints_block',
       'hide_title' => 1,
       'title' => t('History'),
       'weight' => '-98',
