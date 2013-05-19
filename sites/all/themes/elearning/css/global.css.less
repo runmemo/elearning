@@ -2038,6 +2038,11 @@ body.page-home {
   }
 }
 
+.ctools-common-modal-content.ctools-modal-user-forms .popups-container,
+.ctools-common-modal-content.ctools-modal-user-forms .modal-content {
+  background: #f8f8f8;
+}
+
 .login-system-form,
 .profile-edit-form {
   margin-top: 27px;
@@ -2158,6 +2163,10 @@ body.page-home {
     .confirm-parent {
       width: 100%;
     }
+    input.password-confirm,
+    input.password-field {
+      margin-bottom: 0px;
+    }
   }
   .password-confirm {
     .bold(12px);
@@ -2208,8 +2217,6 @@ body.page-home {
   .register-form-license-text {
     .bold(12px);
     color: #505050;
-  }
-  .register-form-license-text {
     a:link, a:visited {
       .link();
       color: #e44100;
@@ -2286,14 +2293,108 @@ body.page-home {
     label {
       .show(none);
     }
+    .date-padding input {
+      .bg-img('date-popup-link.png');
+      background-position: 97% 50%;
+      cursor: pointer;
+    }
   }
   .form-actions {
     margin-top: 37px;
   }
 }
 
+/* date popup section */
+.page-user .ui-datepicker {
+  border: 1px solid #e6e6e6;
+  border-radius: 0px;
+  background: #f6f6f6;
+  width: 190px;
+  .bold(11px);
+  padding: 3px;
+  .ui-datepicker-header {
+    border-radius: 0px;
+    background: #e24210;
+    border: 0;
+  }
+  .ui-datepicker-prev,
+  .ui-datepicker-next {
+    width: 17px;
+    height: 17px;
+    background: #ffffff;
+    .RoundedShape(50%);
+    top: 5px;
+    cursor: pointer;
+  }
+  .ui-datepicker-prev .ui-icon,
+  .ui-datepicker-next .ui-icon {
+    width: 6px;
+    height: 7px;
+  }
 
-/* Login/Registration forms styles END */
+  .ui-datepicker-prev {
+    left: 4px;
+    .ui-icon {
+      .bg-img('date-popup-prev.png');
+      margin: -3px;
+    }
+  }
+  .ui-datepicker-next {
+    right: 4px;
+    .ui-icon {
+      .bg-img('date-popup-next.png');
+      margin: -3px -2px;
+    }
+  }
+  .ui-datepicker-title {
+    margin: 0px 45px;
+    .ui-datepicker-month,
+    .ui-datepicker-year {
+      .bold(11px);
+      color: #ffffff;
+      background: #e24210;
+      border: 0;
+      padding: 0px;
+      width: auto;
+      height: 20px;
+    }
+  }
+  .ui-datepicker-calendar {
+    font-size: 11px;
+    border: 0;
+    td a:link,
+    td a:visited {
+      border: 1px solid #e8e8e8;
+      background: #ffffff;
+      color: #e24210;
+      font-weight: bold;
+    }
+    td a:hover,
+    td a:active,
+    td a.ui-state-active {
+      border-top: 1px solid #b8350c;
+      border-left: 1px solid #b8350c;
+      border-right: 1px solid #bf4c28;
+      border-bottom: 1px solid #bc421c;
+      color: #ffffff;
+    }
+    td a.ui-state-active {
+      background: #e24210;
+    }
+    td a:hover,
+    td a:active {
+      background: #fb6738;
+    }
+  }
+  th {
+    font-size: 10px;
+    font-weight: normal;
+    color: #e24210;
+    padding: 8px 0px 6px 9px;
+  }
+}
+
+/* Login/Registration/Profile editing forms styles END */
 
 /** Css for tooltips **/
 
