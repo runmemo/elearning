@@ -127,11 +127,11 @@ a.user-menu-parent:hover .user-menu-userpoints {
   @media @mobile { 
     .left();
   } 
-  .width-auto();
+  width: auto;
     .content {
       select {
         .main-menu-border();
-        .width-auto();
+        width:auto;
         .bold(14px);
         .main-menu-link();
         background: 0;
@@ -145,10 +145,10 @@ a.user-menu-parent:hover .user-menu-userpoints {
         .bold(14px);
       }
       ul.menu {
-        .width-auto();
+        width: auto;
         > li.menuparent, > li.sf-no-children {
           .main-menu-border();
-          .width-auto();
+          width: auto;
           > a:link, a:visited {
             .bold(14px);
             .main-menu-link();
@@ -207,7 +207,7 @@ a.user-menu-parent:hover .user-menu-userpoints {
 
 .block-main-menu {
   .right();
-  .width-auto();
+  width: auto;
   .content {
     .bold(14px);
     li {
@@ -465,13 +465,8 @@ a.user-menu-parent:hover .user-menu-userpoints {
   }
   .form-submit {
     left: -8px;
-    top: -49px;
+    top: -67px;
     margin-top: 0px;
-  }
-  .form-submit:hover {
-    .gradient-submit-button-hover();
-    .border-sumbit-hover();
-    padding: 4px 19px;
   }
   fieldset {
     margin-bottom: 0;
@@ -499,9 +494,9 @@ a.user-menu-parent:hover .user-menu-userpoints {
   .page-next,
   .page-previous {
     .button-submit();
-      float: left;
-    padding: 8px 1px;
     text-align: center;
+    padding-left: 0;
+    padding-right: 0;
     @media @narrow {
       .grid-narrow-2();
     }
@@ -514,13 +509,11 @@ a.user-menu-parent:hover .user-menu-userpoints {
   }
   .page-next:hover,
   .page-previous:hover {
-    .gradient-submit-button-hover();
-    .border-sumbit-hover();
-    padding: 7px 0;
+    .button-submit-hover();
   }
 
-   .page-next {
-      float: right;
+   .page-previous {
+      float: left;
     }
    .page-title {
       display:none;
@@ -763,15 +756,8 @@ a.user-menu-parent:hover .user-menu-userpoints {
 #course-registration-form .form-submit {
   float: none;
   width: 100%;
-  padding: 10px 0px;
   margin-top: 4px;
 }
-#course-registration-form .form-submit:hover {
-  .gradient-submit-button-hover();
-  .border-sumbit-hover();
-  padding: 9px 0px;
-}
-
 
 /****** Node type "Course" End ******/
 
@@ -1457,12 +1443,6 @@ body.page-home {
   }
   .oq-answer-edit-submit {
     margin-top: 9px;
-    padding: 13px 16px;
-  }
-  .oq-answer-edit-submit:hover {
-    .gradient-submit-button-hover();
-    .border-sumbit-hover();
-    padding: 12px 15px;
   }
 }
 
@@ -1492,12 +1472,6 @@ body.page-home {
     }
     .form-submit {
       margin-top: 9px;
-      padding: 13px 16px;
-    }
-    .form-submit:hover {
-      .gradient-submit-button-hover();
-      .border-sumbit-hover();
-      padding: 12px 15px;
     }
   }
 }
@@ -1688,21 +1662,10 @@ body.page-home {
 
 .oq-review-form-submit {
   margin-bottom: 10px;
-  padding: 13px 16px;
 }
 
-.oq-review-form-submit:hover {
-  .gradient-submit-button-hover();
-  .border-sumbit-hover();
-  padding: 12px 15px;
-}
-
-.oq-review-form-submit[disabled] {
-  color: #ababab;
-  .gradient-disabled();
-}
-
-.oq-review-form-skip, .oq-review-form-skip:hover {
+.oq-review-form-skip, 
+.oq-review-form-skip:hover {
   .action-cancel();
   .bold(14px);
 }
@@ -1717,7 +1680,8 @@ body.page-home {
   }
 }
 
-.oq-review-form-edit, .oq-review-form-edit:hover {
+.oq-review-form-edit, 
+.oq-review-form-edit:hover {
   .button-icon();
   .bg-img('answer-edit.png');
   margin-top: 60px;
@@ -1785,11 +1749,6 @@ body.page-home {
     .form-submit {
       margin: 0;
       height: 30px;
-    }
-    .form-submit:hover {
-      .gradient-submit-button-hover();
-      .border-sumbit-hover();
-      padding: 5px 19px;
     }
   }
   .comment-group, .comment-form {
@@ -1989,7 +1948,7 @@ body.page-home {
     .right();
     margin: 2px 6px 0px 0px;
   }
-  .oq-answer-form-submit, .oq-answer-form-submit:hover {
+  .oq-answer-form-submit {
     border: 0;
     margin: 0px 5px 18px 0px;
     padding: 0;
@@ -2085,15 +2044,6 @@ body.page-home {
       background-color: #fff2ee;
       color: #e24110;
     }
-  }
-  .form-submit {
-    padding: 9px 20px;
-    font-size: 14px;
-  }
-  .form-submit:hover {
-    .gradient-submit-button-hover();
-    padding: 8px 19px;
-    .border-sumbit-hover();
   }
   .messages.error {
     background-color: #e64412;

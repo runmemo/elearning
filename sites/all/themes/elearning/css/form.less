@@ -1,16 +1,23 @@
-
 /**
  * @file
  * contains reusable less css for forms
  */
 
+@import "mixins.less";
+
+@color-button-disabled: #f1f1f1;
+
 .button() {
   border: 0;
+  height: 35px;
+  line-height: 35px;
   margin-top: 2px;
-  padding: 5px 20px;
+  padding: 0px 20px;
   float: right;
   position: relative;
-  font: normal 15px/1.2 Arial, sans-serif;
+  font-style: normal;
+  font-size: 15px/1.2;
+  font-family: Arial, sans-serif;
   font-weight: bold;
   text-shadow: 0 0 transparent;
   color: #fff;
@@ -21,14 +28,32 @@
 .button-submit() {
   .button();
   .gradient-submit-button();
+  border: 1px solid #f54900;
+  &:hover {
+    .border-sumbit-hover();
+    .gradient-submit-button-hover();
+  }
 }
 
 .fieldset-wrapper {
-    background: #f7f7f7;
-    padding: 1px 10px;
-    .grippie {
-      display: none;
-    }
+  background: #f7f7f7;
+  padding: 1px 10px;
+  .grippie {
+    display: none;
+  }
+}
+
+.form-submit[disabled] {
+  color: #ababab;
+  border: 1px solid @color-button-disabled;
+  .gradient-disabled();
+}
+
+.form-submit[disabled],
+.form-submit[disabled]:hover {
+  color: #ababab;
+  border: 1px solid @color-button-disabled;
+  .gradient-disabled();
 }
 
 .action-cancel() {
@@ -36,7 +61,6 @@
   color: #d0471b;
   text-decoration: none;
   .bold(13px);
-  padding: 16px 26px 0px 0px;
   background: none;
   border: 0;
   &:hover {
@@ -71,4 +95,13 @@
   border: none;
   height: @size;
   width: @size;
+}
+
+.form-actions input {
+  margin-right: 0.5em;
+}
+
+
+label {
+  font-weight: bold;
 }
