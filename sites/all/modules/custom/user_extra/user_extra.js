@@ -9,7 +9,7 @@
         var modal = $('.ctools-common-modal-content');
         var _class = Drupal.settings.user_forms.class;
         if ($.isArray(_class)) {
-          _class = _class[0];
+          _class = _class[1];
         }
         modal.addClass('ctools-modal-user-forms');
         if (_class.length > 0) {

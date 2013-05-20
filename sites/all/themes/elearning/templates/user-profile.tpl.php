@@ -35,11 +35,11 @@
 ?>
 <div class="profile omega"<?php print $attributes; ?>>
   <div class="user-profile-name-caption alpha omega">
-    <div class="user-name grid-7 omega">
+    <div class="user-name omega">
       <h2><?php print $user_name; ?></h2>
     </div>
     <?php if ($access) : ?>
-    <div class="user-profile-edit-link grid-7 omega">
+    <div class="user-profile-edit-link omega">
       <h2><?php print l(t('Edit'), 'user/' . $user_uid . '/edit', array('attributes' => array('class' => array('profile-edit', 'ctools-modal-common-modal-style')))); ?></h2>
     </div>
     <?php endif; ?>
@@ -59,7 +59,7 @@
           <?php print $userpoints_count; ?>
         </div>
       </div>
-      <div class="user-profile-fields grid-3 omega">
+      <div class="user-profile-fields omega">
         <?php if (isset($field_name) || isset($field_surname)) : ?>
           <div class="user-profile-name-surname">
             <div class="user-profile-name-surname-caption"><?php print t('Name'); ?></div>

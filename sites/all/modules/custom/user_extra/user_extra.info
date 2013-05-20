@@ -1,18 +1,19 @@
 name = User Extra
 description = Provides additions to default user profile: a form for updating user picture, user tabs, fields.
 core = 7.x
-package = Custom 
+package = Custom
 
 dependencies[] = common_tools
 dependencies[] = context
 dependencies[] = course
 dependencies[] = ctools
 dependencies[] = date
+dependencies[] = email_registration
 dependencies[] = features
 dependencies[] = image
 dependencies[] = quicktabs
 dependencies[] = text
-dependencies[] = email_registration
+dependencies[] = user
 dependencies[] = user_registrationpassword
 features[context][] = user_profile
 features[ctools][] = context:context:3

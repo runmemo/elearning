@@ -18,4 +18,6 @@ body.page-home .region-content-inner {
 
 .view-user-courses {
   clear: none;
+  float: right;
+  width: 655px;
 }

@@ -860,6 +860,7 @@ a.user-menu-parent:hover .user-menu-userpoints {
     .show(inline-block);
     width: 100%;
     .user-name {
+      .left();
       margin-left: 0px;
     }
     .user-name h2, .user-profile-edit-link h2 {
@@ -1072,20 +1073,20 @@ a.user-menu-parent:hover .user-menu-userpoints {
 }
 /* User profile picture update form styles END */
 
-.page-user .view-user-courses {
-  .right();
-}
-
 .view-user-courses {
+.right();
+  @media @narrow {
+    float: none;
+  }
+  @media @mobile {
+    clear: both;
+    width: 90%;
+    float: none;
+    margin-right: auto;
+    margin-left: auto;
+  }
   margin-bottom: 22px;
   background: #fafafa;
-  width: 95%;
-  @media @normal {
-    .grid-normal-9();
-  }
-  @media @wide {
-    .grid-wide-9();
-  }
   .view-header {
     .view-block-header();
     p {
@@ -1159,14 +1160,18 @@ a.user-menu-parent:hover .user-menu-userpoints {
 }
 
 .user-profile-fields {
+  @media @narrow {
+    width: 400px;
+  }
   .user-profile-name-surname,
   .user-profile-email,
   .field-name-field-phone-number,
   .field-name-field-birthday {
-    margin-bottom: 20px;
+    margin-bottom: 14px;
   }
-  .field-label {
-    margin-bottom: 4px;
+  .field-label,
+  .user-profile-name-surname-caption {
+    margin-bottom: 2px;
     .text-grey();
   }
   .field-item {
