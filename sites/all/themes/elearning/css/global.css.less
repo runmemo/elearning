@@ -2028,19 +2028,21 @@ body.page-home {
 
 /* Login/Registration/Profile editing forms styles START */
 
-.not-logged-in 
-.ctools-modal-user-forms {
-  .popups-body {
-    padding: 0px 14px 14px 14px;
-    /* use !important in order to override modal js style for user forms */
-    width: auto !important;
-    position: initial;
-  }
+.not-logged-in .ctools-modal-user-forms .popups-body,
+.page-user .ctools-modal-profile-form .popups-body {
+  padding: 0px 15px 15px 15px;
+  /* use !important in order to override modal js style for user forms */
+  width: auto !important;
+  position: initial;
 }
 
 .ctools-common-modal-content.ctools-modal-user-forms .popups-container,
 .ctools-common-modal-content.ctools-modal-user-forms .modal-content {
   background: #f8f8f8;
+}
+
+.ctools-common-modal-content.ctools-modal-user-forms .form-item label {
+  width: auto;
 }
 
 .login-system-form,
@@ -2179,11 +2181,11 @@ body.page-home {
 }
 
 .register-form {
-  .register-form-name-wrapper {
+  .user-form-name-wrapper {
     margin-bottom: 22px;
     .show(inline-block);
     .field-name-field-name, .field-name-field-surname {
-      width: 197px;
+      width: 196px;
       .left();
     }
     .field-name-field-name {
@@ -2262,6 +2264,13 @@ body.page-home {
 }
 
 .profile-edit-form {
+  .field-name-field-name, .field-name-field-surname {
+    width: 166px;
+    .left();
+  }
+  .field-name-field-name {
+    margin-right: 17px;
+  }
   background: #f8f8f8;
   .form-item {
     margin-bottom: 25px;
@@ -2301,6 +2310,9 @@ body.page-home {
   }
   .form-actions {
     margin-top: 37px;
+    .form-submit {
+      margin-top: 5px;
+    }
   }
 }
 
