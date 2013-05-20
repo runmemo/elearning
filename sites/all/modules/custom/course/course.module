@@ -40,7 +40,7 @@ function course_menu_alter(&$items) {
   
   // Restrict access to node outline to users who have edit access.
   $items['node/%node/outline']['access callback'] = 'node_access';
-  $items['node/%node/outline']['page arguments'] = array('update', 1);
+  $items['node/%node/outline']['access arguments'] = array('update', 1);
   
   // Disable page 'node'
   $items['node']['page callback'] = 'drupal_not_found';  
