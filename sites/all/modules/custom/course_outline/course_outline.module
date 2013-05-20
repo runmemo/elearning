@@ -100,7 +100,7 @@ function course_outline_block_view($delta = '') {
         $certificate['user_credit'] = credit_calculate($course_node, $user);
         $certificate['points'] = format_plural($certificate['user_credit'], '1 point', '@count points');
         $certificate['pass_credit'] = course_get_course_pass_score($course_node);
-        if ($certificate['user_credit'] > $certificate['pass_credit']) {
+        if ($certificate['user_credit'] >= $certificate['pass_credit']) {
           $certificate['class'] = 'certificate-enabled';
           $certificate['link'] = l(t('Download certificate'), 'node/' . $course_node->nid . '/certificate');
         }
