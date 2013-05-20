@@ -670,5 +670,5 @@ function course_access_certificate($node, $user) {
   $pass_score = course_get_course_pass_score($node);
   $user_credit = credit_calculate($node, $user);
   // User must have more credit poits than a pass value on the course.
-  return $user_credit > $pass_score;
+  return $user_credit >= $pass_score;
 }

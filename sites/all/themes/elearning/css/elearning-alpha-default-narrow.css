@@ -9,5 +9,9 @@
 }
 
 .view-user-courses {
-  clear: none;
+  float: none;
+}
+
+.user-profile-basic-info {
+  width: 290px;
 }
