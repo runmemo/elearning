@@ -7,13 +7,13 @@
   Drupal.behaviors.course_outline_accordion = {
     attach: function(context, settings) {
       $('.js-outline-unit').unbind('click').bind('click', function() {
-        $(this).next('ul').slideToggle('fast');
+        $(this).next('.menu').slideToggle('fast');
         $(this).toggleClass('active');
       });
-      // open section with active page
-      $('.block-course-outline .menu > ul').css('display', 'none');
-      $('.block-course-outline .active').closest('ul').css('display', 'inline-block');
-      $('.block-course-outline .active').closest('ul').prev().toggleClass('active');
+      // Open section with active page.
+      $('.block-course-outline .menu > .menu').css('display', 'none');
+      $('.block-course-outline .active').closest('.menu').css('display', 'inline-block');
+      $('.block-course-outline .active').closest('.menu').prev('.js-outline-unit').toggleClass('active');
     }
   };
 })(jQuery);
