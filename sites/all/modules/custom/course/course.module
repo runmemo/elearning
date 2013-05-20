@@ -445,24 +445,51 @@ function _course_get_tree_items($tree, $load_type = FALSE) {
  *   Array of nids of nodes that are part of the course.
  */
 function course_get_items($course_item) {
-  // check if values exist in cache  
+  // Check if values exist in cache (cache item per book). 
   if ($cached = cache_get('course_get_items_' . $course_item->book['bid'])) {
     return $cached->data;
   }
-  // get items from the course book
+  // Get items from the course book.
   $tree = menu_tree_all_data($course_item->book['menu_name'], NULL, 3);
   $items = _course_get_tree_items($tree);
   $res = array();
   foreach ($items as $nid => $item) {
-    $node = node_load($nid);
-    $res[$node->nid] = $node->type;
+    $res[$nid] = course_get_node_type($nid);
   }
  
-  // set chache
+  // Set chache.
   cache_set('course_get_items_' . $course_item->book['bid'], $res, 'cache', 60*60);
   return $res;
 }
 
+/**
+ * Workarround function to avoid infinite loop with node_load.
+ * 
+ * @param integer $nid
+ *   Node's nid.
+ * 
+ * @return string
+ *   Type of the node.
+ */
+function course_get_node_type($nid) {
+  // Cache results for current page load.
+  $type = &drupal_static(__FUNCTION__);
+  if (isset($type)) {
+    return $type;
+  }
+  // Get node type for the database directly rather than node_load!
+  $res = db_select('node', 'n')
+    ->fields('n', array('type'))
+    ->condition('n.nid', $nid)
+    ->execute()->fetch();
+  if ($res) {
+    return $res->type;
+  }
+  else {
+    return FALSE;
+  }
+}
+    
 function course_is_item_node($node) {
   return in_array($node->type, course_item_node_types());
 }
