@@ -302,10 +302,10 @@ class CourseUnitTestCase extends DrupalUnitTestCase {
       $names[] = $name;
     }
     // Assert ranges.
-    $this->assertEqual($ranges[0], '0-50');
-    $this->assertEqual($ranges[1], '50-60');
-    $this->assertEqual($ranges[2], '60-70');
-    $this->assertEqual($ranges[3], '&gt; 70');
+    $this->assertEqual($ranges[0], '0-49');
+    $this->assertEqual($ranges[1], '50-59');
+    $this->assertEqual($ranges[2], '60-69');
+    $this->assertEqual($ranges[3], '70+');
     // Assert range descriptions.
     $this->assertEqual($names[0], 'Certificate is not available');
     $this->assertEqual($names[1], 'Pass');

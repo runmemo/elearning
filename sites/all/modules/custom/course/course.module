@@ -627,13 +627,13 @@ function course_get_grade_ranges($grades) {
   
   // Create array of score ranges with grade names.
   foreach ($grades as $score => $grade_name) {
-    $range = $prev_score . '-' . $score;
+    $range = $prev_score . '-' . ($score - 1);
     $grade_ranges[$range] = $prev_desc;
     $prev_score = $score;
     $prev_desc = $grade_name;
   }
   $max_score = $prev_score;
-  $range = '&gt; ' . $max_score;
+  $range = $max_score . '+';
   $grade_ranges[$range] =  $grades[$max_score];
   return $grade_ranges;
 }
