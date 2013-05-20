@@ -7,6 +7,28 @@
 include_once 'user_extra.features.inc';
 
 /**
+ * Implements hook_date_format_types().
+ */
+function user_extra_date_format_types() {
+  return array(
+    'medium_dot' => t('Medium with dots'),
+  );
+}
+
+/**
+ * Implements hook_date_formats().
+ */
+function user_extra_date_formats() {
+  return array(
+    array(
+      'type' => 'medium_dot',
+      'format' => 'd.m.Y - H:i',
+      'locales' => array(),
+    ),
+  );
+}
+
+/**
  * Implements hook_menu_alter().
  * @param type $items
  */
