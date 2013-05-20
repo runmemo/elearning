@@ -224,11 +224,12 @@ class CourseUnitTestCase extends DrupalUnitTestCase {
     $tree = $this->make_book_tree($outline);
     $items = _course_get_tree_items($tree);
     $expect = array ( 
-      0 => '3',
-      1 => '5', 2 => '6',
-      3 => '8', 4 => '9', 5 => '10',
+      3,
+      5, 6,
+      8, 9, 10,
     );
-    $this->assertEqual($items, $expect, 'Items are correct for provided outline.');
+    debug($items);
+    $this->assertEqual(array_keys($items), $expect, 'Items are correct for provided outline.');
     
   }
   

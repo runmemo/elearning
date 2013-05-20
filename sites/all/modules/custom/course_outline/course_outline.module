@@ -128,7 +128,6 @@ function course_outline_block_view($delta = '') {
  */
 function course_outline_preprocess_tree(&$tree) {
   global $user;
-  $counter = new multi_counter;
   $tree_key = key($tree);
   if (isset($tree[$tree_key]['#below'])) {
     $tree = $tree[$tree_key]['#below']; // remove the top level
@@ -154,7 +153,6 @@ function course_outline_preprocess_tree(&$tree) {
           $item['#attributes']['class'][] = 'js-outline-current';
           $item['#attributes']['class'][] = 'outline-item-is-current';
         }
-        $node->order = $counter->increment($node->type);
 
         $item['#title'] = course_outline_item_title($node);
         $item['#localized_options']['html'] = TRUE;
@@ -173,7 +171,7 @@ function course_outline_item_title($node) {
   $title = "<span class='outline-" . str_replace('_', '-', $node->type) . "-icon'></span>";
   switch ($node->type) {
     case 'lesson':
-      $title = $title . '<span class="outline-lesson-prefix">' . t('Lesson @i.', array('@i' => $node->order)) . '</span>';
+      $title = $title . '<span class="outline-lesson-prefix">' . t('Lesson @i.', array('@i' => $node->outline_index)) . '</span>';
       break;
   }
   $title = '<div class="title-wrapper">' . $title . $node->title . '</div>';
@@ -219,4 +217,30 @@ class multi_counter {
     }
   }
 
+}
+
+/**
+ * Implements hook_node_load().
+ */
+function course_outline_node_load($nodes, $types) {
+  foreach ($nodes as $nid => $node) {
+    if (isset($node->book)) {
+      $node->outline_index = course_outline_get_item_index($node);
+    }
+  }
+}
+
+/**
+ * Gets index of the node in the book by type.
+ */
+function course_outline_get_item_index($node) {
+   $items = course_get_items($node);
+   $counter = new multi_counter();
+   foreach ($items as $nid => $type) {
+      $counter->increment($type);
+      if ($nid == $node->nid) {
+        break;
+      }
+    } 
+   return $counter->current($node->type);
 }

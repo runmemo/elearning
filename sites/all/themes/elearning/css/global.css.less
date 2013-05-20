@@ -518,9 +518,13 @@ a.user-menu-parent:hover .user-menu-userpoints {
    .page-next {
       float: right;
     }
-   .page-up {
+   .page-title {
       display:none;
+      clear: none;
+      float: left;
+      padding-top: 8px;
       @media @narrow {
+        .show();
         .grid-narrow-8();
       }
       @media @normal {
@@ -536,7 +540,6 @@ a.user-menu-parent:hover .user-menu-userpoints {
      color: #333;
      font-size: 14px;
      cursor: default;
-     padding: 7px 0;
      .title-wrapper {
        .lesson {
          .text-orange();
@@ -569,8 +572,8 @@ a.user-menu-parent:hover .user-menu-userpoints {
   }
 }
 
-.media-youtube-video {
-  margin-bottom: 45px;
+.field-name-field-video {
+  margin-bottom: 10px;
 }
 
 /****** Node type "Course" Start ******/
