@@ -32,7 +32,7 @@ class inline_comments_extra_handler_field_inline_comments extends inline_comment
    
     }
     if (user_access('skip comment approval')) {
-      $output .= '<div id="comment-form-show-' . $values->nid . '" class="views-inline-comment-field">' . l(t('Add Comment'), 'comment/reply/' . $values->nid, array('attributes' => array('class' => 'comment-link', 'title' => t('Add Comment')))) . '</div>';
+      $output .= '<div id="comment-form-show-' . $values->nid . '" class="views-inline-comment-field">' . l(t('Add Comment'), 'comment/reply/' . $values->nid, array('attributes' => array('class' => 'comment-link'))) . '</div>';
     }
     return $output;
   }
