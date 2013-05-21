@@ -22,7 +22,7 @@ function subscriptions_node_flag_default_flags() {
   // Exported flag: "follow nodes".
   $flags['follow_node'] = array(
     'entity_type' => 'node',
-    'title' => 'follow node',
+    'title' => 'Follow node',
     'global' => 0,
     'types' => array(
       1 => 'open_question_feedback',
