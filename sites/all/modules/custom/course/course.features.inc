@@ -162,43 +162,31 @@ function course_image_default_styles() {
  */
 function course_flag_default_flags() {
   $flags = array();
-  // Exported flag: "course_item_complete".
+  // Exported flag: "Course item complete".
   $flags['course_item_complete'] = array(
-    'content_type' => 'node',
+    'entity_type' => 'node',
     'title' => 'Course item complete',
-    'global' => '0',
+    'global' => 0,
     'types' => array(
       0 => 'lesson',
       1 => 'open_question',
     ),
     'flag_short' => 'completed',
     'flag_long' => 'Couser item complete',
-    'flag_message' => t('Determines wether course item was complete by student'),
+    'flag_message' => 'Determines wether course item was complete by student',
     'unflag_short' => 'incomplete',
     'unflag_long' => '',
     'unflag_message' => '',
     'unflag_denied_text' => '',
     'link_type' => 'toggle',
-    'roles' => array(
-      'flag' => array(
-        0 => '2',
-      ),
-      'unflag' => array(
-        0 => '2',
-      ),
-    ),
     'weight' => 0,
     'show_on_form' => 0,
     'access_author' => '',
+    'show_contextual_link' => 0,
     'show_on_page' => 0,
     'show_on_teaser' => 0,
-    'show_contextual_link' => 0,
     'i18n' => 0,
-    'api_version' => 2,
-    'module' => 'сourse',
-    'locked' => array(
-      0 => 'name',
-    ),
+    'api_version' => 3,
   );
 
   return $flags;
