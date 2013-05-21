@@ -121,6 +121,10 @@ function course_block_view($delta = '') {
     case 'registration_form':
       return registration_form_block();
     case 'user_notifications_count':
+      global $user;
+      if (!$user->uid) {
+        return;
+      }
       $block = array();
       $block['subject'] = '';
       $block['content'] = array(
