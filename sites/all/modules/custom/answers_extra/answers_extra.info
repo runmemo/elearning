@@ -24,6 +24,7 @@ features[context][] = question
 features[ctools][] = views:views_default:3.0
 features[views_view][] = answers_to_a_question_extra
 features[views_view][] = user_questions_list
+features[views_view][] = user_answers_list
 features[rules_config][] = rules_subscribe_author_to_question
 features[mail_edit_features][] = subscriptions_mail_node-reference-field-answer-question--en
 features[user_permission][] = use vote up/down
