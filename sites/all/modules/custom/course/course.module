@@ -40,7 +40,7 @@ function course_menu_alter(&$items) {
   
   // Restrict access to node outline to users who have edit access.
   $items['node/%node/outline']['access callback'] = 'node_access';
-  $items['node/%node/outline']['page arguments'] = array('update', 1);
+  $items['node/%node/outline']['access arguments'] = array('update', 1);
   
   // Disable page 'node'
   $items['node']['page callback'] = 'drupal_not_found';  
@@ -258,6 +258,14 @@ function course_node_view($node, $view_mode) {
       $node->teacher['surname'] = '';
     }
   }
+  
+  
+  if ($node->type !== 'lesson' && $view_mode === 'full') {
+    if (isset($node->content['book_navigation'])) {
+      unset($node->content['book_navigation']);
+    }
+  }
+
 }
 
 /**
@@ -381,7 +389,7 @@ function course_get_progress($course_nid = FALSE, $account = FALSE) {
   $items = course_get_items($course);
   $counter = new multi_counter();
   $flag = flag_get_flag('course_item_complete');
-  foreach ($items as $nid) {
+  foreach ($items as $nid => $node_type) {
     $counter->increment('items');
     if ($flag->is_flagged($nid, $account->uid)) {
       $counter->increment('completed');
@@ -395,11 +403,17 @@ function course_get_progress($course_nid = FALSE, $account = FALSE) {
 }
 
 /**
- * Returns array with nids of course items
- * @param array $tree array with menue tree structure of the course book
- * @return array list of course itmes
+ * Internal function that gets array with nids of course items.
+ * 
+ * Should only be used in course_get_items().
+ * 
+ * @param array $tree 
+ *   Array with menue tree structure of the course book.
+ * 
+ * @return array 
+ *   List of course itmes.
  */
-function _course_get_tree_items($tree) {
+function _course_get_tree_items($tree, $load_type = FALSE) {
   $items = array();
   $tree_key = key($tree);
   if (!isset($tree[$tree_key]['below'])) {
@@ -412,30 +426,70 @@ function _course_get_tree_items($tree) {
     }
     foreach ($unit['below'] as $item) {
       $nid = str_ireplace('node/', '', $item['link']['link_path']);
-      $items[] = $nid;
+      $items[$nid] = $nid; 
     }
   }  
   return $items;
 }
 
 /**
- * Gets all items that are part of the course
- * @param object $course
- * @return array nids of nodes that are part of the course
+ * Gets all items that are part of the course.
+ * 
+ * This function should be used intead of _course_get_tree_items()
+ * as it provides caching.
+ * 
+ * @param object $course_item
+ *   Node that is part of the course book.
+ * 
+ * @return array 
+ *   Array of nids of nodes that are part of the course.
  */
-function course_get_items($course) {
-  // check if values exist in cache  
-  if ($cached = cache_get('course_get_items_' . $course->nid)) {
+function course_get_items($course_item) {
+  // Check if values exist in cache (cache item per book). 
+  if ($cached = cache_get('course_get_items_' . $course_item->book['bid'])) {
     return $cached->data;
   }
-  // get items from the course book
-  $tree = menu_tree_all_data($course->book['menu_name'], NULL, 3);
+  // Get items from the course book.
+  $tree = menu_tree_all_data($course_item->book['menu_name'], NULL, 3);
   $items = _course_get_tree_items($tree);
-  // set chache
-  cache_set('course_get_items_' . $course->nid, $items, 'cache', 60*60);
-  return $items;
+  $res = array();
+  foreach ($items as $nid => $item) {
+    $res[$nid] = course_get_node_type($nid);
+  }
+ 
+  // Set chache.
+  cache_set('course_get_items_' . $course_item->book['bid'], $res, 'cache', 60*60);
+  return $res;
 }
 
+/**
+ * Workarround function to avoid infinite loop with node_load.
+ * 
+ * @param integer $nid
+ *   Node's nid.
+ * 
+ * @return string
+ *   Type of the node.
+ */
+function course_get_node_type($nid) {
+  // Cache results for current page load.
+  $type = &drupal_static(__FUNCTION__);
+  if (isset($type)) {
+    return $type;
+  }
+  // Get node type for the database directly rather than node_load!
+  $res = db_select('node', 'n')
+    ->fields('n', array('type'))
+    ->condition('n.nid', $nid)
+    ->execute()->fetch();
+  if ($res) {
+    return $res->type;
+  }
+  else {
+    return FALSE;
+  }
+}
+    
 function course_is_item_node($node) {
   return in_array($node->type, course_item_node_types());
 }
@@ -627,13 +681,13 @@ function course_get_grade_ranges($grades) {
   
   // Create array of score ranges with grade names.
   foreach ($grades as $score => $grade_name) {
-    $range = $prev_score . '-' . $score;
+    $range = $prev_score . '-' . ($score - 1);
     $grade_ranges[$range] = $prev_desc;
     $prev_score = $score;
     $prev_desc = $grade_name;
   }
   $max_score = $prev_score;
-  $range = '&gt; ' . $max_score;
+  $range = $max_score . '+';
   $grade_ranges[$range] =  $grades[$max_score];
   return $grade_ranges;
 }
@@ -670,5 +724,5 @@ function course_access_certificate($node, $user) {
   $pass_score = course_get_course_pass_score($node);
   $user_credit = credit_calculate($node, $user);
   // User must have more credit poits than a pass value on the course.
-  return $user_credit > $pass_score;
+  return $user_credit >= $pass_score;
 }

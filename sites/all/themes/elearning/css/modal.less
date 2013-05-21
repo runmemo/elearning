@@ -1,8 +1,9 @@
-
 /**
  * @file
  * contains less css for modal forms and windows
  */
+
+@import "form.less";
  
 div.ctools-common-modal-content {
   background: none;
@@ -99,12 +100,12 @@ div.ctools-common-modal-content {
     margin-top: 10px;
     .course-exit-action {
       float: right;
-    }
-    .course-exit-action a{
-      .orange-button();
+      a {
+        .button-submit();
+      }
     }
     .course-cancel-action {
-      .cancel-action();
+      .link-cancel() ;
     }
   }
   .resizable-textarea {

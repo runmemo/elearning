@@ -6,7 +6,17 @@
   Drupal.behaviors.user_login_system_forms = {
     attach: function(context, settings) {
       if (Drupal.settings.user_forms && Drupal.settings.user_forms.class) {
-        $('.ctools-common-modal-content').addClass('ctools-modal-user-forms').addClass('ctools-modal-login-form');
+        var modal = $('.ctools-common-modal-content');
+        var _class = Drupal.settings.user_forms.class;
+        if ($.isArray(_class)) {
+          _class = _class[1];
+        }
+        modal.addClass('ctools-modal-user-forms');
+        if (_class.length > 0) {
+          modal.addClass(_class);
+        } else {
+          modal.addClass('ctools-modal-login-form');
+        }
         $('.login-form-additional-link').click(function() {
           $('.ctools-common-modal-content').removeClass('ctools-modal-login-form').addClass('ctools-modal-register-form');
         });

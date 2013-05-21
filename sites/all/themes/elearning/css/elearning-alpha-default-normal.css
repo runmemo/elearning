@@ -11,4 +11,6 @@
 
 .view-user-courses {
   clear: none;
+  float: right;
+  width: 510px;
 }

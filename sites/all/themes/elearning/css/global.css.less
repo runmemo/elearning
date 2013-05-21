@@ -127,11 +127,11 @@ a.user-menu-parent:hover .user-menu-userpoints {
   @media @mobile { 
     .left();
   } 
-  .width-auto();
+  width: auto;
     .content {
       select {
         .main-menu-border();
-        .width-auto();
+        width:auto;
         .bold(14px);
         .main-menu-link();
         background: 0;
@@ -145,10 +145,10 @@ a.user-menu-parent:hover .user-menu-userpoints {
         .bold(14px);
       }
       ul.menu {
-        .width-auto();
+        width: auto;
         > li.menuparent, > li.sf-no-children {
           .main-menu-border();
-          .width-auto();
+          width: auto;
           > a:link, a:visited {
             .bold(14px);
             .main-menu-link();
@@ -207,7 +207,7 @@ a.user-menu-parent:hover .user-menu-userpoints {
 
 .block-main-menu {
   .right();
-  .width-auto();
+  width: auto;
   .content {
     .bold(14px);
     li {
@@ -465,13 +465,8 @@ a.user-menu-parent:hover .user-menu-userpoints {
   }
   .form-submit {
     left: -8px;
-    top: -49px;
+    top: -67px;
     margin-top: 0px;
-  }
-  .form-submit:hover {
-    .gradient-submit-button-hover();
-    .border-sumbit-hover();
-    padding: 4px 19px;
   }
   fieldset {
     margin-bottom: 0;
@@ -487,17 +482,21 @@ a.user-menu-parent:hover .user-menu-userpoints {
   }
 }
 
+.node-links {
+  .hide();
+}
+
 .book-navigation {
   .page-links {
     border: 0;
-    padding: 0.5em 0;
+    padding: 0;
   }
   .page-next,
   .page-previous {
     .button-submit();
-      float: left;
-    padding: 8px 1px;
     text-align: center;
+    padding-left: 0;
+    padding-right: 0;
     @media @narrow {
       .grid-narrow-2();
     }
@@ -510,17 +509,19 @@ a.user-menu-parent:hover .user-menu-userpoints {
   }
   .page-next:hover,
   .page-previous:hover {
-    .gradient-submit-button-hover();
-    .border-sumbit-hover();
-    padding: 7px 0;
+    .button-submit-hover();
   }
 
-   .page-next {
-      float: right;
+   .page-previous {
+      float: left;
     }
-   .page-up {
+   .page-title {
       display:none;
+      clear: none;
+      float: left;
+      padding-top: 8px;
       @media @narrow {
+        .show();
         .grid-narrow-8();
       }
       @media @normal {
@@ -536,7 +537,6 @@ a.user-menu-parent:hover .user-menu-userpoints {
      color: #333;
      font-size: 14px;
      cursor: default;
-     padding: 7px 0;
      .title-wrapper {
        .lesson {
          .text-orange();
@@ -569,8 +569,12 @@ a.user-menu-parent:hover .user-menu-userpoints {
   }
 }
 
-.media-youtube-video {
-  margin-bottom: 45px;
+.field-name-field-video {
+  margin-bottom: 10px;
+}
+
+.block-lesson-interaction {
+  margin-top: 29px;
 }
 
 .course-user-register:link,
@@ -774,15 +778,8 @@ a.user-menu-parent:hover .user-menu-userpoints {
 #course-registration-form .form-submit {
   float: none;
   width: 100%;
-  padding: 10px 0px;
   margin-top: 4px;
 }
-#course-registration-form .form-submit:hover {
-  .gradient-submit-button-hover();
-  .border-sumbit-hover();
-  padding: 9px 0px;
-}
-
 
 /****** Node type "Course" End ******/
 
@@ -879,6 +876,7 @@ a.user-menu-parent:hover .user-menu-userpoints {
     .show(inline-block);
     width: 100%;
     .user-name {
+      .left();
       margin-left: 0px;
     }
     .user-name h2, .user-profile-edit-link h2 {
@@ -1091,20 +1089,20 @@ a.user-menu-parent:hover .user-menu-userpoints {
 }
 /* User profile picture update form styles END */
 
-.page-user .view-user-courses {
-  .right();
-}
-
 .view-user-courses {
+.right();
+  @media @narrow {
+    float: none;
+  }
+  @media @mobile {
+    clear: both;
+    width: 90%;
+    float: none;
+    margin-right: auto;
+    margin-left: auto;
+  }
   margin-bottom: 22px;
   background: #fafafa;
-  width: 95%;
-  @media @normal {
-    .grid-normal-9();
-  }
-  @media @wide {
-    .grid-wide-9();
-  }
   .view-header {
     .view-block-header();
     p {
@@ -1178,14 +1176,18 @@ a.user-menu-parent:hover .user-menu-userpoints {
 }
 
 .user-profile-fields {
+  @media @narrow {
+    width: 400px;
+  }
   .user-profile-name-surname,
   .user-profile-email,
   .field-name-field-phone-number,
   .field-name-field-birthday {
-    margin-bottom: 20px;
+    margin-bottom: 14px;
   }
-  .field-label {
-    margin-bottom: 4px;
+  .field-label,
+  .user-profile-name-surname-caption {
+    margin-bottom: 2px;
     .text-grey();
   }
   .field-item {
@@ -1463,12 +1465,6 @@ body.page-home {
   }
   .oq-answer-edit-submit {
     margin-top: 9px;
-    padding: 13px 16px;
-  }
-  .oq-answer-edit-submit:hover {
-    .gradient-submit-button-hover();
-    .border-sumbit-hover();
-    padding: 12px 15px;
   }
 }
 
@@ -1498,12 +1494,6 @@ body.page-home {
     }
     .form-submit {
       margin-top: 9px;
-      padding: 13px 16px;
-    }
-    .form-submit:hover {
-      .gradient-submit-button-hover();
-      .border-sumbit-hover();
-      padding: 12px 15px;
     }
   }
 }
@@ -1694,21 +1684,10 @@ body.page-home {
 
 .oq-review-form-submit {
   margin-bottom: 10px;
-  padding: 13px 16px;
 }
 
-.oq-review-form-submit:hover {
-  .gradient-submit-button-hover();
-  .border-sumbit-hover();
-  padding: 12px 15px;
-}
-
-.oq-review-form-submit[disabled] {
-  color: #ababab;
-  .gradient-disabled();
-}
-
-.oq-review-form-skip, .oq-review-form-skip:hover {
+.oq-review-form-skip, 
+.oq-review-form-skip:hover {
   .action-cancel();
   .bold(14px);
 }
@@ -1723,7 +1702,8 @@ body.page-home {
   }
 }
 
-.oq-review-form-edit, .oq-review-form-edit:hover {
+.oq-review-form-edit, 
+.oq-review-form-edit:hover {
   .button-icon();
   .bg-img('answer-edit.png');
   margin-top: 60px;
@@ -1791,11 +1771,6 @@ body.page-home {
     .form-submit {
       margin: 0;
       height: 30px;
-    }
-    .form-submit:hover {
-      .gradient-submit-button-hover();
-      .border-sumbit-hover();
-      padding: 5px 19px;
     }
   }
   .comment-group, .comment-form {
@@ -1995,7 +1970,7 @@ body.page-home {
     .right();
     margin: 2px 6px 0px 0px;
   }
-  .oq-answer-form-submit, .oq-answer-form-submit:hover {
+  .oq-answer-form-submit {
     border: 0;
     margin: 0px 5px 18px 0px;
     padding: 0;
@@ -2050,19 +2025,21 @@ body.page-home {
 
 /* Login/Registration/Profile editing forms styles START */
 
-.not-logged-in 
-.ctools-modal-user-forms {
-  .popups-body {
-    padding: 0px 14px 14px 14px;
-    /* use !important in order to override modal js style for user forms */
-    width: auto !important;
-    position: initial;
-  }
+.not-logged-in .ctools-modal-user-forms .popups-body,
+.page-user .ctools-modal-profile-form .popups-body {
+  padding: 0px 15px 15px 15px;
+  /* use !important in order to override modal js style for user forms */
+  width: auto !important;
+  position: initial;
 }
 
 .ctools-common-modal-content.ctools-modal-user-forms .popups-container,
 .ctools-common-modal-content.ctools-modal-user-forms .modal-content {
   background: #f8f8f8;
+}
+
+.ctools-common-modal-content.ctools-modal-user-forms .form-item label {
+  width: auto;
 }
 
 .login-system-form,
@@ -2089,15 +2066,6 @@ body.page-home {
       background-color: #fff2ee;
       color: #e24110;
     }
-  }
-  .form-submit {
-    padding: 9px 20px;
-    font-size: 14px;
-  }
-  .form-submit:hover {
-    .gradient-submit-button-hover();
-    padding: 8px 19px;
-    .border-sumbit-hover();
   }
   .messages.error {
     background-color: #e64412;
@@ -2201,11 +2169,11 @@ body.page-home {
 }
 
 .register-form {
-  .register-form-name-wrapper {
+  .user-form-name-wrapper {
     margin-bottom: 22px;
     .show(inline-block);
     .field-name-field-name, .field-name-field-surname {
-      width: 197px;
+      width: 196px;
       .left();
     }
     .field-name-field-name {
@@ -2284,6 +2252,13 @@ body.page-home {
 }
 
 .profile-edit-form {
+  .field-name-field-name, .field-name-field-surname {
+    width: 166px;
+    .left();
+  }
+  .field-name-field-name {
+    margin-right: 17px;
+  }
   background: #f8f8f8;
   .form-item {
     margin-bottom: 25px;
@@ -2323,6 +2298,9 @@ body.page-home {
   }
   .form-actions {
     margin-top: 37px;
+    .form-submit {
+      margin-top: 5px;
+    }
   }
 }
 

@@ -7,6 +7,28 @@
 include_once 'user_extra.features.inc';
 
 /**
+ * Implements hook_date_format_types().
+ */
+function user_extra_date_format_types() {
+  return array(
+    'medium_dot' => t('Medium with dots'),
+  );
+}
+
+/**
+ * Implements hook_date_formats().
+ */
+function user_extra_date_formats() {
+  return array(
+    array(
+      'type' => 'medium_dot',
+      'format' => 'd.m.Y - H:i',
+      'locales' => array(),
+    ),
+  );
+}
+
+/**
  * Implements hook_menu_alter().
  * @param type $items
  */
@@ -79,7 +101,7 @@ function user_extra_form_alter(&$form, &$form_state, $form_id) {
       ),
     );
   } elseif ($form_id == 'user_register_form') {
-    $form['account']['mail']['#description'] = t('Email should be unique on @sitename and will used as your username.', array('@sitename' => variable_get('site_name', 'CourseHub')));
+    $form['account']['mail']['#description'] = t('Email should be unique on @sitename and will be used as your username.', array('@sitename' => variable_get('site_name', 'CourseHub')));
     $form['account']['mail']['#suffix'] = '<a class="register-form-popup-link popup-mail"></a><div class="popup-arrow-left popup-mail-arrow"></div>';
     $form['account']['pass']['#suffix'] = '<a class="register-form-popup-link popup-pass"></a><div class="popup-arrow-left popup-pass-arrow"></div>';
     $form['actions']['submit']['#ajax'] = array(
@@ -91,7 +113,7 @@ function user_extra_form_alter(&$form, &$form_state, $form_id) {
     $form['#attributes']['class'][] = 'login-system-form';
     $form['field_name']['#weight'] = -12;
     $form['field_surname']['#weight'] = -11;
-    $form['field_name']['#prefix'] = '<div class="register-form-name-wrapper">';
+    $form['field_name']['#prefix'] = '<div class="user-form-name-wrapper">';
     $form['field_surname']['#suffix'] = '</div>';
     // @todo Ilya provide real path to the license agreement page.
     $form['message'] = array(
@@ -107,12 +129,20 @@ function user_extra_form_alter(&$form, &$form_state, $form_id) {
     drupal_set_title(t('Request new passowrd'));
   }
   elseif ($form_id == 'user_profile_form') {
+    $form['field_name']['#weight'] = -12;
+    $form['field_surname']['#weight'] = -11;
+    $form['field_name']['#prefix'] = '<div class="user-form-name-wrapper">';
+    $form['field_surname']['#suffix'] = '</div>';
     $form['#attributes']['class'][] = 'profile-edit-form';
     $form['picture']['#access'] = FALSE;
     $form['timezone']['#access'] = FALSE;
     $form['timezone']['#access'] = FALSE;
     $form['locale']['#access'] = FALSE;
+    $form['account']['current_pass']['#access'] = FALSE;
+    $form['account']['pass']['#access'] = FALSE;
     drupal_set_title(t('Editing profile'));
+    drupal_add_js(array('user_forms' => array('class' => 'ctools-modal-profile-form')), 'setting');
+    drupal_add_js(drupal_get_path('module', 'user_extra') . '/user_extra.js');
   }
 }
 
@@ -123,7 +153,7 @@ function user_extra_preprocess_link(&$variables) {
   $paths = array('user/login/nojs', 'user/register/nojs', 'user/password/nojs');
   if (in_array($variables['path'], $paths)) {
     $variables['options']['attributes']['class'][] = 'ctools-modal-common-modal-style';
-    drupal_add_js(array('user_forms' => array('class' => TRUE)), 'setting');
+    drupal_add_js(array('user_forms' => array('class' => '')), 'setting');
     drupal_add_js(drupal_get_path('module', 'user_extra') . '/user_extra.js');
   }
 }
