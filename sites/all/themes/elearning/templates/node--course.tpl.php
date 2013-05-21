@@ -36,16 +36,16 @@
     <div class="node-course-basic-info">
       <div class="node-course-teacher-parameters">
         <h2><?php print $teacher['name'] . $teacher['surname']; ?></h2>
-        <div class="node-course-teacher-button">
+        <div class="node-course-teacher-info">
           <div id="user-profile-picture">
             <?php print $teacher['avatar']; ?>
           </div>
-          <?php print render($form_class_participate); ?>
+          <div class="node-course-paramenters">
+            <?php if (isset($content['field_duration'])) print render($content['field_duration']); ?>
+            <?php if (isset($content['field_course_load'])) print render($content['field_course_load']); ?>
+          </div>
         </div>
-        <div class="node-course-paramenters">
-          <?php if (isset($content['field_duration'])) print render($content['field_duration']); ?>
-          <?php if (isset($content['field_course_load'])) print render($content['field_course_load']); ?>
-        </div>
+        <?php print render($form_class_participate); ?>
       </div>
       <?php if (isset($content['field_video'])) print render($content['field_video']); ?>
     </div>

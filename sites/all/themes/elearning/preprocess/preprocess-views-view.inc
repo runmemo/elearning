@@ -15,7 +15,7 @@ function elearning_alpha_preprocess_views_view(&$vars) {
 }
 
 /**
- * Preprocess for "course_students" view.
+ * Preprocess for course_students view.
  */
 function elearning_alpha_preprocess_views_view__course_students(&$vars) {
   $vars['classes_array'][] = 'omega';
@@ -29,8 +29,15 @@ function elearning_alpha_preprocess_views_view__user_questions_list(&$vars) {
 }
 
 /**
- * Preprocess for user_questions_list view.
+ * Preprocess for relevant_questions_list view.
  */
 function elearning_alpha_preprocess_views_view__relevant_questions_list(&$vars) {
   $vars['classes_array'][] = 'view-questions-list';
+}
+
+/**
+ * Preprocess for user_questions_list view.
+ */
+function elearning_alpha_preprocess_views_view__user_answers_list(&$vars) {
+  $vars['classes_array'][] = 'view-user-answers-list';
 }

@@ -337,8 +337,9 @@ a.user-menu-parent:hover .user-menu-userpoints {
     }
 }
 
-.field-answer-count {
-  .text-orange;
+.field-answer-count,
+.view-user-answers-list .field-content {
+  .text-orange();
   text-align: center;
   .hide();
   float: left;
@@ -357,8 +358,8 @@ a.user-menu-parent:hover .user-menu-userpoints {
   }
 }
 
-
-.view-questions-list {
+.view-questions-list,
+.view-user-answers-list {
   .views-row {
     .border-bottom-dotted();
     .bold(14px);
@@ -366,6 +367,26 @@ a.user-menu-parent:hover .user-menu-userpoints {
     padding: 10px 0;
     .text-dark-grey();
   }
+}
+
+.view-questions-list .field-group-question .field-title a,
+.view-user-answers-list .field-answer-question a {
+  .link();
+  .text-orange();
+}
+
+.view-user-answers-list {
+  .field-content {
+    color: #555555;
+    font-size: 22px;
+  }
+  .field-answer-question {
+    .left();
+    padding-top: 6px;
+  }
+}
+
+.view-questions-list {
   .zero {
     .gris;
   }
@@ -384,11 +405,7 @@ a.user-menu-parent:hover .user-menu-userpoints {
         .grid-wide-8();
     }
     .field-title {
-      margin-bottom: 6px;
-      a {
-        .link();
-        .text-orange();
-      }      
+      margin-bottom: 6px; 
     }
     .field-body p {
       margin-bottom:0;
@@ -413,9 +430,11 @@ a.user-menu-parent:hover .user-menu-userpoints {
   }
 }
 
-.view-user-questions-list {
+.view-user-questions-list,
+.view-user-answers-list {
   margin-top: 14px;
-  .field-group-question {
+  .field-group-question,
+  .field-answer-question {
     @media @narrow {
       .grid-narrow-14();
     }
@@ -726,59 +745,59 @@ a.user-menu-parent:hover .user-menu-userpoints {
   margin-bottom: 23px;
   padding-bottom: 25px;
   .node-course-teacher-parameters {
-  .left();
-  .field-name-field-name {
     .left();
-    margin-right: 5px;
-  }
-  .node-course-teacher-button {
-    .left();
-    margin-right: 20px;
+    .field-name-field-name {
+      .left();
+      margin-right: 5px;
+    }
+    .node-course-teacher-info {
+      .left();
       #user-profile-picture {
         border: 1px solid #cccccc;
         border-radius: 2px;
         margin-bottom: 30px;
+        margin-right: 20px;
+        .left();
         .user-picture {
           padding: 6px;
         }
       }
-  }
-  .node-course-paramenters {
-    .cell();
-    .bold(14px);
-    .left();
-      .field-name-field-duration {
-        margin: 4px 0px 20px 0px;
-      }
-      .field-label {
-        margin-bottom: 4px;
-        .text-grey();
-      }
-      .field-item {
-        .caption-orange();
-      }
-  }
-  }
-  .field-name-field-video {
-    .right();
-  }
-  .media-youtube-video {
-    position: relative;
-    padding-bottom: 52.25%;
-    height: 0;
-    .media-youtube-player {
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 100%;
-      height: 100%;
     }
-  }
+    .node-course-paramenters {
+      .cell();
+      .bold(14px);
+      .left();
+        .field-name-field-duration {
+          margin: 4px 0px 20px 0px;
+        }
+        .field-label {
+          margin-bottom: 4px;
+          .text-grey();
+        }
+        .field-item {
+          .caption-orange();
+        }
+    }
+    }
+    .field-name-field-video {
+      .right();
+    }
+    .media-youtube-video {
+      position: relative;
+      padding-bottom: 52.25%;
+      height: 0;
+      .media-youtube-player {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
+      }
+    }
 }
 
 #course-registration-form .form-submit {
   float: none;
-  width: 100%;
   margin-top: 4px;
 }
 
@@ -1716,6 +1735,8 @@ body.page-home {
 .views-field-feedback-form .oq-review-form-edit.progress-disabled {
   color: transparent;
   .bg-img('progress_orange.gif');
+  width: 16px;
+  height: 16px;
 }
 
 
@@ -1980,6 +2001,7 @@ body.page-home {
     .bold(13px);
     border-bottom: 1px dotted #ce4619;
     .RoundedShape(0px);
+    height: auto;
   }
 }
 
@@ -2108,6 +2130,7 @@ body.page-home {
   .login-form-fb-submit, .login-form-fb-submit:hover {
     .gradient-fb();
     .left();
+    border: 0;
   }
 }
 
@@ -2404,8 +2427,7 @@ body.page-home {
 .down-active,
 .up-active,
 .down-inactive,
-.comment-link,
-.flag,
+.flag-best-answer .flag,
 .up-inactive {
   display: inline;
   position: relative;
@@ -2417,8 +2439,7 @@ body.page-home {
 .down-active:hover:after,
 .up-active:hover:after,
 .down-inactive:hover:after,
-.comment-link:hover:after,
-.flag:hover:after,
+.flag-best-answer .flag:hover:after,
 .up-inactive:hover:after{
   background: #fdfdfd;
   bottom: -21px;
@@ -2437,8 +2458,7 @@ body.page-home {
 .down-active:hover:before,
 .up-active:hover:before,
 .down-inactive:hover:before,
-.comment-link:hover:before,
-.flag:hover:before,
+.flag-best-answer .flag:hover:before,
 .up-inactive:hover:before{
   border: solid;
   border-color: transparent #fff transparent transparent;
@@ -2459,12 +2479,20 @@ body.page-home {
   left: 140%;
 }
 
-.flag:hover:after {
+.flag-best-answer .flag:hover:after {
   left: 152%;
 }
 
 .star a:hover:after {
-  left: 150%;
+  left: -200%;
+  bottom: 30px;
+}
+
+.star a:hover:before {
+  border-color: #FFFFFF transparent transparent;
+  border-width: 8px;
+  top: -10px;
+  left: 20%;
 }
 
 .down-active:hover:before,

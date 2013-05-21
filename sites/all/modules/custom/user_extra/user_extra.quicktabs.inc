@@ -27,7 +27,7 @@ function user_extra_quicktabs_default_quicktabs() {
       'type' => 'block',
     ),
     1 => array(
-      'bid' => 'search_delta_form',
+      'bid' => 'views_delta_user_answers_list-block',
       'hide_title' => 1,
       'title' => t('Answers'),
       'weight' => '-99',

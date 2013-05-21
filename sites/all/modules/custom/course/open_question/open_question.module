@@ -267,7 +267,7 @@ function open_question_answer_form($form, &$form_state, $answered) {
           'wrapper' => 'oq-answer-form-wrapper',
           'progress' => array('message' => ''),
         ),
-        '#attributes' => array('class' => array('oq-answer-form-submit'), 'title' => t('Edit my feedback')),
+        '#attributes' => array('class' => array('oq-answer-form-submit')),
         '#suffix' => '<div class="oq-answer-submit-sign"></div>',
       );
       $stats = open_question_get_feedback_stats($answered);
