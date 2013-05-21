@@ -299,9 +299,11 @@ function course_header_block() {
 
   if ($node->type === 'question') {
     $question_paths = field_get_items('node', $node, 'field_question_path');
+    print_nice($question_paths);
     if ($question_paths) {
       $item_nid = str_ireplace('node/', '', $question_paths[0]['value']);
       $item = node_load($item_nid);
+      print_nice($item_nid);
       if ($item) {
         $book = _node_get_book($item);
         $question_page = TRUE;
