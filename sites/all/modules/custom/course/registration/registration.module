@@ -302,6 +302,14 @@ function course_registration_form($form, &$form_state) {
       '#type' => 'hidden',
       '#value' =>  $nid,   
     );
+
+    if (!$uid) {
+      $form['register'] = array(
+        '#type' => 'item',
+        '#markup' => l(t('Register'), "user/register/nojs", array('query' => array('course' => $nid), 'attributes' => array('class' => array('ctools-use-modal', 'ctools-modal-common-modal-style', 'login-form-additional-link', 'course-user-register'))))
+      );
+      return $form;
+    }
     
     $rid = course_registration_id($uid, $nid);
     if ($rid) { 
@@ -316,12 +324,57 @@ function course_registration_form($form, &$form_state) {
     
     // @todo : get the node id or url of the first lesson    
     $form['submit'] = array(
-        '#type' => 'submit', 
-        '#value' => t('Enroll')
+      '#type' => 'submit', 
+      '#value' => t('Enroll')
     );
     
     return $form;
     
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter
+ */
+function registration_form_user_register_form_alter(&$form, &$form_state) {
+  if(isset($_GET['course'])) {
+    //Store course id in storage
+    $form_state['storage']['course'] = $_GET['course'];
+    $form['#submit'][] = registration_user_register_submit;
+  }
+}
+
+function registration_user_register_submit($form, &$form_state) {
+  if(isset($form_state['storage']['course'])) {
+    global $user;
+
+    //We need this
+    ctools_include('ajax');
+    ctools_add_js('ajax-responder'); 
+
+    $uid = $form_state['values']['uid'];
+    $nid = $form_state['storage']['course'];
+
+    //register user to course
+    $rid = course_register($uid, $nid);
+
+    //Activate new user
+    $new_user = user_load($uid);
+    $new_user->status = 1;
+    user_save($new_user);
+
+    if($rid) {
+      //create session and login new user
+      $form_state = array();
+      $form_state['uid'] = $new_user->uid;      
+      user_login_submit(array(), $form_state);
+
+      //redirect user to class
+      $node = node_load($nid);
+      $commands[] = ctools_ajax_command_redirect(course_first_node_href('lesson', $node->book));
+      print ajax_render($commands);
+      exit;
+    }  
+  }
 }
 
 /**
