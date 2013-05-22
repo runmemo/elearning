@@ -27,7 +27,7 @@ function lesson_block_info() {
  
   $block['lesson_lecturer_notes'] = array(
     'info' => t('Lesson Notes : Lecturer'),
-    'cache' => DRUPAL_CACHE_PER_PAGE,
+    'cache' => DRUPAL_NO_CACHE,
   );
   $block['lesson_student_notes'] = array(
     'info' => t('Lesson Notes : Student'),
@@ -45,7 +45,13 @@ function lesson_block_view($delta = '') {
     case 'lesson_lecturer_notes':
       //Lesson Node
       $lesson_node = menu_get_object('node');
-
+      // check if there are any notes and user has access to edit it,
+      // hide tab, if these conditions are not satisfied
+      $notes = field_get_items('node', $lesson_node, 'field_notes');
+      if (!$notes && !node_access('update', $lesson_node)) {
+        $block['content'] = '';
+        break;
+      }
       //Placeholder for message. 
       $content['message_placeholder'] = array(
         '#type' => 'markup',

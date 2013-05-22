@@ -25,7 +25,7 @@
         $('.form-item-' + element + ' .description').fadeToggle();
         $('.popup-' + element + '-arrow').fadeToggle();
       }
-      $('.messages').insertBefore('.form-actions');
+      $('.ctools-modal-content .messages').insertBefore('.ctools-modal-content .form-actions');
       // popup behaviour for register form
       $('.popup-mail').hover(function() {
         toggle_popup('mail');
