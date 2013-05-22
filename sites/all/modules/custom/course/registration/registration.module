@@ -358,8 +358,13 @@ function registration_user_register_submit($form, &$form_state) {
     $nid = $form_state['storage']['course'];
 
     //register user to course
-    $rid = course_register($uid, $nid);
-
+    try {
+      $rid = registration_register($uid, $nid);
+    } catch (InvalidArgumentException $e) {
+      watchdog_exception($e);
+      $rid = FALSE;
+    }
+   
     //Activate new user
     $new_user = user_load($uid);
     $new_user->status = 1;
@@ -375,7 +380,6 @@ function registration_user_register_submit($form, &$form_state) {
       $node = node_load($nid);
       $commands[] = ctools_ajax_command_redirect(course_first_node_href('lesson', $node->book));
       print ajax_render($commands);
-      exit;
     }  
   }
 }
@@ -423,7 +427,7 @@ function course_registration_form_submit($form, &$form_state) {
     $nid = $form['nid']['#value'];
      
      // register user to the course
-    $rid = course_register($uid, $nid);
+    $rid = registration_register($uid, $nid);
     
     if($rid) {
       $node = node_load($nid);

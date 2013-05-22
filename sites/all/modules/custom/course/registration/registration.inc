@@ -6,12 +6,21 @@
 
 
 /**
- * Registers user to specified course
- * @param integer $uid - id of user to register
- * @param integer $nid - id of the course
- * @return integer node id of new registration.
+ * Registers user to a specified course.
+ * 
+ * @param integer $uid
+ *   uid of user to register.
+ * 
+ * @param integer $nid
+ *   nid of the course.
+ * 
+ * @return integer
+ *   New registration's id.
  */
-function course_register($uid, $nid) {
+function registration_register($uid, $nid) {
+  if (!(bool)$uid) {
+    throw new InvalidArgumentException('User id must be greater than zero. Got $uid = ' . $uid);
+  }
 
   //  check whether registration already exists
   $rid = course_registration_id($uid, $nid, FALSE);
@@ -36,9 +45,15 @@ function course_register($uid, $nid) {
 }
 
 /**
- * Checks whether registration exists for user and course
- * @param integer $uid user id
- * @param integer $nid course id
+ * Gets id for registration with provided uid and nid.
+ * 
+ * @param integer $uid 
+ *   User uid.
+ * 
+ * @param integer $nid 
+ *   Course nid.
+ * @return integer 
+ *   Registration id if exists, FALSE if does not exist.
  */
 function course_registration_id($uid, $nid, $active = TRUE) {
   if (!(bool) $uid) {
@@ -46,19 +61,15 @@ function course_registration_id($uid, $nid, $active = TRUE) {
   }
   // get id of top 1 registration
   $query = new EntityFieldQuery();
-
   $query->entityCondition('entity_type', 'registration')
       ->propertyCondition('uid', $uid)
       ->propertyCondition('nid', $nid);
   if ($active) { // filter cancelled registrations
     $query->propertyCondition('cancelled', 'NULL', '=');
   }
-
   $query->range(0, 1);
-
   $result = $query->execute();
-
-
+  
   if (isset($result['registration'])) {
     $rids = array_keys($result['registration']);
     foreach ($rids as $rid) {
@@ -66,7 +77,8 @@ function course_registration_id($uid, $nid, $active = TRUE) {
     }
     return FALSE;
   }
-  else { // registration for this course does not exist
+  else { 
+    // Registration for this course does not exist.
     return FALSE;
   }
 }

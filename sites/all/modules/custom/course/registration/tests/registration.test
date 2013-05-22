@@ -41,7 +41,7 @@ class CourseRegistrationTestCase extends DrupalWebTestCase {
       $uid = $this->loggedInUser->uid;
       $nid = $this->course->nid;
       // Create registration with course_register_user for test course
-      $rid = course_register($uid, $nid);
+      $rid = registration_register($uid, $nid);
       // Check that only one open registration exists for specified course
       $this->assertNotEqual($rid, FALSE, 'Registration id is not False.');
       
@@ -62,13 +62,13 @@ class CourseRegistrationTestCase extends DrupalWebTestCase {
       $uid = $this->loggedInUser->uid;
       $nid = $this->course->nid;
       
-      $rid_first = course_register($uid, $nid);
-      $rid_second = course_register($uid, $nid);
+      $rid_first = registration_register($uid, $nid);
+      $rid_second = registration_register($uid, $nid);
       
       $this->assertEqual($rid_first, $rid_second, 'Second registration is not created.');
 
       registration_cancel($uid, $nid);
-      $rid_reactivate = course_register($uid, $nid);
+      $rid_reactivate = registration_register($uid, $nid);
       
       $this->assertEqual($rid_first, $rid_reactivate, 'On re-activation same registration is used.');
       
@@ -83,7 +83,7 @@ class CourseRegistrationTestCase extends DrupalWebTestCase {
       $uid = $this->loggedInUser->uid;
       $nid = $this->course->nid;
       
-      $rid = course_register($uid, $nid);
+      $rid = registration_register($uid, $nid);
       // cancel registration first time
       $res = registration_cancel($uid, $nid);
       $this->assertTrue($res, 'First time cancellation returns TRUE');
