@@ -5,7 +5,7 @@
 (function($) {
   Drupal.behaviors.user_login_system_forms = {
     attach: function(context, settings) {
-      if (Drupal.settings.user_forms && Drupal.settings.user_forms.class) {
+  //    if (Drupal.settings.user_forms && Drupal.settings.user_forms.class) {
         var modal = $('.ctools-common-modal-content');
         var _class = Drupal.settings.user_forms.class;
         if ($.isArray(_class)) {
@@ -20,7 +20,7 @@
         $('.login-form-additional-link').click(function() {
           $('.ctools-common-modal-content').removeClass('ctools-modal-login-form').addClass('ctools-modal-register-form');
         });
-      }
+  //    }
       function toggle_popup(element) {
         $('.form-item-' + element + ' .description').fadeToggle();
         $('.popup-' + element + '-arrow').fadeToggle();
