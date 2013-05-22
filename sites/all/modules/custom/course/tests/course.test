@@ -25,9 +25,10 @@ class CourseTestCase extends DrupalWebTestCase {
    * @param object $node 
    * @param object $parent parent node in the book
    */
-  function book_append_child($node, $parent) {
+  function book_append_child($node, $parent, $weight = 0) {
     $node->book['bid'] = $parent->book['bid'];
     $node->book['plid'] = $parent->book['mlid'];
+    $node->book['weight'] = $weight;
     node_save($node);
   }
   
@@ -59,9 +60,10 @@ class CourseTestCase extends DrupalWebTestCase {
 
     $i = 0;
     foreach ($node_types as $unit_key => $unit) {
+      $u = $i;
       $nodes[$i] = $this->drupalCreateNode($unit_settings);
-      $this->book_append_child($nodes[$i], $course);
-      $u = $i; // unit key in the array
+      $this->book_append_child($nodes[$i], $course, $u);
+       // unit key in the array
       $i++;
 
       foreach ($unit as $key => $item) {
@@ -70,7 +72,7 @@ class CourseTestCase extends DrupalWebTestCase {
           'uid' => $this->course_author->uid,
         );
         $nodes[$i] = $this->drupalCreateNode($item_settings);
-        $this->book_append_child($nodes[$i], $nodes[$u]);
+        $this->book_append_child($nodes[$i], $nodes[$u], $i);
         $i++;
       }
     }
@@ -102,8 +104,10 @@ class CourseNavigationTestCase extends CourseTestCase {
     
   }
   /**
-   * Creates course structure for provided course or
+   * Creates course structure for provided course.
+   * 
    * @param object $course
+   * 
    * @return array of nodes
    */
   function populateTestCourse($course = NULL) {
@@ -134,6 +138,7 @@ class CourseNavigationTestCase extends CourseTestCase {
   }
 
   function testCourseProgress() {
+    // @todo
     // login as student
     // check that progress is 0
     // complete 1st lesson
@@ -147,14 +152,14 @@ class CourseNavigationTestCase extends CourseTestCase {
   function testCourseLastVisitedItem() {
     $course2 = $this->createCourseNode($this->course_author->uid);
     $nodes2 = $this->populateTestCourse($course2);
-   // course_register($this->student->uid, $this->course->nid);
-   //  course_register($this->student->uid, $course2->nid);
-// login as student 
+    // course_register($this->student->uid, $this->course->nid);
+    // course_register($this->student->uid, $course2->nid);
+    // Login as student. 
     $this->drupalLogin($this->student);
 
-    // go to item X of the course
+    // Go to item X of the course.
     $this->drupalGet('node/' . $this->nodes[1]->nid);
-    // go to some other page outside of the course
+    // Go to some other page outside of the course.
     $last_nid = course_last_visited_node($this->course->nid, $this->student->uid);
     $this->assertEqual($last_nid, $this->nodes[1]->nid);
 
@@ -162,15 +167,14 @@ class CourseNavigationTestCase extends CourseTestCase {
     sleep(1);
     $this->drupalGet('node/' . $nodes2[1]->nid);
     $this->drupalGet('node/' . $this->nodes[5]->nid);
-    // go to user's page
+    // Go to user's page.
     $this->drupalGet('user/' . $this->student->uid);
-    // assert last visited node
+    // Assert last visited node.
     $last_nid = course_last_visited_node($this->course->nid, $this->student->uid);
     $this->assertEqual($last_nid, $this->nodes[5]->nid);
     $last_nid = course_last_visited_node($course2->nid, $this->student->uid);
     $this->assertEqual($last_nid, $nodes2[1]->nid);
   }
-
 }
 
 /**
