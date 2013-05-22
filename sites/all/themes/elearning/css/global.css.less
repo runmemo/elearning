@@ -484,7 +484,7 @@ a.user-menu-parent:hover .user-menu-userpoints {
   }
   .form-submit {
     left: -8px;
-    top: -67px;
+    top: -58px;
     margin-top: 0px;
   }
   fieldset {
@@ -750,13 +750,13 @@ a.user-menu-parent:hover .user-menu-userpoints {
       .left();
       margin-right: 5px;
     }
-    .node-course-teacher-info {
+    .node-course-teacher-button {
       .left();
+      margin-right: 20px;
       #user-profile-picture {
         border: 1px solid #cccccc;
         border-radius: 2px;
         margin-bottom: 30px;
-        margin-right: 20px;
         .left();
         .user-picture {
           padding: 6px;
@@ -798,7 +798,9 @@ a.user-menu-parent:hover .user-menu-userpoints {
 
 #course-registration-form .form-submit {
   float: none;
+  width: 100%;
   margin-top: 4px;
+  padding: 0px;
 }
 
 /****** Node type "Course" End ******/
@@ -2048,6 +2050,11 @@ body.page-home {
 
 /* Login/Registration/Profile editing forms styles START */
 
+.not-logged-in .form-submit:hover {
+  .border-sumbit-hover();
+  .gradient-submit-button-hover();
+}
+
 .not-logged-in .ctools-modal-user-forms .popups-body,
 .page-user .ctools-modal-profile-form .popups-body {
   padding: 0px 15px 15px 15px;
@@ -2137,14 +2144,13 @@ body.page-home {
 .login-form,
 .register-form {
   .ajax-progress.ajax-progress-throbber {
-    position: absolute;
-    bottom: 22px;
-    right: 100px;
+    float: right;
+    padding: 12px 6px 0px 0px;
     .throbber {
       .bg-img('progress_orange.gif');
       .left();
       height: 16px;
-      margin: 0px 3px 2px 0px;
+      margin: 0;
       width: 16px;
     }
   }
@@ -2235,9 +2241,6 @@ body.page-home {
       .link();
       color: #e44100;
     }
-  }
-  .ajax-progress.ajax-progress-throbber {
-    right: 208px;
   }
   .register-form-popup-link {
     position: absolute;
