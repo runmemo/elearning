@@ -10,10 +10,14 @@
 // @todo total credits - on course content type 
 
 /**
- * Calculates credit attributed to a student for a given course
+ * Calculates credit attributed to a student for a given course.
+ * 
  * @param type $course
+ * 
  * @param type $account
- * @return integer number of points credited to a student
+ * 
+ * @return integer 
+ *   Number of points credited to a student for provided course.
  */
 function credit_calculate($course, $account) {
   if ($course->type !== 'course') {
@@ -56,11 +60,18 @@ function credit_get_item_result($node, $account) {
 }
 
 /**
- * Gets first value from integer field of the node
+ * Gets first value from integer field of the node.
+ * 
  * @param object $node
- * @param string $field machine readable name of field
- * @param integer $default value to return if field is empty
- * @return int first value from the field if exists, otherwise $default
+ * 
+ * @param string $field 
+ *   Machine readable name of field.
+ * 
+ * @param integer $default 
+ *   Value to return if field is empty.
+ * 
+ * @return int 
+ *   First value from the field if exists, otherwise $default.
  */
 function credit_get_field_integer_value($node, $field, $default = 0) {
   $credits = field_get_items('node', $node, $field);

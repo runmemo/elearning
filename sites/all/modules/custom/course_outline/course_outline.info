@@ -3,3 +3,5 @@ description = "Provides a block containing an outline of the current book."
 package = Custom 
 core = 7.x
 dependencies[] = book
+
+files[] = course_outline.test

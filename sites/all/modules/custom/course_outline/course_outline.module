@@ -5,6 +5,8 @@
  * course_outline.module provides a block that shows outline of the course
  */
 
+include_once 'course_outline.inc';
+
 /**
  * Implements hook_block_info()
  */
@@ -176,47 +178,6 @@ function course_outline_item_title($node) {
   }
   $title = '<div class="title-wrapper">' . $title . $node->title . '</div>';
   return $title;
-}
-
-/**
- * Helper counter class allows to keep several counts
- */
-class multi_counter {
-
-  private $counts;
-
-  public function __construct() {
-    $this->counts = array();
-  }
-
-  /**
-   * Increments counter of specific type by one
-   * @param string $type
-   * @return integer
-   */
-  public function increment($type) {
-    if (!isset($this->counts[$type])) {
-      return $this->counts[$type] = 1;
-    }
-    else {
-      return++$this->counts[$type];
-    }
-  }
-
-  /**
-   * Gets current value of counter
-   * @param string $type
-   * @return integer
-   */
-  public function current($type) {
-    if (!isset($this->counts[$type])) {
-      return 0;
-    }
-    else {
-      return $this->counts[$type];
-    }
-  }
-
 }
 
 /**
