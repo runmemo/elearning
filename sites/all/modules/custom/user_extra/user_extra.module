@@ -151,7 +151,7 @@ function user_extra_preprocess_link(&$variables) {
   $paths = array('user/login/nojs', 'user/register/nojs', 'user/password/nojs');
   if (in_array($variables['path'], $paths)) {
     $variables['options']['attributes']['class'][] = 'ctools-modal-common-modal-style';
-    drupal_add_js(array('user_forms' => array('class' => '')), 'setting');
+    drupal_add_js(array('user_forms' => array('class' => 'ctools-modal-login-form')), 'setting');
     drupal_add_js(drupal_get_path('module', 'user_extra') . '/user_extra.js');
   }
 }

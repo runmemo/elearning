@@ -20,12 +20,12 @@
         $('.login-form-additional-link').click(function() {
           $('.ctools-common-modal-content').removeClass('ctools-modal-login-form').addClass('ctools-modal-register-form');
         });
+        $('.absolute-messages-error').insertBefore('.ctools-modal-content .form-actions');
       }
       function toggle_popup(element) {
         $('.form-item-' + element + ' .description').fadeToggle();
         $('.popup-' + element + '-arrow').fadeToggle();
       }
-      $('.ctools-modal-content .messages').insertBefore('.ctools-modal-content .form-actions');
       // popup behaviour for register form
       $('.popup-mail').hover(function() {
         toggle_popup('mail');

@@ -7,6 +7,7 @@
 @import "course-outline.less";
 @import "quicktabs.less";
 @import "modal.less";
+@import "tooltip.less";
 
 /****** Common properties Start ******/
 html, body {
@@ -1405,6 +1406,30 @@ body.page-home {
       margin: 0px 35px 0px 10px;
     }
   }
+  .subscription {
+    a.flag {
+      .show(block);
+      .left();
+      overflow: hidden;
+      color: transparent;
+      width: 18px;
+      height: 18px;
+      .bg-img('follow-flag.png');
+      margin: 14px 0px 0px 11px;
+    }
+    a.unflag-action {
+      background-position: -40px 0px;
+    }
+    a.unflag-action:hover {
+      background-position: -60px 0px;
+    }
+    a.flag-action:hover {
+      background-position: -20px 0px;
+    }
+    .flag-waiting .flag-throbber {
+      .show(none);
+    }
+  }
 }
 
 .node-question-default-picture {
@@ -1417,7 +1442,7 @@ body.page-home {
 
 .author-points {
   .bold(12px);
-  .left();
+  .show(table);
   color: #ffffff;
   text-align: center;
   position: relative;
@@ -1430,6 +1455,11 @@ body.page-home {
 }
 
 .node-question-title-section {
+  .show(inline-block);
+  width: 100%;
+    h1 {
+      .left();
+    }
   .border-bottom-dotted();
   .node-question-picture-points {
     .left();
@@ -1443,17 +1473,16 @@ body.page-home {
     @media @wide {
       margin-right: 24px;
     }
-    img {
-      .left();
-    }
   }
 }
 
 .node-question-body {
   .bold(14px);
   .text-dark-grey();
-  margin-top: 24px;
   .border-bottom-dotted();
+  .show(inline-block);
+  width: 100%;
+  margin-top: 24px;
   .field-name-body {
     line-height: 17px;
   }
@@ -1745,6 +1774,9 @@ body.page-home {
   .views-answer-feedback-body, 
   .views-other-answer-body {
     .show(table);
+    @media @mobile { 
+      .show();
+    }
   }
 }
 
@@ -1787,6 +1819,12 @@ body.page-home {
   }
   .comment-group, .comment-form {
     .right();
+  }
+  .comment-group {
+    @media @mobile { 
+      float: none;
+      padding-left: 30px;
+    }
   }
   .comment-form {
     margin-bottom: 10px;
@@ -1844,6 +1882,10 @@ body.page-home {
     }
     @media @wide {
       width: 812px;
+    }
+    @media @mobile {
+      .right();
+      width: 95%;
     }
   }
   .views-inline-comment-field {
@@ -2085,18 +2127,33 @@ body.page-home {
       color: #e24110;
     }
   }
+  .absolute-messages-error,
   .messages.error {
     background-color: #e64412;
     color: #fff;
     .bold(12px);
+    .show();
     background-image: none;
     padding: 13px 13px 13px 9px;
     margin: 0px 0px -13px 0px;
+    border: 0;
+    text-align: left;
     ul {
       list-style: none;
       margin: 0;
     }
     a:link, a:visited {
+      color: #fff;
+    }
+  }
+  .absolute-messages-error {
+    .content {
+      padding: 0;
+      border: 0;
+    }
+    .absolute-messages-dismiss {
+      border: 2px solid #fff;
+      background-color: #e64412;
       color: #fff;
     }
   }
@@ -2410,112 +2467,3 @@ body.page-home {
 }
 
 /* Login/Registration/Profile editing forms styles END */
-
-/** Css for tooltips **/
-
-.view-feedback-comments .views-inline-comment-field a.comment-link,
-.star a,
-.oq-answer-form-submit,
-.down-active,
-.up-active,
-.down-inactive,
-.flag-best-answer .best-answer-marked,
-.flag-opaf-useful .flag,
-.flag-abuse-content .flag,
-.up-inactive {
-  display: inline;
-  position: relative;
-  overflow: visible !important;
-}
-
-.view-feedback-comments .views-inline-comment-field a.comment-link:hover:after,
-.star a:hover:after,
-.oq-answer-form-submit:hover:after,
-.down-active:hover:after,
-.up-active:hover:after,
-.down-inactive:hover:after,
-.flag-best-answer .best-answer-marked:hover:after,
-.flag-abuse-content .flag:hover:after,
-.flag-opaf-useful .flag:hover:after,
-.up-inactive:hover:after{
-  background: #fdfdfd;
-  bottom: -21px;
-  content: attr(title);
-  left: 120%;
-  padding: 15px;
-  position: absolute;
-  color: #3d3d3d;
-  font-size: 12px;
-  font-weight: bold;
-  .tooltip();
-}
-
-.view-feedback-comments .views-inline-comment-field a.comment-link:hover:before,
-.star a:hover:before,
-.oq-answer-form-submit:hover:before,
-.down-active:hover:before,
-.up-active:hover:before,
-.down-inactive:hover:before,
-.flag-best-answer .best-answer-marked:hover:before,
-.flag-opaf-useful .flag:hover:before,
-.flag-abuse-content .flag:hover:before,
-.up-inactive:hover:before{
-  border: solid;
-  border-color: transparent #fff transparent transparent;
-  border-width: 8px 8px 8px 0;
-  bottom: 20px;
-  content: "";
-  left: 110%;
-  position: absolute;
-  z-index: 99;
-  top: -2px;
-}
-
-.down-active:hover:after,
-.up-active:hover:after,
-.down-inactive:hover:after,
-.up-inactive:hover:after {
-  bottom: -25px;
-  left: 140%;
-}
-
-.flag-abuse-content .flag:hover:after,
-.flag-opaf-useful .flag:hover:after,
-.flag-best-answer .best-answer-marked:hover:after {
-  left: 152%;
-}
-
-.star a:hover:after {
-  left: -200%;
-  bottom: 30px;
-}
-
-.view-feedback-comments .views-inline-comment-field a.comment-link:hover:after {
-  bottom: 35px;
-  left: -238%;
-}
-
-.view-feedback-comments .views-inline-comment-field a.comment-link:hover:before,
-.star a:hover:before {
-  border-color: #FFFFFF transparent transparent;
-  border-width: 8px;
-  top: -10px;
-  left: 20%;
-}
-
-.view-feedback-comments .views-inline-comment-field a.comment-link:hover:before {
-  left: 0%;
-}
-
-.down-active:hover:before,
-.up-active:hover:before,
-.down-inactive:hover:before,
-.up-inactive:hover:before {
-  left: 108%;
-}
-
-div.fivestar-widget .cancel, 
-div.fivestar-widget .star {
-  overflow: visible;
-  text-indent: 0;
-}
