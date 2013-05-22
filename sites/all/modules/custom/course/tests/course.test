@@ -319,4 +319,15 @@ class CourseUnitTestCase extends DrupalUnitTestCase {
     $this->assertEqual(count($names), 4, 'Only 4 ranges exist.');
     
   }
+  
+  /**
+   * Tests for exported feature functions and data returned by them.
+   */
+  function testFeaturesHookImplementations() {  
+    module_load_include('inc', 'course', 'course.features.user_permission');
+    $this->assertTrue(function_exists('course_user_default_permissions'), 'Course user permissions exported.');
+    
+    
+  }
+  
 }

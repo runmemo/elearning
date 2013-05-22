@@ -6,8 +6,6 @@
  */
 include_once 'course.features.inc';
 
-
-
 /**
  *  Implements hook_menu() for course module.
  */
@@ -495,6 +493,9 @@ function course_get_node_type($nid) {
 }
     
 function course_is_item_node($node) {
+  if (!isset($node->book)) {
+    return FALSE;
+  }
   return in_array($node->type, course_item_node_types());
 }
 
@@ -580,8 +581,7 @@ function course_leave_modal($js = NULL, $user = NULL, $course = NULL) {
  */
 function course_node_access($node, $op, $account) {
   if (($op == 'update' || $op == 'delete') && course_is_item_node($node)) {
-    global $user;
-    if (course_is_teacher($node->book['bid'], $user->uid)) {
+    if (course_is_teacher($node, $account)) {
       return NODE_ACCESS_ALLOW;
     }
     return NODE_ACCESS_IGNORE;
@@ -589,46 +589,22 @@ function course_node_access($node, $op, $account) {
 }
 
 /**
- * Checks if uid is course teacher
+ * Checks if user is a teacher for the course to which node belongs.
  */
-function course_is_teacher($course_nid = NULL, $uid = NULL) {
-  if (is_null($course_nid)) {
+function course_is_teacher($node, $account) {
+  if (is_null($node) || !isset($node->book)) {
     return FALSE;
   }
-  
-  if (is_null($uid)) {
-    global $user;
-    $uid = $user->uid;
-  }
-  
-  $course = node_load($course_nid);
-  if (!$course) { // node does not exist
+  // Compare uid of course teacher and account.
+  $item = entity_metadata_wrapper('node', $node);
+  $teacher = $item->book->field_teacher->uid->raw();
+  if ($teacher == $account->uid) {
+    // Account is a teacher of the course.
+    return TRUE;
+  } 
+  else {
     return FALSE;
   }
-  
-  $teacher = field_get_items('node', $course, 'field_teacher');
-  if ($teacher) {
-    if ($teacher[0]['uid'] == $uid) {
-      return TRUE;
-    }
-  }
-
-  return FALSE;
-}
-
-
-function course_field_extra_field() {
-  $extra = array();
-  $extra['node']['course']['form']['provider']['logo'] = array(
-    'display' => array(
-      'picture' => array(
-        'label' => t('Provider Logo'),
-        'description' => t('Logo of course provider'),
-        'weight' => 0,
-      ),
-    )
-  );
-  return $extra;
 }
 
 /**
