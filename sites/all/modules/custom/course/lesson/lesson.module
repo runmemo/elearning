@@ -27,11 +27,11 @@ function lesson_block_info() {
  
   $block['lesson_lecturer_notes'] = array(
     'info' => t('Lesson Notes : Lecturer'),
-    'cache' => DRUPAL_NO_CACHE,
+    'cache' => DRUPAL_CACHE_PER_ROLE,
   );
   $block['lesson_student_notes'] = array(
     'info' => t('Lesson Notes : Student'),
-    'cache' => DRUPAL_CACHE_PER_PAGE,
+    'cache' => DRUPAL_CACHE_PER_USER,
   );
   return $block;
 }
@@ -135,6 +135,10 @@ function student_notes($form, &$form_state) {
             $nid = $lesson->nid;
             $form_state['lesson_nid'] = $nid;
         } else { // this is not a page of open question
+            $form['message'] = array(
+              '#type' => 'markup',
+              '#markup' => t('Please complete your registration by comfirming your e-mail to make notes.'),
+            );
             return $form;
         }
         
