@@ -304,9 +304,6 @@ function course_registration_form($form, &$form_state) {
     );
 
     if (!$uid) {
-      //Code borrowed from user_extra.js
-      //@todo user extra.js for register form loaded here.
-      drupal_add_js(drupal_get_path('module', 'registration') . '/registration.js');
       $form['register'] = array(
         '#type' => 'item',
         '#markup' => l(t('Register'), "user/register/nojs", array('query' => array('course' => $nid), 'attributes' => array('class' => array('ctools-use-modal', 'ctools-modal-common-modal-style', 'login-form-additional-link', 'course-user-register'))))
