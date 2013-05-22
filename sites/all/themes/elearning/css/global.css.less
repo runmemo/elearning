@@ -1415,7 +1415,7 @@ body.page-home {
       width: 18px;
       height: 18px;
       .bg-img('follow-flag.png');
-      margin: 16px 0px 0px 11px;
+      margin: 14px 0px 0px 11px;
     }
     a.unflag-action {
       background-position: -40px 0px;
@@ -1479,8 +1479,10 @@ body.page-home {
 .node-question-body {
   .bold(14px);
   .text-dark-grey();
-  margin-top: 24px;
   .border-bottom-dotted();
+  .show(inline-block);
+  width: 100%;
+  margin-top: 24px;
   .field-name-body {
     line-height: 17px;
   }
@@ -1772,6 +1774,9 @@ body.page-home {
   .views-answer-feedback-body, 
   .views-other-answer-body {
     .show(table);
+    @media @mobile { 
+      .show();
+    }
   }
 }
 
@@ -1814,6 +1819,12 @@ body.page-home {
   }
   .comment-group, .comment-form {
     .right();
+  }
+  .comment-group {
+    @media @mobile { 
+      float: none;
+      padding-left: 30px;
+    }
   }
   .comment-form {
     margin-bottom: 10px;
@@ -1871,6 +1882,10 @@ body.page-home {
     }
     @media @wide {
       width: 812px;
+    }
+    @media @mobile {
+      .right();
+      width: 95%;
     }
   }
   .views-inline-comment-field {
@@ -2112,18 +2127,33 @@ body.page-home {
       color: #e24110;
     }
   }
+  .absolute-messages-error,
   .messages.error {
     background-color: #e64412;
     color: #fff;
     .bold(12px);
+    .show();
     background-image: none;
     padding: 13px 13px 13px 9px;
     margin: 0px 0px -13px 0px;
+    border: 0;
+    text-align: left;
     ul {
       list-style: none;
       margin: 0;
     }
     a:link, a:visited {
+      color: #fff;
+    }
+  }
+  .absolute-messages-error {
+    .content {
+      padding: 0;
+      border: 0;
+    }
+    .absolute-messages-dismiss {
+      border: 2px solid #fff;
+      background-color: #e64412;
       color: #fff;
     }
   }
