@@ -71,5 +71,9 @@ function best_answer_extra_preprocess_flag(&$vars) {
       $vars['flag_classes'] .= $is_flagged ? ' best-answer-marked' : ' best-answer-hidden';
       $vars['title'] = $is_flagged ? t('Author selected this answer as best') : '';
     }
+    else {
+      //Add class for identifying question author
+      $vars['flag_classes'] .= ' question-author';
+    }
   }
 }
