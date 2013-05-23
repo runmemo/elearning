@@ -345,8 +345,6 @@ function registration_form_user_register_form_alter(&$form, &$form_state) {
 
 function registration_user_register_submit($form, &$form_state) {
   if(isset($form_state['storage']['course'])) {
-    global $user;
-
     //We need this
     ctools_include('ajax');
     ctools_add_js('ajax-responder'); 
@@ -361,23 +359,34 @@ function registration_user_register_submit($form, &$form_state) {
       watchdog_exception($e);
       $rid = FALSE;
     }
-   
-    //Activate new user
-    $new_user = user_load($uid);
-    $new_user->status = 1;
-    user_save($new_user);
 
     if($rid) {
-      //create session and login new user
-      $form_state = array();
-      $form_state['uid'] = $new_user->uid;      
-      user_login_submit(array(), $form_state);
-
-      //redirect user to class
-      $node = node_load($nid);
-      $commands[] = ctools_ajax_command_redirect(course_first_node_href('lesson', $node->book));
+      //redirect user to course page
+      $commands[] = ctools_ajax_command_redirect("node/$nid");
       print ajax_render($commands);
+      exit;
     }  
+  }
+}
+
+/*
+ * Function called after user validates email and redirects to first page of lesson.
+ */
+function registration_user_validated($account = NULL) {
+  if(!$account) {
+    global $user;
+    $account = $user;
+  }
+
+  // Get course nid for which user has been registered.
+  $res = db_select('registration', 'r')
+    ->fields('r', array('registration_id', 'nid'))
+    ->condition('r.uid', $account->uid)
+    ->execute()->fetch();
+
+  if ($res) {
+    $node = node_load($res->nid);
+    drupal_goto(course_first_node_href('lesson', $node->book));
   }
 }
 
