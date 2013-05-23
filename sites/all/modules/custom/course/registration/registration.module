@@ -356,7 +356,8 @@ function registration_user_register_submit($form, &$form_state) {
  * Implements hook_user_update
  */
 function registration_user_update(&$edit, $account, $category) {
-  if($account->logintoboggan_email_validated) {
+  if ($account->logintoboggan_email_validated) {
+
     // Get course nid for which user has been registered.
     $res = db_select('registration', 'r')
       ->fields('r', array('nid'))
@@ -366,17 +367,20 @@ function registration_user_update(&$edit, $account, $category) {
     if ($res) {
       //get role object
       $role = user_role_load_by_name('student');
+
       // Save the user object with the student role.
       if (!isset($account->roles[$role->rid])) {
         $roles = $account->roles + array($role->rid => $role->name);
         user_save($account, array('roles' => $roles));
       }
+
+      //set message before re-direct.
+      drupal_set_message(t('You have successfully validated your e-mail address.'));
+
+      //Take user to class.
+      $node = node_load($res->nid);   
+      drupal_goto(course_first_node_href('lesson', $node->book));
     }
-    //set message before re-direct
-    drupal_set_message(t('You have successfully validated your e-mail address.'));
-    //Take user to class    
-    $node = node_load($res->nid);   
-    drupal_goto(course_first_node_href('lesson', $node->book));
   }
 }
 
