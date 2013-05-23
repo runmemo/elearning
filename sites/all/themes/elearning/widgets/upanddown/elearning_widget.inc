@@ -17,7 +17,6 @@ $plugin = array(
  * Alter template variables.
  */
 function elearning_widget_alter_template_vars($template_type, &$variables) {
-  $variables['show_reset'] = FALSE;
   // array with parameters to find all positive votes
   $criteria = array(
     'entity_type' => $variables['type'],
@@ -31,6 +30,7 @@ function elearning_widget_alter_template_vars($template_type, &$variables) {
   $criteria['function'] = 'negatives';
   $negatives = (int) votingapi_select_single_result_value($criteria);
   $points = $positives + $negatives;
+  //change class in order to fit any possible amount of characters.
   if ($points >= 0 && $points < 10) {
     $current_class = 'current-default';
   } elseif ($points < 0 && $points > -10) {

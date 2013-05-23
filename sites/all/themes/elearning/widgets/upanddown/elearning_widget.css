@@ -64,8 +64,13 @@
 
 .vud-widget-elearning_widget .up-active,
 .vud-widget-elearning_widget .down-active {
-  cursor: default;
+  cursor: pointer;
 }
+
+.vud-widget-elearning_widget .vud-link-reset {
+  display: none;
+}
+
 .vud-widget-elearning_widget .up-inactive,
 .vud-widget-elearning_widget .down-inactive,
 .vud-widget-elearning_widget .up-active,

@@ -1393,7 +1393,17 @@ body.page-home {
     padding-top: 4px;
   }
   .ajax-progress-throbber {
-    .show(none);
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    display: block;
+    background: #fff url(../images/progress_orange.gif) no-repeat 50% 50%;
+    .throbber {
+      .show(none);
+    }
   }
   .vud-widget-elearning_widget {
     @media @narrow {
