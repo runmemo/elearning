@@ -178,7 +178,7 @@ function user_extra_preprocess_user_profile(&$variables) {
  */
 function user_extra_user_menu_title() {
   global $user;
-  return $user->uid > 0 ? $user->name : t('Login');
+  return $user->uid > 0 ? format_username($user) : t('Login');
 }
 
 /**

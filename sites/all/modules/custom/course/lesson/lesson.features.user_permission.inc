@@ -7,7 +7,8 @@
 /**
  * Implements hook_user_default_permissions().
  */
-function user_permissions_user_default_permissions() {
+function lesson_user_default_permissions() {
+  
   $permissions = array();
 
   // Exported permission: create notes content.

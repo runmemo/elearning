@@ -14,6 +14,10 @@
           });
         }
       });
+      // if user clicks on active "up" or "down" arrow, reset user's vote.
+      $('.up-active,.down-active').click(function() {
+        $(this).parents('.vud-widget').find('.vud-link-reset').click();
+      });
     }
   };
 })(jQuery);

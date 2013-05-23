@@ -21,17 +21,17 @@ function registration_entity_info() {
     'base table' => 'registration',
     'fieldable' => TRUE,
     'entity keys' => array(
-        'id' => 'registration_id',    
+      'id' => 'registration_id',
     ),
     // Bundles are defined by the registration types below
     'bundles' => array(
-        'Registration' => array(
-            'label' => 'Registration ',
-            'admin' => array(
-                'path' => 'admin/structure/registration/manage',
-                'access arguments' => array('administer postits'),
-            ),
-         ),
+      'Registration' => array(
+        'label' => 'Registration ',
+        'admin' => array(
+          'path' => 'admin/structure/registration/manage',
+          'access arguments' => array('administer postits'),
+        ),
+      ),
     ),
     'label callback' => 'entity_class_label',
     'uri callback' => 'entity_class_uri',
@@ -48,8 +48,6 @@ function registration_entity_info() {
   );
   return $return;
 }
-  
-
 
 /**
  * Implements hook_permission().
@@ -58,16 +56,15 @@ function registration_permission() {
   // We set up permisssions to manage entity types, manage all entities and the
   // permissions for each individual entity
   $permissions = array(
-     'administer registrations' => array(
+    'administer registrations' => array(
       'title' => t('Administer registrations'),
       'description' => t('Edit and delete all registrations'),
-    ),  
+    ),
   );
-  
-  
-  return $permissions;  
-}
 
+
+  return $permissions;
+}
 
 /**
  * Determines whether the given user has access to a registration.
@@ -87,10 +84,9 @@ function registration_access($op, $registration = NULL, $account = NULL) {
   if (user_access('administer registrations', $account)) {
     return TRUE;
   }
-  
+
   return FALSE;
 }
-
 
 /**
  * Fetch a registration object. Make sure that the wildcard you choose 
@@ -109,7 +105,6 @@ function registration_load($registration_id, $reset = FALSE) {
   $registrations = registration_load_multiple(array($registration_id), array(), $reset);
   return reset($registrations);
 }
-
 
 /**
  * Load multiple registrations based on certain conditions.
@@ -130,14 +125,12 @@ function registration_load_multiple($registration_ids = array(), $conditions = a
   return entity_load('registration', $registration_ids, $conditions, $reset);
 }
 
-
 /**
  * Deletes a registration.
  */
 function registration_delete(Registration $registration) {
   $registration->delete();
 }
-
 
 /**
  * Delete multiple registrations.
@@ -149,14 +142,12 @@ function registration_delete_multiple(array $registration_ids) {
   entity_get_controller('registration')->delete($registration_ids);
 }
 
-
 /**
  * Create a registration object.
  */
 function registration_create($values = array()) {
   return entity_get_controller('registration')->create($values);
 }
-
 
 /**
  * Saves a registration to the database.
@@ -168,14 +159,12 @@ function registration_save(Registration $registration) {
   return $registration->save();
 }
 
-
 /**
  * Saves a registration type to the db.
  */
 function registration_type_save(RegistrationType $type) {
   $type->save();
 }
-
 
 /**
  * Deletes a registration type from the db.
@@ -184,36 +173,32 @@ function registration_type_delete(RegistrationType $type) {
   $type->delete();
 }
 
-
 /**
  * URI callback for registrations
  */
-function registration_uri(Registration $registration){
+function registration_uri(Registration $registration) {
   return array(
     'path' => 'registration/' . $registration->registration_id,
   );
 }
 
-
 /**
  * Menu title callback for showing individual entities
  */
-function registration_page_title(Registration $registration){
+function registration_page_title(Registration $registration) {
   return $registration->name;
 }
-
 
 /**
  * Sets up content to show an individual registration
  * @todo - get rid of drupal_set_title();
  */
-function registration_page_view($registration, $view_mode = 'full') {    
-  $controller = entity_get_controller('registration');  
+function registration_page_view($registration, $view_mode = 'full') {
+  $controller = entity_get_controller('registration');
   $content = $controller->view(array($registration->registration_id => $registration));
   drupal_set_title($registration->name);
   return $content;
 }
-
 
 /**
  * Implements hook_views_api().
@@ -225,7 +210,6 @@ function registration_views_api() {
   );
 }
 
-
 function registration_form_block() {
   $block = array();
   $block['subject'] = t('Course registration');
@@ -233,9 +217,8 @@ function registration_form_block() {
 
   $block['content'][] = drupal_get_form('course_registration_form');
   return $block;
-
 }
- 
+
 /**
  * Implements hook_context_plugins().
  *
@@ -269,7 +252,6 @@ function registration_context_registry() {
   );
 }
 
-
 function goto_class_form_block() {
   $block = array();
   $block['subject'] = t('Go to class');
@@ -281,62 +263,61 @@ function goto_class_form_block() {
  * @return array form for registration of user
  */
 function course_registration_form($form, &$form_state) {
-    
-     // check whether user is already registered. 
-    global $user;   
-    $uid = $user->uid;
-    
-    // get node id
-    if (arg(0) == 'node' && is_numeric(arg(1))) {
-        $nid = arg(1);
-    }
-    else { // it is not a node profile page, so don't show the button
-        watchdog('Callback', 'Registration button is visible in a wrong place.', array($form), WATCHDOG_ERROR);
-        return;
-    }
-    
-    $form = array();
-  
-    // cache nid in the form as it will not be available in the callback overwise
-    $form['nid'] = array(
-      '#type' => 'hidden',
-      '#value' =>  $nid,   
-    );
 
-    if (!$uid) {
-      $form['register'] = array(
-        '#type' => 'item',
-        '#markup' => l(t('Register'), "user/register/nojs", array('query' => array('course' => $nid), 'attributes' => array('class' => array('ctools-use-modal', 'ctools-modal-common-modal-style', 'login-form-additional-link', 'course-user-register'))))
-      );
-      return $form;
-    }
-    
-    $rid = course_registration_id($uid, $nid);
-    if ($rid) { 
-      // user already registered, so we give him goto class button
-      $form['submit'] = array(
-        '#type' => 'submit', 
-        '#submit' => array('course_goto_class_submit'),
-        '#value' => t('Go to class'),
-      );
-      return $form; // no need to show the button for registered user
-    }
-    
-    // @todo : get the node id or url of the first lesson    
-    $form['submit'] = array(
-      '#type' => 'submit', 
-      '#value' => t('Enroll')
+  // check whether user is already registered. 
+  global $user;
+  $uid = $user->uid;
+
+  // get node id
+  if (arg(0) == 'node' && is_numeric(arg(1))) {
+    $nid = arg(1);
+  }
+  else { // it is not a node profile page, so don't show the button
+    watchdog('Callback', 'Registration button is visible in a wrong place.', array($form), WATCHDOG_ERROR);
+    return;
+  }
+
+  $form = array();
+
+  // cache nid in the form as it will not be available in the callback overwise
+  $form['nid'] = array(
+    '#type' => 'hidden',
+    '#value' => $nid,
+  );
+
+  if (!$uid) {
+    $form['register'] = array(
+      '#type' => 'item',
+      '#markup' => l(t('Register'), "user/register/nojs", array('query' => array('course' => $nid), 'attributes' => array('class' => array('ctools-use-modal', 'ctools-modal-common-modal-style', 'login-form-additional-link', 'course-user-register'))))
     );
-    
     return $form;
-    
+  }
+
+  $rid = course_registration_id($uid, $nid);
+  if ($rid) {
+    // user already registered, so we give him goto class button
+    $form['submit'] = array(
+      '#type' => 'submit',
+      '#submit' => array('course_goto_class_submit'),
+      '#value' => t('Go to class'),
+    );
+    return $form; // no need to show the button for registered user
+  }
+
+  // @todo : get the node id or url of the first lesson    
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Enroll')
+  );
+
+  return $form;
 }
 
 /**
  * Implements hook_form_FORM_ID_alter
  */
 function registration_form_user_register_form_alter(&$form, &$form_state) {
-  if(isset($_GET['course'])) {
+  if (isset($_GET['course'])) {
     //Store course id in storage
     $form_state['storage']['course'] = $_GET['course'];
     $form['#submit'][] = registration_user_register_submit;
@@ -345,9 +326,10 @@ function registration_form_user_register_form_alter(&$form, &$form_state) {
 
 function registration_user_register_submit($form, &$form_state) {
   if(isset($form_state['storage']['course'])) {
+
     //We need this
     ctools_include('ajax');
-    ctools_add_js('ajax-responder'); 
+    ctools_add_js('ajax-responder');
 
     $uid = $form_state['values']['uid'];
     $nid = $form_state['storage']['course'];
@@ -366,6 +348,7 @@ function registration_user_register_submit($form, &$form_state) {
       print ajax_render($commands);
       exit;
     }  
+
   }
 }
 
@@ -374,8 +357,7 @@ function registration_user_register_submit($form, &$form_state) {
  */
 function registration_user_validated($account = NULL) {
   if(!$account) {
-    global $user;
-    $account = $user;
+    return FALSE;
   }
 
   // Get course nid for which user has been registered.
@@ -385,7 +367,20 @@ function registration_user_validated($account = NULL) {
     ->execute()->fetch();
 
   if ($res) {
-    $node = node_load($res->nid);
+   
+    //Due to drupal_goto student role is not getting assigned manually assign it
+    //@todo get rid of this manual role assignment
+
+    //get role object
+    $role = user_role_load_by_name('student');
+    // Save the user object with the student role.
+    if (!isset($account->roles[$role->rid])) {
+      $roles = $account->roles + array($role->rid => $role->name);
+      user_save($account, array('roles' => $roles));
+    }
+
+    //Take user to class    
+    $node = node_load($res->nid);   
     drupal_goto(course_first_node_href('lesson', $node->book));
   }
 }
@@ -394,7 +389,7 @@ function registration_user_validated($account = NULL) {
  * Implements hook_node_view
  */
 function registration_node_view($node, $view_mode) {
-   if ($view_mode == 'full' && node_is_page($node)) {
+  if ($view_mode == 'full' && node_is_page($node)) {
     if (!course_is_item_node($node)) {
       return;
     }
@@ -418,42 +413,41 @@ function registration_node_view($node, $view_mode) {
   }
 }
 
-
 /**
  * Registration form submit hook
  */
 function course_registration_form_submit($form, &$form_state) {
-    global $user;
-    $uid = $user->uid;
-    
-    if ($user->uid == 0) { //user is not logged in 
-        // @todo redirect to user registration form
-    }
-    
-    $nid = $form['nid']['#value'];
-     
-     // register user to the course
-    $rid = registration_register($uid, $nid);
-    
-    if($rid) {
-      $node = node_load($nid);
-      $form_state['redirect'] = course_first_node_href('lesson', $node->book);
-    }   
+  global $user;
+  $uid = $user->uid;
+
+  if ($user->uid == 0) { //user is not logged in 
+    // @todo redirect to user registration form
+  }
+
+  $nid = $form['nid']['#value'];
+
+  // register user to the course
+  $rid = registration_register($uid, $nid);
+
+  if ($rid) {
+    $node = node_load($nid);
+    $form_state['redirect'] = course_first_node_href('lesson', $node->book);
+  }
 }
 
 function course_goto_class_submit($form, &$form_state) {
-   $nid = $form['nid']['#value'];
-   $last_nid = course_last_visited_node($nid);
-   $path = '';
-   if ($last_nid) { // user already visited some content of the course
-     $path = 'node/' . $last_nid; 
-   }
-   else { // user did not see the course, we redirect him to fist child page
-     $node = node_load($nid);
-     $next = book_next($node->book);
-     $path = $next['link_path'];
-   }
-   $form_state['redirect'] = $path ;
+  $nid = $form['nid']['#value'];
+  $last_nid = course_last_visited_node($nid);
+  $path = '';
+  if ($last_nid) { // user already visited some content of the course
+    $path = 'node/' . $last_nid;
+  }
+  else { // user did not see the course, we redirect him to fist child page
+    $node = node_load($nid);
+    $next = book_next($node->book);
+    $path = $next['link_path'];
+  }
+  $form_state['redirect'] = $path;
 }
 
 /**
@@ -469,15 +463,12 @@ function registration_theme() {
       'render element' => 'elements',
       'template' => 'registration',
     ),
-   'registration_sample_data' => array(
+    'registration_sample_data' => array(
       'variables' => array('registration_sample_data', 'registration' => NULL),
       'template' => 'registration-sample-data',
     ),
-
-
   );
-}  
-
+}
 
 /**
  * Implements hook_menu_local_tasks_alter().
@@ -495,10 +486,9 @@ function registration_menu_local_tasks_alter(&$data, $router_item, $root_path) {
   }
 }
 
-
 /**
-* Implements hook_entity_property_info_alter().
-*/
+ * Implements hook_entity_property_info_alter().
+ */
 function registration_entity_property_info_alter(&$info) {
   $properties = &$info['example_task']['properties'];
   $properties['created'] = array(
@@ -528,7 +518,7 @@ function registration_entity_property_info_alter(&$info) {
  * The class used for registration entities
  */
 class Registration extends Entity {
-  
+
   public function __construct($values = array()) {
     parent::__construct($values, 'registration');
   }
@@ -540,16 +530,17 @@ class Registration extends Entity {
   protected function defaultUri() {
     return array('path' => 'registration/' . $this->registration_id);
   }
+
 }
 
 /**
  * The Controller for Registration entities
  */
 class RegistrationController extends EntityAPIController {
+
   public function __construct($entityType) {
     parent::__construct($entityType);
   }
-
 
   /**
    * Create a registration - we first set up the values that are specific
@@ -564,7 +555,7 @@ class RegistrationController extends EntityAPIController {
    */
   public function create(array $values = array()) {
     // Add values that are specific to our Registration
-    $values += array( 
+    $values += array(
       'registration_id' => '',
       'is_new' => TRUE,
       'title' => '',
@@ -575,24 +566,22 @@ class RegistrationController extends EntityAPIController {
       'nid' => $values['nid'],
       'uid' => $values['uid'],
     );
-    
+
     $registration = parent::create($values);
     return $registration;
   }
-  
+
   /**
    * Overriding the buldContent function to add entity specific fields
    */
   public function buildContent($entity, $view_mode = 'full', $langcode = NULL, $content = array()) {
     $content = parent::buildContent($entity, $view_mode, $langcode, $content);
-    $content['registration_sample_data'] =  array(
+    $content['registration_sample_data'] = array(
       '#markup' => theme('registration_sample_data', array('registration_sample_data' => check_plain($entity->data['sample_data']), 'registration' => $entity)),
     );
 
     return $content;
   }
-  
-  
-  
+
 }
 

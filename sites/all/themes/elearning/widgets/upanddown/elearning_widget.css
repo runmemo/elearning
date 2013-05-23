@@ -64,8 +64,13 @@
 
 .vud-widget-elearning_widget .up-active,
 .vud-widget-elearning_widget .down-active {
-  cursor: default;
+  cursor: pointer;
 }
+
+.vud-widget-elearning_widget .vud-link-reset {
+  display: none;
+}
+
 .vud-widget-elearning_widget .up-inactive,
 .vud-widget-elearning_widget .down-inactive,
 .vud-widget-elearning_widget .up-active,
@@ -77,6 +82,20 @@
   font-weight: bold;
   text-align: center;
   background: url(../../images/arrows.png) 0 0 no-repeat;
+}
+
+.vud-widget-elearning_widget.vud-widget-inactive .up-inactive,
+.vud-widget-elearning_widget.vud-widget-inactive .up-active,
+.vud-widget-elearning_widget.vud-widget-inactive .up-inactive:hover,
+.vud-widget-elearning_widget.vud-widget-inactive .up-active:hover {
+  background-position: 0px -72px;
+}
+
+.vud-widget-elearning_widget.vud-widget-inactive .down-inactive,
+.vud-widget-elearning_widget.vud-widget-inactive .down-active,
+.vud-widget-elearning_widget.vud-widget-inactive .down-inactive:hover,
+.vud-widget-elearning_widget.vud-widget-inactive .down-active:hover {
+  background-position: 0px -57px;
 }
 
 .vud-widget-elearning_widget .up-active {
