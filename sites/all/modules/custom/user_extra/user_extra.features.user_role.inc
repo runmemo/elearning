@@ -11,8 +11,8 @@ function user_extra_user_default_roles() {
   $roles = array();
 
   // Exported role: pre-authorized.
-  $roles['not-validated'] = array(
-    'name' => 'not-validated',
+  $roles['not validated user'] = array(
+    'name' => 'not validated user',
     'weight' => 5,
   );
 

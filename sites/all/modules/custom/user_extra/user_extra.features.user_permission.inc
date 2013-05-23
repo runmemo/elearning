@@ -27,7 +27,7 @@ function user_extra_user_default_permissions() {
       'administrator' => 'administrator',
       'anonymous user' => 'anonymous user',
       'authenticated user' => 'authenticated user',
-      'not-validated' => 'not-validated',
+      'not validated user' => 'not validated user',
     ),
     'module' => 'comment',
   );
@@ -39,7 +39,7 @@ function user_extra_user_default_permissions() {
       'administrator' => 'administrator',
       'anonymous user' => 'anonymous user',
       'authenticated user' => 'authenticated user',
-      'not-validated' => 'not-validated',
+      'not validated user' => 'not validated user',
     ),
     'module' => 'node',
   );

@@ -36,7 +36,7 @@ features[user_permission][] = access comments
 features[user_permission][] = access content
 
 features[ctools][] = strongarm:strongarm:1
-features[user_role][] = not-validated
+features[user_role][] = not validated user
 features[variable][] = logintoboggan_confirm_email_at_registration
 features[variable][] = logintoboggan_immediate_login_on_register
 features[variable][] = logintoboggan_login_successful_message
