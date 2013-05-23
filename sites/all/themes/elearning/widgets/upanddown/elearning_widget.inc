@@ -17,6 +17,7 @@ $plugin = array(
  * Alter template variables.
  */
 function elearning_widget_alter_template_vars($template_type, &$variables) {
+  global $user;
   // array with parameters to find all positive votes
   $criteria = array(
     'entity_type' => $variables['type'],
@@ -39,11 +40,22 @@ function elearning_widget_alter_template_vars($template_type, &$variables) {
     $current_class = 'current-medium';
   } elseif ($points >= 100 && $points < 1000) {
     $current_class = 'current-wide';
-  } elseif($points <= -10 && $points > -100) {
+  } elseif ($points <= -10 && $points > -100) {
     $current_class = 'current-negative-wide';
   } else {
     $current_class = 'current-small';
   }
   $variables['current_class'] = $current_class;
   $variables['current_points'] = $points;
+  // check, whether the node belongs to the current user
+  // and define access to the links and message for tooltips
+  $node = isset($variables['entity_id']) ? node_load($variables['entity_id']) : FALSE;
+  $variables['vote_acess'] = (!$node || ($node && $node->uid == $user->uid)) ? FALSE : TRUE;
+  if ($variables['vote_acess']) {
+    $variables['title_text_up'] = $variables['class_up'] == 'up-active' ? t('Reset your vote') : t('Vote up!');
+    $variables['title_text_down'] = $variables['class_up'] == 'down-active' ? t('Reset your vote') : t('Vote down!');
+  } else {
+    $variables['title_text_up'] = t('You cannot vote up your own !content_type', array('!content_type' => $node ? $node->type : t('content')));
+    $variables['title_text_down'] = t('You cannot vote down your own !content_type', array('!content_type' => $node ? $node->type : t('content')));
+  }
 }
