@@ -9,8 +9,5 @@ files[] = registration.inc
 files[] = registration.admin.inc
 files[] = tests/registration.test
 
-features[features_api][] = api:1
-features[rules_config][] = rules_course_registration_role
-
 dependencies[] = course
-dependencies[] = logintoboggan_rules
+dependencies[] = logintoboggan
