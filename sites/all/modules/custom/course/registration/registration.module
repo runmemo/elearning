@@ -318,38 +318,36 @@ function course_registration_form($form, &$form_state) {
  */
 function registration_form_user_register_form_alter(&$form, &$form_state) {
   if (isset($_GET['course'])) {
-    //Store course id in storage
+    // Store course id in storage.
     $form_state['storage']['course'] = $_GET['course'];
-    $form['#submit'][] = registration_user_register_submit;
   }
+  $form['#submit'][] = registration_user_register_submit;
 }
 
 function registration_user_register_submit($form, &$form_state) {
+
   if (isset($form_state['storage']['course'])) {
-
-    //We need this
-    ctools_include('ajax');
-    ctools_add_js('ajax-responder');
-
     $uid = $form_state['values']['uid'];
     $nid = $form_state['storage']['course'];
 
-    //register user to course
+    // register user to course.
     try {
       $rid = registration_register($uid, $nid);
     } catch (InvalidArgumentException $e) {
       watchdog_exception($e);
       $rid = FALSE;
     }
-
-    if ($rid) {
-      //redirect user to course page
-      $commands[] = ctools_ajax_command_redirect("node/$nid");
-      print ajax_render($commands);
-      exit;
-    }  
-
   }
+
+  // Include required ctools libraries.
+  ctools_include('ajax');
+  ctools_add_js('ajax-responder');
+  ctools_include('modal');
+
+  // reload parent page.
+  $commands[] = ctools_ajax_command_reload();
+  print ajax_render($commands);
+  exit;    
 }
 
 /**
