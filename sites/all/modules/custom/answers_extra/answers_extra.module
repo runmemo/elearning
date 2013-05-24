@@ -223,3 +223,26 @@ function answers_extra_preprocess_views_view_fields(&$vars) {
     $answers_count_field->content = $output;
   }  
 }
+
+/**
+ * Implements hook_userpoints().
+ * Prevents account's userpoints from going (further) negative.
+ * @param string $op operation, being performed
+ * @param array $params array with transaction parameters
+ * @return boolean
+ */
+function answers_extra_userpoints($op, $params) {
+  if ($op == 'points before' && isset($params['points']) && $params['points'] < 0) {
+    $current_points = userpoints_get_current_points($params['uid'], $params['tid']);
+    $diff = $current_points + $params['points'];
+    // if points are going to be negative or negative already cancel current transaction
+    // and perform transaction, that set points to zero
+    if ($diff < 0 || $current_points < 0) {
+      $params['points'] = 0 - $current_points;
+      _userpoints_transaction($params);
+      // Reset the static cache of userpoints.
+      drupal_static_reset('userpoints_get_current_points');
+      return FALSE;
+    }
+  }
+}

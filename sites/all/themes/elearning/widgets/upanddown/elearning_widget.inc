@@ -53,7 +53,7 @@ function elearning_widget_alter_template_vars($template_type, &$variables) {
   $variables['vote_acess'] = (!$node || ($node && $node->uid == $user->uid)) ? FALSE : TRUE;
   if ($variables['vote_acess']) {
     $variables['title_text_up'] = $variables['class_up'] == 'up-active' ? t('Reset your vote') : t('Vote up!');
-    $variables['title_text_down'] = $variables['class_up'] == 'down-active' ? t('Reset your vote') : t('Vote down!');
+    $variables['title_text_down'] = $variables['class_down'] == 'down-active' ? t('Reset your vote') : t('Vote down!');
   } else {
     $variables['title_text_up'] = t('You cannot vote up your own !content_type', array('!content_type' => $node ? $node->type : t('content')));
     $variables['title_text_down'] = t('You cannot vote down your own !content_type', array('!content_type' => $node ? $node->type : t('content')));
