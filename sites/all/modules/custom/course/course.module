@@ -35,14 +35,14 @@ function course_menu() {
  */
 function course_menu_alter(&$items) {
   $items['flag/confirm/%/%flag/%']['modal'] = TRUE;
-  
+
   // Restrict access to node outline to users who have edit access.
   $items['node/%node/outline']['access callback'] = 'node_access';
   $items['node/%node/outline']['access arguments'] = array('update', 1);
-  
+
   // Disable page 'node'
-  $items['node']['page callback'] = 'drupal_not_found';  
-  $items['node']['access callback'] = FALSE; 
+  $items['node']['page callback'] = 'drupal_not_found';
+  $items['node']['access callback'] = FALSE;
 }
 
 /**
@@ -52,11 +52,11 @@ function course_menu_alter(&$items) {
  *                     we will look for last visited node.
  */
 function course_last_visited_node($nid, $uid = NULL) {
-  if(!isset($uid)) { 
+  if (!isset($uid)) {
     global $user;
     $uid = $user->uid;
   }
-  
+
   if ($uid == 0) {
     return $nid;
   }
@@ -100,7 +100,7 @@ function course_block_info() {
   );
   // Block for displaying course item links
   $blocks['course_item_links'] = array(
-    'info' => t('Course Links'), 
+    'info' => t('Course Links'),
   );
   return $blocks;
 }
@@ -133,15 +133,15 @@ function course_block_view($delta = '') {
   }
 }
 
-/** 
-  * Return course item operation links
-  */
+/**
+ * Return course item operation links
+ */
 function course_item_links() {
   $node = menu_get_object('node');
   if (!node_access('update', $node)) {
     return FALSE;
   }
-  
+
   $block = array();
   $block['subject'] = '';
   $tabs = menu_local_tasks(0);
@@ -212,25 +212,25 @@ function course_theme() {
 function course_node_view($node, $view_mode) {
   //unset Book Links
   hide($node->content['links']['book']);
-  
+
   // Redirect to fist lesson from unit content type page
   if ($node->type === 'unit' && $view_mode == 'full') {
     $book_link = $node->book;
     $next = book_next($book_link);
     if ($next) { // there is a lesson ahead
       drupal_goto($next['link_path'], array(), 301);
-      }
-      else { 
+    }
+    else {
       // @todo unit does not have any lessons, so we need to show something     
     }
   }
-  
+
   // add fields from referenced nodes to content
   if ($view_mode == 'full' && $node->type == 'course') {
-      
+
     $provider = field_get_items('node', $node, 'field_provider');
     if (isset($provider[0])) {
-      
+
       $field_logo = field_view_field('node', $provider[0]['entity'], 'field_logo', array('label' => 'hidden', 'settings' => array('image_style' => 'provider_logo')));
       if (empty($field_logo)) {
         $node->provider['logo'] = '<div class="provider-logo-default"></div>';
@@ -242,7 +242,7 @@ function course_node_view($node, $view_mode) {
       $node->provider['extra'] = render($field_extra);
       $node->provider['name'] = $provider[0]['entity']->title;
     }
-    
+
     // teacher logo and name
     $teacher = field_get_items('node', $node, 'field_teacher');
     $node->teacher = array();
@@ -253,21 +253,20 @@ function course_node_view($node, $view_mode) {
       $node->teacher['avatar'] = elearning_get_user_picture($teacher_account, '', 'user-profile');
       $node->teacher['name'] = render($field_name);
       $node->teacher['surname'] = render($field_surname);
-     } 
-     else {
+    }
+    else {
       $node->teacher['avatar'] = '';
       $node->teacher['name'] = '';
       $node->teacher['surname'] = '';
     }
   }
-  
-  
+
+
   if ($node->type !== 'lesson' && $view_mode === 'full') {
     if (isset($node->content['book_navigation'])) {
       unset($node->content['book_navigation']);
     }
   }
-
 }
 
 /**
@@ -277,7 +276,6 @@ function course_node_view($node, $view_mode) {
 function course_preprocess_print(&$variables) {
   
 }
-
 
 /**
  * Gets corresponding book for a node.
@@ -428,9 +426,9 @@ function _course_get_tree_items($tree, $load_type = FALSE) {
     }
     foreach ($unit['below'] as $item) {
       $nid = str_ireplace('node/', '', $item['link']['link_path']);
-      $items[$nid] = $nid; 
+      $items[$nid] = $nid;
     }
-  }  
+  }
   return $items;
 }
 
@@ -458,9 +456,9 @@ function course_get_items($course_item) {
   foreach ($items as $nid => $item) {
     $res[$nid] = course_get_node_type($nid);
   }
- 
+
   // Set chache.
-  cache_set('course_get_items_' . $course_item->book['bid'], $res, 'cache', 60*60);
+  cache_set('course_get_items_' . $course_item->book['bid'], $res, 'cache', 60 * 60);
   return $res;
 }
 
@@ -481,9 +479,9 @@ function course_get_node_type($nid) {
   }
   // Get node type for the database directly rather than node_load!
   $res = db_select('node', 'n')
-    ->fields('n', array('type'))
-    ->condition('n.nid', $nid)
-    ->execute()->fetch();
+          ->fields('n', array('type'))
+          ->condition('n.nid', $nid)
+          ->execute()->fetch();
   if ($res) {
     return $res->type;
   }
@@ -491,7 +489,7 @@ function course_get_node_type($nid) {
     return FALSE;
   }
 }
-    
+
 function course_is_item_node($node) {
   if (!isset($node->book)) {
     return FALSE;
@@ -572,8 +570,7 @@ function course_leave_modal($js = NULL, $user = NULL, $course = NULL) {
     ctools_include('ajax');
   }
 
-  return ctools_modal_render(t('Confirmation'), 
-    theme('course_leave_modal', array('uid' => $user->uid, 'course' => $course)));
+  return ctools_modal_render(t('Confirmation'), theme('course_leave_modal', array('uid' => $user->uid, 'course' => $course)));
 }
 
 /**
@@ -601,7 +598,7 @@ function course_is_teacher($node, $account) {
   if ($teacher == $account->uid) {
     // Account is a teacher of the course.
     return TRUE;
-  } 
+  }
   else {
     return FALSE;
   }
@@ -658,7 +655,7 @@ function course_get_grade_ranges($grades) {
   $grade_ranges = array();
   $prev_score = 0;
   $prev_desc = t('Certificate is not available');
-  
+
   // Create array of score ranges with grade names.
   foreach ($grades as $score => $grade_name) {
     $range = $prev_score . '-' . ($score - 1);
@@ -668,7 +665,7 @@ function course_get_grade_ranges($grades) {
   }
   $max_score = $prev_score;
   $range = $max_score . '+';
-  $grade_ranges[$range] =  $grades[$max_score];
+  $grade_ranges[$range] = $grades[$max_score];
   return $grade_ranges;
 }
 
@@ -705,4 +702,20 @@ function course_access_certificate($node, $user) {
   $user_credit = credit_calculate($node, $user);
   // User must have more credit poits than a pass value on the course.
   return $user_credit >= $pass_score;
+}
+
+/**
+ * Implements hook_user_update().
+ */
+function course_user_update(&$edit, $account, $category) {
+  if ($account->logintoboggan_email_validated) {
+    // Get role object for student.
+    $role = user_role_load_by_name('student');
+
+    // Save the user object with the student role.
+    if (!isset($account->roles[$role->rid])) {
+      $edit['roles'] = $account->roles + array($role->rid => $role->name);
+      user_save($account, $edit);
+    }
+  }
 }
