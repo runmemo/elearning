@@ -249,3 +249,56 @@ function common_tools_theme() {
 function theme_menu_link__superfish_link_parent($variables) {
   return '<a href="' . check_plain(url($variables['path'], $variables['options'])) . '"' . drupal_attributes($variables['options']['attributes']) . '>' . $variables['text'] . '</a><div class="arrow-up"></div>';
 }
+
+
+/**
+ * Implements hook_form_alter().
+ * Code is borrowed from  http://drupal.org/node/1169798#comment-6172482
+ */
+function common_tools_form_alter(&$form, &$form_state, $form_id) {
+  // Pass the meta data (labels and description) through the t() function.
+  if (isset($form['type']) && $form['type']['#value'] . '_node_form' == $form_id) {
+    foreach (element_children($form_state['field']) as $field) {
+      // In Drupal 7 the "#language" value is set on each form field.
+      if (!empty($form[$field]['#language'])) {
+        // Obtain the field's language.
+        $lang = $form[$field]['#language'];
+        // Translate the field's label on the $form_state.
+        if (!empty($form_state['field'][$field][$lang]['instance']['label'])) {
+          $form_state['field'][$field][$lang]['instance']['label'] = t($form_state['field'][$field][$lang]['instance']['label']);
+        }
+        // Translate the field's description on the $form_state.
+        if (!empty($form_state['field'][$field][$lang]['instance']['description'])) {
+          $form_state['field'][$field][$lang]['instance']['description'] = t($form_state['field'][$field][$lang]['instance']['description']);
+        }
+        // Translate the field title.
+        if (!empty($form[$field][$lang]['#title'])) {
+          $form[$field][$lang]['#title'] = t($form[$field][$lang]['#title']);
+        }
+        // Translate the field description.
+        if (!empty($form[$field][$lang]['#description'])) {
+          $form[$field][$lang]['#description'] = t($form[$field][$lang]['#description']);
+        }
+        // Translate the meta data on any instances on the field.
+        foreach(element_children($form[$field][$lang]) as $instance) {
+          // Translate the field's instance descripion.
+          if (!empty($form[$field][$lang][$instance]['#description'])) {
+            $form[$field][$lang][$instance]['#description'] = t($form[$field][$lang][$instance]['#description']);
+          }
+          // Translate the field's instance value descripion.
+          if (!empty($form[$field][$lang][$instance]['value']['#description'])) {
+            $form[$field][$lang][$instance]['value']['#description'] = t($form[$field][$lang][$instance]['value']['#description']);
+          }
+          // Translate the field's instance title.
+          if (!empty($form[$field][$lang][$instance]['#title'])) {
+            $form[$field][$lang][$instance]['#title'] = t($form[$field][$lang][$instance]['#title']);
+          }
+          // Translate the field's instance value title.
+          if (!empty($form[$field][$lang][$instance]['value']['#title'])) {
+            $form[$field][$lang][$instance]['value']['#title'] = t($form[$field][$lang][$instance]['value']['#title']);
+          }
+        }
+      }
+    }
+  }
+}
