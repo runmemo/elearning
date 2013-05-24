@@ -49,3 +49,7 @@ features[variable][] = node_submitted_notes
 
 features[rules_config][] = rules_lesson_item_complete_flagged
 features[rules_config][] = rules_lesson_item_complete_unflagged
+
+features[user_permission][] = create notes content
+features[user_permission][] = delete own notes content
+features[user_permission][] = edit own notes content
