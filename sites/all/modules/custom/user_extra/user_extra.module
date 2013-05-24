@@ -193,7 +193,7 @@ function profile_pic_update_form($form, &$form_state) {
     global $user;
     $user_picture = theme('user_picture', array('account' => $user));
     if (!isset($user_picture) || $user_picture == '') {
-      $user_picture = '<div class="user-profile-default-picture"></div>';
+      $user_picture = '<div class="default-avatar"></div>';
     }
     $form_state['storage']['picture'] = $user_picture;
     $form_state['storage']['user'] = $user->uid;
@@ -309,7 +309,7 @@ function profile_pic_update_form_submit($form, &$form_state) {
     );
     user_save($user, $edit);
     $form_state['rebuild'] = TRUE;
-    $form_state['storage']['picture'] = '<div class="user-profile-default-picture"></div>';
+    $form_state['storage']['picture'] = '<div class="default-avatar"></div>';
   }
 }
 

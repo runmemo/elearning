@@ -281,11 +281,6 @@ a.user-menu-parent:hover .user-menu-userpoints {
   }
 }
 
-.default-avatar {
-  .bg-img('small-avatar-default.jpg');  
-  .small-avatar();
-}
-
 /****** Common properties End ******/
 
 
@@ -717,9 +712,7 @@ a.user-menu-parent:hover .user-menu-userpoints {
   td.col-4 {
     padding: 0px 0px 0px 4px;
   }
-  img {
-    .small-avatar();
-  }
+  .views-field-picture {.small-avatar() };
 }
 
   
@@ -958,12 +951,10 @@ a.user-menu-parent:hover .user-menu-userpoints {
   }
 }
 
-.user-profile-default-picture {
+.user-profile-avatar {
+  .default-avatar();
   .show(inline-block);
   margin: 5px 6px 3px 6px;
-  .bg-img('user-profile-default.png');
-  width: 107px;
-  height: 107px;
 }
 
 /* User profile picture update form styles */
@@ -1434,14 +1425,6 @@ body.page-home {
   }
 }
 
-.node-question-default-picture {
-  width: 44px;
-  height: 44px;
-  .box-shadow();
-  .bg-img('small-avatar-default.jpg');
-  background-position: 40% 48%;
-}
-
 .author-points {
   .bold(12px);
   .show(table);
@@ -1465,6 +1448,7 @@ body.page-home {
   .border-bottom-dotted();
   .node-question-picture-points {
     .left();
+    .tiny-avatar();
     margin-bottom: -15px;
     @media @narrow {
       margin-right: 15px;
@@ -1667,23 +1651,23 @@ body.page-home {
 }
 
 .view-answer-feedbacks {
-  .views-answer-feedback-picture {
-    position: relative;
-  }
   .views-answer-feedback-widgets {
     margin-right: 20px;
   }
 }
 
-.view-answers-review {
-  .views-other-answer-picture {
-    .left();
-    margin-right: 20px;
-  }
-  .views-answer-feedback-picture {
-    position: relative;
-  }
+
+.views-other-answer-picture {
+  .left();
+  margin-right: 20px;
+  .tiny-avatar();
 }
+
+.views-answer-feedback-picture { 
+  position: relative;
+  .tiny-avatar();
+}
+
 
 .views-field-feedback-form {
   margin-top: 25px;
@@ -1947,6 +1931,8 @@ body.page-home {
 .node-open-question-picture {
   .left();
   margin-right: 17px;
+  .tiny-avatar();
+
 }
 
 .node-open-question-body {
