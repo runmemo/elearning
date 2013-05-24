@@ -351,7 +351,7 @@ function registration_user_register_submit($form, &$form_state) {
  * Implements hook_user_update
  */
 function registration_user_update(&$edit, $account, $category) {
-  if ($account->logintoboggan_email_validated) {
+  if (!empty($account->logintoboggan_email_validated)) {
     // Get course nid for which user has been registered.
     $res = db_select('registration', 'r')
       ->fields('r', array('nid'))
