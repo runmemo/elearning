@@ -213,8 +213,6 @@ function registration_views_api() {
 function registration_form_block() {
   $block = array();
   $block['subject'] = t('Course registration');
-  // add form to search products from same event
-
   $block['content'][] = drupal_get_form('course_registration_form');
   return $block;
 }
@@ -332,10 +330,9 @@ function registration_user_register_submit($form, &$form_state) {
 
     // register user to course.
     try {
-      $rid = registration_register($uid, $nid);
+      registration_register($uid, $nid);
     } catch (InvalidArgumentException $e) {
       watchdog_exception($e);
-      $rid = FALSE;
     }
   }
 
@@ -355,7 +352,6 @@ function registration_user_register_submit($form, &$form_state) {
  */
 function registration_user_update(&$edit, $account, $category) {
   if ($account->logintoboggan_email_validated) {
-
     // Get course nid for which user has been registered.
     $res = db_select('registration', 'r')
       ->fields('r', array('nid'))
@@ -363,16 +359,7 @@ function registration_user_update(&$edit, $account, $category) {
       ->execute()->fetch();
 
     if ($res) {
-      //get role object
-      $role = user_role_load_by_name('student');
-
-      // Save the user object with the student role.
-      if (!isset($account->roles[$role->rid])) {
-        $roles = $account->roles + array($role->rid => $role->name);
-        user_save($account, array('roles' => $roles));
-      }
-
-      //set message before re-direct.
+      // Set message before re-direct.
       drupal_set_message(t('You have successfully validated your e-mail address.'));
 
       //Take user to class.
@@ -384,7 +371,7 @@ function registration_user_update(&$edit, $account, $category) {
 
 
 /**
- * Implements hook_node_view
+ * Implements hook_node_view().
  */
 function registration_node_view($node, $view_mode) {
   if ($view_mode == 'full' && node_is_page($node)) {
