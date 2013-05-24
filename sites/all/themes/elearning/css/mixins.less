@@ -264,12 +264,19 @@
 
 .view-block-header() {
   height: 36px;
+  line-height: 36px;
+  padding-right: 8px;
+  padding-left: 8px;
+  margin-bottom: 8px;
   background-color: #f8f8f8;
   .box-shadow();
-  margin-bottom: 8px;
   .RoundedShape(1px);
   .bold(18px);
   color: #383838;
+  p {
+    .bold(18px);
+    line-height: 36px;
+  }
 }
 
 .link-image-left(@padding: 16px) {

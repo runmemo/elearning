@@ -683,53 +683,44 @@ a.user-menu-parent:hover .user-menu-userpoints {
   }
 }
 
-.node-course {
-  .view-course-students {
-    .right();
-    @media @narrow {
-      width: 250px;
-    }
-    @media @normal {
-      width: 250px;
-    }
-    @media @wide {
-      width: 280px;
-    }
-    @media @mobile {
-      width: 250px;
-    }
-    .view-header {
-      .view-block-header();
-      .header-left {
-        .left();
-        margin: 8px 0px 12px 8px;
-      }
-      .header-right {
-        .right();
-        margin: 8px;
-      }
-    }
-    table {
-      border: none;
-      td.col-1 {
-        padding: 4px 4px 4px 8px;
-      }
-      td.col-2, td.col-3 {
-        padding: 0px 4px;
-      }
-      td.col-4 {
-        padding: 0px 0px 0px 4px;
-      }
-      img {
-        .box-shadow();
-      }
-    }
-    .view-content {
-      max-height: 236px;
-      overflow: hidden;
+
+.view-course-students {
+  .right();
+  @media @narrow {
+    width: 250px;
+  }
+  @media @normal {
+    width: 250px;
+  }
+  @media @wide {
+    width: 280px;
+  }
+  @media @mobile {
+    width: 250px;
+  }
+  .view-header {
+    .view-block-header();
+    .right {
+      float:right;
     }
   }
+  table {
+    border: none;
+  }
+  td.col-1 {
+    padding: 4px 4px 4px 8px;
+  }
+  td.col-2, td.col-3 {
+    padding: 0px 4px;
+  }
+  td.col-4 {
+    padding: 0px 0px 0px 4px;
+  }
+  img {
+    .box-shadow();
+  }
 }
+
   
 .node-course-basic-info {
   display: inline-block;
@@ -1105,7 +1096,7 @@ a.user-menu-parent:hover .user-menu-userpoints {
 /* User profile picture update form styles END */
 
 .view-user-courses {
-.right();
+  .right();
   @media @narrow {
     float: none;
   }
@@ -1120,10 +1111,6 @@ a.user-menu-parent:hover .user-menu-userpoints {
   background: #fafafa;
   .view-header {
     .view-block-header();
-    p {
-      padding: 7px 0px 0px 11px;
-      font-size: 18px;
-    }
   }
   .view-content {
     padding: 22px 24px;
