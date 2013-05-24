@@ -88,7 +88,7 @@ function course_views_default_views() {
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
   $handler->display->display_options['exposed_form']['type'] = 'basic';
-  $handler->display->display_options['pager']['type'] = 'some';
+  $handler->display->display_options['pager']['type'] = 'mini';
   $handler->display->display_options['pager']['options']['items_per_page'] = '16';
   $handler->display->display_options['pager']['options']['offset'] = '0';
   $handler->display->display_options['style_plugin'] = 'grid';
@@ -99,12 +99,12 @@ function course_views_default_views() {
   $handler->display->display_options['header']['php']['id'] = 'php';
   $handler->display->display_options['header']['php']['table'] = 'views';
   $handler->display->display_options['header']['php']['field'] = 'php';
+  $handler->display->display_options['header']['php']['label'] = 'Number of students';
   $handler->display->display_options['header']['php']['php_output'] = 
     '<p>
       <?php 
-        $count = count($results);
         $count_wrap = \'<span class="right">@count</span>\';
-        print format_plural($count, \'Student \' . $count_wrap, \'Students \' .$count_wrap);
+        print format_plural($view->total_rows, \'Student \' . $count_wrap, \'Students \' .$count_wrap);
       ?>
     </p>';
       
