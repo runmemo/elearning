@@ -708,7 +708,7 @@ function course_access_certificate($node, $user) {
  * Implements hook_user_update().
  */
 function course_user_update(&$edit, $account, $category) {
-  if ($account->logintoboggan_email_validated) {
+  if (!empty($account->logintoboggan_email_validated)) {
     // Get role object for student.
     $role = user_role_load_by_name('student');
 

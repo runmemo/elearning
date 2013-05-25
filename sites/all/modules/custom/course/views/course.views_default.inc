@@ -88,7 +88,7 @@ function course_views_default_views() {
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
   $handler->display->display_options['exposed_form']['type'] = 'basic';
-  $handler->display->display_options['pager']['type'] = 'some';
+  $handler->display->display_options['pager']['type'] = 'mini';
   $handler->display->display_options['pager']['options']['items_per_page'] = '16';
   $handler->display->display_options['pager']['options']['offset'] = '0';
   $handler->display->display_options['style_plugin'] = 'grid';
@@ -99,7 +99,15 @@ function course_views_default_views() {
   $handler->display->display_options['header']['php']['id'] = 'php';
   $handler->display->display_options['header']['php']['table'] = 'views';
   $handler->display->display_options['header']['php']['field'] = 'php';
-  $handler->display->display_options['header']['php']['php_output'] = '<?php $count = count($results); ?><div class="header-left"><?php print format_plural($count, \'Student\', \'Students\');?></div><div class="header-right"><?php print $count; ?></div>';
+  $handler->display->display_options['header']['php']['label'] = 'Number of students';
+  $handler->display->display_options['header']['php']['php_output'] = 
+    '<p>
+      <?php 
+        $count_wrap = \'<span class="right">@count</span>\';
+        print format_plural($view->total_rows, \'Student \' . $count_wrap, \'Students \' .$count_wrap);
+      ?>
+    </p>';
+      
   /* Relationship: Registration: Node */
   $handler->display->display_options['relationships']['nid']['id'] = 'nid';
   $handler->display->display_options['relationships']['nid']['table'] = 'registration';
@@ -115,8 +123,8 @@ function course_views_default_views() {
   $handler->display->display_options['fields']['picture']['relationship'] = 'uid';
   $handler->display->display_options['fields']['picture']['label'] = '';
   $handler->display->display_options['fields']['picture']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['picture']['empty'] = '<div class="default-avatar"></div>';
-  $handler->display->display_options['fields']['picture']['image_style'] = 'course_students';
+  $handler->display->display_options['fields']['picture']['empty'] = '<div class="small-avatar"></div>';
+  $handler->display->display_options['fields']['picture']['image_style'] = 'user_profile_picture';
   /* Contextual filter: Content: Nid */
   $handler->display->display_options['arguments']['nid']['id'] = 'nid';
   $handler->display->display_options['arguments']['nid']['table'] = 'node';
@@ -160,7 +168,7 @@ function course_views_default_views() {
   $handler->display->display_options['query']['type'] = 'views_query';
   $handler->display->display_options['exposed_form']['type'] = 'basic';
   $handler->display->display_options['pager']['type'] = 'some';
-  $handler->display->display_options['pager']['options']['items_per_page'] = '5';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '15';
   $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['row_plugin'] = 'fields';
   /* Header: Global: Text area */
@@ -168,7 +176,7 @@ function course_views_default_views() {
   $handler->display->display_options['header']['area']['table'] = 'views';
   $handler->display->display_options['header']['area']['field'] = 'area';
   $handler->display->display_options['header']['area']['content'] = 'My courses';
-  $handler->display->display_options['header']['area']['format'] = 'filtered_html';
+  $handler->display->display_options['header']['area']['format'] = 'plain_text';
   /* Relationship: Registration: Node */
   $handler->display->display_options['relationships']['nid']['id'] = 'nid';
   $handler->display->display_options['relationships']['nid']['table'] = 'registration';

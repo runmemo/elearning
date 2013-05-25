@@ -18,7 +18,7 @@
  * @return string HTML for the picture.
  */
 function elearning_get_user_picture($user, $style_name, $type) {
-  $user_picture = '<div class="' . $type . '-default-picture"></div>';
+  $user_picture = '<div class="' . $type . '-avatar"></div>';
   if (!is_object($user)) {
     $user = user_load($user);
   }
@@ -61,7 +61,7 @@ function elearning_preprocess_user_profile(&$variables) {
   $variables['user_uid'] = $account->uid;
   $variables['user_name'] = $account->name;
   $variables['user_mail'] = $account->mail;
-  $variables['user_picture'] = elearning_get_user_picture($account, '', 'user-profile');
+  $variables['user_picture'] = elearning_get_user_picture($account, '', 'default');
   $field_name = field_view_field('user', $account, 'field_name', array('label' => 'hidden'));
   $field_surname = field_view_field('user', $account, 'field_surname', array('label' => 'hidden'));
   $field_birthday = field_view_field('user', $account, 'field_birthday', 'full');

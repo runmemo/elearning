@@ -172,7 +172,7 @@ a.user-menu-parent:hover .user-menu-userpoints {
         li.menuparent ul {
           background: white;
           border-radius: 2px;
-          margin: 7px 0px 0px -54px;
+          margin-top: 7px;
           /* use !important in order to override superfish css */
           padding: 0 !important;
           -moz-box-shadow: 0px 1px 3px 0px #888;
@@ -279,13 +279,6 @@ a.user-menu-parent:hover .user-menu-userpoints {
       height: 30px;
     }
   }
-}
-
-.default-avatar {
-  .box-shadow();
-  .bg-img('small-avatar-default.jpg');  
-  width: 51px;
-  height: 48px;
 }
 
 /****** Common properties End ******/
@@ -683,49 +676,47 @@ a.user-menu-parent:hover .user-menu-userpoints {
   }
 }
 
-.node-course {
-  .view-course-students {
-    .right();
-    @media @narrow {
-      width: 250px;
-    }
-    @media @normal {
-      width: 250px;
-    }
-    @media @wide {
-      width: 280px;
-    }
-    @media @mobile {
-      width: 250px;
-    }
-    .view-header {
-      .view-block-header();
-      .header-left {
-        .left();
-        margin: 8px 0px 12px 8px;
-      }
-      .header-right {
-        .right();
-        margin: 8px;
-      }
-    }
-    table {
-      border: none;
-      td.col-1 {
-        padding: 4px 4px 4px 8px;
-      }
-      td.col-2, td.col-3 {
-        padding: 0px 4px;
-      }
-      td.col-4 {
-        padding: 0px 0px 0px 4px;
-      }
-      img {
-        .box-shadow();
-      }
+
+.view-course-students {
+  .right();
+  @media @narrow {
+    width: 250px;
+  }
+  @media @normal {
+    width: 250px;
+  }
+  @media @wide {
+    width: 280px;
+  }
+  @media @mobile {
+    width: 250px;
+  }
+  .view-header {
+    .view-block-header();
+    .right {
+      float:right;
     }
   }
+  .item-list {
+    display: none;
+  }
+  table {
+    border: none;
+  }
+  td.col-1 {
+    padding: 4px 4px 4px 8px;
+  }
+  td.col-2, td.col-3 {
+    padding: 0px 4px;
+  }
+  td.col-4 {
+    padding: 0px 0px 0px 4px;
+  }
+  .views-field-picture {
+    .small-avatar();
+  }
 }
+
   
 .node-course-basic-info {
   display: inline-block;
@@ -962,14 +953,6 @@ a.user-menu-parent:hover .user-menu-userpoints {
   }
 }
 
-.user-profile-default-picture {
-  .show(inline-block);
-  margin: 5px 6px 3px 6px;
-  .bg-img('user-profile-default.png');
-  width: 107px;
-  height: 107px;
-}
-
 /* User profile picture update form styles */
 .upload-form-background {
   .show(none);
@@ -1101,7 +1084,7 @@ a.user-menu-parent:hover .user-menu-userpoints {
 /* User profile picture update form styles END */
 
 .view-user-courses {
-.right();
+  .right();
   @media @narrow {
     float: none;
   }
@@ -1116,10 +1099,6 @@ a.user-menu-parent:hover .user-menu-userpoints {
   background: #fafafa;
   .view-header {
     .view-block-header();
-    p {
-      padding: 7px 0px 0px 11px;
-      font-size: 18px;
-    }
   }
   .view-content {
     padding: 22px 24px;
@@ -1442,14 +1421,6 @@ body.page-home {
   }
 }
 
-.node-question-default-picture {
-  width: 44px;
-  height: 44px;
-  .box-shadow();
-  .bg-img('small-avatar-default.jpg');
-  background-position: 40% 48%;
-}
-
 .author-points {
   .bold(12px);
   .show(table);
@@ -1473,6 +1444,7 @@ body.page-home {
   .border-bottom-dotted();
   .node-question-picture-points {
     .left();
+    .tiny-avatar();
     margin-bottom: -15px;
     @media @narrow {
       margin-right: 15px;
@@ -1675,23 +1647,23 @@ body.page-home {
 }
 
 .view-answer-feedbacks {
-  .views-answer-feedback-picture {
-    position: relative;
-  }
   .views-answer-feedback-widgets {
     margin-right: 20px;
   }
 }
 
-.view-answers-review {
-  .views-other-answer-picture {
-    .left();
-    margin-right: 20px;
-  }
-  .views-answer-feedback-picture {
-    position: relative;
-  }
+
+.views-other-answer-picture {
+  .left();
+  margin-right: 20px;
+  .tiny-avatar();
 }
+
+.views-answer-feedback-picture { 
+  position: relative;
+  .tiny-avatar();
+}
+
 
 .views-field-feedback-form {
   margin-top: 25px;
@@ -1955,6 +1927,8 @@ body.page-home {
 .node-open-question-picture {
   .left();
   margin-right: 17px;
+  .tiny-avatar();
+
 }
 
 .node-open-question-body {

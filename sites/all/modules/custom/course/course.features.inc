@@ -84,30 +84,7 @@ function course_node_info() {
  */
 function course_image_default_styles() {
   $styles = array();
-
-  // Exported image style: course_students.
-  $styles['course_students'] = array(
-    'name' => 'course_students',
-    'effects' => array(
-      3 => array(
-        'label' => 'Scale',
-        'help' => 'Scaling will maintain the aspect-ratio of the original image. If only a single dimension is specified, the other dimension will be calculated.',
-        'effect callback' => 'image_scale_effect',
-        'dimensions callback' => 'image_scale_dimensions',
-        'form callback' => 'image_scale_form',
-        'summary theme' => 'image_scale_summary',
-        'module' => 'image',
-        'name' => 'image_scale',
-        'data' => array(
-          'width' => '51',
-          'height' => '51',
-          'upscale' => 0,
-        ),
-        'weight' => '1',
-      ),
-    ),
-  );
-
+  
   // Exported image style: provider_logo.
   $styles['provider_logo'] = array(
     'name' => 'provider_logo',
@@ -132,6 +109,7 @@ function course_image_default_styles() {
   );
 
   // Exported image style: teacher_picture.
+  // @todo Ilya: change effect to Scale & Crop.
   $styles['teacher_picture'] = array(
     'name' => 'teacher_picture',
     'effects' => array(
