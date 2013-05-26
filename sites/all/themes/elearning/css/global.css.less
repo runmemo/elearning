@@ -9,6 +9,7 @@
 @import "modal.less";
 @import "tooltip.less";
 @import "front.less";
+@import "calendar.less";
 
 /****** Common properties Start ******/
 html, body {
@@ -290,46 +291,46 @@ a.user-menu-parent:hover .user-menu-userpoints {
 }
 
 #info-provider {
+  float: left;
+  width: 870px;
+  padding: 0 0 50px 0;
+  margin-bottom: 20px;
+  .border-bottom-dotted;
+  .field-name-field-logotype {
+      float: left;
+      margin: 0 15px 0 0;
+  }
+  #info-school {
     float: left;
-    width: 870px;
-    padding: 0 0 50px 0;
-    margin-bottom: 20px;
-    .border-bottom-dotted;
-    .field-name-field-logotype {
-        float: left;
-        margin: 0 15px 0 0;
+    padding-top: 15px;
+    #name-course {
+      .title-node {
+      font-size: 22px;
+      font-weight: bold;
+      margin: 0px 0 20px 0;
+      }
     }
-    #info-school {
-        float: left;
-        padding-top: 15px;
-        #name-course {
-            .title-node {
-            font-size: 22px;
-            font-weight: bold;
-            margin: 0px 0 20px 0;
-            }
-        }
-        #provider {
-            .text-blue;
-            font-size: 14px;
-            font-weight: bold;
-        }
+    #provider {
+      .text-blue;
+      font-size: 14px;
+      font-weight: bold;
     }
+  }
 }
 
 #second-row {
-    float: left;
-    width: 870px;
-    padding-bottom: 25px;
-    margin-bottom: 25px;
-    .border-bottom-dotted;
-    #info-teacher {
-        float: left;
-        width: 440px;
-    }
-    #video-course {
-        float: left;
-    }
+  float: left;
+  width: 870px;
+  padding-bottom: 25px;
+  margin-bottom: 25px;
+  .border-bottom-dotted;
+  #info-teacher {
+      float: left;
+      width: 440px;
+  }
+  #video-course {
+      float: left;
+  }
 }
 
 .field-answer-count,
@@ -617,36 +618,38 @@ a.user-menu-parent:hover .user-menu-userpoints {
   width: 100%;
   margin-bottom: 22px;
   .border-bottom-dotted();
-    .node-course-header-left {
-      .cell();
-      .left();
-      margin-bottom: 51px;
-      margin-left: 0;
-    }
-    .field-name-field-logo {
-      .left();
-    }
-  .node-course-provider-name {
-    .left();
-    margin-left: 13px;
-    .course-title {
-      margin-bottom: 8px;
-    }
-    .provider-name-extra {
-      .bold(14px);
-      color: #435d7b;
-      margin-left: 0;
-      .provider-name {
-        margin-bottom: 7px;
-      }
-    }
-  }
   .social-share {
     .cell();
     .right();
     margin-top: 14px;
     .bg-img('social-stuff.png');
     height: 71px;
+  }
+  .field-name-field-logo {
+    .left();
+  }
+}
+
+.node-course-header-left {
+  .cell();
+  .left();
+  margin-bottom: 51px;
+  margin-left: 0;
+}
+ 
+.node-course-provider-name {
+  .left();
+  margin-left: 13px;
+  .course-title {
+    margin-bottom: 8px;
+  }
+  .provider-name-extra {
+    .bold(14px);
+    color: #435d7b;
+    margin-left: 0;
+    .provider-name {
+      margin-bottom: 7px;
+    }
   }
 }
 
@@ -1332,31 +1335,32 @@ a.user-menu-parent:hover .user-menu-userpoints {
 }
 
 /* CKEditor Theming */
-.cke_top, 
-.cke_bottom {
-  .cke-main-panel-blue();
+.html {
+  .cke_top, 
+  .cke_bottom {
+    .cke-main-panel-blue();
+  }
+  .cke {
+    border: @border-cke-blue;
+  }
+  .cke_top {
+    border-bottom: @border-cke-blue;
+  }
+  .cke_bottom {
+    border-top: @border-cke-blue;
+  }
+  .cke_toolgroup {
+    border: @border-cke-blue;
+    border-bottom-color: #ccd6e0;
+    .cke-tools-panel-blue();
+  }
+  .cke_toolbar_separator {
+    background: #e2e8ed;
+  }
 }
-.cke {
-  border: @border-cke-blue;
-}
-.cke_top {
-  border-bottom: @border-cke-blue;
-}
-.cke_bottom {
-  border-top: @border-cke-blue;
-}
-.cke_toolgroup {
-  border: @border-cke-blue;
-  border-bottom-color: #ccd6e0;
-  .cke-tools-panel-blue();
-}
-.cke_toolbar_separator {
-  background: #e2e8ed;
-}
-
 /****** Node type "Question" End ******/
 
-/* Views on Open Question page START */
+// Views on Open Question page.
 .node-supplementary,
 .view-question-answers .views-field-created,
 .view-question-answers .views-field-name,
@@ -1606,7 +1610,9 @@ a.user-menu-parent:hover .user-menu-userpoints {
   .hidden {
     visibility: hidden;
   }
-  .formcloselink, .closelink, .comment-click {
+  .formcloselink, 
+  .closelink, 
+  .comment-click {
     .show(none);
   }
   .comment-form {
@@ -1978,31 +1984,31 @@ a.user-menu-parent:hover .user-menu-userpoints {
   }
 }
 
-.ctools-modal-login-form .login-form .form-actions.form-wrapper {
-  padding-top: 16px;
-  margin-top: 29px;
-}
-
 .login-form {
-  .login-form-registration, .login-form-reset {
-    .right();
-  }
   .form-item-name {
     margin-bottom: 22px;
   }
   .form-item-pass {
     margin-bottom: 16px;
   }
-  a.login-form-additional-link {
-    color: #ec4600;
-    .link();
-    .bold(12px);
-  }
-  .login-form-fb-submit, .login-form-fb-submit:hover {
-    .gradient-fb();
-    .left();
-    border: 0;
-  }
+}
+
+.login-form-registration, 
+.login-form-reset {
+  .right();
+}
+
+.login-form-fb-submit, 
+.login-form-fb-submit:hover {
+  .gradient-fb();
+  .left();
+  border: 0;
+}
+
+.login-form-additional-link {
+  color: #ec4600;
+  .link();
+  .bold(12px);
 }
 
 .login-form,
@@ -2020,6 +2026,10 @@ a.user-menu-parent:hover .user-menu-userpoints {
   }
 }
 
+.ctools-modal-login-form .login-form .form-actions.form-wrapper {
+  padding-top: 16px;
+  margin-top: 29px;
+}
 
 .ctools-modal-register-form {
   /* use !important in order to override modal js style for user forms */
@@ -2066,7 +2076,8 @@ a.user-menu-parent:hover .user-menu-userpoints {
   .user-form-name-wrapper {
     margin-bottom: 22px;
     .show(inline-block);
-    .field-name-field-name, .field-name-field-surname {
+    .field-name-field-name, 
+    .field-name-field-surname {
       width: 196px;
       .left();
     }
@@ -2074,17 +2085,19 @@ a.user-menu-parent:hover .user-menu-userpoints {
       margin-right: 17px;
     }
   }
-  .form-item-mail .description,
-  .form-item-pass .description {
-    position: absolute;
-    left: 98%;
-    width: 131px;
-    padding: 15px;
-    background: #fdfdfd;
-    z-index: 10000;
-    moz-box-shadow: 2px 4px 23px 1px #888;
-    -webkit-box-shadow: 2px 4px 23px 1px #888;
-    box-shadow: 2px 4px 23px 1px #888;
+  .form-item-mail, 
+  .form-item-pass {
+    .description & {
+      position: absolute;
+      left: 98%;
+      width: 131px;
+      padding: 15px;
+      background: #fdfdfd;
+      z-index: 10000;
+      moz-box-shadow: 2px 4px 23px 1px #888;
+      -webkit-box-shadow: 2px 4px 23px 1px #888;
+      box-shadow: 2px 4px 23px 1px #888;
+    }
   }
   .form-item-mail {
     margin-bottom: 25px;
@@ -2194,95 +2207,3 @@ a.user-menu-parent:hover .user-menu-userpoints {
     }
   }
 }
-
-/* date popup section */
-.page-user .ui-datepicker {
-  border: 1px solid #e6e6e6;
-  border-radius: 0px;
-  background: #f6f6f6;
-  width: 190px;
-  .bold(11px);
-  padding: 3px;
-  .ui-datepicker-header {
-    border-radius: 0px;
-    background: #e24210;
-    border: 0;
-  }
-  .ui-datepicker-prev,
-  .ui-datepicker-next {
-    width: 17px;
-    height: 17px;
-    background: #ffffff;
-    .RoundedShape(50%);
-    top: 5px;
-    cursor: pointer;
-  }
-  .ui-datepicker-prev .ui-icon,
-  .ui-datepicker-next .ui-icon {
-    width: 6px;
-    height: 7px;
-  }
-
-  .ui-datepicker-prev {
-    left: 4px;
-    .ui-icon {
-      .bg-img('date-popup-prev.png');
-      margin: -3px;
-    }
-  }
-  .ui-datepicker-next {
-    right: 4px;
-    .ui-icon {
-      .bg-img('date-popup-next.png');
-      margin: -3px -2px;
-    }
-  }
-  .ui-datepicker-title {
-    margin: 0px 45px;
-    .ui-datepicker-month,
-    .ui-datepicker-year {
-      .bold(11px);
-      color: #ffffff;
-      background: #e24210;
-      border: 0;
-      padding: 0px;
-      width: auto;
-      height: 20px;
-    }
-  }
-  .ui-datepicker-calendar {
-    font-size: 11px;
-    border: 0;
-    td a:link,
-    td a:visited {
-      border: 1px solid #e8e8e8;
-      background: #ffffff;
-      color: #e24210;
-      font-weight: bold;
-    }
-    td a:hover,
-    td a:active,
-    td a.ui-state-active {
-      border-top: 1px solid #b8350c;
-      border-left: 1px solid #b8350c;
-      border-right: 1px solid #bf4c28;
-      border-bottom: 1px solid #bc421c;
-      color: #ffffff;
-    }
-    td a.ui-state-active {
-      background: #e24210;
-    }
-    td a:hover,
-    td a:active {
-      background: #fb6738;
-    }
-  }
-  th {
-    font-size: 10px;
-    font-weight: normal;
-    color: #e24210;
-    padding: 8px 0px 6px 9px;
-  }
-}
-
-/* Login/Registration/Profile editing forms styles END */
