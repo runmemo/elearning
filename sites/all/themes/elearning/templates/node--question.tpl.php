@@ -10,9 +10,6 @@
   <div class="node-question-title-section">
     <div class="node-question-picture-points">
       <?php print $user_picture; ?>
-      <div class="author-points">
-        <?php print $userpoints_count; ?>
-      </div>
     </div>
     <?php if (isset($title)) : ?>
       <h1><?php print $title ?></h1>

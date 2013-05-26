@@ -32,9 +32,14 @@ function elearning_alpha_preprocess_node_course(&$vars) {
  * @param array $vars
  */
 function elearning_alpha_preprocess_node_question(&$vars) {
-  $vars['userpoints_count'] = userpoints_get_current_points($vars['uid'], 'all');
   $account = user_load($vars['uid']);
-  $vars['user_picture'] = theme('user_picture', array('account' => $account, 'size' => 'tiny'));
+  $vars['user_picture'] = theme('user_picture', 
+    array(
+      'account' => $account, 
+      'size' => 'tiny', 
+      'show_points' => TRUE,
+    )
+  );
   $vars['created_formatted'] = t('@time ago', array('@time' => format_interval(REQUEST_TIME - $vars['created'], 1)));
   $vars['follow_flag'] = flag_create_link('subscriptions_reference_flag', $vars['nid']);
 }

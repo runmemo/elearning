@@ -2,24 +2,26 @@
 
 /**
  * @file
- * Default theme implementation to present a picture configured for the
+ * Extention of theme implementation to present a picture configured for the
  * user's account.
  *
  * Available variables:
- * - $user_picture: Image set by the user or the site's default. Will be linked
- *   depending on the viewer's permission to view the user's profile page.
- * - $account: Array of account information. Potentially unsafe. Be sure to
- *   check_plain() before use.
- *
- * @see template_preprocess_user_picture()
- *
- * @ingroup themeable
+ * - $show_points - defines wether points should be shown allong with the picture.
+ * - $userpoints - number of user points for the user.
+ * - $size - defines the size of the image to be shown.
+ * 
+ * @see template_preprocess_user_picture() for default variables.
  */
 ?>
 <div class="<?php print $size; ?>-avatar">
   <?php 
-    if ($user_picture) {
+    if (!empty($user_picture)) {
       print $user_picture; 
     }
   ?>
+  <?php if (isset($userpoints)): ?>
+    <div class="author-points">
+         <?php print $userpoints; ?>
+    </div>
+   <?php endif; ?>
 </div>
