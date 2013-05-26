@@ -220,6 +220,13 @@ function front_page_views_default_views() {
   $handler->display->display_options['fields']['counter']['exclude'] = TRUE;
   $handler->display->display_options['fields']['counter']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['counter']['counter_start'] = '1';
+  /* Field: Content: Dates */
+  $handler->display->display_options['fields']['field_course_dates']['id'] = 'field_course_dates';
+  $handler->display->display_options['fields']['field_course_dates']['table'] = 'field_data_field_course_dates';
+  $handler->display->display_options['fields']['field_course_dates']['field'] = 'field_course_dates';
+  $handler->display->display_options['fields']['field_course_dates']['label'] = '';
+  $handler->display->display_options['fields']['field_course_dates']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_course_dates']['type'] = 'text_plain'; 
   /* Sort criterion: Content: Post date */
   $handler->display->display_options['sorts']['created']['id'] = 'created';
   $handler->display->display_options['sorts']['created']['table'] = 'node';
