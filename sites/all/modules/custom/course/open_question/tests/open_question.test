@@ -52,7 +52,7 @@ class OpenQuestionBaseCase extends DrupalWebTestCase {
    */
   function create_oq_answer($uid, $question_nid) {
     $field_open_question = array();
-    $field_open_question['und'][0]['target_id'] = $question_nid;
+    $field_open_question[LANGUAGE_NONE][0]['target_id'] = $question_nid;
     $answer_settings = array(
       'type' => 'open_question_answer',
       'uid' => $uid,
@@ -70,9 +70,9 @@ class OpenQuestionBaseCase extends DrupalWebTestCase {
    */
   function create_oq_feedback($uid, $answer_nid, $rating) {
     $field_oq_answer = array();
-    $field_oq_answer['und'][0]['target_id'] = $answer_nid;
+    $field_oq_answer[LANGUAGE_NONE][0]['target_id'] = $answer_nid;
     $fied_rating = array();
-    $fied_rating['und'][0]['rating'] = $rating;
+    $fied_rating[LANGUAGE_NONE][0]['rating'] = $rating;
     $feedback_settings = array(
         'type' => 'open_question_feedback',
         'uid' => $uid,

@@ -1564,14 +1564,15 @@ a.user-menu-parent:hover .user-menu-userpoints {
   }
 }
 
-.oq-review-form-edit, 
-.oq-review-form-edit:hover {
-  .button-icon();
-  .bg-img('answer-edit.png');
-  margin-top: 60px;
-  margin-right: 8px;
-  position: absolute;
-  right: 0;
+.oq-review-form-edit {
+  &, &:hover {
+    .button-icon();
+    .bg-img('answer-edit.png');
+    margin-top: 60px;
+    margin-right: 8px;
+    position: absolute;
+    right: 0;
+  }
 }
 
 .oq-review-form-edit.progress-disabled {
@@ -1768,8 +1769,10 @@ a.user-menu-parent:hover .user-menu-userpoints {
 
 /****** Node type "Open Question" Start ******/
 .node-open-question-picture {
-  .left();
-  margin-right: 17px;
+  .hide();
+  @media @normal {
+    .show();
+  }
 }
 
 .node-open-question-body {
@@ -1777,6 +1780,12 @@ a.user-menu-parent:hover .user-menu-userpoints {
   .field-name-field-question {
     .bold(14px);
     .text-light-grey();
+  }
+  @media @narrow {
+    padding-left: 17px;
+  }
+   @media @normal {
+    padding-left: 0px;
   }
 }
 

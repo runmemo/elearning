@@ -50,7 +50,8 @@ function elearning_alpha_preprocess_node_question(&$vars) {
  */
 function elearning_alpha_preprocess_node_open_question(&$vars) {
   $vars['display_submitted'] = FALSE;
-  $vars['user_picture'] = theme('user_picture', array('account' => $account, 'size' => 'small'));
+  $account = user_load($vars['uid']);
+  $vars['user_picture'] = theme('user_picture', array('account' => $account, 'size' => 'tiny'));
   drupal_add_css(drupal_get_path('theme', 'elearning') . '/widgets/elearning_fivestar/elearning_fivestar_widget.css');
 }
 

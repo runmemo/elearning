@@ -12,10 +12,10 @@
  */
 ?>
 <div id="node-<?php print $node->nid; ?>" class="<?php print $classes; ?> clearfix"<?php print $attributes; ?>>
-  <div class="node-open-question-picture">
+  <div class="node-open-question-picture grid-1 alpha">
     <?php print $user_picture; ?>
   </div>
-  <div class="node-open-question-body">
+  <div class="node-open-question-body grid-10 omega">
     <?php if (isset($title)) : ?><h1><?php print $title ?></h1><?php endif; ?>
     <?php if (isset($content['field_question'])) print render($content['field_question']); ?>
   </div>

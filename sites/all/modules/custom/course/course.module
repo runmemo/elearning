@@ -229,7 +229,7 @@ function course_node_view($node, $view_mode) {
   if ($view_mode == 'full' && $node->type == 'course') {
 
     $provider = field_get_items('node', $node, 'field_provider');
-    if (isset($provider[0])) {
+    if ($provider) {
 
       $field_logo = field_view_field('node', $provider[0]['entity'], 'field_logo', array('label' => 'hidden', 'settings' => array('image_style' => 'provider_logo')));
       if (empty($field_logo)) {
@@ -246,12 +246,15 @@ function course_node_view($node, $view_mode) {
     // teacher logo and name
     $teacher = field_get_items('node', $node, 'field_teacher');
     $node->teacher = array();
-    if (isset($teacher[0])) {
+    if ($teacher) {
+      // Get teacher's avatar.
       $teacher_account = user_load($teacher[0]['uid']);
-      $field_name = field_view_field('user', $teacher_account, 'field_name', array('label' => 'hidden'));
-      $field_surname = field_view_field('user', $teacher_account, 'field_surname', array('label' => 'hidden'));
       $node->teacher['avatar'] = theme('user_picture', array('account' => $teacher_account));
+      // Get name.
+      $field_name = field_view_field('user', $teacher_account, 'field_name', array('label' => 'hidden'));
       $node->teacher['name'] = render($field_name);
+      // Get surname.
+      $field_surname = field_view_field('user', $teacher_account, 'field_surname', array('label' => 'hidden'));
       $node->teacher['surname'] = render($field_surname);
     }
     else {
@@ -267,14 +270,6 @@ function course_node_view($node, $view_mode) {
       unset($node->content['book_navigation']);
     }
   }
-}
-
-/**
- * Implements hook_preprocess_print().
- * Prepares variables for print--node--certificate.tpl.php
- */
-function course_preprocess_print(&$variables) {
-  
 }
 
 /**
