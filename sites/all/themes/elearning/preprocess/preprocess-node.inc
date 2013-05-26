@@ -33,9 +33,10 @@ function elearning_alpha_preprocess_node_course(&$vars) {
  */
 function elearning_alpha_preprocess_node_question(&$vars) {
   $vars['userpoints_count'] = userpoints_get_current_points($vars['uid'], 'all');
-  $vars['user_picture'] = elearning_get_user_picture($vars['uid'], 'user_profile_picture', 'tiny');
+  $account = user_load($vars['uid']);
+  $vars['user_picture'] = theme('user_picture', array('account' => $account, 'size' => 'tiny'));
   $vars['created_formatted'] = t('@time ago', array('@time' => format_interval(REQUEST_TIME - $vars['created'], 1)));
-  $vars['subscribe_button'] =  render($vars['elements']['links']['flag']);
+  $vars['follow_flag'] = flag_create_link('subscriptions_reference_flag', $vars['nid']);
 }
 
 /**
@@ -44,7 +45,7 @@ function elearning_alpha_preprocess_node_question(&$vars) {
  */
 function elearning_alpha_preprocess_node_open_question(&$vars) {
   $vars['display_submitted'] = FALSE;
-  $vars['user_picture'] = elearning_get_user_picture($vars['uid'], 'user_profile_picture', 'small');
+  $vars['user_picture'] = theme('user_picture', array('account' => $account, 'size' => 'small'));
   drupal_add_css(drupal_get_path('theme', 'elearning') . '/widgets/elearning_fivestar/elearning_fivestar_widget.css');
 }
 

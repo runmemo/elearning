@@ -29,7 +29,7 @@
   <?php if (!empty($field->separator)): ?>
     <?php print $field->separator; ?>
   <?php endif; ?>
-<?php if ($id == 'field_teacher') print '<div class="view-fields-teacher-provider">' ?>
+<?php if ($id == 'field_teacher') print '<div class="home-courses-group-bottom">' ?>
   <?php print $field->wrapper_prefix; ?>
     <?php print $field->label_html; ?>
     <?php print $field->content; ?>

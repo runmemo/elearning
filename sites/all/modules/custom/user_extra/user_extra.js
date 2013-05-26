@@ -38,29 +38,27 @@
   Drupal.behaviors.user_profile_picture_edit = {
     attach: function(context, settings) {
       // show/hide "Choose photo link"
-      $('.user-profile-picture-edit').hover(
+      $('.js-avatar').hover(
         function() {
-          $('.user-picture-edit').show();
+          $('.js-avatar-edit').show();
         },
         function() {
-          $('.user-picture-edit').hide();
+          $('.js-avatar-edit').hide();
         }
       );
       // show form for user picture
-      $('.user-picture-edit').click(function() {
-        $('.upload-form-background').show();
-        $('.upload-form-container').show();
+      $('.js-avatar-edit').click(function() {
+        $('.js-modal').show();
       });
       // hide form for user picture
       function upload_form_hide() {
-        $('.upload-form-background').hide();
-        $('.upload-form-container').hide();
+        $('.js-modal').hide();
       }
       // hide form if user clicks submit button, close icon or just clicks outside the form
-      $('.upload-form-background').click(function() {
+      $('.js-modal-out').click(function() {
         upload_form_hide();
       });
-      $('.upload-form-close').click(function() {
+      $('.popups-close').click(function() {
         upload_form_hide();
       });
       $('.upload-form-submit-link').click(function() {

@@ -14,7 +14,7 @@
  *
  */
 ?>
-<div class="book-header">
+<div class="course-header">
     <div class="provider-logo">
       <?php print $provider_logo; ?>
     </div>  

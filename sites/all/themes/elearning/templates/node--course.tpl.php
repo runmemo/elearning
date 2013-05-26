@@ -37,7 +37,7 @@
       <div class="node-course-teacher-parameters">
         <h2><?php print $teacher['name'] . $teacher['surname']; ?></h2>
         <div class="node-course-teacher-button">
-          <div id="user-profile-picture">
+          <div class="teacher-avatar">
             <?php print $teacher['avatar']; ?>
           </div>
           <?php print render($form_class_participate); ?>

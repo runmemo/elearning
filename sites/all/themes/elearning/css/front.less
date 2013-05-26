@@ -1,0 +1,145 @@
+/****** Front Page Start ******/
+
+.page-home {
+  .region-content-inner {
+      margin-left: 38px;
+  } 
+}
+
+.block-views-front-page-slider-block {
+  width: 864px;
+  position: relative;
+}
+
+.view-front-page-slider {
+  padding: 45px 0px;
+  .views-field-body {
+    position: absolute;
+    top: 123px;
+    background: rgba(255, 255, 255, .5);
+    width: 366px;
+    right: 0;
+      p {
+        .bold(28px);
+        padding: 20px 30px 10px 17px;
+      }
+  }
+  .views-field-field-image {
+    img {
+      border: 7px solid transparent;
+      border-image: url(../images/slider-bottom.png) 7 0 stretch;
+      border-top: 0;
+      border-right: 0;
+      border-left: 0;
+      padding-bottom: 3px;
+    }
+  }
+}
+
+.views-slideshow-controls-top {
+  z-index: 100;
+  position: absolute;
+  right: 6px;      
+}
+
+.views-slideshow-controls-text {
+  .left();
+  margin: 2px 20px 0px 7px;
+}
+
+.views-slideshow-controls-text-previous,
+.views-slideshow-controls-text-next {
+  .show(none);
+}
+
+.views-slideshow-controls-text-pause {
+  a {
+    .show(inline-block);
+    .bg-img('slider-pause.png');
+    color: transparent;
+    width: 13px;
+    font-size: 0px;
+    height: 20px;
+  }
+}
+
+.views-slideshow-pager-fields {
+  .left();
+  border-right: @border-1 white;
+  margin-top: 16px;
+  .active {
+    background-position: -12px 0px;
+  }
+  .views-field-counter {
+    .show(none);
+  }
+}
+
+.views-slideshow-pager-field-item {
+  .left();
+  .bg-img('slider-buttons.png');
+  width: 12px;
+  height: 12px;
+  cursor: pointer;
+  margin: 0px 5px 0px 0px;
+}
+
+.view-home-page-courses {
+  width: 100%;
+  .views-row {
+    .border-bottom-dotted();
+    margin-bottom: 48px;
+    list-style: none;
+    .bold(12px);
+    width: 408px;
+  }
+  .column-1 {
+    .left();
+    clear: left;
+  }
+  .column-2 {
+    .right();
+    clear: right;
+  }
+}
+
+.home-courses-title a {
+  position: absolute;
+  .bold(18px);
+  .link();
+  color: black;
+  padding: 10px 0px 10px 8px;
+  width: 400px;
+  .bg-img('arrow-right-home.png');
+  background-color: rgb(253, 253, 253);
+  background-color: rgba(255, 255, 255, .88);
+  background-position: 97%;
+  &:hover {
+    /* @todo Ilya create icon for hover state */
+    .bg-img('arrow_right_hover.png');
+    background-position: 97%;
+    background-color: rgb(253, 253, 253);
+    background-color: rgba(255, 255, 255, .88);
+  }
+}
+
+.home-courses-image {
+  margin-bottom: 8px;
+}
+
+.home-courses-provider-logo {
+  .left();
+  margin: 0 9px 6px 2px;
+} 
+
+.home-courses-provider {
+  .link();
+  color: #2e2422;
+}
+.home-courses-teacher a {
+  .link();
+  .text-orange();
+  clear:right;
+}
+
+/****** Front Page End ******/

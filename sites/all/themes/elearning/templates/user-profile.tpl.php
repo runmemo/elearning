@@ -47,12 +47,12 @@
   <div class="user-profile-main-panel alpha omega">
     <div class="user-profile-basic-info grid-6 alpha omega">
       <div class="user-profile-picture-points alpha">
-        <div class="user-profile-picture-edit">
-          <div id="user-profile-picture">
-            <?php if (isset($user_picture)) print $user_picture; ?>
+        <div class="user-avatar-wrapper js-avatar">
+          <div id="js-user-avatar">
+            <?php print $user_picture; ?>
           </div>
           <?php if ($access) : ?>
-            <a class="user-picture-edit"><?php print t('Choose photo'); ?></a>
+            <a class="user-avatar-edit-link js-avatar-edit"><?php print t('Choose photo'); ?></a>
           <?php endif; ?>
         </div>
         <div class="user-profile-userpoints">
@@ -80,7 +80,9 @@
     <?php if (isset($user_courses_view)) print $user_courses_view; ?>
   </div>
 </div>
-<div class="upload-form-background"></div>
-<div class="upload-form-container">
-  <?php if (isset($upload_form)) print render($upload_form); ?>
+<div class="js-modal"> 
+  <div class="overlay-background js-modal-out"></div>
+  <div class="upload-form-container js-modal-in">
+    <?php if (isset($upload_form)) print render($upload_form); ?>
+  </div>
 </div>

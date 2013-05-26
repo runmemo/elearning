@@ -250,7 +250,7 @@ function course_node_view($node, $view_mode) {
       $teacher_account = user_load($teacher[0]['uid']);
       $field_name = field_view_field('user', $teacher_account, 'field_name', array('label' => 'hidden'));
       $field_surname = field_view_field('user', $teacher_account, 'field_surname', array('label' => 'hidden'));
-      $node->teacher['avatar'] = elearning_get_user_picture($teacher_account, '', 'user-profile');
+      $node->teacher['avatar'] = theme('user_picture', array('account' => $teacher_account));
       $node->teacher['name'] = render($field_name);
       $node->teacher['surname'] = render($field_surname);
     }
@@ -361,7 +361,7 @@ function course_views_pre_render(&$view) {
     $account = user_load(arg(1));
     if (user_edit_access($account)) {
       $view->result[$id]->continue_link = l(t('Continue'), $path, array('attributes' => array('class' => 'user-course-continue')));
-      $view->result[$id]->exit_link = ctools_modal_text_button('<span></span>', "course-exit/nojs/{$user->uid}/{$course->node_registration_nid}", t('Exit Course'), 'ctools-modal-common-modal-style user-course-exit');
+      $view->result[$id]->exit_link = ctools_modal_text_button('', "course-exit/nojs/{$user->uid}/{$course->node_registration_nid}", t('Exit Course'), 'ctools-modal-common-modal-style user-course-exit');
     }
     else {
       $view->result[$id]->continue_link = '';

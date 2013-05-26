@@ -14,12 +14,25 @@
  display : @type;
 }
 
+.box(@size) {
+  height: @size;
+  width: @size;
+}
+
+.clearfix() {
+  &:after {
+   content: " ";
+   display: block; 
+   height: 0; 
+   clear: both;
+  }
+}
+
 @images-folder: "../images/";
 /* Background Image */
 .bg-img(@img) { 
   background-image: url("@{images-folder}@{img}");
   background-repeat: no-repeat;
-  background-position: 0 0;
   background-color: transparent;
 }
 
@@ -345,9 +358,10 @@
 
 .default-avatar {
   .avatar(107px, default);
-  margin: 5px 6px 3px 6px;
+  padding: 6px 6px 6px 6px;
+  background-position: center center;
   .show(inline-block);
-  .no-shadow();
+  box-shadow: 0 0 1px 0 #888888;
 }
 
 .small-avatar {

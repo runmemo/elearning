@@ -9,35 +9,6 @@
  * for more information on this topic.
  */
 
-/**
- * Helper function, that checks if there is picture for the user
- * and generates HTML for it, otherwise it returns div with default class.
- * @param object $user
- * @param string $style_name
- * @param type $type
- * @return string HTML for the picture.
- */
-function elearning_get_user_picture($user, $style_name, $type) {
-  $user_picture = '<div class="' . $type . '-avatar"></div>';
-  if (!is_object($user)) {
-    $user = user_load($user);
-  }
-  else {
-    $user_picture_test = theme('user_picture', array('account' => $user));
-    return $user_picture_test == '' ? $user_picture : $user_picture_test;
-  }
-  if (!isset($user->picture->fid) || (!is_object($user->picture) && $user->picture = 0)) {
-    return $user_picture;
-  }
-  if (is_numeric($user->picture)) {
-    $user->picture = file_load($user->picture);
-  }
-  if (isset($user->picture->uri) && !empty($user->picture->uri)) {
-    $filepath = $user->picture->uri;
-    $user_picture = theme('image_style', array('style_name' => $style_name, 'path' => $filepath));
-    return $user_picture;
-  }
-}
 
 /**
  * Preprocess for HTML view.
@@ -61,7 +32,7 @@ function elearning_preprocess_user_profile(&$variables) {
   $variables['user_uid'] = $account->uid;
   $variables['user_name'] = $account->name;
   $variables['user_mail'] = $account->mail;
-  $variables['user_picture'] = elearning_get_user_picture($account, '', 'default');
+  $variables['user_picture'] = theme('user_picture', array('account' => $account, 'size' => 'default'));
   $field_name = field_view_field('user', $account, 'field_name', array('label' => 'hidden'));
   $field_surname = field_view_field('user', $account, 'field_surname', array('label' => 'hidden'));
   $field_birthday = field_view_field('user', $account, 'field_birthday', 'full');
@@ -102,6 +73,7 @@ function elearning_css_alter(&$css) {
   unset($css[drupal_get_path('module', 'system') . '/system.menus.css']);
   // Remove fivestar.css file because we use our own widget.
   unset($css[drupal_get_path('module', 'fivestar') . '/css/fivestar.css']);
+  unset($css[drupal_get_path('module', 'ctools') . '/css/modal.css']);
 }
 
 /**

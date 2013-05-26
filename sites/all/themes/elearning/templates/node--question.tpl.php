@@ -14,8 +14,10 @@
         <?php print $userpoints_count; ?>
       </div>
     </div>
-    <?php if (isset($title)) : ?><h1><?php print $title ?></h1><?php endif; ?>
-    <div class="subscription"><?php print $subscribe_button; ?></div>
+    <?php if (isset($title)) : ?>
+      <h1><?php print $title ?></h1>
+    <?php endif; ?>
+    <?php print $follow_flag; ?>
   </div>
   <div class="node-question-body grid-11 alpha omega">
     <?php if (isset($content['field_rating_widget'])) print render($content['field_rating_widget']); ?>

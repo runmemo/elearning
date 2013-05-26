@@ -26,12 +26,8 @@
 <?php if ($row->course_progress == 0) $style = ' style="color: #565656"'; ?>
 <div class="views-user-courses-links">
   <?php print $fields['title']->wrapper_prefix . $fields['title']->content . $fields['title']->wrapper_suffix; ?>
-  <div class="views-field views-field-link-exit">
-    <?php print $row->exit_link; ?>
-  </div>
-  <div class="views-field views-field-link-continue">
-    <?php print $row->continue_link; ?>
-  </div>
+  <?php print $row->exit_link; ?>
+  <?php print $row->continue_link; ?>
 </div>
 <div class="view-user-courses-progress-outer">
   <p<?php if (isset($style)) print $style; ?>><?php print $row->course_progress . '%' ?></p>

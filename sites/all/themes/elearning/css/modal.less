@@ -4,6 +4,7 @@
  */
 
 div.ctools-common-modal-content {
+ 
   background: none;
   border: 0;
   color: #000000;
@@ -11,6 +12,7 @@ div.ctools-common-modal-content {
   padding: 0;
   text-align: left;
   box-shadow: 2px 2px 7px #333;
+ 
   .modal-scroll {
     overflow: hidden;
     overflow-y: auto;
@@ -49,16 +51,7 @@ div.ctools-common-modal-content {
     height: 100%;
     background-color: #fff;
   }
-  div.popups-title {
-    background-color: #f4f4f4;
-    border: 1px solid #ddd;
-    padding: 4px 10px 5px;
-    color: #555;
-    text-align: center;
-    .modal-title {
-      color: #555;
-    }
-  }
+ 
   .popups-body {
     background-color: #fff;
     padding: 8px;
@@ -67,22 +60,8 @@ div.ctools-common-modal-content {
   .popups-box .popups-footer {
     background-color: #fff;
   }
-  .popups-title a.close {
-    color: transparent;
-    text-decoration:none;
-    background: url(../images/close.png) no-repeat scroll center center;
-    width: 8px;
-  }
-  .popups-title a:hover.close {
-    background: url(../images/close_hover.png) no-repeat scroll center center;
-  }
-  .popups-close {
-    font-size: 120%;
-    float: right;
-    text-align: right;
-    border-left: 1px solid #ddd;
-    padding: 0 0 0 10px;
-  }
+  
+  
   .modal-content .modal-throbber-wrapper img {
     margin-top: 30px;
   }
@@ -134,6 +113,39 @@ div.ctools-common-modal-content {
   .form-submit {
     margin-right: 0;
   }
+}
+
+.popups-title {
+  background-color: #f4f4f4;
+  border: 1px solid #ddd;
+  line-height:33px;
+  color: #555;
+  text-align: center;
+  font-size: 120%;
+  font-weight: bold;
+  .modal-title {
+    color: #555;
+  }
+  .close {
+    color: transparent; 
+    .bg-img('close.png');
+    background-position: center center;
+    width: 33px;
+    &:hover {
+      .bg-img('close_hover.png');
+    }
+  }
+}
+
+.popups-close {
+  width: 33px;
+  float:right;
+  border-left: 1px solid #ddd;
+}
+
+.modal-content {
+  padding: 1em 1em 0 1em;
+  .clearfix();
 }
 
 #modalContent {

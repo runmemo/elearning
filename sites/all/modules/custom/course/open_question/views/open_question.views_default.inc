@@ -59,7 +59,7 @@ function open_question_views_default_views() {
   $handler->display->display_options['fields']['picture']['label'] = '';
   $handler->display->display_options['fields']['picture']['exclude'] = TRUE;
   $handler->display->display_options['fields']['picture']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['picture']['empty'] = '<div class="small-avatar"></div>';
+  $handler->display->display_options['fields']['picture']['empty'] = '<div class="tiny-avatar"></div>';
   $handler->display->display_options['fields']['picture']['image_style'] = 'user_profile_picture';
   /* Field: Userpoints total: Current total points */
   $handler->display->display_options['fields']['points_1']['id'] = 'points_1';
@@ -356,7 +356,7 @@ function open_question_views_default_views() {
   $handler->display->display_options['fields']['picture']['label'] = '';
   $handler->display->display_options['fields']['picture']['exclude'] = TRUE;
   $handler->display->display_options['fields']['picture']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['picture']['empty'] = '<div class="small-avatar"></div>';
+  $handler->display->display_options['fields']['picture']['empty'] = '<div class="tiny-avatar"></div>';
   $handler->display->display_options['fields']['picture']['link_photo_to_profile'] = FALSE;
   $handler->display->display_options['fields']['picture']['image_style'] = 'user_profile_picture';
   /* Field: Userpoints total: Current total points */

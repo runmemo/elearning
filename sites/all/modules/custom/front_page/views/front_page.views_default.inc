@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * front_page.views_default.inc
@@ -55,12 +56,17 @@ function front_page_views_default_views() {
   $handler->display->display_options['fields']['title']['label'] = '';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
+  $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['title']['element_wrapper_class'] = 'home-courses-title';
+  $handler->display->display_options['fields']['title']['element_default_classes'] = FALSE;
   /* Field: Content: Image */
   $handler->display->display_options['fields']['field_image']['id'] = 'field_image';
   $handler->display->display_options['fields']['field_image']['table'] = 'field_data_field_image';
   $handler->display->display_options['fields']['field_image']['field'] = 'field_image';
   $handler->display->display_options['fields']['field_image']['label'] = '';
   $handler->display->display_options['fields']['field_image']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_image']['element_wrapper_class'] = 'home-courses-image';
+  $handler->display->display_options['fields']['field_image']['element_default_classes'] = FALSE;
   $handler->display->display_options['fields']['field_image']['click_sort_column'] = 'fid';
   $handler->display->display_options['fields']['field_image']['settings'] = array(
     'image_style' => 'course_home_picture',
@@ -73,6 +79,8 @@ function front_page_views_default_views() {
   $handler->display->display_options['fields']['field_logo']['relationship'] = 'field_provider_target_id';
   $handler->display->display_options['fields']['field_logo']['label'] = '';
   $handler->display->display_options['fields']['field_logo']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_logo']['element_wrapper_class'] = 'home-courses-provider-logo';
+  $handler->display->display_options['fields']['field_logo']['element_default_classes'] = FALSE;
   $handler->display->display_options['fields']['field_logo']['click_sort_column'] = 'fid';
   $handler->display->display_options['fields']['field_logo']['settings'] = array(
     'image_style' => 'provider_home_picture',
@@ -82,22 +90,20 @@ function front_page_views_default_views() {
   $handler->display->display_options['fields']['field_teacher']['id'] = 'field_teacher';
   $handler->display->display_options['fields']['field_teacher']['table'] = 'field_data_field_teacher';
   $handler->display->display_options['fields']['field_teacher']['field'] = 'field_teacher';
+  $handler->display->display_options['fields']['field_teacher']['label'] = 'Lector';
+  $handler->display->display_options['fields']['field_teacher']['element_class'] = 'home-courses-teacher';
+  $handler->display->display_options['fields']['field_teacher']['element_default_classes'] = FALSE;
   /* Field: Content: Provider */
   $handler->display->display_options['fields']['field_provider']['id'] = 'field_provider';
   $handler->display->display_options['fields']['field_provider']['table'] = 'field_data_field_provider';
   $handler->display->display_options['fields']['field_provider']['field'] = 'field_provider';
   $handler->display->display_options['fields']['field_provider']['label'] = '';
   $handler->display->display_options['fields']['field_provider']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_provider']['element_wrapper_class'] = 'home-courses-provider';
+  $handler->display->display_options['fields']['field_provider']['element_default_classes'] = FALSE;
   $handler->display->display_options['fields']['field_provider']['settings'] = array(
     'link' => 0,
   );
-  /* Field: Content: Dates */
-  $handler->display->display_options['fields']['field_course_dates']['id'] = 'field_course_dates';
-  $handler->display->display_options['fields']['field_course_dates']['table'] = 'field_data_field_course_dates';
-  $handler->display->display_options['fields']['field_course_dates']['field'] = 'field_course_dates';
-  $handler->display->display_options['fields']['field_course_dates']['label'] = '';
-  $handler->display->display_options['fields']['field_course_dates']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['field_course_dates']['type'] = 'text_plain';
   /* Sort criterion: Content: Post date */
   $handler->display->display_options['sorts']['created']['id'] = 'created';
   $handler->display->display_options['sorts']['created']['table'] = 'node';
@@ -123,7 +129,7 @@ function front_page_views_default_views() {
   $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
   $handler->display->display_options['path'] = 'home';
   $export['home_page_courses'] = $view;
-  
+
   $view = new view();
   $view->name = 'front_page_slider';
   $view->description = '';
@@ -238,6 +244,6 @@ function front_page_views_default_views() {
   $handler = $view->new_display('block', 'Block', 'block');
   $handler->display->display_options['block_description'] = 'Front Page Slider';
   $export['front_page_slider'] = $view;
-  
+
   return $export;
 }

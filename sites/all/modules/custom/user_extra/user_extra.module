@@ -190,23 +190,19 @@ function user_extra_user_menu_title() {
 function profile_pic_update_form($form, &$form_state) {
   // store user's picture in $form_state along with user ID.
   if (!isset($form_state['storage']['picture'])) {
-    global $user;
-    $user_picture = theme('user_picture', array('account' => $user));
-    if (!isset($user_picture) || $user_picture == '') {
-      $user_picture = '<div class="default-avatar"></div>';
-    }
-    $form_state['storage']['picture'] = $user_picture;
+    global $user; 
+    $form_state['storage']['picture'] = theme('user_picture', array('account' => $user));
     $form_state['storage']['user'] = $user->uid;
   }
   $form = array();
   $form['#prefix'] = '<div id="user-picture-upload-wrapper">';
   $form['#suffix'] = '</div>';
   $form['header'] = array(
-    '#markup' => '<div class="upload-form-header-caption">' . t('Photo editing') . '</div>',
-    '#prefix' => '<div class="upload-header">'
+    '#markup' => '<span class="modal-title">' . t('Photo editing') . '</span>',
+    '#prefix' => '<div class="modal-header popups-title">'
   );
   $form['close'] = array(
-    '#markup' => '<span class="upload-form-close" title="' . t('Close') . '"></span>',
+    '#markup' => '<span class="popups-close" title="' . t('Close') . '"><a class="close" href="#">x</a></span>',
     '#suffix' => '</div>'
   );
   $form['picture'] = array(
@@ -329,7 +325,7 @@ function user_pic_update_submit_callback($form, &$form_state) {
   }
   unset($form['file']['#value']);
   $commands[] = ajax_command_replace('#user-picture-upload-wrapper', render($form));
-  $commands[] = ajax_command_replace('#user-profile-picture', '<div id="user-profile-picture">' . $form_state['storage']['picture'] . '</div>');
+  $commands[] = ajax_command_replace('#js-user-avatar', '<div id="js-user-avatar">' . $form_state['storage']['picture'] . '</div>');
   return array('#type' => 'ajax', '#commands' => $commands);
 }
 
@@ -348,7 +344,7 @@ function user_pic_update_delete_callback($form, &$form_state) {
   }
   unset($form['file']['#value']);
   $commands[] = ajax_command_replace('#user-picture-upload-wrapper', render($form));
-  $commands[] = ajax_command_replace('#user-profile-picture', '<div id="user-profile-picture">' . $form_state['storage']['picture'] . '</div>');
+  $commands[] = ajax_command_replace('#js-user-avatar', '<div id="js-user-avatar">' . $form_state['storage']['picture'] . '</div>');
   return array('#type' => 'ajax', '#commands' => $commands);
 }
 

@@ -8,6 +8,7 @@
 @import "quicktabs.less";
 @import "modal.less";
 @import "tooltip.less";
+@import "front.less";
 
 /****** Common properties Start ******/
 html, body {
@@ -410,16 +411,16 @@ a.user-menu-parent:hover .user-menu-userpoints {
     float: left;
     text-align: center;
     @media @normal {
-       .show();
-       .gris();
-       .grid-normal-2();
+      .show();
+      .gris();
+      .grid-normal-2();
     }
     @media @narrow {
-       .grid-narrow-2();
-       margin-left: 40px;
+      .grid-narrow-2();
+      margin-left: 40px;
     }
     @media @wide {
-        .grid-wide-2();
+      .grid-wide-2();
     }
   }
 }
@@ -733,15 +734,10 @@ a.user-menu-parent:hover .user-menu-userpoints {
     .node-course-teacher-button {
       .left();
       margin-right: 20px;
-      #user-profile-picture {
-        border: 1px solid #cccccc;
-        border-radius: 2px;
+      
+    }
+    .teacher-avatar {
         margin-bottom: 30px;
-        .left();
-        .user-picture {
-          padding: 6px;
-        }
-      }
     }
     .node-course-paramenters {
       .cell();
@@ -786,16 +782,16 @@ a.user-menu-parent:hover .user-menu-userpoints {
 /****** Node type "Course" End ******/
 
 /** Course Book Header **/
-.book-header {
+
+.course-header {
   border-bottom: 1px dotted #AFAFAF;
-  margin-bottom: 20px;
-  padding: 20px 0px;
+  padding: 20px 0px 16px 0px;
   float: left;
   width: 100%;
   .provider-logo {
     float: left;
     padding-right: 20px;
-    margin-left: 20px;
+    margin-left: 10px;
   }
   .title-wrapper {
     float: left;
@@ -841,11 +837,23 @@ a.user-menu-parent:hover .user-menu-userpoints {
     }    
   }
 }  
+
+.block-course-book-header {
+   margin-bottom: 22px;
+}
+
+.node-type-question {
+  .block-course-book-header {
+     margin-bottom: 0;
+  }
+}
+
 /** Course Book Header **/
 
 /****** User Profile ******/
 .page-user {
-  #block-system-main, #block-quicktabs-user-profile-tab {
+  .block-system-main, 
+  .block-quicktabs-user-profile-tab {
     @media @normal {
       margin: 0px 20px 20px 20px;
     }
@@ -857,53 +865,48 @@ a.user-menu-parent:hover .user-menu-userpoints {
     .bold(14px);
     .text-grey();
     margin-top: 23px;
-    a:link, a:visited {
-      color: #333333;
+    a {
       .link();
-    }
-    a:hover {
-      .caption-orange();
-      .link();
-    }
-    a:active {
-      .caption-orange();
-      .link();
+      &:link, 
+      &:visited {
+        color: #333333;
+        .link();
+      }
+      &:hover,
+      &:active {
+        .text-orange();
+      }
     }
   }
 }
 
-.page-user {
-  .user-profile-name-caption {
-    .border-bottom-dotted();
-    .show(inline-block);
-    width: 100%;
-    .user-name {
-      .left();
-      margin-left: 0px;
-    }
-    .user-name h2, .user-profile-edit-link h2 {
-      margin-bottom: 7px;
-    }
-    .user-profile-edit-link {
-      .right();
-      h2 {
-       .right();
-        a.profile-edit {
-          .link-image-left(16px);
-        }
-        a.profile-edit:link, 
-        a.profile-edit:visited {
-          .bg-img('profile-edit-link.png');
-          background-position: 0 2px;
-        }
-        a.profile-edit:hover,
-        a.profile-edit:active {
-          .text-orange();
-          .bg-img('profile-edit-hover.png');
-          background-position: 0 2px;
-        }
-      }
-    }
+.user-profile-name-caption {
+  .border-bottom-dotted();
+  .show(inline-block);
+  width: 100%;
+  .user-name {
+    .left();
+    margin-left: 0px;
+  }
+  .user-name h2, .user-profile-edit-link h2 {
+    margin-bottom: 7px;
+  }
+}
+
+.user-profile-edit-link {
+  .right();
+}
+
+.profile-edit {
+  background-position: 0 2px;
+  .link-image-left(16px);
+  &:link, 
+  &:visited {
+    .bg-img('profile-edit-link.png');
+  }
+  &:hover,
+  &:active {
+    .bg-img('profile-edit-hover.png');
   }
 }
 
@@ -911,51 +914,55 @@ a.user-menu-parent:hover .user-menu-userpoints {
   margin-top: 26px;
 }
 
-.user-profile-basic-info {
-  .user-profile-picture-points {
-    margin-right: 20px;
-    @media @wide {
-      margin-right: 25px;
-    }
-    .left();
-    .user-profile-picture-edit {
-      .box-shadow();
-      .user-picture {
-        float: none;
-        margin: 0;
-        img {
-          padding: 6px;
-        }
-      }
-      .user-picture-edit {
-        .bold(11px);
-        .link();
-        color: #333333;
-        position: absolute;
-        top: 84px;
-        left: 6px;
-        background: rgba(255,255,255,0.66);
-        width: 107px;
-        text-align: center;
-        height: 18px;
-        padding-top: 11px;
-        .show(none);
-        cursor: pointer;
-      }
-    }
-    .user-profile-userpoints {
-      height: 23px;
-      margin: 15px 0px 15px 40px;
-      padding: 6px 0px 0px 29px;
-      .bg-img('profile-crown.png');
-     
-    }
+
+.user-profile-picture-points {
+  margin-right: 20px;
+  @media @wide {
+    margin-right: 25px;
+  }
+  .left();
+}
+
+.user-avatar {
+  float: none;
+  margin: 0;
+  img {
+    padding: 6px;
   }
 }
 
-/* User profile picture update form styles */
-.upload-form-background {
+
+.user-avatar-edit-link {
+  .bold(11px);
+  .link();
+  color: #333333;
+  position: absolute;
+  top: 84px;
+  left: 6px;
+  background: rgba(255,255,255,0.66);
+  width: 107px;
+  text-align: center;
+  height: 18px;
+  padding-top: 11px;
   .show(none);
+  cursor: pointer;
+}
+
+.user-profile-userpoints {
+  height: 23px;
+  margin: 15px 0px 15px 40px;
+  padding: 6px 0px 0px 29px;
+  .bg-img('profile-crown.png');
+
+}
+
+
+/* User profile picture update form styles */
+.js-modal {
+  .show(none);
+}
+
+.overlay-background {
   position: fixed;
   top: 0;
   left: 0;
@@ -966,12 +973,6 @@ a.user-menu-parent:hover .user-menu-userpoints {
   opacity: 0.5;
 }
 
-.upload-form-container {
-  .show(none);
-}
-
-#profile-pic-update-form,
-#user-picture-upload-wrapper,
 .upload-form-container {
   position: fixed;
   width: 387px;
@@ -984,42 +985,14 @@ a.user-menu-parent:hover .user-menu-userpoints {
 }
 
 #profile-pic-update-form {
- .upload-header {
-    .show(inline-block);
-    width: 385px;
-    height: 33px;
-    border: 1px solid #e5e1e2;
-    .upload-form-header-caption {
-      .bold(14px);
-      .left();
-      color: #505050;
-      text-align: center;
-      width: 350px;
-      margin-top: 8px;
-    }
-    .upload-form-close {
-      .right();
-      width: 33px;
-      height: 31px;
-      margin-top: 1px;
-      border-left: 1px solid #d8d8d8;
-      .bg-img('close.png');
-      background-position: 50% 50%;
-      cursor: pointer;
-    }
-  }
   .upload-form-main-wrapper {
     .show(inline-table);
-    margin-top: 5px;
+    margin-top: 10px;
     margin-left: 10px;
     .border-bottom-dotted();
     #upload-form-picture {
       .left();
-      .box-shadow();
       margin: 0px 10px 10px 0px;
-    }
-    .user-picture {
-      padding: 6px;
     }
   }
   .upload-form-links-wrapper {
@@ -1045,12 +1018,13 @@ a.user-menu-parent:hover .user-menu-userpoints {
       .text-dark-grey();
       .bold(14px);
       .border-bottom-dotted();
+      
     }
     a.active {
-      color: #f64a00;
-      border-bottom: 1px dotted #f64a00;
+        color: #f64a00;
+        border-bottom: 1px dotted #f64a00;
     }
-    a.remove-link {
+    .remove-link {
       position: absolute;
       left: 139px;
     }
@@ -1096,72 +1070,74 @@ a.user-menu-parent:hover .user-menu-userpoints {
     margin-left: auto;
   }
   margin-bottom: 22px;
-  background: #fafafa;
+  background: #FAFAFA;
   .view-header {
     .view-block-header();
   }
   .view-content {
     padding: 22px 24px;
-    .views-user-courses-links {
-      .show(table);
-      width: 100%;
-      .views-field-title {
-        .left();
-        a:hover {
-          color: #333333;
-        }
-      }
-      .views-field-link-continue {
-        .right();
-        a.user-course-continue {
-          .link-image-left(20px);
-          border-right: 1px solid #cccccc;
-          padding-right: 10px;
-        }
-        a.user-course-continue:link, a.user-course-continue:visited {
-          .bg-img('continue_link.png');
-        }
-        a.user-course-continue:hover, a.user-course-continue:active {
-          .bg-img('continue_link_hover.png');
-        }
-      }
-    .views-field-link-exit {
-        .right();
-        a.user-course-exit span {
-          .link-image-left(16px);
-          margin-left: 10px;
-        }
-        a.user-course-exit:link span, a.user-course-exit:visited span {
-          .bg-img('exit.png');
-        }
-        a.user-course-exit:hover span, a.user-course-exit:active span {
-          .bg-img('exit_hover.png');
-        }
-      }
+  }
+}
+
+.view-user-courses-progress-outer {
+  height: 28px;
+  margin: 11px 0px 34px 0px;
+  .RoundedShape(3px);
+  border: #859AA1 @border-1;
+  width: 100%;
+  p {
+    .left();
+    color: white;
+    padding: 6px 8px;
+  }
+}
+.view-user-courses-progress-inner, 
+.view-user-courses-progress-gradient {
+  height: 28px;
+}
+.view-user-courses-progress-inner {
+  .striped-progressbar();
+}
+.view-user-courses-progress-gradient {
+  .gradient-progressbar();
+}
+
+.views-user-courses-links {
+  .show(table);
+  width: 100%;
+  .views-field-title {
+    .left();
+    a:hover {
+      color: #333333;
     }
-    .view-user-courses-progress-outer {
-      height: 28px;
-      margin: 11px 0px 34px 0px;
-      .RoundedShape(3px);
-      border: #859aa1 @border-1;
-      width: 100%;
-      .view-user-courses-progress-inner, .view-user-courses-progress-gradient {
-        height: 28px;
-        border-bottom-left-radius: 2px;
-        border-top-left-radius: 2px;
-      }
-      .view-user-courses-progress-inner {
-        .striped-progressbar();
-        .view-user-courses-progress-gradient {
-          .gradient-progressbar();
-        }
-      }
-      p {
-        .left();
-        color: white;
-        padding: 6px 8px;
-      }
-    }
+  }
+}
+
+.user-course-exit {
+  .right();
+  .box(16px);
+  margin-left: 10px;
+  &:link,
+  &:visited {
+    .bg-img('exit.png');
+  }
+  &:hover, &:active {
+    .bg-img('exit_hover.png');
+  }
+}
+
+.user-course-continue {
+  .right();
+  .link-image-left(20px);
+  border-right: 1px solid #cccccc;
+  padding-right: 10px;
+  &:link,
+  &:visited {
+    .bg-img('continue_link.png');
+  }
+  &:hover,
+  &:active {
+    .bg-img('continue_link_hover.png');
   }
 }
 
@@ -1195,142 +1171,6 @@ a.user-menu-parent:hover .user-menu-userpoints {
 
 /****** User Profile End ******/
 
-/****** Front Page Start ******/
-
-body.page-home {
-  .region-content-inner {
-      margin-left: 38px;
-  } 
-}
-
-.block-views-front-page-slider-block {
-  width: 864px;
-  position: relative;
-}
-
-.view-id-front_page_slider {
-    padding: 45px 0px;
-    .views-slideshow-controls-top {
-      z-index: 100;
-      position: absolute;
-      right: 6px;
-      .views-slideshow-pager-fields {
-        .left();
-        border-right: @border-1 white;
-        margin-top: 16px;
-        .views-slideshow-pager-field-item {
-          .left();
-          .bg-img('slider-buttons.png');
-          width: 12px;
-          height: 12px;
-          cursor: pointer;
-          margin: 0px 5px 0px 0px;
-        }
-        .active {
-          background-position: -12px 0px;
-        }
-        .views-field-counter {
-          .show(none);
-        }
-      }
-      .views-slideshow-controls-text {
-        .left();
-        margin: 2px 20px 0px 7px;
-        .views-slideshow-controls-text-previous,
-        .views-slideshow-controls-text-next {
-          .show(none);
-        }
-        .views-slideshow-controls-text-pause {
-          a {
-            .show(inline-block);
-            .bg-img('slider-pause.png');
-            color: transparent;
-            width: 13px;
-            font-size: 0px;
-            height: 20px;
-          }
-        }
-      }
-    }
-    .views-field-body {
-      position: absolute;
-      top: 123px;
-      background: rgba(255, 255, 255, .5);
-      width: 366px;
-      right: 0;
-        p {
-          .bold(28px);
-          padding: 20px 30px 10px 17px;
-        }
-    }
-    .views-field-field-image {
-      img {
-        border: 7px solid transparent;
-        border-image: url(../images/slider-bottom.png) 7 0 stretch;
-        border-top: 0;
-        border-right: 0;
-        border-left: 0;
-        padding-bottom: 3px;
-      }
-    }
-  }
-
-.view-home-page-courses {
-  width: 100%;
-  .views-row {
-    .border-bottom-dotted();
-    margin-bottom: 48px;
-    list-style: none;
-    .bold(12px);
-    width: 408px;
-    .views-field-title .field-content a {
-      position: absolute;
-      .bold(18px);
-      .link();
-      color: black;
-      padding: 10px 0px 10px 8px;
-      width: 400px;
-      .bg-img('arrow-right-home.png');
-      background-color: rgb(253, 253, 253);
-      background-color: rgba(255, 255, 255, .88);
-      background-position: 97%;
-    }
-    .views-field-field-logo {
-      .left();
-      .field-content {
-        margin: 8px 9px 6px 2px;
-      }
-   }
-    .view-fields-teacher-provider {
-      .left();
-      margin-top: 8px;
-      .views-field-field-teacher .field-content a {
-        .link();
-        .text-orange();
-      }
-      .views-field-field-provider .field-content {
-        .link();
-        color: #2e2422;
-      }
-    }
-    .views-field-field-course-dates {
-      .right();
-      .text-orange();
-      width: 56px;
-      margin-top: 8px;
-    }
-  }
-  .column-1 {
-    .left();
-    clear: left;
-  }
-  .column-2 {
-    .right();
-    clear: right;
-  }
-}
-/****** Front Page End ******/
-
 #notes-markup {
   float: left;
 }
@@ -1338,39 +1178,6 @@ body.page-home {
 
 /****** Node type "Question" Start ******/
 .node-type-question {
-  #block-course-book-header {
-    .book-header {
-      margin-bottom: 5px;
-      padding: 20px 0px 16px 0px;
-      .provider-logo {
-        margin-left: 10px;
-      }
-    }
-    a.node-question-return-link {
-      .bold(13px);
-      .right();
-      .link();
-      height: 16px;
-      border: 16px solid transparent;
-      border-image: url(../images/return_link.png) 0 16 stretch;
-      border-top: 0;
-      border-right: 0;
-      border-bottom: 0;
-      padding-left: 6px;
-      margin-top: 36px;
-    }
-    a.node-question-return-link:link, a.node-question-return-link:visited {
-      color: #1f1f1f;
-    }
-    a.node-question-return-link:hover, a.node-question-return-link:active {
-     .caption-orange();
-     border-image: url(../images/left_square_arrow_hover.png) 0 16 stretch;
-    }
-  }
-  h1 {
-    margin-bottom: 10px;
-    padding-top: 4px;
-  }
   .ajax-progress-throbber {
     position: absolute;
     width: 100%;
@@ -1395,40 +1202,64 @@ body.page-home {
       margin: 0px 35px 0px 10px;
     }
   }
-  .subscription {
-    a.flag {
-      .show(block);
-      .left();
-      overflow: hidden;
-      color: transparent;
-      width: 18px;
-      height: 18px;
-      .bg-img('follow-flag.png');
-      margin: 14px 0px 0px 11px;
-    }
-    a.unflag-action {
-      background-position: -40px 0px;
-    }
-    a.unflag-action:hover {
-      background-position: -60px 0px;
-    }
-    a.flag-action:hover {
-      background-position: -20px 0px;
-    }
-    .flag-waiting .flag-throbber {
-      .show(none);
-    }
+}
+
+.node-question-return-link {
+  .bold(13px);
+  .right();
+  .link();
+  height: 16px;
+  border: 16px solid transparent;
+  border-image: url(../images/return_link.png) 0 16 stretch;
+  border-top: 0;
+  border-right: 0;
+  border-bottom: 0;
+  padding-left: 6px;
+  margin-right: 25px;
+  margin-top: 36px;
+  &:link, &:visited {
+    color: #1f1f1f;
+  }
+  &:hover, &:active {
+    .caption-orange();
+    border-image: url(../images/left_square_arrow_hover.png) 0 16 stretch;
+  }
+}
+
+.flag-subscriptions-reference-flag {
+  .flag {
+    .show(block);
+    .left();
+    overflow: hidden;
+    color: transparent;
+    width: 18px;
+    height: 18px;
+    .bg-img('follow-flag.png');
+    margin: 10px 0px 0px 11px;
+  }
+  .unflag-action {
+    background-position: -40px 0px;
+  }
+  .unflag-action:hover {
+    background-position: -60px 0px;
+  }
+  .flag-action:hover {
+    background-position: -20px 0px;
+  }
+  .flag-waiting .flag-throbber {
+    .show(none);
   }
 }
 
 .author-points {
   .bold(12px);
-  .show(table);
   color: #ffffff;
   text-align: center;
-  position: relative;
+  position: absolute;
   bottom: 12px;
-  left: 36px;
+  left: 31px;
+  top: 34px;
+  width: auto;
   height: 15px;
   border-radius: 2px;
   background-color: #e44300;
@@ -1436,27 +1267,31 @@ body.page-home {
 }
 
 .node-question-title-section {
+  padding: 4px 0px 4px 0px;
   .show(inline-block);
   width: 100%;
-    h1 {
-      .left();
-    }
   .border-bottom-dotted();
-  .node-question-picture-points {
+   h1 {
+    margin-bottom: 0;
     .left();
-    .tiny-avatar();
-    margin-bottom: -15px;
-    @media @narrow {
-      margin-right: 15px;
-    }
-    @media @normal {
-      margin-right: 15px;
-    }
-    @media @wide {
-      margin-right: 24px;
-    }
+   }
+}
+
+
+.node-question-picture-points {
+  .left();
+  
+  @media @narrow {
+    margin-right: 15px;
+  }
+  @media @normal {
+    margin-right: 15px;
+  }
+  @media @wide {
+    margin-right: 24px;
   }
 }
+
 
 .node-question-body {
   .bold(14px);
@@ -1492,35 +1327,37 @@ body.page-home {
 
 .block-answers-extra {
   margin: 0;
-  #quick-answer-wrapper {
-    .cke_top, .cke_bottom {
-      .cke-main-panel-blue();
-    }
-    .cke {
-      border: @border-cke-blue;
-    }
-    .cke_top {
-      border-bottom: @border-cke-blue;
-    }
-    .cke_bottom {
-      border-top: @border-cke-blue;
-    }
-    .cke_toolgroup {
-      border: @border-cke-blue;
-      border-bottom-color: #ccd6e0;
-      .cke-tools-panel-blue();
-    }
-    .cke_toolbar_separator {
-      background: #e2e8ed;
-    }
-    .form-submit {
-      margin-top: 9px;
-    }
+  .form-submit {
+    margin-top: 9px;
   }
 }
+
+/* CKEditor Theming */
+.cke_top, 
+.cke_bottom {
+  .cke-main-panel-blue();
+}
+.cke {
+  border: @border-cke-blue;
+}
+.cke_top {
+  border-bottom: @border-cke-blue;
+}
+.cke_bottom {
+  border-top: @border-cke-blue;
+}
+.cke_toolgroup {
+  border: @border-cke-blue;
+  border-bottom-color: #ccd6e0;
+  .cke-tools-panel-blue();
+}
+.cke_toolbar_separator {
+  background: #e2e8ed;
+}
+
 /****** Node type "Question" End ******/
 
-/* Views on Open Question page START*/
+/* Views on Open Question page START */
 .node-supplementary,
 .view-question-answers .views-field-created,
 .view-question-answers .views-field-name,
@@ -1531,8 +1368,8 @@ body.page-home {
 .view-answers-review .views-field-name {
   .left();
   .bold(11px);
-  color: #435d7b;
-  border: 1px solid #e0e8ea;
+  color: #435D7B;
+  border: 1px solid #E0E8EA;
   background-color: #f4f7f7;
   padding: 8px;
   margin: 22px 6px 22px 0px;
@@ -1554,19 +1391,19 @@ body.page-home {
     box-shadow: none;
     border-radius: 0;
     width: 100%;
-    .views-field-body {
-      color: #3d3d3d;
-      font: normal 14px Arial;
-      .show(table);
-      p {
-        margin: 0;
-      }
-    }
     .form-item {
       margin: 0;
     }
     .form-textarea-wrapper {
       margin-bottom: 10px;
+    }
+  }
+  .views-field-body {
+    color: #3d3d3d;
+    font: normal 14px Arial;
+    .show(table);
+    p {
+      margin: 0;
     }
   }
 }
@@ -1585,11 +1422,13 @@ body.page-home {
   }
   a.flag-action {
     background-position: -19px 0px;
+    &:hover {
+      background-position: 0px 0px;
+    }
   }
-  a.flag-action:hover {
-    background-position: 0px 0px;
-  }
-  .flag-waiting .flag-throbber, .best-answer-hidden {
+
+  .flag-waiting .flag-throbber, 
+  .best-answer-hidden {
     .show(none);
   }
 }
@@ -1652,7 +1491,6 @@ body.page-home {
   }
 }
 
-
 .views-other-answer-picture {
   .left();
   margin-right: 20px;
@@ -1663,7 +1501,6 @@ body.page-home {
   position: relative;
   .tiny-avatar();
 }
-
 
 .views-field-feedback-form {
   margin-top: 25px;
@@ -1733,21 +1570,19 @@ body.page-home {
   right: 0;
 }
 
-.views-field-feedback-form .oq-review-form-edit.progress-disabled {
+.oq-review-form-edit.progress-disabled {
   color: transparent;
   .bg-img('progress_orange.gif');
   width: 16px;
   height: 16px;
 }
 
-
-/*@todo Ilya adjust layout in accordance with psd*/
+/* @todo Ilya adjust layout in accordance with psd. */
 .oq-review-form-edit-body-is-empty {
   margin-top: 4px;
   margin-right: -13px;
   .show(none);
 }
-
 
 .view-question-answers, 
 .view-answer-feedbacks, 
@@ -1854,7 +1689,8 @@ body.page-home {
   .views-row {
     padding: 0;
   }
-  .feedback-body, .views-field-comment-count {
+  .feedback-body, 
+  .views-field-comment-count {
     .left();
     @media @narrow {
       width: 452px;
@@ -1884,7 +1720,8 @@ body.page-home {
       .right();
     }
   }
-  .comment-group, .comment-form {
+  .comment-group, 
+  .comment-form {
     width: 95%;
   }
   .comment-group .comment,
@@ -1927,8 +1764,6 @@ body.page-home {
 .node-open-question-picture {
   .left();
   margin-right: 17px;
-  .tiny-avatar();
-
 }
 
 .node-open-question-body {
