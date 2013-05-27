@@ -65,37 +65,18 @@ function course_outline_block_view($delta = '') {
     return NULL;
   }
   $block['subject'] = '';
+  $course_node = node_load($book['bid']);
   switch ($delta) {
     case 'course_outline':
-      // Build course outline.
-      drupal_add_js(drupal_get_path('module', 'course_outline') . '/course_outline.js');
-      drupal_add_css(drupal_get_path('module', 'course_outline') . '/course_outline.css');
-      drupal_add_library('system', 'ui.accordion');
-
-      $tree = menu_tree_all_data($book['menu_name'], NULL, 3);
-      $tree_key = key($tree);
-
-      course_outline_preprocess_tree($tree);
-
-      // If we pass 1 as the second param, we just get the top level node in the
-      // book. Since the key will be the top level mlid, we'll have to use 
-      // ['p1'] in the $book array (which contains the top mlid) when we use it 
-      // for the block title.
-      $book_name = book_toc($book['bid'], 1);
-
-      $tree_output = menu_tree_output($tree);
-      // Alter titles and classes of the links in the tree.
-      course_outline_preprocess_tree($tree_output);
-
-      // Build the block title and contents.
-      $block['content'][] = $tree_output;
+      $node = menu_get_object();
+      $edit_access = node_access('update', $node) ? TRUE : FALSE;
+      $block['content'][] = drupal_get_form('course_outline_block_view_form', $course_node, $book, $edit_access);
       break;
 
     case 'course_certificate' :
       // Build certificate block.
       $certificate = array();
       global $user;
-      $course_node = node_load($book['bid']);
       if ($course_node) {
         $grades = course_get_course_grades($course_node);
         $certificate['grade_ranges'] = course_get_grade_ranges($grades);
@@ -121,6 +102,142 @@ function course_outline_block_view($delta = '') {
   }
 
   return $block;
+}
+
+/**
+ * Returns course outline block with edit button, if current user has access to it.
+ * @param object $node first object of the course's hierarchy
+ * @param array $book course's book
+ * @param boolean $edit_access access rights for editing node
+ * @return array form's array
+ */
+function course_outline_block_view_form($form, &$form_state, $course_node = FALSE, $book = array(), $edit_access = NULL) {
+  $form = array();
+  $form['#prefix'] = '<div id="course-outline-block-wrapper">';
+  $form['#suffix'] = '</div>';
+  // Build course outline.
+  drupal_add_js(drupal_get_path('module', 'course_outline') . '/course_outline.js');
+  drupal_add_library('system', 'ui.accordion');
+
+  $tree = menu_tree_all_data($book['menu_name'], NULL, 3);
+  $tree_key = key($tree);
+
+  course_outline_preprocess_tree($tree);
+
+  // If we pass 1 as the second param, we just get the top level node in the
+  // book. Since the key will be the top level mlid, we'll have to use 
+  // ['p1'] in the $book array (which contains the top mlid) when we use it 
+  // for the block title.
+  $book_name = book_toc($book['bid'], 1);
+
+  $tree_output = menu_tree_output($tree);
+  // Alter titles and classes of the links in the tree.
+  course_outline_preprocess_tree($tree_output);
+  
+  // Build the block title and contents.
+  $form['view'] = array(
+    '#markup' => drupal_render($tree_output),
+  );
+
+  $form_state['storage']['course_node'] = $course_node;
+  $form_state['storage']['edit_access'] = $edit_access;
+  
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Edit'),
+    '#access' => $edit_access,
+    '#ajax' => array(
+      'callback' => 'course_outline_block_view_form_submit_callback',
+      'wrapper' => 'course-outline-block-wrapper',
+      'progress' => array('type' => 'throbber'),
+    ),
+  );
+  return $form;
+}
+
+/**
+ * Custom ajax callback for course_outline_block_view_form();
+ */
+function course_outline_block_view_form_submit_callback($form, &$form_state) {
+  $course_node = isset($form_state['storage']['course_node']) ? $form_state['storage']['course_node'] : '';
+  $edit_access = isset($form_state['storage']['edit_access']) ? $form_state['storage']['edit_access'] : FALSE;
+  $form = $course_node ? drupal_get_form('course_outline_book_admin_edit', $course_node, $edit_access) : array();
+  $commands[] = ajax_command_replace('#course-outline-block-wrapper', drupal_render($form));
+  return array('#type' => 'ajax', '#commands' => $commands);
+}
+
+
+/**
+ * Custom form for administering a course's hierarchy.
+ * Code has been borrowed from 'book' module in order to make this form ajaxable.
+ * @param $node
+ *   The node of the top-level page in the book.
+ * @see book.admin.inc file in 'book' module
+ * @ingroup forms
+ */
+function course_outline_book_admin_edit($form, $form_state, $course_node, $edit_access) {
+  include_once drupal_get_path('module', 'book') . '/book.admin.inc';
+  $form['#prefix'] = '<div id="course-outline-edit-wrapper">';
+  $form['#suffix'] = '</div>';
+  $form['#node'] = $course_node;
+  $form_state['storage']['edit_access'] = $edit_access;
+  _book_admin_table($course_node, $form);
+  if (isset($form['table']) && !empty($form['table'])) {
+    foreach ($form['table'] as $key => &$row_item) {
+      if ($key != '#theme' && $key != '#tree') {
+        $row_item['title']['#disabled'] = TRUE;
+      }
+    }
+  }
+  $form['save'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save'),
+    '#ajax' => array(
+      'callback' => 'course_outline_edit_form_submit_callback',
+      'wrapper' => 'course-outline-edit-wrapper',
+      'progress' => array('type' => 'throbber')
+    ),
+  );
+  return $form;
+}
+
+/**
+ * Form validation handler for course_outline_book_admin_edit().
+ * Checks that the book has not been changed while using the form.
+ */
+function course_outline_book_admin_edit_validate($form, &$form_state) {
+  if ($form_state['values']['tree_hash'] != $form_state['values']['tree_current_hash']) {
+    form_set_error('', t('This book has been modified by another user, the changes could not be saved.'));
+  }
+}
+
+/**
+ * Ajax form submission callback for course_outline_book_admin_edit().
+ * This function takes care to save parent menu items before their children.
+ */
+function course_outline_edit_form_submit_callback($form, &$form_state) {
+  // Save elements in the same order as defined in post rather than the form.
+  // This ensures parents are updated before their children, preventing orphans.
+  $order = array_flip(array_keys($form_state['input']['table']));
+  $form['table'] = array_merge($order, $form['table']);
+  foreach (element_children($form['table']) as $key) {
+    if ($form['table'][$key]['#item']) {
+      $row = $form['table'][$key];
+      $values = $form_state['values']['table'][$key];
+
+      // Update menu item if moved.
+      if ($row['plid']['#default_value'] != $values['plid'] || $row['weight']['#default_value'] != $values['weight']) {
+        $row['#item']['plid'] = $values['plid'];
+        $row['#item']['weight'] = $values['weight'];
+        menu_link_save($row['#item']);
+      }
+    }
+  }
+  // replace this form with course_outline_block_view_form().
+  $edit_access = isset($form_state['storage']['edit_access']) ? $form_state['storage']['edit_access'] : FALSE;
+  $form = drupal_get_form('course_outline_block_view_form', $form['#node'], $form['#node']->book, $edit_access);
+  $commands[] = ajax_command_replace('#course-outline-edit-wrapper', drupal_render($form));
+  return array('#type' => 'ajax', '#commands' => $commands);
 }
 
 /**
