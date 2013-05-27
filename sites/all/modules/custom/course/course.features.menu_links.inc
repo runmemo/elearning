@@ -46,8 +46,8 @@ function course_menu_default_menu_links() {
     'expanded' => '0',
     'weight' => '0',
   );
-    // Exported menu link: user-menu:<front>
-  $menu_links['user-menu:<front>'] = array(
+  // Exported menu link: user-menu:user
+  $menu_links['user-menu:user'] = array(
     'menu_name' => 'user-menu',
     'link_path' => 'user',
     'router_path' => 'user',
@@ -65,17 +65,17 @@ function course_menu_default_menu_links() {
     'weight' => '-50',
     'parent_path' => 'user',
   );
-  // Exported menu link: user-menu:myuserpoints
-  $menu_links['user-menu:myuserpoints'] = array(
+  // Exported menu link: user?history=1
+  $menu_links['user-menu:user?history=1'] = array(
     'menu_name' => 'user-menu',
-    'link_path' => 'myuserpoints',
-    'router_path' => 'myuserpoints',
-    'link_title' => 'My !points',
+    'link_path' => 'user?history=1',
+    'router_path' => 'user?history=1',
+    'link_title' => 'Points',
     'options' => array(),
-    'module' => 'system',
+    'module' => 'menu',
     'hidden' => '0',
     'external' => '0',
-    'has_children' => '1',
+    'has_children' => '0',
     'expanded' => '0',
     'weight' => '-49',
     'parent_path' => 'user',
@@ -134,7 +134,7 @@ function course_menu_default_menu_links() {
   // Included for use with string extractors like potx.
   t('About');
   t('Log out');
-  t('My !points');
+  t('Points');
   t('Profile');
   t('User Agreement');
   t('User account');
