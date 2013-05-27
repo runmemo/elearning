@@ -29,19 +29,57 @@ function answers_extra_default_rules_configuration_alter(&$configs) {
     }
   }
 
-  //unset all vote down rules for Q&A now.
-  //@todo Bulat : Please define stories for Votes down actions on Q&A.
+  // User votes down question awrard -5 points from Author 0 from Actor.
   if (isset($configs['rules_user_votes_down_a_question'])) {
-    unset($configs['rules_user_votes_down_a_question']);
+    foreach($configs['rules_user_votes_down_a_question']->actions() as $action) {
+      if ($action->getElementName() == 'userpoints_action_grant_points') {
+        if($action->settings['user:select'] === 'vote:user') {
+          $action->settings['points'] = 0;
+        }
+        if($action->settings['user:select'] === 'node:author') {
+          $action->settings['points'] = -5;
+        }
+      }
+    }
   }
+
   if (isset($configs['rules_user_retracts_a_vote_down_on_a_question'])) {
-    unset($configs['rules_user_retracts_a_vote_down_on_a_question']);
+    foreach($configs['rules_user_retracts_a_vote_down_on_a_question']->actions() as $action) {
+      if ($action->getElementName() == 'userpoints_action_grant_points') {
+        if($action->settings['user:select'] === 'vote:user') {
+          $action->settings['points'] = 0;
+        }
+        if($action->settings['user:select'] === 'node:author') {
+          $action->settings['points'] = 5;
+        }
+      }
+    }
   }
+
   if (isset($configs['rules_user_votes_down_an_answer'])) {
-    unset($configs['rules_user_votes_down_an_answer']);
+    foreach($configs['rules_user_votes_down_an_answer']->actions() as $action) {
+      if ($action->getElementName() == 'userpoints_action_grant_points') {
+        if($action->settings['user:select'] === 'vote:user') {
+          $action->settings['points'] = 0;
+        }
+        if($action->settings['user:select'] === 'node:author') {
+          $action->settings['points'] = -5;
+        }
+      }
+    }
   }
+
   if (isset($configs['rules_user_retracts_a_vote_down_on_an_answer'])) {
-    unset($configs['rules_user_retracts_a_vote_down_on_an_answer']);
+    foreach($configs['rules_user_retracts_a_vote_down_on_an_answer']->actions() as $action) {
+      if ($action->getElementName() == 'userpoints_action_grant_points') {
+        if($action->settings['user:select'] === 'vote:user') {
+          $action->settings['points'] = 0;
+        }
+        if($action->settings['user:select'] === 'node:author') {
+          $action->settings['points'] = 5;
+        }
+      }
+    }
   }
 
 }
