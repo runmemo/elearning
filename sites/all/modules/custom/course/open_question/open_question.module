@@ -116,10 +116,19 @@ function open_question_block_view($delta = '') {
 /*
  * Gets answers of other students for review.
  */
-function open_question_review_list_view() {
+function open_question_review_list_view($oq_nid = 0) {
   $block_content = array();
   // show answers of other students for review
   $review_list_view = views_get_view('open_questions_review_list');
+
+  if($oq_nid) {
+    // Ajax calls requires to send the correct oq_nid for rendering view.
+    global $user;
+    // set arguments for ajax calls.
+    $review_list_view->set_arguments(array($user->uid, $oq_nid));
+    $review_list_view->execute();
+  }
+  
   $block_content['review_list'] = array(
     '#type' => 'markup',
     '#markup' => $review_list_view->preview(),
@@ -347,7 +356,7 @@ function open_question_answer_submit($form, &$form_state) {
  * Callback for open question answer submit
  */
 function open_question_answer_submit_js($form, &$form_state) {
-  $commands[] = ajax_command_replace('#block-open-question-oq-other-answers-block .content', render(open_question_review_list_view()));
+  $commands[] = ajax_command_replace('#block-open-question-oq-other-answers-block .content', render(open_question_review_list_view($form_state['question_nid'])));
   $commands[] = ajax_command_replace('#oq-answer-form-wrapper',  render($form));
   return array('#type' => 'ajax', '#commands' => $commands);
 }
