@@ -482,11 +482,12 @@ function oq_review_form($form, &$form_state, $args) {
           'callback' => 'oq_review_form_js',
           'wrapper' => "oq-review-wrapper-{$answer_nid}",
         ),
-        '#prefix' => '<div>',
+        '#prefix' => '<div class="oq-review">',
       );
       
       if (!empty($review_body)) {
         $form['edit_button']['#attributes']['class'][] = 'oq-review-form-edit';
+        $form['edit_button']['#suffix'] = '<div class="description">'.t('Edit').'</div>';
       }
       else {
         $form['edit_button']['#attributes']['class'][] = 'oq-review-form-edit-body-is-empty';

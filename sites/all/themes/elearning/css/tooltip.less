@@ -123,3 +123,33 @@ div.fivestar-widget .star {
   overflow: visible;
   text-indent: 0;
 }
+
+/*
+ * Add hover tooltip to Edit icon on OQ2.
+ */
+.oq-review .description {
+  .show(none);
+  position: absolute;
+  right: -15px;
+  padding: 15px;
+  background: #fdfdfd;
+  z-index: 10000;
+  moz-box-shadow: 2px 4px 23px 1px #888;
+  -webkit-box-shadow: 2px 4px 23px 1px #888;
+  box-shadow: 2px 4px 23px 1px #888;
+  color: #3d3d3d;
+  font-size: 12px;
+  font-weight: bold;
+  .tooltip();
+  &:before {
+    border: solid;
+    bottom: 20px;
+    content: "";
+    position: absolute;
+    z-index: 99;
+    border-color: #FFFFFF transparent transparent;
+    border-width: 8px;
+    top: 48px;
+    left: 35%;
+  }
+}

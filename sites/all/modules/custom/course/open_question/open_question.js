@@ -84,6 +84,17 @@
       $('select[name="rating"][class~="error"]').parents('.views-field-feedback-form').find('.form-submit').addClass('is-active');
       $('textarea[name="review"][class~="error"]').parents('.views-field-feedback-form').find('.is-inactive').removeClass('.is-inactive').addClass('is-active');
       $('textarea[name="review"][class~="error"]').parents('.views-field-feedback-form').find('.form-submit').addClass('is-active');
+
+
+      // Hover tooltip on OQ2 edit form.
+      $(".oq-review .oq-review-form-edit")
+        .mouseenter(function() {
+          $(this).next(".description").show();
+        })
+        .mouseleave(function() {
+          $(this).next(".description").hide();
+        });
+
     }
   };
 })(jQuery);
