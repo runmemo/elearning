@@ -133,6 +133,11 @@ function user_extra_form_alter(&$form, &$form_state, $form_id) {
     $form['field_name']['#prefix'] = '<div class="user-form-name-wrapper">';
     $form['field_surname']['#suffix'] = '</div>';
     $form['#attributes']['class'][] = 'profile-edit-form';
+    // searches the #validate array for the current_pass validation function, and removes it
+    $key = array_search('user_validate_current_pass', $form['#validate']);
+    if ($key !== FALSE) {
+      unset($form['#validate'][$key]);
+    }
     $form['picture']['#access'] = FALSE;
     $form['timezone']['#access'] = FALSE;
     $form['timezone']['#access'] = FALSE;
