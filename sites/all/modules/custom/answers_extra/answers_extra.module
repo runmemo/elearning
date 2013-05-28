@@ -6,13 +6,13 @@
  */
 
 /**
- * Implements hook_init()
+ * Implements hook_init() to redirect from answer nodes to questions.
  */
 function answers_extra_init() {
   $node = menu_get_object('node', 1);
   if($node && $node->type == 'answer') {
     $question = entity_metadata_wrapper('node', $node);
-    drupal_goto("node/".$question->field_answer_question->value()->nid, array('fragment' => "answer-".$node->nid), '302');   
+    drupal_goto('node/' . $question->field_answer_question->raw(), array('fragment' => "answer-".$node->nid), '302');   
   }
 }
 
@@ -39,7 +39,7 @@ function answers_extra_views_api() {
 }
 
 /**
- * Implements hook_block_info()
+ * Implements hook_block_info().
  */
 function answers_extra_block_info() {
   $block['question_answers'] = array(
@@ -50,7 +50,7 @@ function answers_extra_block_info() {
 }
 
 /**
- * Implementation of hook_block_view()
+ * Implements of hook_block_view().
  */
 function answers_extra_block_view($delta = '') {
   $content = array();
