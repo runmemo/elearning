@@ -223,7 +223,8 @@ function common_tools_preprocess_link(&$variables) {
     $last_class = array_pop($classes);
     if ($last_class == 'menuparent') {
       if ($variables['path'] == 'user') {
-        $variables['text'] = $variables['text'] . '<span class="user-menu-userpoints">(' . userpoints_get_current_points($GLOBALS['user']->uid, 'all') . ')</span>';
+        $link = l('(' . userpoints_get_current_points($GLOBALS['user']->uid, 'all') . ')', 'user', array('attributes' => array('class' => array('user-menu-userpoints')), 'fragment' => 'qt-user_profile_tab-ui-tabs3'));
+        $variables['text'] = $variables['text'] . $link ;
         $variables['options']['attributes']['class'][] = 'user-menu-parent';
       }
       $variables['theme_hook_suggestions'][] = 'menu_link__superfish_link_parent';

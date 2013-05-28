@@ -78,7 +78,6 @@ features[menu_custom][] = main-menu
 features[menu_custom][] = menu-footer-menu
 features[menu_custom][] = user-menu
 features[menu_links][] = user-menu:user
-features[menu_links][] = user-menu:user?history=1
 features[menu_links][] = user-menu:user/login
 features[menu_links][] = user-menu:user/logout
 features[views_view][] = course_teachers

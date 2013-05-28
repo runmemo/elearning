@@ -101,9 +101,9 @@
         });
         return result;
       }
-      var names = ['history', 'page', 'sort', 'order'];
+      var names = ['page', 'sort', 'order'];
       if (urlparam(names)) {
-        $('a[href="#qt-user_profile_tab-ui-tabs3"]', context)[0].click();
+        window.location = $('a[href="#qt-user_profile_tab-ui-tabs3"]', context).attr('href');
       }
     }
   };
