@@ -68,12 +68,12 @@ function best_answer_extra_preprocess_flag(&$vars) {
       // don't allow other users to mark answers as best.
       $vars['link_href'] = FALSE;
       $is_flagged = $flag->is_flagged($nid, $question->uid);
-      $vars['flag_classes'] .= $is_flagged ? ' best-answer-marked' : ' best-answer-hidden';
+      $vars['flag_classes_array'][] = $is_flagged ? 'best-answer-marked' : 'best-answer-hidden';
       $vars['title'] = $is_flagged ? t('Author selected this answer as best') : '';
     }
     else {
       //Add class for identifying question author
-      $vars['flag_classes'] .= ' question-author';
+      $vars['flag_classes_array'][] = 'question-author';
     }
   }
 }

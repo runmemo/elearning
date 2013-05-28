@@ -26,5 +26,4 @@ function elearning_alpha_preprocess_flag__abuse_content(&$vars) {
   $vars['flag_classes_array'][] = 'ctools-use-modal';
   $vars['flag_classes_array'][] = 'ctools-modal-common-modal-style';
   $vars['flag_classes_array'][] = 'ctools-modal-abuse';
-  $vars['flag_classes'] = implode(' ', $vars['flag_classes_array']); 
 }

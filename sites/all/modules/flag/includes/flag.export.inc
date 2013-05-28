@@ -240,33 +240,66 @@ function flag_update_page($flag) {
  *   The flag object passed by reference.
  */
 function flag_update_export(&$flag) {
-  // Set the API version to 1 by default.
+  // Set the API version to 1 by default: version 1 did not explicitly define
+  // the API version.
   if (empty($flag->api_version)) {
     $flag->api_version = 1;
   }
 
-  // Loop through the classes until the API version is up to date.
-  while ($flag->api_version != FLAG_API_VERSION) {
-    // Get the class for the update.
-    $update_class = 'FlagUpdate_' . $flag->api_version;
+  // Get all our update classes.
+  // This is not terribly graceful, but the alternative is declaring our classes
+  // explicitly, or registering them with the Drupal autoloader and then running
+  // a database query, which seems a waste of space given we only ever need
+  // these here.
+  $classes = get_declared_classes();
+  $update_handlers = array();
+  foreach ($classes as $class) {
+    // Any class whose name is of the form 'FlagUpdate_foo' is one of ours, we
+    // assume. Should this prove problematic, we can add use of reflection here.
+    if (substr($class, 0, 11) == 'FlagUpdate_') {
+      // @todo: change this to work with the static class when we drop support
+      // for PHP 5.2: see commit d5b517.
+      $update_handler = new $class;
+      // Cast to string, as decimals as array keys seem to be rounded down to
+      // ints, WTF PHP?
+      $version = (string) $update_handler->old_api_version;
+
+      $update_handlers[$version] = $update_handler;
+    }
+  }
+  // Sort the classes by old version number.
+  uksort($update_handlers, 'version_compare');
+
+  // Work through each update handler.
+  foreach ($update_handlers as $old_api_version => $update_handler) {
+    // Skip update classes that are older than our current flag.
+    if (version_compare($old_api_version, $flag->api_version, '<')) {
+      continue;
+    }
 
     // Run the update and change the API version on the flag.
-    // @todo: change this to work with the static class when we drop support for
-    // PHP 5.2: see commit d5b517.
-    $update_handler = new $update_class;
     $update_handler->update($flag);
     $flag->api_version = $update_handler->new_api_version;
   }
 }
 
 /**
- * Flag update class for API 1 flags.
+ * Flag update class for API 1 flags -> API 2.
+ *
+ * The class name after the prefix is immaterial, though we follow the Drupal
+ * system update convention whereby the number here is what we update to.
  */
-class FlagUpdate_1 {
+class FlagUpdate_2 {
+
   /**
-   * The API version this class updates a flag to.
+   * The API version this class updates a flag from.
    *
    * @todo: Change this to a class constant when we drop support for PHP 5.2.
+   */
+  public $old_api_version = 1;
+
+  /**
+   * The API version this class updates a flag to.
    */
   public $new_api_version = 2;
 
@@ -284,9 +317,11 @@ class FlagUpdate_1 {
 }
 
 /**
- * Flag update class for API 2 flags.
+ * Flag update class for API 2 flags -> API 3.
  */
-class FlagUpdate_2 {
+class FlagUpdate_3 {
+
+  public $old_api_version = 2;
   public $new_api_version = 3;
 
   static function update(&$flag) {
@@ -304,6 +339,30 @@ class FlagUpdate_2 {
     // @see flag_form()
     if (isset($flag->roles)) {
       $flag->import_roles = $flag->roles;
+    }
+
+    // Update show_on_teaser property to use new view mode settings.
+    if (!empty($flag->show_on_teaser)) {
+      $flag->show_in_links['teaser'] = TRUE;
+      unset($flag->show_on_teaser);
+    }
+
+    // Update show_on_page property to use new view mode settings.
+    if (!empty($flag->show_on_page)) {
+      $flag->show_in_links['full'] = TRUE;
+      unset($flag->show_on_page);
+    }
+
+    // Update show_on_comment and show_on_entity properties to use new view
+    // mode settings. Since the old logic was to show on all view modes, do that.
+    if (!empty($flag->show_on_entity) || !empty($flag->show_on_comment)) {
+      if ($entity_info = entity_get_info($flag->entity_type)) {
+        foreach ($entity_info['view modes'] as $view_mode => $value) {
+          $flag->show_in_links[$view_mode] = TRUE;
+        }
+      }
+
+      unset($flag->show_on_entity, $flag->show_on_comment);
     }
   }
 }
