@@ -81,7 +81,8 @@ function theme_course_outline_book_admin_table($variables) {
     // Generate item's HTML for the text part.
     if ($form[$key]['#item']['has_children'] == 1) {
       $text = '<div class="outline-unit">' . $form[$key]['title']['#value'] . '</div>';
-    } else {
+    } 
+    else {
       $node = node_load($form[$key]['nid']['#value']);
       $text = course_outline_item_title($node);
     }
@@ -122,11 +123,8 @@ function course_outline_block_view($delta = '') {
   switch ($delta) {
     case 'course_outline':
       drupal_add_js(drupal_get_path('module', 'course_outline') . '/course_outline.js');
-      $node = menu_get_object();
-      $edit_access = node_access('update', $node) ? TRUE : FALSE;
-      $block['content'][] = drupal_get_form('course_outline_block_view_form', $course_node, $book, $edit_access);
+      $block['content'][] = drupal_get_form('course_outline_block_view_form', $course_node);
       break;
-
     case 'course_certificate' :
       // Build certificate block.
       $certificate = array();
@@ -162,38 +160,31 @@ function course_outline_block_view($delta = '') {
  * Processes book array, related to the course and builds HTML with course outline.
  * 
  * @param $book
- *   book's items array
+ *   Book's items array.
  * 
  * @return 
- *   course outline block HTML
+ *   Course outline block HTML.
  */
 function course_outline_get_course_items($book) {
   $tree = menu_tree_all_data($book['menu_name'], NULL, 3);
   $tree_key = key($tree);
-  
-  course_outline_preprocess_tree($tree);
-  
   $tree_output = menu_tree_output($tree);
-  // Alter titles and classes of the links in the tree.
-  course_outline_preprocess_tree($tree_output);
   
-  return drupal_render($tree_output);
+// Alter titles and classes of the links in the tree.
+  course_outline_preprocess_tree($tree_output);
+  return $tree_output;
 }
 
 /**
  * Form for viewing and editing course outline items.
  * 
- * @param $course_node
- *   first object of the course's hierarchy
- * @param $book
- *   course's book
- * @param $edit_access
- *   access rights for editing node
+ * @param $course
+ *   Node that represents the course.
  * 
  * @return
  *   form's array
  */
-function course_outline_block_view_form($form, &$form_state, $course_node = FALSE, $book = array(), $edit_access = NULL) {
+function course_outline_block_view_form($form, &$form_state, $course) {
   $form = array();
   
   $form['#prefix'] = '<div id="course-outline-form-wrapper">';
@@ -211,9 +202,9 @@ function course_outline_block_view_form($form, &$form_state, $course_node = FALS
     case 'edit':
       // Build book admin table form, using custom theme function.
       include_once drupal_get_path('module', 'book') . '/book.admin.inc';
-      $form['#node'] = $course_node;
+      $form['#node'] = $course;
       $form_state['storage']['edit_access'] = $edit_access;
-      _book_admin_table($course_node, $form);
+      _book_admin_table($course, $form);
       if (isset($form['table']) && !empty($form['table'])) {
         $form['table']['#theme'] = 'course_outline_book_admin_table';
       }
@@ -230,15 +221,12 @@ function course_outline_block_view_form($form, &$form_state, $course_node = FALS
       return $form;
     case 'view':
       // Build course outline.
-      $form['view'] = array(
-        '#markup' => course_outline_get_course_items($book),
-      );
-      
+      $form['view'] = course_outline_get_course_items($course->book);
       $form['submit'] = array(
         '#type' => 'submit',
         '#value' => t('Edit'),
         '#name' => 'view',
-        '#access' => $edit_access,
+        '#access' => node_access('update', $course) ? TRUE : FALSE,
         '#ajax' => array(
           'callback' => 'course_outline_form_submit_callback',
           'wrapper' => 'course-outline-form-wrapper',
@@ -273,10 +261,11 @@ function course_outline_block_view_form_validate($form, &$form_state) {
 function course_outline_block_view_form_submit($form, &$form_state) {
   if ($form_state['triggering_element']['#name'] == 'view') {
     $form_state['step'] = 'edit';
-  } elseif ($form_state['triggering_element']['#name'] == 'edit') {
-    // validate the form
+  } 
+  elseif ($form_state['triggering_element']['#name'] == 'edit') {
+    // Validate the form.
     drupal_validate_form('course_outline_block_view_form', $form, $form_state);
-    // if there are errors, return the form to display the error messages
+    // If there are errors, return the form to display the error messages.
     if (form_get_errors()) {
       $form_state['rebuild'] = TRUE;
       return $form;
@@ -304,23 +293,24 @@ function course_outline_block_view_form_submit($form, &$form_state) {
 }
 
 /**
- * Adds content type specific html to leafs of course menu
- * @param array $tree represents menu tree
- * @return boolean
+ * Adds content type specific html to leafs of course menu.
+ * 
+ * @param array $tree 
+ *   Rendered menu tree, @see menu_tree_output().
  */
 function course_outline_preprocess_tree(&$tree) {
   global $user;
   $tree_key = key($tree);
   if (isset($tree[$tree_key]['#below'])) {
-    $tree = $tree[$tree_key]['#below']; // remove the top level
+    $tree = $tree[$tree_key]['#below']; // Remove the top level.
     $flag = flag_get_flag('course_item_complete');
     foreach ($tree as &$unit) {
       if (!isset($unit['#below'])) {
         continue;
       }
-      // change theme for unit level links
+      // Change theme for unit level links.
       $unit['#theme'] = 'menu_link__course_outline_unit';
-      // for each lesson we add html to the title
+      // For each lesson we add html to the title.
       foreach ($unit['#below'] as &$item) {
         if (!isset($item['#below'])) {
           continue;
@@ -345,9 +335,13 @@ function course_outline_preprocess_tree(&$tree) {
 }
 
 /**
- * Builds title for course outline menu item
+ * Builds title for course outline menu item.
+ * 
  * @param object $node
- * @return string title for the course outline menu item
+ *   Item of the course.
+ * 
+ * @return string
+ *   Title of the course outline menu item.
  */
 function course_outline_item_title($node) {
   $title = "<span class='outline-" . str_replace('_', '-', $node->type) . "-icon'></span>";
