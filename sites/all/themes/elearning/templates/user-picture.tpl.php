@@ -13,7 +13,7 @@
  * @see template_preprocess_user_picture() for default variables.
  */
 ?>
-<div class="<?php print $size; ?>-avatar">
+<div class="<?php print $size; ?>-avatar<?php if (!empty($upload_form)) print ' js-avatar'; ?>">
   <?php 
     if (!empty($user_picture)) {
       print $user_picture; 
@@ -23,5 +23,16 @@
     <div class="author-points">
          <?php print $userpoints; ?>
     </div>
-   <?php endif; ?>
+  <?php endif; ?>
+  <?php if (!empty($upload_form)) : ?>
+    <a class="user-avatar-edit-link js-avatar-edit">
+      <?php print t('Choose photo'); ?>
+    </a>
+    <div class="js-modal"> 
+      <div class="overlay-background js-modal-out"></div>
+      <div class="upload-form-container js-modal-in">
+        <?php print render($upload_form); ?>
+      </div>
+    </div>
+  <?php endif; ?>
 </div>
