@@ -3,6 +3,58 @@
  * Contains less css for course outline
  */
 
+.block-course-outline .course-outline-form {
+  #book-outline {
+    min-width: 0;
+    border: 0;
+  }
+  thead, .tabledrag-toggle-weight-wrapper, .tabledrag-changed {
+    .show(none);
+  }
+  .form-type-textfield {
+    overflow: hidden;
+  }
+  .outline-unit {
+    clear: none;
+  }
+  tr {
+    .border-bottom-dotted();
+    cursor: pointer;
+    .font-bold();
+  }
+  tr.outline-unit-wrapper {
+    border: 0;
+    .tabledrag-handle {
+      height: auto;
+      .handle {
+        margin: 5px 0px 0px 11px;
+      }
+    }
+  }
+  .title-wrapper:hover {
+    background: #fff0d9;
+  }
+  td {
+    padding: 0;
+    background: #fff;
+  }
+  .ajax-progress.ajax-progress-throbber {
+    float: right;
+    padding: 12px 6px 0px 0px;
+    .throbber {
+      background: none;
+      .bg-img('progress_orange.gif');
+      .left();
+      height: 16px;
+      margin: 0;
+      width: 16px;
+    }
+  }
+  .form-submit {
+    margin-top: 10px;
+  }
+}
+
 .block-course-outline .menu {
     width: 100%;
     .menu {
@@ -34,7 +86,7 @@
     float: right;
   }
   &:hover {
-    .text-orange;
+    .text-orange();
     .icon {
        .bg-img('arrow_down_hover.png');
     }
@@ -80,7 +132,7 @@
     text-decoration: none;
     float: left;
     clear: both;
-    .font-bold;
+    .font-bold();
     width: 95%;
     color: #000000;
     .title-wrapper {
