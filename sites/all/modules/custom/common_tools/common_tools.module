@@ -258,7 +258,7 @@ function theme_menu_link__superfish_link_parent($variables) {
  */
 function common_tools_form_alter(&$form, &$form_state, $form_id) {
   // Pass the meta data (labels and description) through the t() function.
-  if (isset($form['type']) && $form['type']['#value'] . '_node_form' == $form_id) {
+  if (isset($form['type']['#value']) && $form['type']['#value'] . '_node_form' == $form_id) {
     foreach (element_children($form_state['field']) as $field) {
       // In Drupal 7 the "#language" value is set on each form field.
       if (!empty($form[$field]['#language'])) {
