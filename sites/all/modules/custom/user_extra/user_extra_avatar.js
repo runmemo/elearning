@@ -5,7 +5,7 @@
 (function($) {
   Drupal.behaviors.user_profile_picture_edit = {
     attach: function(context, settings) {
-      // show/hide "Choose photo link"
+      // Show/hide "Choose photo" link.
       $('.js-avatar').hover(
         function() {
           $('.js-avatar-edit').show();
@@ -21,23 +21,18 @@
       // Hide form for user picture.
       function upload_form_hide() {
         $('.js-modal').hide();
+        $('#js-user-avatar').html($('#upload-form-picture .default-avatar').html());
       }
-      // hide form if user clicks submit button, close icon or just clicks outside the form
-      $('.js-modal-out').click(function() {
+      // Hide form if user clicks submit button, close icon or just clicks outside the form.
+      $('.js-modal-out, .popups-close, .upload-form-submit-link').click(function() {
         upload_form_hide();
       });
-      $('.popups-close').click(function() {
-        upload_form_hide();
-      });
-      $('.upload-form-submit-link').click(function() {
-        upload_form_hide();
-      });
-      // submit upload form if user chooses picture
+      // Submit upload form if user chooses picture.
       $('#edit-file').change(function() {
         $('.upload-form-main-submit').trigger('mousedown');
       });
-      // when hovering on inputs for uploading files or deletion, add class to
-      // links, which are in front of them
+      // When hovering on inputs for uploading files or deletion, add class to
+      // links, which are in front of them.
       $('input#edit-file').hover(
         function() {
           $('.upload-link').addClass('active');
