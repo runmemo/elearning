@@ -256,10 +256,10 @@ function answers_extra_question_form($form, &$form_state) {
   }
   $question = $form_state['storage']['question'];
 
-  if (!$question || $question->type !== 'question') {
-      return $form;
+  if (!node_access("update", $question) || !$question || $question->type !== 'question') {
+    return $form;
   }
-  
+
   if (!isset($form_state['step'])) {  // page is loaded
     $form_state['step'] =  'view';
   }
@@ -370,7 +370,7 @@ function answers_extra_answer_form($form, &$form_state, $nid) {
   }
   $answer = $form_state['storage']['answer'];
 
-  if (!$answer || $answer->type !== 'answer') {
+  if (!node_access("update", $answer) || !$answer || $answer->type !== 'answer') {
     return $form;
   }
   
