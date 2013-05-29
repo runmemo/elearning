@@ -18,7 +18,7 @@
   <div<?php print $content_attributes; ?>>
     <div class="node-course-header">
       <div class="node-course-header-left grid-10 omega">
-        <?php print $provider['logo']; ?>
+        <?php if (isset($provider['logo'])) print $provider['logo']; ?>
         <div class ="node-course-provider-name">
           <h1 class="title course-title" id="page-title"><?php print $node->title; ?></h1>
           <?php if (isset($provider['name']) || isset($provider['extra'])) : ?>
