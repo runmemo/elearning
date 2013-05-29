@@ -39,6 +39,7 @@ function elearning_alpha_preprocess_node_question(&$vars) {
       'account' => $account, 
       'size' => 'tiny', 
       'show_points' => TRUE,
+      'access' => FALSE,
     )
   );
   $vars['created_formatted'] = t('@time ago', array('@time' => format_interval(REQUEST_TIME - $vars['created'], 1)));
@@ -55,7 +56,13 @@ function elearning_alpha_preprocess_node_question(&$vars) {
 function elearning_alpha_preprocess_node_open_question(&$vars) {
   $vars['display_submitted'] = FALSE;
   $account = user_load($vars['uid']);
-  $vars['user_picture'] = theme('user_picture', array('account' => $account, 'size' => 'tiny'));
+  $vars['user_picture'] = theme('user_picture', 
+      array(
+        'account' => $account, 
+        'size' => 'tiny',
+        'access' => FALSE,
+      )
+  );
   drupal_add_css(drupal_get_path('theme', 'elearning') . '/widgets/elearning_fivestar/elearning_fivestar_widget.css');
 }
 

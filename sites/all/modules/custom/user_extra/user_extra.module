@@ -181,10 +181,13 @@ function user_extra_preprocess_user_profile(&$variables) {
  */
 function user_extra_preprocess_user_picture(&$variables) {
   
+  // Add upload form to the user picture, if use has access.
+  if (isset($variables['size']) && $variables['size'] !== 'default') {
+    return;
+  }
   if (isset($variables['access']) && !$variables['access']) {
     return;
   }
-  // Add upload form to the user picture, if use has access.
   if (user_edit_access($variables['account'])) {
     drupal_add_js(drupal_get_path('module', 'user_extra') . '/user_extra_avatar.js');
     $variables['upload_form'] = drupal_get_form('profile_pic_update_form');
