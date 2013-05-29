@@ -99,18 +99,6 @@ h2 {
   margin-left: 2px;
 }
 
-.user-menu-userpoints:hover {
-  .bg-img('user-crown-hover.png');
-  background-position: top center;
-  background-repeat: no-repeat;
-}
-
-a.user-menu-parent:hover .user-menu-userpoints {
-  .bg-img('user-crown-hover.png');
-  background-position: top center;
-  background-repeat: no-repeat;
-}
-
 .arrow-up {
   width: 0;
   height: 0;
@@ -121,8 +109,8 @@ a.user-menu-parent:hover .user-menu-userpoints {
   .show(none);
 }
 
-.sf-user-menu .middle .sf-depth-2 {
-  .border-bottom-dotted(); 
+.sf-user-menu .last .sf-depth-2 {
+  border-top: 1px dotted #aeaeae;
 }
 
 .block-superfish {
@@ -155,9 +143,9 @@ a.user-menu-parent:hover .user-menu-userpoints {
           > a:link, a:visited {
             .bold(14px);
             .main-menu-link();
+            display: initial;
           }
           > a:hover {
-            color: #ffffff;
             .link();
           }
           > a:active {
@@ -167,6 +155,14 @@ a.user-menu-parent:hover .user-menu-userpoints {
         li.menuparent {
           .bg-img('superfish-menu-triangle-small.png');
           background-position: 49% 100%;
+        }
+        li.menuparent.sfHover a {
+          color: #ffffff;
+        }
+        li.menuparent.sfHover a.user-menu-userpoints {
+          .bg-img('user-crown-hover.png');
+          background-position: top center;
+          background-repeat: no-repeat;
         }
         li.menuparent.sfHover .arrow-up {
           .show(block);

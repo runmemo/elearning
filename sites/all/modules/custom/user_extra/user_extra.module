@@ -171,7 +171,19 @@ function user_extra_preprocess_user_profile(&$variables) {
   $account = $variables['elements']['#account'];
   // todo @Ilya: get rid of this after fixing issue with title from userpoints form.
   drupal_set_title(format_username($account));
-  if (user_edit_access($account)) {
+}
+
+/**
+ * Implements hook_preprocess_user_picture.
+ */
+function user_extra_preprocess_user_picture(&$variables) {
+  
+  if (isset($variables['access']) && !$variables['access']) {
+    return;
+  }
+  // Add upload form to the user picture, if use has access.
+  if (user_edit_access($variables['account'])) {
+    drupal_add_js(drupal_get_path('module', 'user_extra') . '/user_extra_avatar.js');
     $variables['upload_form'] = drupal_get_form('profile_pic_update_form');
   }
 }
@@ -196,7 +208,7 @@ function profile_pic_update_form($form, &$form_state) {
   // store user's picture in $form_state along with user ID.
   if (!isset($form_state['storage']['picture'])) {
     global $user; 
-    $form_state['storage']['picture'] = theme('user_picture', array('account' => $user));
+    $form_state['storage']['picture'] = theme('user_picture', array('account' => $user, 'access' => FALSE));
     $form_state['storage']['user'] = $user->uid;
   }
   $form = array();
@@ -261,6 +273,8 @@ function profile_pic_update_form($form, &$form_state) {
 function profile_pic_update_form_validate($form, &$form_state) {
   if ($form_state['triggering_element']['#id'] == 'edit-submit') {
     // try to save uploaded file
+    // @todo Ilya: why file is saved in validate hook?
+    // Move it to submit.
     $file = file_save_upload('file', array(
       'file_validate_is_image' => array(),
       'file_validate_extensions' => array('png gif jpg jpeg'),
@@ -294,24 +308,23 @@ function profile_pic_update_form_submit($form, &$form_state) {
   if ($form_state['triggering_element']['#id'] == 'edit-submit') {
     // if new photo is submitted save user's account with new photo
     // and update photo's representation in $form_state
+   //dvm($form_state['values']['file']);
     $file = $form_state['values']['file'];
+  //  dvm($file->uri);
     $file->status = FILE_STATUS_PERMANENT;
     file_save($file);
     $edit = array(
       'picture' => $file,
     );
-    $saved_user = user_save($user, $edit);
-    unset($form_state['values']['file']);
-    $form_state['rebuild'] = TRUE;
-    $form_state['storage']['picture'] = theme('user_picture', array('account' => $saved_user));
   } elseif ($form_state['triggering_element']['#id'] == 'edit-delete') {
     $edit = array(
       'picture_delete' => TRUE,
     );
-    user_save($user, $edit);
-    $form_state['rebuild'] = TRUE;
-    $form_state['storage']['picture'] = '<div class="default-avatar"></div>';
   }
+  $saved_user = user_save($user, $edit);
+  unset($form_state['values']['file']);
+  $form_state['rebuild'] = TRUE;
+  $form_state['storage']['picture'] = theme('user_picture', array('account' => $saved_user));
 }
 
 /**

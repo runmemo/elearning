@@ -94,6 +94,18 @@ class flag_flag {
   );
 
   /**
+   * An associative array containing textual errors that may be created during validation.
+   *
+   * The array keys should reflect the type of error being set. At this time,
+   * the only "special" behavior related to the array keys is that
+   * drupal_access_denied() is called when the key is 'access-denied' and
+   * javascript is disabled.
+   *
+   * @var array
+   */
+  var $errors = array();
+
+  /**
    * Creates a flag from a database row. Returns it.
    *
    * This is static method.
@@ -478,12 +490,18 @@ class flag_flag {
     }
 
     // Allow modules to disallow (or allow) access to flagging.
-    $access_array = module_invoke_all('flag_access', $this, $entity_id, $action, $account);
-
-    foreach ($access_array as $set_access) {
-      if (isset($set_access)) {
-        $access = $set_access;
-      }
+    // We grant access to the flag if both of the following conditions are met:
+    // - No modules say to deny access.
+    // - At least one module says to grant access.
+    // If no module specified either allow or deny, we fall back to the
+    // default access check above.
+    $module_access = module_invoke_all('flag_access', $this, $entity_id, $action, $account);
+    if (in_array(FALSE, $module_access, TRUE)) {
+      $access = FALSE;
+    }
+    elseif (in_array(TRUE, $module_access, TRUE)) {
+      // WARNING: This allows modules to bypass the default access check!
+      $access = TRUE;
     }
 
     return $access;
@@ -551,6 +569,10 @@ class flag_flag {
    * Implements access() implemented by each child class.
    *
    * @abstract
+   *
+   * @return
+   *  FALSE if access should be denied, or NULL if there is no restriction to
+   *  be made. This should NOT return TRUE.
    */
   function type_access($entity_id, $action, $account) {
     return NULL;
@@ -560,6 +582,12 @@ class flag_flag {
    * Implements access_multiple() implemented by each child class.
    *
    * @abstract
+   *
+   * @return
+   *  An array keyed by entity ids, whose values represent the access to the
+   *  corresponding entity. The access value may be FALSE if access should be
+   *  denied, or NULL (or not set) if there is no restriction to  be made. It
+   *  should NOT be TRUE.
    */
   function type_access_multiple($entity_ids, $account) {
     return array();
@@ -580,10 +608,44 @@ class flag_flag {
   }
 
   /**
-   * Returns TRUE if the flag is configured to show the flag-link using hook_link.
-   * Derived classes are likely to implement this.
+   * Utility function: Checks whether a flag applies to a certain type, and
+   * possibly subtype, of entity.
+   *
+   * @param $entity_type
+   *   The type of entity being checked, usually "node".
+   * @param $content_subtype
+   *   The subtype (node type) being checked.
+   *
+   * @return
+   *   TRUE if the flag is enabled for this type and subtype.
    */
-  function uses_hook_link($teaser) {
+  function access_entity_enabled($entity_type, $content_subtype = NULL) {
+   $entity_type_matches = ($this->entity_type == $entity_type);
+   $sub_type_matches = FALSE;
+   if (!isset($content_subtype) || !count($this->types)) {
+     // Subtype automatically matches if we're not asked about it,
+     // or if the flag applies to all subtypes.
+     $sub_type_matches = TRUE;
+   }
+   else {
+     $sub_type_matches = in_array($content_subtype, $this->types);
+   }
+   return $entity_type_matches && $sub_type_matches;
+ }
+
+  /**
+   * Determine whether the flag should show a flag link in entity links.
+   *
+   * Derived classes are likely to implement this.
+   *
+   * @param $view_mode
+   *   The view mode of the entity being displayed.
+   *
+   * @return
+   *   A boolean indicating whether the flag link is to be shown in entity
+   *   links.
+   */
+  function shows_in_entity_links($view_mode) {
     return FALSE;
   }
 
@@ -615,7 +677,7 @@ class flag_flag {
    *   applicable to the item, etc.), TRUE otherwise.
    */
   function flag($action, $entity_id, $account = NULL, $skip_permission_check = FALSE, $flagging = NULL) {
-     // Get the user.
+    // Get the user.
     if (!isset($account)) {
       $account = $GLOBALS['user'];
     }
@@ -626,6 +688,7 @@ class flag_flag {
     // Check access and applicability.
     if (!$skip_permission_check) {
       if (!$this->access($entity_id, $action, $account)) {
+        $this->errors['access-denied'] = t('You are not allowed to flag, or unflag, this content.');
         // User has no permission to flag/unflag this object.
         return FALSE;
       }
@@ -634,14 +697,19 @@ class flag_flag {
       // We are skipping permission checks. However, at a minimum we must make
       // sure the flag applies to this entity type:
       if (!$this->applies_to_entity_id($entity_id)) {
+        $this->errors['entity-type'] = t('This flag does not apply to this entity type.');
         return FALSE;
       }
     }
 
+    if (($this->errors = module_invoke_all('flag_validate', $action, $this, $entity_id, $account, $skip_permission_check, $flagging))) {
+      return FALSE;
+    }
+
     // Clear various caches; We don't want code running after us to report
     // wrong counts or false flaggings.
-    flag_get_counts(NULL, NULL, TRUE);
-    flag_get_user_flags(NULL, NULL, NULL, NULL, TRUE);
+    drupal_static_reset('flag_get_counts');
+    drupal_static_reset('flag_get_user_flags');
     drupal_static_reset('flag_get_entity_flags');
 
     // Find out which user id to use.
@@ -655,6 +723,7 @@ class flag_flag {
       $sid = flag_get_sid($uid, TRUE);
       // Anonymous users must always have a session id.
       if ($sid == 0 && $account->uid == 0) {
+        $this->errors['session'] = t('Internal error: You are anonymous but you have no session ID.');
         return FALSE;
       }
     }
@@ -717,16 +786,22 @@ class flag_flag {
         $this->_flag_anonymous($entity_id);
       }
       if (!$flagged) {
+        // The entity is unflagged. By definition there is no flagging entity,
+        // but we may have been passed one in to save.
         if (!isset($flagging)) {
           // Construct a new flagging object if we don't have one.
           $flagging = $this->new_flagging($entity_id, $uid, $sid);
         }
+        // Save the flagging entity (just our table).
         $flagging_id = $this->_flag($entity_id, $uid, $sid);
+        // The _flag() method is a plain DB record writer, so it's a bit
+        // antiquated. We have to explicitly get our new ID out.
+        $flagging->flagging_id = $flagging_id;
         $this->_increase_count($entity_id);
         // We're writing out a flagging entity even when we aren't passed one
         // (e.g., when flagging via JavaScript toggle links); in this case
         // Field API will assign the fields their default values.
-        $this->_insert_flagging($flagging, $entity_id, $flagging_id);
+        $this->_insert_flagging($flagging);
         module_invoke_all('flag_flag', $this, $entity_id, $account, $flagging);
         // Invoke Rules event.
         if (module_exists('rules')) {
@@ -766,8 +841,7 @@ class flag_flag {
    * operation is also accompanied by some bookkeeping (calling hooks, updating
    * counters) or access control. These tasks are handled by the flag() method.
    */
-  private function _insert_flagging($flagging, $entity_id, $flagging_id) {
-    $flagging->flagging_id = $flagging_id;
+  private function _insert_flagging($flagging) {
     field_attach_presave('flagging', $flagging);
     field_attach_insert('flagging', $flagging);
   }
@@ -1020,8 +1094,12 @@ class flag_flag {
       $sid = flag_get_sid($uid);
     }
     return db_select('flagging', 'fc')->fields('fc', array('flagging_id'))
-      ->condition('fid', $this->fid)->condition('uid', $uid)->condition('sid', $sid)
-      ->countQuery()->execute()->fetchField();
+      ->condition('fid', $this->fid)
+      ->condition('uid', $uid)
+      ->condition('sid', $sid)
+      ->countQuery()
+      ->execute()
+      ->fetchField();
   }
 
   /**
@@ -1114,6 +1192,13 @@ class flag_flag {
     $flag_action->entity_type = $this->entity_type;
     $flag_action->entity_id = $entity_id;
     return $flag_action;
+  }
+
+  /**
+   * Returns an array of errors set during validation.
+   */
+  function get_errors() {
+    return $this->errors;
   }
 
   /**
@@ -1359,14 +1444,30 @@ class flag_flag {
   }
 
   /**
-   * Renders a flag/unflag link. This is a wrapper around theme('flag') that,
-   * in Drupal 6, easily channels the call to the right template file.
+   * Renders a flag/unflag link.
    *
-   * For parameters docmentation, see theme_flag().
+   * This is a wrapper around theme('flag') that channels the call to the right
+   * template file.
+   *
+   * @param $action
+   *  The action the link is about to carry out, either "flag" or "unflag".
+   * @param $entity_id
+   *  The ID of the object to flag.
+   * @param $variables = array()
+   *  An array of further variables to pass to theme('flag'). For the full list
+   *  of parameters, see flag.tpl.php. Of particular interest:
+   *  - after_flagging: Set to TRUE if this flag link is being displayed as the result
+   *    of a flagging action.
+   *  - errors: An array of error messages.
+   *
+   * @return
+   *  The HTML for the flag link.
    */
-  function theme($action, $entity_id, $after_flagging = FALSE) {
+  function theme($action, $entity_id, $variables = array()) {
     static $js_added = array();
     global $user;
+
+    $after_flagging = !empty($variables['after_flagging']);
 
     // If the flagging user is anonymous, set a boolean for the benefit of
     // JavaScript code. Currently, only our "anti-crawlers" mechanism uses it.
@@ -1391,12 +1492,21 @@ class flag_flag {
       }
       if (!isset($js_added[$this->name . '_' . $entity_id])) {
         $js_added[$this->name . '_' . $entity_id] = TRUE;
-        $js_template = theme($this->theme_suggestions(), array('flag' => $this, 'action' => $js_action, 'entity_id' => $entity_id, 'after_flagging' => $after_flagging));
+        $js_template = theme($this->theme_suggestions(), array(
+          'flag' => $this,
+          'action' => $js_action,
+          'entity_id' => $entity_id,
+          'after_flagging' => $after_flagging,
+        ));
         drupal_add_js(array('flag' => array('templates' => array($this->name . '_' . $entity_id => $js_template))), 'setting');
       }
     }
 
-    return theme($this->theme_suggestions(), array('flag' => $this, 'action' => $action, 'entity_id' => $entity_id, 'after_flagging' => $after_flagging));
+    return theme($this->theme_suggestions(), array(
+      'flag' => $this,
+      'action' => $action,
+      'entity_id' => $entity_id,
+    ) + $variables);
   }
 
   /**
@@ -1405,8 +1515,16 @@ class flag_flag {
   function theme_suggestions() {
     $suggestions = array();
     $suggestions[] = 'flag__' . $this->name;
+    $suggestions[] = 'flag__' . $this->link_type;
     $suggestions[] = 'flag';
     return $suggestions;
+  }
+
+  /**
+   * A shortcut function to output the link URL.
+   */
+  function _flag_url($path, $fragment = NULL, $absolute = TRUE) {
+    return url($path, array('fragment' => $fragment, 'absolute' => $absolute));
   }
 }
 
