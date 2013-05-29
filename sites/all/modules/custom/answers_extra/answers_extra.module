@@ -247,10 +247,7 @@ function answers_extra_userpoints($op, &$params) {
  */
 function answers_extra_form_question_node_form_alter(&$form, &$form_state) {
   // hide not required fields.
-  $form['field_best_answer']['#prefix'] = '<div style="display: none;">';
-  $form['field_best_answer']['#suffix'] = '</div>';
-  $form['field_notify_p']['#prefix'] = '<div style="display: none;">';
-  $form['field_notify_p']['#suffix'] = '</div>';
+  $form['field_notify_p']['#access'] = FALSE;
 }
 
 /**
@@ -259,6 +256,7 @@ function answers_extra_form_question_node_form_alter(&$form, &$form_state) {
 function answers_extra_strongarm_alter(&$items) {
   $items['node_options_question']->value = array('status', 'revision');
 }
+
 /**
  * Form for inline answer editing.
  */
