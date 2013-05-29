@@ -248,7 +248,11 @@ function answers_extra_userpoints($op, &$params) {
 function answers_extra_form_question_node_form_alter(&$form, &$form_state) {
   // hide not required fields.
   $form['field_notify_p']['#access'] = FALSE;
+  
+  // hide format selection.
+  $form['body'][LANGUAGE_NONE][0]['format']['#access'] = FALSE;
 }
+
 
 /**
  * Implements hook_strongarm_alter().
