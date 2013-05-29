@@ -14,14 +14,16 @@
  */
 ?>
 <div class="<?php print $size; ?>-avatar<?php if (!empty($upload_form)) print ' js-avatar'; ?>">
-  <?php 
+  <div id="js-user-avatar">
+    <?php
     if (!empty($user_picture)) {
-      print $user_picture; 
+      print $user_picture;
     }
-  ?>
+    ?>
+  </div>
   <?php if (isset($userpoints)): ?>
     <div class="author-points">
-         <?php print $userpoints; ?>
+      <?php print $userpoints; ?>
     </div>
   <?php endif; ?>
   <?php if (!empty($upload_form)) : ?>
