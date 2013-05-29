@@ -16,7 +16,7 @@
         <h1><?php print $title ?></h1>
       <?php endif; ?>
       <?php print $follow_flag; ?>
-      <?php print $edit_link; ?>
+      <?php print render($edit_link); ?>
     </div>
     <div class="node-question-body grid-11 alpha omega" id ='ae-question-form-wrapper'>
       <?php if (isset($content['field_rating_widget'])) print render($content['field_rating_widget']); ?>

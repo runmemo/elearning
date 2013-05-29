@@ -43,8 +43,9 @@ function elearning_alpha_preprocess_node_question(&$vars) {
   );
   $vars['created_formatted'] = t('@time ago', array('@time' => format_interval(REQUEST_TIME - $vars['created'], 1)));
   $vars['follow_flag'] = flag_create_link('subscriptions_reference_flag', $vars['nid']);
-  watchdog('view_mode', $vars['view_mode']);
-  $vars['edit_link'] = render(drupal_get_form('answers_extra_question_form', $vars['node'], $vars['view_mode']));
+ // watchdog('view_mode', $vars['view_mode']);
+ // $node = $vars['node'];
+  $vars['edit_link'] = drupal_get_form('answers_extra_question_form');
 }
 
 /**

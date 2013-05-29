@@ -6,6 +6,10 @@
  */
 include_once 'lesson.features.inc';
 
+function lesson_quicktabs_alter(&$quicktabs) {
+ // print_nice($quicktabs);
+}
+
 /**
  * Implements hook_init()
  */
