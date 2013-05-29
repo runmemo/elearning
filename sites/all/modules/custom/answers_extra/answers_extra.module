@@ -242,121 +242,23 @@ function answers_extra_userpoints($op, &$params) {
   }
 }
 
-
 /**
- * Form for inline question editing.
+ * Implements hook_form_FORM_ID_alter().
  */
-function answers_extra_question_form($form, &$form_state) {
-  $form = array();
-  $form['#prefix'] = "<div id='node-question-form'>";
-  $form['#suffix'] = '</div>';
-
-  if (!isset($form_state['storage']['question'])) {
-    $form_state['storage']['question'] = menu_get_object('node');
-  }
-  $question = $form_state['storage']['question'];
-
-  if (!node_access("update", $question) || !$question || $question->type !== 'question') {
-    return $form;
-  }
-
-  if (!isset($form_state['step'])) {  // page is loaded
-    $form_state['step'] =  'view';
-  }
-   
-  // build form depending on it's current mode
-  switch ($form_state['step']) {
-    case 'view':
-      $form['view']['edit'] = array(
-        '#name' => 'edit',
-        '#type' => 'submit',
-        '#value' => t('Edit'),
-        '#submit' => array('answer_extra_question_form_edit'),
-        '#ajax' => array(
-          'callback' => 'answers_extra_question_form_js',
-          'wrapper' => 'node-question-form',
-          'progress' => array('message' => ''),
-        ),
-      );
-      break;
-    
-    case 'edit' :
-      // build form for editing
-      $question_wrapper = entity_metadata_wrapper('node', $question);
-      $question_body = $question_wrapper->body->value();
-     
-      $form['edit']['title'] = array(
-        '#type' => 'textfield',
-        '#default_value' => $question->title
-      );
-     
-      $form['edit']['body'] = array(
-        '#type' => 'text_format',
-        '#format' => 'filtered_html',
-        '#default_value' => $question_body['value']
-      );
-      
-      $form['edit']['save'] = array(
-        '#name' => 'save',
-        '#type' => 'submit',
-        '#submit' => array('answers_extra_question_form_save'),
-        '#value' => t('Save'),
-        '#ajax' => array(
-          'callback' => 'answers_extra_question_form_js',
-          'wrapper' => 'node-question-form',
-          'progress' => array('message' => ''),
-        ),
-      );
-      break;
-    
-    default :
-      $form['bad_state'] = array(
-        '#type' => 'markup',
-        '#markup' => t('State @mode is not supported by this form.', array('@mode' => $mode)),
-      );
-  }
-
-  return $form;
+function answers_extra_form_question_node_form_alter(&$form, &$form_state) {
+  // hide not required fields.
+  $form['field_best_answer']['#prefix'] = '<div style="display: none;">';
+  $form['field_best_answer']['#suffix'] = '</div>';
+  $form['field_notify_p']['#prefix'] = '<div style="display: none;">';
+  $form['field_notify_p']['#suffix'] = '</div>';
 }
 
 /**
- * Form submit for edit mode inline question editing.
+ * Implements hook_strongarm_alter().
  */
-function answer_extra_question_form_edit($form, &$form_state) {
-  $form_state['step'] = 'edit';
-  $form_state['rebuild'] = TRUE;
+function answers_extra_strongarm_alter(&$items) {
+  $items['node_options_question']->value = array('status', 'revision');
 }
-
-/**
- * Implements submit function for the question editing form
- */
-function answers_extra_question_form_save($form, &$form_state) {
-  $question = $form_state['storage']['question'];
-  $question->title = $form_state['values']['title'];
-  $question->body[$question->language][0]['value'] = $form_state['values']['body']['value'];
-  $question->body[$question->language][0]['format'] = 'filtered_html';
-  node_save($question);
-
-  $form_state['step'] = 'view';
-  $form_state['rebuild'] = TRUE;
-
-  // Temporary workaround for showing updated content to user.
-  // @todo : Find some another way to refresh node.
-  ctools_include('ajax');
-  ctools_add_js('ajax-responder');
-  $commands[] = ctools_ajax_command_reload();
-  print ajax_render($commands);
-  exit;
-
-}
-
-/**
- * Callback for question edit js submit
- */
-function answers_extra_question_form_js($form, &$form_state) {
-  return $form;
-}
-
 /**
  * Form for inline answer editing.
  */
