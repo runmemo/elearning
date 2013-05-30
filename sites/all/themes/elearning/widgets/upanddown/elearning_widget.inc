@@ -4,9 +4,6 @@
  * @file
  * Elearning Up Down Widget.
  */
-
-define('QA_RATE_POINTS', 100);
-
 /**
  * Plugin decleration.
  */
@@ -63,8 +60,7 @@ function elearning_widget_alter_template_vars($template_type, &$variables) {
   }
 
   // check, whether the current user has minimum required points and its not the node author.
-  $current_user_points = userpoints_get_current_points($user->uid);
-  if(($current_user_points <= QA_RATE_POINTS) && ($node->uid <> $user->uid)) {
+  if(!user_has_min_voting_points() && ($node->uid <> $user->uid)) {
     $variables['title_text_up'] = t('You need to have !points points to be able to vote up this !content_type', array('!points' => QA_RATE_POINTS, '!content_type' => $node ? $node->type : t('content')));
     $variables['title_text_down'] = t('You need to have !points points to be able to vote down this !content_type', array('!points' => QA_RATE_POINTS, '!content_type' => $node ? $node->type : t('content')));    
   }

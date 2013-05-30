@@ -6,6 +6,7 @@
  */
 
 define('QA_EDIT_POINTS', 500);
+define('QA_RATE_POINTS', 100);
 
 /**
  * Implements hook_init() to redirect from answer nodes to questions.
@@ -292,6 +293,7 @@ function answers_extra_answer_form($form, &$form_state, $nid) {
         '#type' => 'submit',
         '#value' => t('Edit'),
         '#submit' => array('answers_extra_answer_form_edit'),
+        '#attributes' => array('class' => array('ae-answer-form-edit')),
         '#ajax' => array(
           'callback' => 'answers_extra_answer_form_js',
           'wrapper' => "node-answer-form-$nid",
@@ -372,7 +374,7 @@ function answers_extra_answer_form_js($form, &$form_state) {
 }
 
 /**
- *  Implements of hook_node_access()
+ *  Implements hook_node_access()
  */
 function answers_extra_node_access($node, $op, $account) {
   if ($op == 'update' && ($node->type === 'question' || $node->type === 'answer')) {
@@ -393,4 +395,19 @@ function answers_extra_node_access($node, $op, $account) {
 
     return NODE_ACCESS_IGNORE;
   }
+}
+
+/**
+  * Helper function which determines current user has minimum required points for commenting nodes.
+  */
+
+function user_has_min_voting_points() {
+  global $user;
+  $user_points = userpoints_get_current_points($user->uid);
+
+  if($user_points >= QA_RATE_POINTS) {
+    return TRUE;
+  }
+
+  return FALSE;
 }
