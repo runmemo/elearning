@@ -8,6 +8,7 @@
  * More details on following approach can be read at : http://www.impressivewebs.com/pure-css-tool-tips/ or http://csstooltip.com/
  */
 
+.flag-subscriptions-reference-flag .flag,
 .view-feedback-comments .views-inline-comment-field a.comment-link,
 .star a,
 .oq-answer-form-submit,
@@ -24,6 +25,7 @@
   overflow: visible !important;
 }
 
+.flag-subscriptions-reference-flag .flag:hover:after,
 .view-feedback-comments .views-inline-comment-field a.comment-link:hover:after,
 .star a:hover:after,
 .oq-answer-form-submit:hover:after,
@@ -47,6 +49,7 @@
   .tooltip();
 }
 
+.flag-subscriptions-reference-flag .flag:hover:before,
 .view-feedback-comments .views-inline-comment-field a.comment-link:hover:before,
 .star a:hover:before,
 .oq-answer-form-submit:hover:before,
@@ -77,6 +80,11 @@
   left: 140%;
 }
 
+.flag-subscriptions-reference-flag .flag:hover:after {
+  left: -100%;
+  bottom: 28px;
+}
+
 .flag-abuse-content .flag:hover:after,
 .flag-opaf-useful .flag:hover:after,
 .flag-best-answer .best-answer-marked:hover:after,
@@ -95,6 +103,7 @@
 }
 
 // For some elements tts required to show hovertips on top of the element
+.flag-subscriptions-reference-flag .flag:hover:before,
 .view-feedback-comments .views-inline-comment-field a.comment-link:hover:before,
 .star a:hover:before {
   border-color: #FFFFFF transparent transparent;
