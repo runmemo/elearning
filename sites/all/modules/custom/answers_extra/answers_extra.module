@@ -5,7 +5,7 @@
  * answers_extra.module
  */
 
-define('QA_ACCESS_POINTS', 500);
+define('QA_EDIT_POINTS', 500);
 
 /**
  * Implements hook_init() to redirect from answer nodes to questions.
@@ -387,7 +387,7 @@ function answers_extra_node_access($node, $op, $account) {
   
     // check current user has minimum points to access the node edit.
     $points = userpoints_get_current_points($account->uid);
-    if($points >= QA_ACCESS_POINTS) {
+    if($points >= QA_EDIT_POINTS) {
       return NODE_ACCESS_ALLOW;
     }
 
