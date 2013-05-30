@@ -418,7 +418,20 @@ function user_has_min_voting_points() {
  * Implementation of hook_node_view().
  */
 function answers_extra_node_view($node, $view_mode, $langcode) {
+
   if ($node->type == 'question') {
     drupal_add_js(drupal_get_path('module', 'answers_extra') . '/answers_extra.js');
+  }
+
+  if($node->type == 'answer') {
+    global $user;
+    // check if user has 'teacher' role or he is author of answer.
+    if(($node->uid == $user->uid) || in_array('teacher', array_values($user->roles))) {
+      drupal_add_js(array('answersExtra' => array("commentAccess-{$node->nid}" => TRUE)), 'setting');
+    }
+    else {
+      // Otherwise comment link visibility will be depend on user points.
+      drupal_add_js(array('answersExtra' => array("commentAccess-{$node->nid}" => user_has_min_voting_points())), 'setting');
+    }
   }
 }
