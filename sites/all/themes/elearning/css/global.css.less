@@ -1564,6 +1564,7 @@ h2 {
   }
 }
 
+.ae-answer-form-edit,
 .oq-review-form-edit {
   &, &:hover {
     .button-icon();
@@ -1575,6 +1576,13 @@ h2 {
   }
 }
 
+.ae-answer-form-edit {
+  &, &:hover {
+    margin-top: 0 !important;
+  }
+}
+
+.ae-answer-form-edit.progress-disabled,
 .oq-review-form-edit.progress-disabled {
   color: transparent;
   .bg-img('progress_orange.gif');
@@ -2215,4 +2223,16 @@ h2 {
       margin-top: 5px;
     }
   }
+}
+
+/** Css for href edit links **/
+.edit-link {
+  .bg-img('answer-edit.png');
+    .show(block);
+    .left();
+    overflow: hidden;
+    color: transparent;
+    width: 18px;
+    height: 18px;
+    margin: 12px 0px 0px 11px;
 }

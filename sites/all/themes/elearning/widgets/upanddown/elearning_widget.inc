@@ -58,4 +58,11 @@ function elearning_widget_alter_template_vars($template_type, &$variables) {
     $variables['title_text_up'] = t('You cannot vote up your own !content_type', array('!content_type' => $node ? $node->type : t('content')));
     $variables['title_text_down'] = t('You cannot vote down your own !content_type', array('!content_type' => $node ? $node->type : t('content')));
   }
+
+  // check, whether the current user has minimum required points and its not the node author.
+  if(!user_has_min_voting_points() && ($node->uid <> $user->uid)) {
+    $variables['vote_acess'] = FALSE;
+    $variables['title_text_up'] = t('You need to have !points points to be able to vote up this !content_type', array('!points' => QA_RATE_POINTS, '!content_type' => $node ? $node->type : t('content')));
+    $variables['title_text_down'] = t('You need to have !points points to be able to vote down this !content_type', array('!points' => QA_RATE_POINTS, '!content_type' => $node ? $node->type : t('content')));    
+  }
 }
