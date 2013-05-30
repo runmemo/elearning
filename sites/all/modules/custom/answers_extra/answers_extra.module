@@ -271,6 +271,7 @@ function answers_extra_answer_form($form, &$form_state, $nid) {
   $form = array();
   $form['#prefix'] = "<div id='node-answer-form-$nid'>";
   $form['#suffix'] = '</div>';
+  $form['#attributes'] = array('class' => 'ae_answer_form');
 
   if (!isset($form_state['storage']['answer'])) {
     $form_state['storage']['answer'] = node_load($nid);
@@ -294,6 +295,7 @@ function answers_extra_answer_form($form, &$form_state, $nid) {
         '#value' => t('Edit'),
         '#submit' => array('answers_extra_answer_form_edit'),
         '#attributes' => array('class' => array('ae-answer-form-edit')),
+        '#suffix' => '<div class="description">'.t('Edit').'</div>',
         '#ajax' => array(
           'callback' => 'answers_extra_answer_form_js',
           'wrapper' => "node-answer-form-$nid",
@@ -410,4 +412,13 @@ function user_has_min_voting_points() {
   }
 
   return FALSE;
+}
+
+/**
+ * Implementation of hook_node_view().
+ */
+function answers_extra_node_view($node, $view_mode, $langcode) {
+  if ($node->type == 'question') {
+    drupal_add_js(drupal_get_path('module', 'answers_extra') . '/answers_extra.js');
+  }
 }

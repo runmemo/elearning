@@ -8,6 +8,7 @@
  * More details on following approach can be read at : http://www.impressivewebs.com/pure-css-tool-tips/ or http://csstooltip.com/
  */
 
+.edit-link,
 .flag-subscriptions-reference-flag .flag,
 .view-feedback-comments .views-inline-comment-field a.comment-link,
 .star a,
@@ -25,6 +26,7 @@
   overflow: visible !important;
 }
 
+.edit-link:hover:after,
 .flag-subscriptions-reference-flag .flag:hover:after,
 .view-feedback-comments .views-inline-comment-field a.comment-link:hover:after,
 .star a:hover:after,
@@ -49,6 +51,7 @@
   .tooltip();
 }
 
+.edit-link:hover:before,
 .flag-subscriptions-reference-flag .flag:hover:before,
 .view-feedback-comments .views-inline-comment-field a.comment-link:hover:before,
 .star a:hover:before,
@@ -80,6 +83,7 @@
   left: 140%;
 }
 
+.edit-link:hover:after,
 .flag-subscriptions-reference-flag .flag:hover:after {
   left: -100%;
   bottom: 28px;
@@ -103,6 +107,7 @@
 }
 
 // For some elements tts required to show hovertips on top of the element
+.edit-link:hover:before,
 .flag-subscriptions-reference-flag .flag:hover:before,
 .view-feedback-comments .views-inline-comment-field a.comment-link:hover:before,
 .star a:hover:before {
@@ -136,9 +141,10 @@ div.fivestar-widget .star {
 /*
  * Add hover tooltip to Edit icon on OQ2.
  */
+.ae_answer_form .description,
 .oq-review .description {
-  .show(none);
-  position: absolute;
+  .hide();
+  position: relative;
   right: -15px;
   padding: 15px;
   background: #fdfdfd;
@@ -163,4 +169,10 @@ div.fivestar-widget .star {
     top: 48px;
     left: 65%;
   }
+}
+
+.ae_answer_form .description {
+  float: right;
+  top: -63px;
+  right: -15px;
 }
