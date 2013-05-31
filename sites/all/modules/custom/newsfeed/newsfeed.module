@@ -1,0 +1,91 @@
+<?php
+
+/**
+ * @file
+ * Code for the Newsfeed feature.
+ */
+include_once 'newsfeed.features.inc';
+
+/**
+ * Implements hook_ctools_plugin_api().
+ */
+function newsfeed_ctools_plugin_api() {
+  list($module, $api) = func_get_args();
+  if ($module == "strongarm" && $api == "strongarm") {
+    return array("version" => "1");
+  }
+  if ($module == 'message_notify' && $api == 'notifier') {
+    return array('version' => 1);
+  }
+}
+
+/**
+ * Implements hook_views_api().
+ */
+function newsfeed_views_api() {
+  return array("api" => "3.0");
+}
+
+/**
+ * Implements hook_ctools_plugin_directory().
+ */
+function newsfeed_ctools_plugin_directory($owner, $plugin_type) {
+  if ($owner == 'message_notify' && $plugin_type == 'notifier') {
+    return 'plugins/notifier/internal';
+  }
+}
+
+/**
+ * Implements hook_node_insert().
+ */
+function newsfeed_node_insert($node) {
+  if ($node->type == 'answer') {
+    // Notify all question subscribers if new answer is posted.
+    $author = user_load($node->uid);
+    $answer = entity_metadata_wrapper('node', $node);
+    // Assign every message to admin first.
+    $message = message_create('subscriptions_notification', array('uid' => 1));
+    $wrapper = entity_metadata_wrapper('message', $message);
+    // Load question, in order to pass it to message_subscribe_send_message()
+    // and get all question subscibers.
+    $question = node_load($answer->field_answer_question->raw());
+    $msg = t('User !user added !answer to the !question.', array(
+      '!user' => l(format_username($author), 'user/' . $author->uid),
+      '!answer' => l(t('answer'), 'node/' . $answer->field_answer_question->raw(), array('fragment' => 'answer-' . $node->nid)),
+      '!question' => t('question') . ': ' . l('"' . $answer->field_answer_question->title->raw() . '"', 'node/' . $answer->field_answer_question->nid->raw())));
+    $wrapper->field_message_body->set(array('value' => $msg, 'format' => 'filtered_html'));
+    // Add parameters to save message for every subscriber.
+    $notify_options = array(
+      'internal' => array(
+        'save on success' => TRUE
+      )
+    );
+    $subscribe_options = array(
+      'save message' => FALSE,
+      'author' => $node->uid,
+    );
+    message_subscribe_send_message('node', $question, $message, $notify_options, $subscribe_options);
+  }
+}
+
+/**
+ * Implements hook_message_subscribe_get_subscribers_alter().
+ * 
+ * Adds 'internal' notifier in order to save every message.
+ */
+function newsfeed_message_subscribe_get_subscribers_alter(&$uids, $values) {
+  if (empty($uids) || is_null($notifier = message_notify_get_notifier('internal'))) {
+    return;
+  }
+  foreach ($uids as $uid => $options) {
+    // Unset node author from receivers arrray.
+    if (isset($values['subscribe_options']['author']) && $values['subscribe_options']['author'] == $uid) {
+      unset($uids[$uid]);
+      continue;
+    }
+    // Add internal notifier if it's not added yet.
+    if (!isset($options['notifiers']['internal'])) {
+      $uids[$uid]['notifiers']['internal'] = 'internal';
+    }
+  }
+}
