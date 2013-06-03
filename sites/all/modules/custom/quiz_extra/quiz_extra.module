@@ -1,0 +1,88 @@
+<?php
+
+/**
+ * @file 
+ * quiz_extra.module
+ */
+
+/**
+ * Implements hook_menu_alter().
+ * @param type $items
+ */
+
+include_once 'quiz_extra.features.inc';
+
+function quiz_extra_menu_alter(&$items) {
+  $items['node/%node/take']['page callback'] = 'quiz_take_extra';  
+}
+
+/**
+ * Primary quiz-taking view on 'Take' tab.
+ */
+function quiz_take_extra($node) {
+
+  drupal_add_js(drupal_get_path('module', 'quiz_extra') . '/quiz_extra.js');
+
+  //drupal_alter('quiz_take', $node);
+  if (isset($node->rendered_content)) {
+    return $node->rendered_content;
+  }
+  $to_be_rendered = quiz_take_quiz($node);
+  if(!empty($_SESSION['quiz_' . $node->nid])) { // we are not on result page
+    // add customized stats.
+    $to_be_rendered['stats'] = array(
+      '#markup' => theme('quiz_stats', array('node' => $node)),
+      '#weight' => 1,
+    );
+  }
+
+  // alter the weight for progress provided by quiz.module.
+  $to_be_rendered['progress']['#weight'] = 2;
+
+  return drupal_render($to_be_rendered);
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function quiz_extra_form_quiz_question_answering_form_alter(&$form, &$form_state) {
+  unset($form['tries[answer]']['#title']);
+}
+
+/**
+ * Implements hook_theme().
+ */
+function quiz_extra_theme($existing, $type, $theme, $path) {
+  return array(
+    'quiz_stats' => array(
+      'variables' => array('node' => NULL),
+      'template' => 'quiz-stats',
+    ),
+  );
+}
+
+/**
+ * Theme the stats on the views page
+ *
+ * @param $node
+ *   The quiz node
+ */
+function template_preprocess_quiz_stats(&$vars) {
+  $node = $vars['node'];
+  if ($node->show_attempt_stats) {
+    $takes = $node->takes == 0 ? t('Unlimited') : $node->takes;
+    $stats[] = array(
+      'title' => t('Attempts'),
+      'data' => $takes,
+    );
+  }
+  if (!empty($node->pass_rate)) {
+    $stats[] = array(
+      'title' => t('Pass rate'),
+      'data' => $node->pass_rate . ' %',
+    );
+  }
+
+  $vars['stats'] = $stats;
+}
+
