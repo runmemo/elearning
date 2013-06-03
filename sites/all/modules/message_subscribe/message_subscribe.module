@@ -339,7 +339,7 @@ function message_subscribe_get_basic_context($entity_type, $entity, $subscribe_o
  *   the user.
  *   - "notifiers": Array with the Message notifier name plugins.
  *
- * @see flag_get_content_flags()
+ * @see flag_get_entity_flags()
  */
 function message_subscribe_message_subscribe_get_subscribers(Message $message, $subscribe_options = array(), $context = array()) {
   $uids = array();
@@ -369,12 +369,12 @@ function message_subscribe_message_subscribe_get_subscribers(Message $message, $
     }
 
     // Query all the entity IDs inside the given flags. We don't use
-    // flag_get_content_flags() as we want to get all the flaggings of an
+    // flag_get_entity_flags() as we want to get all the flaggings of an
     // entity-type in a single query.
-    $query = db_select('flag_content', 'fc')
+    $query = db_select('flagging', 'fc')
       ->fields('fc')
-      ->condition('content_type', $entity_type)
-      ->condition('content_id', $entity_ids, 'IN')
+      ->condition('entity_type', $entity_type)
+      ->condition('entity_id', $entity_ids, 'IN')
       ->condition('fid', array_keys($fids), 'IN')
       ->condition('uid', $subscribe_options['last uid'], '>')
       ->orderBy('uid', 'ASC');
@@ -410,23 +410,21 @@ function message_subscribe_message_subscribe_get_subscribers(Message $message, $
  * Return Flags realted to message subscribe using a name convention --
  * the flag name should start with "subscribe_".
  *
- * @param $content_type
+ * @param $entity_type
  *   Optional. The type of content for which to load the flags. Usually 'node'.
  * @param $content_subtype
  *   Optional. The node type for which to load the flags.
  * @param $account
  *   Optional. The user accont to filter available flags. If not set, all
  *   flags for will this node will be returned.
- * @param $reset
- *   Optional. Reset the internal query cache.
  *
  * @return $flags
  *   An array of the structure [fid] = flag_object.
  *
  * @see flag_get_flags()
  */
-function message_subscribe_flag_get_flags($content_type = NULL, $content_subtype = NULL, $account = NULL, $reset = FALSE) {
-  $flags = flag_get_flags($content_type, $content_subtype, $account, $reset);
+function message_subscribe_flag_get_flags($entity_type = NULL, $content_subtype = NULL, $account = NULL) {
+  $flags = flag_get_flags($entity_type, $content_subtype, $account);
   $ms_flags = array();
   $prefix = variable_get('message_subscribe_flag_prefix', 'subscribe') . '_';
   foreach ($flags as $flag_name => $flag) {
@@ -446,10 +444,11 @@ function message_subscribe_flag_default_flags() {
   $flags = array();
   // Exported flag: "Content".
   $flags['subscribe_node'] = array(
-    'content_type' => 'node',
+    'entity_type' => 'node',
     'title' => 'Content',
-    'global' => '0',
+    'global' => 0,
     'types' => array(),
+    'errors' => array(),
     'flag_short' => 'Subscribe',
     'flag_long' => '',
     'flag_message' => 'You are now subscribed to this item.',
@@ -458,12 +457,12 @@ function message_subscribe_flag_default_flags() {
     'unflag_message' => 'You are no longer subscribed to this item.',
     'unflag_denied_text' => '',
     'link_type' => 'toggle',
-    'roles' => array(
+    'import_roles' => array(
       'flag' => array(
-        0 => '2',
+        0 => 2,
       ),
       'unflag' => array(
-        0 => '2',
+        0 => 2,
       ),
     ),
     'weight' => 0,
@@ -475,17 +474,22 @@ function message_subscribe_flag_default_flags() {
     'i18n' => 0,
     'module' => 'message_subscribe',
     'locked' => array(
-      0 => 'name',
+      'name' => 'name',
     ),
-    'api_version' => 2,
+    'api_version' => 3,
     'status' => FALSE,
+    'show_in_links' => array(
+      'teaser' => TRUE,
+      'full' => TRUE,
+    ),
   );
   // Exported flag: "Terms".
   $flags['subscribe_term'] = array(
-    'content_type' => 'taxonomy_term',
+    'entity_type' => 'taxonomy_term',
     'title' => 'Terms',
-    'global' => '0',
+    'global' => 0,
     'types' => array(),
+    'errors' => array(),
     'flag_short' => 'Subscribe',
     'flag_long' => '',
     'flag_message' => 'You are now subscribed to this item.',
@@ -494,12 +498,12 @@ function message_subscribe_flag_default_flags() {
     'unflag_message' => 'You are no longer subscribed to this item.',
     'unflag_denied_text' => '',
     'link_type' => 'toggle',
-    'roles' => array(
+    'import_roles' => array(
       'flag' => array(
-        0 => '2',
+        0 => 2,
       ),
       'unflag' => array(
-        0 => '2',
+        0 => 2,
       ),
     ),
     'weight' => 0,
@@ -508,17 +512,23 @@ function message_subscribe_flag_default_flags() {
     'access_author' => '',
     'module' => 'message_subscribe',
     'locked' => array(
-      0 => 'name',
+      'name' => 'name',
     ),
-    'api_version' => 2,
+    'api_version' => 3,
     'status' => FALSE,
+    'show_in_links' => array(
+      'full' => TRUE,
+      'diff_standard' => TRUE,
+      'token' => TRUE,
+    ),
   );
   // Exported flag: "Users".
   $flags['subscribe_user'] = array(
-    'content_type' => 'user',
+    'entity_type' => 'user',
     'title' => 'Users',
-    'global' => '0',
+    'global' => 0,
     'types' => array(),
+    'errors' => array(),
     'flag_short' => 'Subscribe',
     'flag_long' => '',
     'flag_message' => 'You are now subscribed to this item.',
@@ -527,12 +537,12 @@ function message_subscribe_flag_default_flags() {
     'unflag_message' => 'You are no longer subscribed to this item.',
     'unflag_denied_text' => '',
     'link_type' => 'toggle',
-    'roles' => array(
+    'import_roles' => array(
       'flag' => array(
-        0 => '2',
+        0 => 2,
       ),
       'unflag' => array(
-        0 => '2',
+        0 => 2,
       ),
     ),
     'weight' => 0,
@@ -542,19 +552,20 @@ function message_subscribe_flag_default_flags() {
     'access_uid' => '',
     'module' => 'message_subscribe',
     'locked' => array(
-      0 => 'name',
+      'name' => 'name',
     ),
-    'api_version' => 2,
+    'api_version' => 3,
     'status' => FALSE,
   );
 
   if (module_exists('og')) {
     // Exported flag: "Groups".
     $flags['subscribe_og'] = array(
-      'content_type' => 'node',
+      'entity_type' => 'node',
       'title' => 'Groups',
-      'global' => '0',
+      'global' => 0,
       'types' => array(),
+      'errors' => array(),
       'flag_short' => 'Subscribe',
       'flag_long' => '',
       'flag_message' => 'You are now subscribed to this item.',
@@ -563,7 +574,7 @@ function message_subscribe_flag_default_flags() {
       'unflag_message' => 'You are no longer subscribed to this item.',
       'unflag_denied_text' => '',
       'link_type' => 'toggle',
-      'roles' => array(
+      'import_roles' => array(
         'flag' => array(
           0 => '2',
         ),
@@ -580,9 +591,9 @@ function message_subscribe_flag_default_flags() {
       'i18n' => 0,
       'module' => 'message_subscribe',
       'locked' => array(
-        0 => 'name',
+        'name' => 'name',
       ),
-      'api_version' => 2,
+      'api_version' => 3,
       'status' => FALSE,
     );
   }

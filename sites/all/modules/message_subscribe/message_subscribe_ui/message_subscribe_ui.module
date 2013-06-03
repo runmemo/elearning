@@ -105,7 +105,7 @@ function message_subscribe_ui_tab_title($account, $flag_name = NULL) {
   }
 
   $flag = flag_get_flag($flag_name);
-  $flaggings = flag_get_user_flags($flag->content_type, NULL, $account->uid);
+  $flaggings = flag_get_user_flags($flag->entity_type, NULL, $account->uid);
 
   $count = !empty($flaggings[$flag_name]) ? count($flaggings[$flag_name]) : 0;
   $params = array(
@@ -135,7 +135,7 @@ function message_subscribe_ui_tab($account, $flag_name = NULL) {
 
   $flag = flag_get_flag($flag_name);
   $prefix = variable_get('message_subscribe_flag_prefix', 'subscribe') . '_';
-  list($view_name, $display_id) = explode(':', variable_get('message_' . $flag->name, $prefix . $flag->content_type . ':default'));
+  list($view_name, $display_id) = explode(':', variable_get('message_' . $flag->name, $prefix . $flag->entity_type . ':default'));
 
   if (!$view = views_get_view($view_name)) {
     // View doesn't exist.
