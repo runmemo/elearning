@@ -6,8 +6,8 @@
   Drupal.behaviors.answers_extra = {
     attach: function(context, settings) {
 
-      // Hover tooltip on OQ2 edit form.
-      $(".ae-answer-form-edit")
+      // Hover tooltip on Answer edit link.
+      $(".answer-form-edit")
         .mouseenter(function() {
           $(this).next(".description").show();
         })
