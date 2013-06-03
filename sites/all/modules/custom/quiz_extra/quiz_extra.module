@@ -5,13 +5,12 @@
  * quiz_extra.module
  */
 
+include_once 'quiz_extra.features.inc';
+
 /**
  * Implements hook_menu_alter().
  * @param type $items
  */
-
-include_once 'quiz_extra.features.inc';
-
 function quiz_extra_menu_alter(&$items) {
   $items['node/%node/take']['page callback'] = 'quiz_take_extra';  
 }
