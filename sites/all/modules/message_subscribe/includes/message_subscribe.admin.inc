@@ -31,7 +31,7 @@ function message_subscribe_admin_settings() {
       '#title' => t('View for flag <em>@title</em>', $params),
       '#description' => t('Select the View that should be used for flag @title.', $params),
       '#options' => views_get_views_as_options(),
-      '#default_value' => variable_get($name, $prefix . $flag->content_type . ':default'),
+      '#default_value' => variable_get($name, $prefix . $flag->entity_type . ':default'),
       '#required' => TRUE,
     );
   }

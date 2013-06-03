@@ -27,7 +27,22 @@ function course_menu() {
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
+  $items['admin/course/help'] = array(
+   'title' => 'Course help',
+   'page callback' => 'course_help_index_page',
+   'access arguments' => array('view advanced help index'),
+   'weight' => 9,
+ );
   return $items;
+}
+
+function course_help_index_page() {
+  $output = theme('advanced_help_topic', array(
+    'module' => 'course',
+    'topic' => 'introduction',
+  ));
+  $output .= '&nbsp;' . t('Index of the help page for course functionality.');
+  return $output;
 }
 
 /**
@@ -572,7 +587,9 @@ function course_leave_modal($js = NULL, $user = NULL, $course = NULL) {
  *  Implements of hook_node_access()
  */
 function course_node_access($node, $op, $account) {
-  if (($op == 'update' || $op == 'delete') && course_is_item_node($node)) {
+  // @todo allow teachers to create new course, lessson, etc.
+  if (($op == 'update' || $op == 'delete') &&
+      (course_is_item_node($node) || in_array($node->type, array('course', 'unit')))) {
     if (course_is_teacher($node, $account)) {
       return NODE_ACCESS_ALLOW;
     }

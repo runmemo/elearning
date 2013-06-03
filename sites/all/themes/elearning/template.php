@@ -44,11 +44,13 @@ function elearning_css_alter(&$css) {
   if (array_key_exists('sites/all/themes/omega/omega/css/formalize.css', $css)) {
     $css['sites/all/themes/omega/omega/css/formalize.css']['data'] = $theme_path . '/css/formalize.css';
   }
-  // delete system.menus.css
+      
+  // Delete system.menus.css
   unset($css[drupal_get_path('module', 'system') . '/system.menus.css']);
   // Remove fivestar.css file because we use our own widget.
   unset($css[drupal_get_path('module', 'fivestar') . '/css/fivestar.css']);
   unset($css[drupal_get_path('module', 'ctools') . '/css/modal.css']);
+  
 }
 
 /**
@@ -106,4 +108,21 @@ function elearning_preprocess_certificate_certificate(&$variables) {
     $field_signature = !empty($signature_file) ? theme_image_style(array('style_name' => 'certificate_signature', 'path' => $signature_file['uri'], 'width' => $signature_file['image_dimensions']['width'], 'height' => $signature_file['image_dimensions']['height'])) : '';
     $variables['course']['teacher_signature'] = !empty($field_signature) ? render($field_signature) : '';
   }
+}
+
+function elearning_process_advanced_help_popup(&$variables) {
+  
+  // Get current themes path.
+  $theme_path = drupal_get_path('theme', variable_get('theme_default', NULL));
+  $css = $variables['css'];
+  $advanced_help_css = drupal_get_path('module', 'advanced_help') . '/help-popup.css';
+  if(array_key_exists($advanced_help_css, $css)) {
+   unset($css[$advanced_help_css]);
+   // http://localhost/coursehub.dev/themes/seven/style.css?mnmn0m
+    $css = drupal_add_css($theme_path . '/css/help.css');
+    
+   
+    
+  }
+  $variables['styles'] = drupal_get_css($css);
 }

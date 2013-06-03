@@ -114,91 +114,94 @@ h2 {
 }
 
 .block-superfish {
-  .right();
-  @media @mobile { 
-    .left();
-  } 
+  clear: both;
   width: auto;
-    .content {
-      select {
+  .left();
+  @media @narrow { 
+    .right();
+    clear:none;
+  } 
+  .content {
+    select {
+      .main-menu-border();
+      width:auto;
+      .bold(14px);
+      .main-menu-link();
+      background: 0;
+      height: auto;
+      option {
+        color: #000;
+      }
+      @media @normal {
+        border-image: url(../images/line-main-menu.png) 0 3 stretch;
+      }
+    }
+    select:hover {
+      color: #ffffff;
+      .bold(14px);
+    }
+    ul.menu {
+      width: auto;
+      > li.menuparent, 
+      > li.sf-no-children {
         .main-menu-border();
-        width:auto;
-        .bold(14px);
-        .main-menu-link();
-        background: 0;
-        height: auto;
-        option {
-          color: #000;
-        }
-      }
-      select:hover {
-        color: #ffffff;
-        .bold(14px);
-      }
-      ul.menu {
         width: auto;
-        > li.menuparent, > li.sf-no-children {
-          .main-menu-border();
-          width: auto;
-          > a:link, a:visited {
+        > a {
+          &:link, &:visited {
             .bold(14px);
             .main-menu-link();
             display: initial;
           }
-          > a:hover {
-            .link();
-          }
-          > a:active {
-            .link();
-          }
+          &:hover, &:active { .link(); }
+        }  
+      }
+      li.menuparent {
+        .bg-img('superfish-menu-triangle-small.png');
+        background-position: 49% 87%;
+      }
+      li.menuparent.sfHover a {
+        color: #ffffff;
+      }
+      li.menuparent.sfHover a.user-menu-userpoints {
+        .bg-img('user-crown-hover.png');
+        background-position: top center;
+        background-repeat: no-repeat;
+      }
+      li.menuparent.sfHover .arrow-up {
+        .show(block);
+      }
+      li.menuparent ul {
+        background: white;
+        border-radius: 2px;
+        margin-top: 7px;
+        /* use !important in order to override superfish css */
+        padding: 0 !important;
+        -moz-box-shadow: 0px 1px 3px 0px #888;
+        -webkit-box-shadow: 0px 1px 3px 0px #888;
+        box-shadow: 0px 1px 3px 0px #888;
+        border-top: none;
+        a:link, a:visited {
+          color: #383838;
+          .link();
         }
-        li.menuparent {
-          .bg-img('superfish-menu-triangle-small.png');
-          background-position: 49% 100%;
+        a:hover {
+          .caption-orange();
+          .link();
+           background: #fff4ee;
         }
-        li.menuparent.sfHover a {
-          color: #ffffff;
+        a:active {
+          .caption-orange();
+          .link();
         }
-        li.menuparent.sfHover a.user-menu-userpoints {
-          .bg-img('user-crown-hover.png');
-          background-position: top center;
-          background-repeat: no-repeat;
+        li a.sf-depth-2 {
+          .bold(14px);
+          padding: 5px 5px 10px 10px;
+          margin: 0px 5px 5px 5px;
         }
-        li.menuparent.sfHover .arrow-up {
-          .show(block);
+        li.first a.sf-depth-2 {
+          margin-top: 5px;
         }
-        li.menuparent ul {
-          background: white;
-          border-radius: 2px;
-          margin-top: 7px;
-          /* use !important in order to override superfish css */
-          padding: 0 !important;
-          -moz-box-shadow: 0px 1px 3px 0px #888;
-          -webkit-box-shadow: 0px 1px 3px 0px #888;
-          box-shadow: 0px 1px 3px 0px #888;
-          border-top: none;
-            a:link, a:visited {
-              color: #383838;
-              .link();
-            }
-            a:hover {
-              .caption-orange();
-              .link();
-               background: #fff4ee;
-            }
-            a:active {
-              .caption-orange();
-              .link();
-            }
-            li a.sf-depth-2 {
-              .bold(14px);
-              padding: 5px 5px 10px 10px;
-              margin: 0px 5px 5px 5px;
-            }
-            li.first a.sf-depth-2 {
-              margin-top: 5px;
-            }
-        }
+      }
     }
   }
 }

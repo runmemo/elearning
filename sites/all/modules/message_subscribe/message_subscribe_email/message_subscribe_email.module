@@ -7,10 +7,10 @@
 /**
  * Implements hook_flag_access().
  */
-function message_subscribe_email_flag_access($flag, $content_id, $action, $account) {
+function message_subscribe_email_flag_access($flag, $entity_id, $action, $account) {
   if (strpos($flag->name, 'email_') === 0) {
     // Get the other flags on that same content.
-    $user_flags = flag_get_user_flags($flag->content_type, $content_id);
+    $user_flags = flag_get_user_flags($flag->entity_type, $entity_id);
 
     $name = str_replace('email_', '', $flag->name);
     $prefix = variable_get('message_subscribe_flag_prefix', 'subscribe') . '_';
@@ -21,21 +21,40 @@ function message_subscribe_email_flag_access($flag, $content_id, $action, $accou
 }
 
 /**
- * Implements hook_flag().
+ * Implements hook_flag_flag().
  *
  * When flagging subscription flags, check if user wants email notifications
  * and flag the user for emails accordingly.
  */
-function message_subscribe_email_flag($action, $flag, $content_id, $account) {
+function message_subscribe_email_flag_flag($flag, $entity_id, $account, $flagging) {
   $prefix = variable_get('message_subscribe_flag_prefix', 'subscribe') . '_';
   if (strpos($flag->name, $prefix) === 0) {
     // The flag is a subscription flag.
     $wrapper = entity_metadata_wrapper('user', $account);
-    if ($wrapper->message_subscribe_email->value() || $action == 'unflag') {
+    if ($wrapper->message_subscribe_email->value()) {
       // User wants to use email for the subscription.
-      // Flag or unflag user for emailing according to action taken.
+      // Flag user for emailing.
       $name = str_replace($prefix, '', $flag->name);
-      flag($action, 'email_' . $name, $content_id, $account);
+      flag('flag', 'email_' . $name, $entity_id, $account);
+    }
+  }
+}
+
+/**
+ * Implements hook_flag_unflag().
+ *
+ * When flagging subscription flags, check if user wants email notifications
+ * and flag the user for emails accordingly.
+ */
+function message_subscribe_email_flag_unflag($flag, $entity_id, $account, $flagging) {
+  $prefix = variable_get('message_subscribe_flag_prefix', 'subscribe') . '_';
+  if (strpos($flag->name, $prefix) === 0) {
+    // The flag is a subscription flag.
+    $wrapper = entity_metadata_wrapper('user', $account);
+    if ($wrapper->message_subscribe_email->value()) {
+      // Unflag user for emailing.
+      $name = str_replace($prefix, '', $flag->name);
+      flag('unflag', 'email_' . $name, $entity_id, $account);
     }
   }
 }
@@ -47,23 +66,21 @@ function message_subscribe_email_flag($action, $flag, $content_id, $account) {
  *
  * The flag name should start with "email_".
  *
- * @param $content_type
+ * @param $entity_type
  *   Optional. The type of content for which to load the flags. Usually 'node'.
  * @param $content_subtype
  *   Optional. The node type for which to load the flags.
  * @param $account
  *   Optional. The user accont to filter available flags. If not set, all
  *   flags for will this node will be returned.
- * @param $reset
- *   Optional. Reset the internal query cache.
  *
  * @return $flags
  *   An array of the structure [fid] = flag_object.
  *
  * @see flag_get_flags()
  */
-function message_subscribe_email_flag_get_flags($content_type = NULL, $content_subtype = NULL, $account = NULL, $reset = FALSE) {
-  $flags = flag_get_flags($content_type, $content_subtype, $account, $reset);
+function message_subscribe_email_flag_get_flags($entity_type = NULL, $content_subtype = NULL, $account = NULL) {
+  $flags = flag_get_flags($entity_type, $content_subtype, $account);
   $email_flags = array();
   foreach ($flags as $flag_name => $flag) {
     // Check that the flag is using name convention.
@@ -93,7 +110,7 @@ function message_subscribe_email_message_subscribe_get_subscribers_alter(&$uids,
     $flag_ids[] = $flag->fid;
   }
 
-  $result = db_select('flag_content', 'f')
+  $result = db_select('flagging', 'f')
     ->fields('f', array('uid'))
     ->condition('fid', $flag_ids, 'IN')
     ->condition('uid', array_keys($uids), 'IN')
@@ -122,10 +139,11 @@ function message_subscribe_email_flag_default_flags() {
   $flags = array();
   // Exported flag: "Email node".
   $flags['email_node'] = array(
-    'content_type' => 'node',
+    'entity_type' => 'node',
     'title' => 'Email content',
-    'global' => '0',
+    'global' => 0,
     'types' => array(),
+    'errors' => array(),
     'flag_short' => 'Send Email',
     'flag_long' => '',
     'flag_message' => '',
@@ -134,12 +152,12 @@ function message_subscribe_email_flag_default_flags() {
     'unflag_message' => '',
     'unflag_denied_text' => '',
     'link_type' => 'toggle',
-    'roles' => array(
+    'import_roles' => array(
       'flag' => array(
-        0 => '2',
+        0 => 2,
       ),
       'unflag' => array(
-        0 => '2',
+        0 => 2,
       ),
     ),
     'weight' => 0,
@@ -151,17 +169,18 @@ function message_subscribe_email_flag_default_flags() {
     'i18n' => 0,
     'module' => 'message_subscribe_email',
     'locked' => array(
-      0 => 'name',
+      'name' => 'name',
     ),
-    'api_version' => 2,
+    'api_version' => 3,
     'status' => FALSE,
   );
   // Exported flag: "Email term".
   $flags['email_term'] = array(
-    'content_type' => 'taxonomy_term',
+    'entity_type' => 'taxonomy_term',
     'title' => 'Email term',
-    'global' => '0',
+    'global' => 0,
     'types' => array(),
+    'errors' => array(),
     'flag_short' => 'Send Email',
     'flag_long' => '',
     'flag_message' => '',
@@ -170,12 +189,12 @@ function message_subscribe_email_flag_default_flags() {
     'unflag_message' => '',
     'unflag_denied_text' => '',
     'link_type' => 'toggle',
-    'roles' => array(
+    'import_roles' => array(
       'flag' => array(
-        0 => '2',
+        0 => 2,
       ),
       'unflag' => array(
-        0 => '2',
+        0 => 2,
       ),
     ),
     'weight' => 0,
@@ -184,17 +203,18 @@ function message_subscribe_email_flag_default_flags() {
     'access_author' => '',
     'module' => 'message_subscribe_email',
     'locked' => array(
-      0 => 'name',
+      'name' => 'name',
     ),
-    'api_version' => 2,
+    'api_version' => 3,
     'status' => FALSE,
   );
   // Exported flag: "Email user".
   $flags['email_user'] = array(
-    'content_type' => 'user',
+    'entity_type' => 'user',
     'title' => 'Email user',
-    'global' => '0',
+    'global' => 0,
     'types' => array(),
+    'errors' => array(),
     'flag_short' => 'Send Email',
     'flag_long' => '',
     'flag_message' => '',
@@ -203,12 +223,12 @@ function message_subscribe_email_flag_default_flags() {
     'unflag_message' => '',
     'unflag_denied_text' => '',
     'link_type' => 'toggle',
-    'roles' => array(
+    'import_roles' => array(
       'flag' => array(
-        0 => '2',
+        0 => 2,
       ),
       'unflag' => array(
-        0 => '2',
+        0 => 2,
       ),
     ),
     'weight' => 0,
@@ -218,9 +238,9 @@ function message_subscribe_email_flag_default_flags() {
     'access_uid' => '',
     'module' => 'message_subscribe_email',
     'locked' => array(
-      0 => 'name',
+      'name' => 'name',
     ),
-    'api_version' => 2,
+    'api_version' => 3,
     'status' => FALSE,
   );
 
@@ -228,10 +248,11 @@ function message_subscribe_email_flag_default_flags() {
   if (module_exists('og')) {
     // Exported flag: "Email groups".
     $flags['email_og'] = array(
-      'content_type' => 'node',
+      'entity_type' => 'node',
       'title' => 'Email groups',
-      'global' => '0',
+      'global' => 0,
       'types' => array(),
+      'errors' => array(),
       'flag_short' => 'Send Email',
       'flag_long' => '',
       'flag_message' => 'You will now recieve emails about this item.',
@@ -240,12 +261,12 @@ function message_subscribe_email_flag_default_flags() {
       'unflag_message' => 'You will no longer recieve emails about this item.',
       'unflag_denied_text' => '',
       'link_type' => 'toggle',
-      'roles' => array(
+      'import_roles' => array(
         'flag' => array(
-          0 => '2',
+          0 => 2,
         ),
         'unflag' => array(
-          0 => '2',
+          0 => 2,
         ),
       ),
       'weight' => 0,
@@ -257,9 +278,9 @@ function message_subscribe_email_flag_default_flags() {
       'i18n' => 0,
       'module' => 'message_subscribe_email',
       'locked' => array(
-        0 => 'name',
+        'name' => 'name',
       ),
-      'api_version' => 2,
+      'api_version' => 3,
       'status' => FALSE,
     );
   }
