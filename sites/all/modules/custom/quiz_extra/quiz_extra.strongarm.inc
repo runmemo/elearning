@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * test.strongarm.inc
+ * quiz_extra.strongarm.inc
  */
 
 /**
  * Implements hook_strongarm().
  */
-function test_strongarm() {
+function quiz_extra_strongarm() {
   $export = array();
 
   $strongarm = new stdClass();
