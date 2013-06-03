@@ -374,3 +374,26 @@
   background-position: 40% 48%;
 }
 
+/** Mixin for generating css arrow **/
+.arrow(@direction, @border-size: 0, @border-color: inherit) {
+  border: solid;
+  border-width: @border-size;
+}
+
+.arrow(@direction, @border-size: 0, @border-color: inherit) when (@direction = top) {
+  border-color: transparent transparent @border-color;
+}
+
+.arrow(@direction, @border-size: 0, @border-color: inherit) when (@direction = right) {
+  border-color: transparent transparent transparent @border-color;
+}
+
+.arrow(@direction, @border-size: 0, @border-color: inherit) when (@direction = bottom) {
+  border-color: @border-color transparent transparent transparent;
+}
+
+.arrow(@direction, @border-size: 0, @border-color: inherit) when (@direction = left) {
+  border-color: transparent @border-color transparent transparent;
+}
+
+
