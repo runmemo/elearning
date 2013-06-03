@@ -594,12 +594,10 @@ h2 {
 .course-user-register,
 .course-user-register:link,
 .course-user-register:visited {
-   
-   .button-submit();
-    width: 120px;
-    padding: 0;
-    text-align: center;
-   
+  .button-submit();
+  width: 120px;
+  padding: 0;
+  text-align: center; 
 }
 
 /****** Node type "Course" Start ******/
@@ -736,7 +734,9 @@ h2 {
     .node-course-teacher-button {
       .left();
       margin-right: 20px;
-      
+      .ajax-progress {
+        .show(none);
+      }
     }
     .teacher-avatar {
         margin-bottom: 30px;
@@ -2011,24 +2011,23 @@ h2 {
   .form-item-pass {
     margin-bottom: 16px;
   }
+  .login-form-fb-submit, 
+  .login-form-fb-submit:hover {
+    .gradient-fb();
+    .left();
+    border: 0;
+  }
+
+  .login-form-additional-link {
+    color: #ec4600;
+    .link();
+    .bold(12px);
+  }
 }
 
 .login-form-registration, 
 .login-form-reset {
   .right();
-}
-
-.login-form-fb-submit, 
-.login-form-fb-submit:hover {
-  .gradient-fb();
-  .left();
-  border: 0;
-}
-
-.login-form-additional-link {
-  color: #ec4600;
-  .link();
-  .bold(12px);
 }
 
 .login-form,
