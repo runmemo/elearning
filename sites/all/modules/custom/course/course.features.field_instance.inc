@@ -266,7 +266,7 @@ function course_field_default_field_instances() {
       ),
       'entity_type' => 'field_collection_item',
       'field_name' => 'field_grade_score',
-      'label' => 'Grade Score',
+      'label' => t('Grade Score'),
       'required' => 0,
       'settings' => array(
         'max' => 100,
@@ -301,7 +301,7 @@ function course_field_default_field_instances() {
       ),
       'entity_type' => 'field_collection_item',
       'field_name' => 'field_grade_name',
-      'label' => 'Grade Name',
+      'label' => t('Grade Name'),
       'required' => 0,
       'settings' => array(
         'text_processing' => 0,

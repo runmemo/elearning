@@ -1,0 +1,176 @@
+body {
+  color: #333333;
+  font: 14px/1.286 "Lucida Grande","Lucida Sans Unicode","DejaVu Sans",Lucida,Arial,Helvetica,sans-serif;
+  margin: 0 auto;
+  min-height: 400px;
+  background-image: url(../images/help-bg-content.png);
+}
+
+h2 {
+  font-size: 120%;
+  color: #cc6600;
+}
+
+
+body #breadcrumb .breadcrumb {
+  line-height: 2em;
+  color: white;
+
+}
+
+body #breadcrumb {
+ background-color: #333;
+}
+
+body #page-title {
+  margin-top: 20px;
+  margin-left: 20px;
+  background-color: transparent;
+}
+
+#content-content {
+  background-color: white;
+}
+
+.advanced-help-topic {
+  padding: 20px 0 0 0;
+}
+
+.advanced-help-topic > * {
+     clear: both;
+     margin-left: 3%;
+     margin-right: 3%;
+     max-width: 94%;
+     display: block;
+}
+
+.advanced-help-topic .help-navigation,
+.advanced-help-topic > .item-list {
+  
+  min-width: 100%;
+}
+
+.help-navigation {
+  margin: 0 0;
+  clear: both;
+  background-color: #333;
+  color: white;
+  height: 35px;
+  line-height: 35px;
+}
+
+.help-navigation .help-left,
+.help-navigation .help-up-noleft
+{
+  float: left;
+  margin-left: 10px;
+}
+
+.help-navigation .help-up {
+   margin-left: 30%;
+}
+
+.help-navigation .help-right, 
+.help-navigation .help-up-right {
+  float: right;
+  margin-right: 10px;
+  
+}
+
+.breadcrumb a,
+.breadcrumb a:link,
+.breadcrumb a:visited,
+.help-navigation a:link, 
+.help-navigation a:visited {
+  color: wheat;
+}
+
+.screenshot {
+  border-style: dashed;
+  border-width: 1px;
+  padding: 0;
+}
+
+img {
+  clear: both; /* we dont want images to be surrounded by other elements */
+  margin-bottom: 20px;
+}
+
+.advanced-help-topic > p {
+  float: left;
+}
+.advanced-help-topic > .item-list {
+  float: right;
+  padding: 15px 0;
+  margin-bottom: 10px;
+  background-color: #EEE;
+  margin-bottom: 0;
+  margin: 0;
+  width: 100%;
+}
+.advanced-help-topic > .item-list > ul {
+  margin-left: 15px;
+  margin-right: 15px;
+}
+
+.item-list a:link {
+ color: black; 
+}
+
+.item-list a:visited {
+ color: #C26400 
+}
+
+@media all and (min-width: 740px) {
+  .advanced-help-topic > .item-list {
+     clear: none;
+     width: 35%;
+     max-width: auto;
+     min-width: auto;
+     margin-bottom: 20px;
+    
+  }
+  .advanced-help-topic > * {
+    margin-right: 0;
+    margin-left: 0;
+    
+    
+  }
+  .advanced-help-topic > p {
+    max-width: 60%;
+    clear: none;
+    float: left;
+  }
+  
+  
+  .help-navigation {
+    width: auto;
+    max-width: none;
+    margin-top: 20px;
+  }
+  
+  .advanced-help-topic {
+    padding-right: 2%;
+    padding-left: 2%;
+    padding-bottom: 20px;
+  }
+  
+  .advanced-help-topic .screenshot {
+    padding: 10px;
+    clear: left;
+    float: left; 
+    max-width: 60%;
+    background-color: #DDD;
+    background-image: linear-gradient(45deg, #BBB 25%, transparent 25%, transparent), 
+                      linear-gradient(-45deg, #BBB 25%, transparent 25%, transparent), 
+                      linear-gradient(45deg, transparent 75%, #BBB 75%), 
+                      linear-gradient(-45deg, transparent 75%, #BBB 75%);
+     -webkit-background-size: 10px 10px;
+     -moz-background-size: 10px 10px;
+     background-size: 10px 10px;
+  }
+  .advanced-help-topic img {
+    clear:left;
+  }
+}
+
