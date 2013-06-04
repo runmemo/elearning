@@ -142,7 +142,7 @@ h2 {
     }
     ul.menu {
       width: auto;
-      > li.menuparent, 
+      > li.menuparent,
       > li.sf-no-children {
         .main-menu-border();
         width: auto;
@@ -153,7 +153,21 @@ h2 {
             display: initial;
           }
           &:hover, &:active { .link(); }
-        }  
+        }
+        .ajax-progress.ajax-progress-throbber {
+          float: right;
+          padding-right: 6px;
+          position: relative;
+          margin-right: -25px;
+          .throbber {
+            background: none;
+            .bg-img('progress_white.gif');
+            .left();
+            height: 16px;
+            margin: 0;
+            width: 16px;
+          }
+        }
       }
       li.menuparent {
         .bg-img('superfish-menu-triangle-small.png');
