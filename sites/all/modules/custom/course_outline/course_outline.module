@@ -159,19 +159,21 @@ function course_outline_block_view($delta = '') {
 /**
  * Processes book array, related to the course and builds HTML with course outline.
  * 
- * @param $book
+ * @param array $book
  *   Book's items array.
+ * @param integer $current_nid
+ *   Current node ID.
  * 
  * @return 
  *   Course outline block HTML.
  */
-function course_outline_get_course_items($book) {
+function course_outline_get_course_items($book, $current_nid) {
   $tree = menu_tree_all_data($book['menu_name'], NULL, 3);
   $tree_key = key($tree);
   $tree_output = menu_tree_output($tree);
   
 // Alter titles and classes of the links in the tree.
-  course_outline_preprocess_tree($tree_output);
+  course_outline_preprocess_tree($tree_output, $current_nid);
   return $tree_output;
 }
 
@@ -197,13 +199,14 @@ function course_outline_block_view_form($form, &$form_state, $course) {
   } else {
     $mode = $form_state['step'];
   }
-
+  if (!isset($form_state['current_nid'])) {
+    $form_state['current_nid'] = arg(1);
+  }
   switch ($mode) {
     case 'edit':
       // Build book admin table form, using custom theme function.
       include_once drupal_get_path('module', 'book') . '/book.admin.inc';
       $form['#node'] = $course;
-      $form_state['storage']['edit_access'] = $edit_access;
       _book_admin_table($course, $form);
       if (isset($form['table']) && !empty($form['table'])) {
         $form['table']['#theme'] = 'course_outline_book_admin_table';
@@ -221,7 +224,7 @@ function course_outline_block_view_form($form, &$form_state, $course) {
       return $form;
     case 'view':
       // Build course outline.
-      $form['view'] = course_outline_get_course_items($course->book);
+      $form['view'] = course_outline_get_course_items($course->book, $form_state['current_nid']);
       $form['submit'] = array(
         '#type' => 'submit',
         '#value' => t('Edit'),
@@ -297,8 +300,10 @@ function course_outline_block_view_form_submit($form, &$form_state) {
  * 
  * @param array $tree 
  *   Rendered menu tree, @see menu_tree_output().
+ * @param integer $current_nid 
+ *   Current node ID.
  */
-function course_outline_preprocess_tree(&$tree) {
+function course_outline_preprocess_tree(&$tree, $current_nid) {
   global $user;
   $tree_key = key($tree);
   if (isset($tree[$tree_key]['#below'])) {
@@ -321,7 +326,7 @@ function course_outline_preprocess_tree(&$tree) {
         $item['#attributes']['class'][] = 'outline-item';
         unset($item['#attributes']['class']['leaf']);
         $item['#attributes']['class'][] = $completed ? 'outline-item-is-complete' : 'outline-item-is-incomplete';
-        if ($node->nid == arg(1)) {
+        if ($node->nid == $current_nid) {
           $item['#attributes']['class'][] = 'js-outline-current';
           $item['#attributes']['class'][] = 'outline-item-is-current';
         }

@@ -40,10 +40,12 @@
   }
   .ajax-progress.ajax-progress-throbber {
     float: right;
-    padding: 12px 6px 0px 0px;
+    padding: 20px 6px 0px 0px;
+    position: relative;
+    margin-right: -25px;
     .throbber {
       background: none;
-      .bg-img('progress_orange.gif');
+      .bg-img('progress_white.gif');
       .left();
       height: 16px;
       margin: 0;
@@ -143,25 +145,25 @@
      background: #fff0d9;
    }
   }
-  a.active {
-    background: #fff0d9;
-  }
 }
 
 .outline-item-is-current {
   .class-progress-current() !important;
-   @media @mobile {
-     .class-progress-parameters(3%, 100%, 100%, 65%, 100%, 0%, no-repeat) !important;
-   }
-   @media @narrow {
-     .class-progress-parameters(6px, 9px, 100%, 65%, 100%, 0%, repeat-y) !important;
-   }
-   @media @normal {
-     .class-progress-parameters(7px, 9px, 100%, 65%, 100%, 0%, repeat-y) !important;
-   }
-   @media @wide {
-     .class-progress-parameters(9px, 9px, 100%, 65%, 100%, 0%, repeat-y) !important;
-   }
+  @media @mobile {
+    .class-progress-parameters(3%, 100%, 100%, 65%, 100%, 0%, no-repeat) !important;
+  }
+  @media @narrow {
+    .class-progress-parameters(6px, 9px, 100%, 65%, 100%, 0%, repeat-y) !important;
+  }
+  @media @normal {
+    .class-progress-parameters(7px, 9px, 100%, 65%, 100%, 0%, repeat-y) !important;
+  }
+  @media @wide {
+    .class-progress-parameters(9px, 9px, 100%, 65%, 100%, 0%, repeat-y) !important;
+  }
+  a {
+    background: #fff0d9;
+  }
 }
 
 .outline-item-is-complete {

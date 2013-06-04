@@ -6,6 +6,9 @@
 (function($) {
   Drupal.behaviors.course_outline_accordion = {
     attach: function(context, settings) {
+      if (!$('.js-outline-current').hasClass('active')) {
+        $('.js-outline-current').addClass('active');
+      }
       $('.js-outline-unit').unbind('click').bind('click', function() {
         $(this).next('.menu').slideToggle('fast');
         $(this).toggleClass('active');
