@@ -39,32 +39,44 @@ function newsfeed_ctools_plugin_directory($owner, $plugin_type) {
  * Implements hook_node_insert().
  */
 function newsfeed_node_insert($node) {
-  if ($node->type == 'answer') {
-    // Notify all question subscribers if new answer is posted.
+  if (in_array($node->type, array('answer', 'open_question_feedback'))) {
     $author = user_load($node->uid);
-    $answer = entity_metadata_wrapper('node', $node);
-    // Assign every message to admin first.
-    $message = message_create('subscriptions_notification', array('uid' => 1));
-    $wrapper = entity_metadata_wrapper('message', $message);
-    // Load question, in order to pass it to message_subscribe_send_message()
-    // and get all question subscibers.
-    $question = node_load($answer->field_answer_question->raw());
-    $msg = t('User !user added !answer to the !question.', array(
-      '!user' => l(format_username($author), 'user/' . $author->uid),
-      '!answer' => l(t('answer'), 'node/' . $answer->field_answer_question->raw(), array('fragment' => 'answer-' . $node->nid)),
-      '!question' => t('question') . ': ' . l('"' . $answer->field_answer_question->title->raw() . '"', 'node/' . $answer->field_answer_question->nid->raw())));
-    $wrapper->field_message_body->set(array('value' => $msg, 'format' => 'filtered_html'));
-    // Add parameters to save message for every subscriber.
-    $notify_options = array(
-      'internal' => array(
-        'save on success' => TRUE
-      )
-    );
-    $subscribe_options = array(
-      'save message' => FALSE,
-      'author' => $node->uid,
-    );
-    message_subscribe_send_message('node', $question, $message, $notify_options, $subscribe_options);
+    $node_wrapper = entity_metadata_wrapper('node', $node);
+    if ($node->type == 'answer') {
+      // Notify all question subscribers if new answer is posted.
+      // Assign every message to admin first.
+      $message = message_create('subscriptions_notification', array('uid' => 1));
+      $wrapper = entity_metadata_wrapper('message', $message);
+      // Load question, in order to pass it to message_subscribe_send_message()
+      // and get all question subscibers.
+      $question = node_load($node_wrapper->field_answer_question->raw());
+      $msg = t('User !user added !answer to the !question.', array(
+        '!user' => l(format_username($author), 'user/' . $author->uid),
+        '!answer' => l(t('answer'), 'node/' . $node_wrapper->field_answer_question->raw(), array('fragment' => 'answer-' . $node->nid)),
+        '!question' => t('question') . ': ' . l('"' . $node_wrapper->field_answer_question->title->raw() . '"', 'node/' . $node_wrapper->field_answer_question->nid->raw())));
+      $wrapper->field_message_body->set(array('value' => $msg, 'format' => 'filtered_html'));
+      // Add parameters to save message for every subscriber.
+      $notify_options = array(
+        'internal' => array(
+          'save on success' => TRUE
+        )
+      );
+      $subscribe_options = array(
+        'save message' => FALSE,
+        'author' => $node->uid,
+      );
+      message_subscribe_send_message('node', $question, $message, $notify_options, $subscribe_options);
+    } elseif ($node->type == 'open_question_feedback') {
+      // Notify answer author about new feedback.
+      $message = message_create('subscriptions_notification', array('uid' => $node_wrapper->field_open_question_answer->value()->uid));
+      $wrapper = entity_metadata_wrapper('message', $message);
+      $msg = t('User !user added !feedback to your answer to this question: !question.', array(
+        '!user' => l(format_username($author), 'user/' . $author->uid),
+        '!feedback' => l(t('feedback'), 'node/' . $node_wrapper->field_open_question_answer->field_open_question->value()->nid, array('fragment' => 'feedback-' . $node->nid)),
+        '!question' => l('"' . $node_wrapper->field_open_question_answer->field_open_question->value()->title . '"', 'node/' . $node_wrapper->field_open_question_answer->field_open_question->value()->nid)));
+      $wrapper->field_message_body->set(array('value' => $msg, 'format' => 'filtered_html'));
+      $message->save();
+    }
   }
 }
 

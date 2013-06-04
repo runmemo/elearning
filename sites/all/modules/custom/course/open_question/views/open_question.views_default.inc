@@ -70,7 +70,7 @@ function open_question_views_default_views() {
   $handler->display->display_options['fields']['points_1']['element_label_colon'] = FALSE;
   /* Field: Flags: Flag link */
   $handler->display->display_options['fields']['ops']['id'] = 'ops';
-  $handler->display->display_options['fields']['ops']['table'] = 'flag_content';
+  $handler->display->display_options['fields']['ops']['table'] = 'flagging';
   $handler->display->display_options['fields']['ops']['field'] = 'ops';
   $handler->display->display_options['fields']['ops']['relationship'] = 'flag_content_rel';
   $handler->display->display_options['fields']['ops']['label'] = '';
@@ -134,31 +134,39 @@ function open_question_views_default_views() {
     'style' => 'average',
     'text' => 'average',
   );
+  /* Field: Content: Nid */
+  $handler->display->display_options['fields']['nid']['id'] = 'nid';
+  $handler->display->display_options['fields']['nid']['table'] = 'node';
+  $handler->display->display_options['fields']['nid']['field'] = 'nid';
+  $handler->display->display_options['fields']['nid']['label'] = '';
+  $handler->display->display_options['fields']['nid']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['nid']['element_label_colon'] = FALSE;
   /* Field: Field Grouping */
   $handler->display->display_options['fields']['nothing_1']['id'] = 'nothing_1';
   $handler->display->display_options['fields']['nothing_1']['table'] = 'views';
   $handler->display->display_options['fields']['nothing_1']['field'] = 'nothing';
   $handler->display->display_options['fields']['nothing_1']['ui_name'] = 'Field Grouping';
   $handler->display->display_options['fields']['nothing_1']['label'] = '';
-  $handler->display->display_options['fields']['nothing_1']['alter']['text'] = '<div class="views-answer-feedback-main">
-  <div class="views-answer-feedback-widgets">
-          <div class="views-answer-feedback-picture">
-            <div class="views-field-picture">[picture]</div>
-            <div class="author-points">[points_1]</div>
-          </div>
-          <div class="views-field-flag-thumbs-up">[ops]</div>
-          <div class="abuse-flag">[ops_1]</div>
-      </div>
-        <div class="views-answer-feedback-body">
-          <div class="views-field-body">[body]</div>
-          <div class="node-supplementary-wrapper"> 
-            <div class="views-field-created">[created]</div>
-            <div class="views-field-name">[name]</div>
-            <div class="views-field-rating">[field_rating]</div>
-          </div>
+  $handler->display->display_options['fields']['nothing_1']['alter']['text'] = '<a name="feedback-[nid]" /></a>
+  <div class="views-answer-feedback-main">
+    <div class="views-answer-feedback-widgets">
+            <div class="views-answer-feedback-picture">
+              <div class="views-field-picture">[picture]</div>
+              <div class="author-points">[points_1]</div>
+            </div>
+            <div class="views-field-flag-thumbs-up">[ops]</div>
+            <div class="abuse-flag">[ops_1]</div>
         </div>
-  </div>
-   <div class="views-field-comment-count">[comment_count]</div>';
+          <div class="views-answer-feedback-body">
+            <div class="views-field-body">[body]</div>
+            <div class="node-supplementary-wrapper"> 
+              <div class="views-field-created">[created]</div>
+              <div class="views-field-name">[name]</div>
+              <div class="views-field-rating">[field_rating]</div>
+            </div>
+          </div>
+    </div>
+     <div class="views-field-comment-count">[comment_count]</div>';
   $handler->display->display_options['fields']['nothing_1']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['nothing_1']['element_default_classes'] = FALSE;
   /* Contextual filter: Content: Open Question Answer (field_open_question_answer) */
