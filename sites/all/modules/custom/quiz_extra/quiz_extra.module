@@ -17,6 +17,7 @@ function quiz_extra_menu_alter(&$items) {
 
 /**
  * Primary quiz-taking view on 'Take' tab.
+ * Code borrowed from quiz.module.
  */
 function quiz_take_extra($node) {
 
@@ -27,7 +28,7 @@ function quiz_take_extra($node) {
     return $node->rendered_content;
   }
   $to_be_rendered = quiz_take_quiz($node);
-  if(!empty($_SESSION['quiz_' . $node->nid])) { // we are not on result page
+  if(!empty($_SESSION['quiz_' . $node->nid])) { // if we are not on result page do not render quiz stats.
     // add customized stats.
     $to_be_rendered['stats'] = array(
       '#markup' => theme('quiz_stats', array('node' => $node)),
@@ -61,7 +62,7 @@ function quiz_extra_theme($existing, $type, $theme, $path) {
 }
 
 /**
- * Theme the stats on the views page
+ * Theme the stats on the quiz page
  *
  * @param $node
  *   The quiz node
@@ -89,61 +90,39 @@ function template_preprocess_quiz_stats(&$vars) {
  * Implements hook_theme_registry_alter  
  */ 
 function quiz_extra_theme_registry_alter(&$theme_registry) {
-  if (!empty($theme_registry['quiz_take_summary']['function'])) { 
-    $theme_registry['quiz_take_summary']['function'] = 'quiz_extra_quiz_take_summary';
+  if (!empty($theme_registry['quiz_take_summary'])) { 
+
+    // Assign custom preprocess function.
+    $theme_registry['quiz_take_summary']['preprocess functions'] = array('quiz_take_summary_preprocess');
+
+    // unset default theme function, to load custom template file.
+    unset($theme_registry['quiz_take_summary']['function']); 
+    $theme_registry['quiz_take_summary']['template'] = drupal_get_path('module', 'quiz_extra').'/quiz-take-summary';
+
   }
 }
 
-function quiz_extra_quiz_take_summary($variables) {
-  $quiz = $variables['quiz'];
-  $questions = $variables['questions'];
+function quiz_take_summary_preprocess(&$vars) {
+  $quiz = $vars['quiz'];
+  $questions = $vars['questions'];
   $score = $variables['score'];
-  $summary = $variables['summary'];
-  $rid =  $variables['rid'];
-  // Set the title here so themers can adjust.
   drupal_set_title($quiz->title);
 
-  // Display overall result.
-  $output = '';
-  if (!empty($score['possible_score'])) {
-    if (!$score['is_evaluated']) {
-      if (user_access('score taken quiz answer')) {
-        $msg = t('Parts of this @quiz have not been evaluated yet. The score below is not final. <a class="self-score" href="!result_url">Click here</a> to give scores on your own.', array('@quiz' => QUIZ_NAME, '!result_url' => url('node/' . $quiz->nid . '/results/' . $rid)));
-      }
-      else {
-        $msg = t('Parts of this @quiz have not been evaluated yet. The score below is not final.', array('@quiz' => QUIZ_NAME));
-      }
-      drupal_set_message($msg, 'warning');
-    }
-    $output .= '<div id="quiz_score_possible">';
+  // Link to next lesson in course.
+  $next = book_next($quiz->book);
+  // link-button class should be used for links rendered as button.
+  $vars['next_lesson'] = l(t('Next Lesson'), $next['link_path'], array('attributes' => array('class' => array('link-button'))));
 
-    $output .= '<span class="title">';
-    $output .= t('Test Result');
-    $output .= '</span>';
-
-    $output .= '<div class="summary">';
-    $output .= '<span class="correct">';
-    $output .= t('Correct: %num_correct', array('%num_correct' => $score['numeric_score']));
-    $output .= '</span>';
-    $output .= ' / ';
-    $output .= '<span class="wrong">';
-    $output .= t('Wrong: %num_wrong', array('%num_wrong' => $score['possible_score'] - $score['numeric_score']));
-    $output .= '</span>';
-    $output .= '</div>';
-
-    $output .= '</div>';
-
-  }
-  if (isset($summary['passfail'])) {
-    $output .= '<div id="quiz_summary">' . $summary['passfail'] . '</div>' . "\n";
-  }
-  if (isset($summary['result'])) {
-    $output .= '<div id="quiz_summary">' . $summary['result'] . '</div>' . "\n";
-  }
   // Get the feedback for all questions. These are included here to provide maximum flexibility for themers
   if ($quiz->display_feedback) {
     $form = drupal_get_form('quiz_report_form', $questions);
-    $output .= drupal_render($form);
+    $vars['quiz_report_form'] = drupal_render($form);
   }
-  return $output;
+  else {
+    $vars['quiz_report_form'] = '';
+  }
+
+  // Wrong score : calculated as Max Score - score
+  $vars['wrong_score'] = $score['possible_score'] - $score['numeric_score'];
 }
+

@@ -605,13 +605,16 @@ h2 {
   margin-top: 29px;
 }
 
-.course-user-register,
-.course-user-register:link,
-.course-user-register:visited {
-  .button-submit();
-  width: 120px;
-  padding: 0;
-  text-align: center; 
+.link-button,
+.course-user-register {
+  &,
+  &:link,
+  &:visited {
+    .button-submit();
+    width: 120px;
+    padding: 0;
+    text-align: center; 
+  }
 }
 
 /****** Node type "Course" Start ******/
@@ -2362,6 +2365,7 @@ div.quiz-report {
   box-shadow: 0px 1px 1px #EEEEEE;
   .summary {
     .right();
+    font-size: 14px;
     em {
       font-style: normal;
     }
