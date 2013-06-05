@@ -105,7 +105,7 @@ function quiz_extra_theme_registry_alter(&$theme_registry) {
 function quiz_take_summary_preprocess(&$vars) {
   $quiz = $vars['quiz'];
   $questions = $vars['questions'];
-  $score = $variables['score'];
+  $score = $vars['score'];
   drupal_set_title($quiz->title);
 
   // Link to next lesson in course.
