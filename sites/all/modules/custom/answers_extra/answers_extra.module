@@ -251,11 +251,15 @@ function answers_extra_userpoints($op, &$params) {
 function answers_extra_form_question_node_form_alter(&$form, &$form_state) {
   // hide not required fields.
   $form['field_notify_p']['#access'] = FALSE;
-  
+
   // hide format selection.
-  $form['body'][LANGUAGE_NONE][0]['format']['#access'] = FALSE;
+  $form['#after_build'] = array('hide_format_question');
 }
 
+function hide_format_question(&$form) {
+  $form['body'][LANGUAGE_NONE][0]['format']['#access'] = FALSE;
+  return $form;
+}
 
 /**
  * Implements hook_strongarm_alter().
@@ -314,7 +318,7 @@ function answers_extra_answer_form($form, &$form_state, $nid) {
         '#format' => 'filtered_html',
         '#default_value' => $answer_body['value']
       );
-      
+
       $form['edit']['save'] = array(
         '#name' => 'save',
         '#type' => 'submit',
@@ -335,8 +339,15 @@ function answers_extra_answer_form($form, &$form_state, $nid) {
       );
   }
 
-  return $form;
+  // remove format selection after building the form.
+  $form['#after_build'] = array('hide_format_answer');
 
+  return $form;
+}
+
+function hide_format_answer($form) {
+  $form['edit']['body']['format']['#access'] = FALSE;
+  return $form;
 }
 
 /**
