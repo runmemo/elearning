@@ -267,8 +267,9 @@ function course_registration_form($form, &$form_state) {
   $uid = $user->uid;
 
   // get node id
-  if (arg(0) == 'node' && is_numeric(arg(1))) {
-    $nid = arg(1);
+  $node = menu_get_object('node');
+  if ($node && isset($node->book)) {
+    $nid = $node->book['bid'];
   }
   else { // it is not a node profile page, so don't show the button
     watchdog('Callback', 'Registration button is visible in a wrong place.', array($form), WATCHDOG_ERROR);
