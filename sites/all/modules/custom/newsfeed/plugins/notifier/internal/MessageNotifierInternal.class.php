@@ -9,7 +9,8 @@
 class MessageNotifierInternal extends MessageNotifierBase {
 
   public function deliver(array $output = array()) {
-    newsfeed_create_instance($this->plugin['options']['mid'], $this->message->uid);
+    $record = array('mid' => $this->plugin['options']['mid'], 'uid' => $this->message->uid);
+    drupal_write_record('message_user', $record);
     return TRUE;
   }
 

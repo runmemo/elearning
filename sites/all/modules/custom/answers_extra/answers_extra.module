@@ -426,3 +426,22 @@ function answers_extra_node_view($node, $view_mode, $langcode) {
     drupal_add_js(drupal_get_path('module', 'answers_extra') . '/answers_extra.js');
   }
 }
+
+/**
+ * Implements hook_node_insert().
+ */
+function answers_extra_node_insert($node) {
+  if ($node->type == 'answer' && module_exists('newsfeed')) {
+    $author = user_load($node->uid);
+    $node_wrapper = entity_metadata_wrapper('node', $node);
+    // Notify all question subscribers if new answer is posted.
+    // Load question, in order to pass it to message_subscribe_send_message()
+    // and get all question subscibers.
+    $question = node_load($node_wrapper->field_answer_question->raw());
+    $msg = t('User !user added !answer to the !question.', array(
+      '!user' => l(format_username($author), 'user/' . $author->uid),
+      '!answer' => l(t('answer'), 'node/' . $node_wrapper->field_answer_question->raw(), array('fragment' => 'answer-' . $node->nid)),
+      '!question' => t('question') . ': ' . l('"' . $node_wrapper->field_answer_question->title->raw() . '"', 'node/' . $node_wrapper->field_answer_question->nid->raw())));
+    newsfeed_create_message($author->uid, $msg, $question);
+  }
+}
