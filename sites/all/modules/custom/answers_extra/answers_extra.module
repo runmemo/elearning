@@ -379,17 +379,21 @@ function answers_extra_answer_form_js($form, &$form_state) {
  *  Implements hook_node_access()
  */
 function answers_extra_node_access($node, $op, $account) {
-  if ($op == 'update' && ($node->type === 'question' || $node->type === 'answer')) {
-    // check current user & Author has "student" role.
+  if ($op == 'update' && in_array($node->type, array('question', 'answer'))) {
+    
+    // Check whether current user has "student" role.
     if (!in_array('student', array_values($account->roles))) {
       return NODE_ACCESS_IGNORE;
     }
+    
+    // Check whether current node author has "student" role.
     $author = user_load($node->uid);
     if (!in_array('student', array_values($author->roles))) {
       return NODE_ACCESS_IGNORE;
     }
   
-    // check current user has minimum points to access the node edit.
+    // Check whether current user has minimum points required to edit questions
+    // and answers of other students.
     $points = userpoints_get_current_points($account->uid);
     if($points >= QA_EDIT_POINTS) {
       return NODE_ACCESS_ALLOW;
@@ -400,9 +404,9 @@ function answers_extra_node_access($node, $op, $account) {
 }
 
 /**
-  * Helper function which determines current user has minimum required points for commenting nodes.
+  * Helper function which determines current user has minimum 
+  * required points for commenting nodes.
   */
-
 function user_has_min_voting_points() {
   global $user;
   $user_points = userpoints_get_current_points($user->uid);
