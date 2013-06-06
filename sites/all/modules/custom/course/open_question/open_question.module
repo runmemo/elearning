@@ -42,7 +42,7 @@ function open_question_block_info() {
 /**
  * Implements hook_permission()
  */
-function opent_question_permission() {
+function open_question_permission() {
   return array(
     'create open question' => array(
       'title' => t('Create open question'),
@@ -678,7 +678,7 @@ function oq_review_form_submit($form, &$form_state) {
 }
 
 /**
- * Implementation of hook_node_view().
+ * Implements hook_node_view().
  */
 function open_question_node_view($node, $view_mode, $langcode) {
   if ($node->type == 'open_question') {

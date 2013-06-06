@@ -3,14 +3,14 @@
 /**
  * Internal notifier.
  * 
- * Simple class, that imitates delivery in order to make "MessageNotifierBase"
- * save message for every user.
+ * Simple class, that imitates delivery in order to create instance between user
+ * and message.
  */
 class MessageNotifierInternal extends MessageNotifierBase {
 
   public function deliver(array $output = array()) {
-    // Just pass TRUE in order to save message.
+    newsfeed_create_instance($this->plugin['options']['mid'], $this->message->uid);
     return TRUE;
   }
-  
+
 }
