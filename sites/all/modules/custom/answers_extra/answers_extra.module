@@ -390,17 +390,21 @@ function answers_extra_answer_form_js($form, &$form_state) {
  *  Implements hook_node_access()
  */
 function answers_extra_node_access($node, $op, $account) {
-  if ($op == 'update' && ($node->type === 'question' || $node->type === 'answer')) {
-    // check current user & Author has "student" role.
+  if ($op == 'update' && in_array($node->type, array('question', 'answer'))) {
+    
+    // Check whether current user has "student" role.
     if (!in_array('student', array_values($account->roles))) {
       return NODE_ACCESS_IGNORE;
     }
+    
+    // Check whether current node author has "student" role.
     $author = user_load($node->uid);
     if (!in_array('student', array_values($author->roles))) {
       return NODE_ACCESS_IGNORE;
     }
   
-    // check current user has minimum points to access the node edit.
+    // Check whether current user has minimum points required to edit questions
+    // and answers of other students.
     $points = userpoints_get_current_points($account->uid);
     if($points >= QA_EDIT_POINTS) {
       return NODE_ACCESS_ALLOW;
@@ -411,9 +415,9 @@ function answers_extra_node_access($node, $op, $account) {
 }
 
 /**
-  * Helper function which determines current user has minimum required points for commenting nodes.
+  * Helper function which determines current user has minimum 
+  * required points for commenting nodes.
   */
-
 function user_has_min_voting_points() {
   global $user;
   $user_points = userpoints_get_current_points($user->uid);
@@ -431,5 +435,24 @@ function user_has_min_voting_points() {
 function answers_extra_node_view($node, $view_mode, $langcode) {
   if ($node->type == 'question') {
     drupal_add_js(drupal_get_path('module', 'answers_extra') . '/answers_extra.js');
+  }
+}
+
+/**
+ * Implements hook_node_insert().
+ */
+function answers_extra_node_insert($node) {
+  if ($node->type == 'answer' && module_exists('newsfeed')) {
+    $author = user_load($node->uid);
+    $node_wrapper = entity_metadata_wrapper('node', $node);
+    // Notify all question subscribers if new answer is posted.
+    // Load question, in order to pass it to message_subscribe_send_message()
+    // and get all question subscibers.
+    $question = node_load($node_wrapper->field_answer_question->raw());
+    $msg = t('User !user added !answer to the !question.', array(
+      '!user' => l(format_username($author), 'user/' . $author->uid),
+      '!answer' => l(t('answer'), 'node/' . $node_wrapper->field_answer_question->raw(), array('fragment' => 'answer-' . $node->nid)),
+      '!question' => t('question') . ': ' . l('"' . $node_wrapper->field_answer_question->title->raw() . '"', 'node/' . $node_wrapper->field_answer_question->nid->raw())));
+    newsfeed_create_message($author->uid, $msg, $question);
   }
 }

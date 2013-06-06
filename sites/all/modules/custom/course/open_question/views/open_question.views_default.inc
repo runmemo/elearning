@@ -266,7 +266,8 @@ function open_question_views_default_views() {
   $handler->display->display_options['fields']['nothing']['field'] = 'nothing';
   $handler->display->display_options['fields']['nothing']['ui_name'] = 'Field Grouping';
   $handler->display->display_options['fields']['nothing']['label'] = '';
-  $handler->display->display_options['fields']['nothing']['alter']['text'] = '<div class="comment feedback-body">
+  $handler->display->display_options['fields']['nothing']['alter']['text'] = '<a name="review-!1"></a>
+ <div class="comment feedback-body">
   <div class="submitted">
     <span>[name] - [created]</span>
   </div>

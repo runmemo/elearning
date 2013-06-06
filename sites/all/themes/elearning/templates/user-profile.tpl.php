@@ -9,11 +9,11 @@
 <div class="profile omega"<?php print $attributes; ?>>
   <div class="user-profile-name-caption alpha omega">
     <div class="user-name omega">
-      <h2><?php print $user->name; ?></h2>
+      <h2><?php print $account->name; ?></h2>
     </div>
     <?php if ($access) : ?>
     <div class="user-profile-edit-link omega">
-      <h2><?php print l(t('Edit'), 'user/' . $user->uid . '/edit', array('attributes' => array('class' => array('profile-edit', 'ctools-modal-common-modal-style')))); ?></h2>
+      <h2><?php print l(t('Edit'), 'user/' . $account->uid . '/edit', array('attributes' => array('class' => array('profile-edit', 'ctools-modal-common-modal-style')))); ?></h2>
     </div>
     <?php endif; ?>
   </div>
@@ -37,9 +37,9 @@
         <?php endif; ?>
         <div class="user-profile-email">
           <div class="field-label">
-            <?php print t('E-mail') ?>
+            <?php print t('E-mail'); ?>
           </div>
-          <div class="field-item"><?php print $user->mail; ?></div>
+          <div class="field-item"><?php print $account->mail; ?></div>
         </div>
         <?php if (isset($field_birthday)) print render($user_profile['field_birthday']); ?>
         <?php if (isset($field_phone)) print render($user_profile['$field_phone']); ?>
