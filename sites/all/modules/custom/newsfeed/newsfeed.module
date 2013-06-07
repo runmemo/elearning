@@ -38,19 +38,31 @@ function newsfeed_ctools_plugin_directory($owner, $plugin_type) {
 /**
  * Creates new message with given parameters.
  * 
+ * @param string $type
+ *   Type of the message
  * @param integer $uid
  *   User ID, to which to assgin message
- * @param string $body
- *   Body of the message
+ * @param object $node
+ *   Node which is used to get the context ans list of subscribers
+ * @param array $fields
+ *   Values to place in corresponding fields
+ * @param array $uids
+ *   User IDs array. It's used in case of single recipient of the message
  * 
- * @return Message $message
- *   Message object
  */
-function newsfeed_create_message($uid, $body, $node, $uids = array()) {
-  // Create message and save it with given body.
-  $message = message_create('subscriptions_notification', array('uid' => $uid));
+function newsfeed_create_message($type, $uid, $node, $fields = array(), $uids = array()) {
+  // Create message.
+  $message = message_create($type, array('uid' => $uid));
   $wrapper = entity_metadata_wrapper('message', $message);
-  $wrapper->field_message_body->set(array('value' => $body, 'format' => 'filtered_html'));
+  
+  // Set necessary fields to use with tokens.
+  switch ($type) {
+    case 'question_answer_notification':
+      foreach ($fields as $name => $value) {
+        $wrapper->$name->set($value);
+      }
+  }
+
   $message->save();
 
   // Add parameters in order to avoid creating message for every subscriber.

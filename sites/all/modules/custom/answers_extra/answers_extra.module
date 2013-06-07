@@ -265,7 +265,9 @@ function hide_format_question(&$form) {
  * Implements hook_strongarm_alter().
  */
 function answers_extra_strongarm_alter(&$items) {
-  $items['node_options_question']->value = array('status', 'revision');
+  if (isset($items['node_options_question'])) {
+    $items['node_options_question']->value = array('status', 'revision');
+  }
 }
 
 /**
@@ -456,11 +458,11 @@ function answers_extra_node_insert($node) {
     // Load question, in order to pass it to message_subscribe_send_message()
     // and get all question subscibers.
     $question = node_load($node_wrapper->field_answer_question->raw());
-    $msg = t('User !user added !answer to the !question.', array(
-      '!user' => l(format_username($author), 'user/' . $author->uid),
-      '!answer' => l(t('answer'), 'node/' . $node_wrapper->field_answer_question->raw(), array('fragment' => 'answer-' . $node->nid)),
-      '!question' => t('question') . ': ' . l('"' . $node_wrapper->field_answer_question->title->raw() . '"', 'node/' . $node_wrapper->field_answer_question->nid->raw())));
-    newsfeed_create_message($author->uid, $msg, $question);
+    $fields = array(
+      'field_message_answer' => $node->nid,
+      'field_message_question' => $node_wrapper->field_answer_question->raw(),
+    );
+    newsfeed_create_message('question_answer_notification', $author->uid, $question, $fields);
   }
 }
 

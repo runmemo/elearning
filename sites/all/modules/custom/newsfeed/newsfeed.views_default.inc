@@ -56,14 +56,14 @@ function newsfeed_views_default_views() {
   $handler->display->display_options['fields']['picture']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['picture']['empty'] = '<div class="tiny-avatar"></div>';
   $handler->display->display_options['fields']['picture']['image_style'] = 'user_profile_picture';
-  /* Field: Message: Message Body */
-  $handler->display->display_options['fields']['field_message_body']['id'] = 'field_message_body';
-  $handler->display->display_options['fields']['field_message_body']['table'] = 'field_data_field_message_body';
-  $handler->display->display_options['fields']['field_message_body']['field'] = 'field_message_body';
-  $handler->display->display_options['fields']['field_message_body']['label'] = '';
-  $handler->display->display_options['fields']['field_message_body']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['field_message_body']['hide_empty'] = TRUE;
-  $handler->display->display_options['fields']['field_message_body']['hide_alter_empty'] = FALSE;
+  /* Field: Message: Render message (Get text) */
+  $handler->display->display_options['fields']['message_render']['id'] = 'message_render';
+  $handler->display->display_options['fields']['message_render']['table'] = 'message';
+  $handler->display->display_options['fields']['message_render']['field'] = 'message_render';
+  $handler->display->display_options['fields']['message_render']['label'] = '';
+  $handler->display->display_options['fields']['message_render']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['message_render']['partials'] = 1;
+  $handler->display->display_options['fields']['message_render']['partials_delta'] = '1';
   /* Field: Message: Timestamp */
   $handler->display->display_options['fields']['timestamp']['id'] = 'timestamp';
   $handler->display->display_options['fields']['timestamp']['table'] = 'message';
