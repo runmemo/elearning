@@ -193,9 +193,9 @@ h2 {
         margin-top: 7px;
         /* use !important in order to override superfish css */
         padding: 0 !important;
-        -moz-box-shadow: 0px 1px 3px 0px #888;
-        -webkit-box-shadow: 0px 1px 3px 0px #888;
-        box-shadow: 0px 1px 3px 0px #888;
+        -moz-box-shadow: 0 1px 3px 0 #888;
+        -webkit-box-shadow: 0 1px 3px 0 #888;
+        box-shadow: 0 1px 3px 0 #888;
         border-top: none;
         a:link, a:visited {
           color: #383838;
@@ -213,7 +213,7 @@ h2 {
         li a.sf-depth-2 {
           .bold(14px);
           padding: 5px 5px 10px 10px;
-          margin: 0px 5px 5px 5px;
+          margin: 0 5px 5px 5px;
         }
         li.first a.sf-depth-2 {
           margin-top: 5px;
@@ -245,7 +245,7 @@ h2 {
 
 .block-menu-top-menu {
   ul {
-    padding: 0px;
+    padding: 0;
     margin: 8px 0 0 0;
     li {
     .bg-image('line-main-menu.png');
@@ -323,7 +323,7 @@ h2 {
       .title-node {
       font-size: 22px;
       font-weight: bold;
-      margin: 0px 0 20px 0;
+      margin: 0 0 20px 0;
       }
     }
     #provider {
@@ -373,6 +373,7 @@ h2 {
 .view-questions-list,
 .view-user-answers-list {
   .views-row {
+     width: 100%;
     .border-bottom-dotted();
     .bold(14px);
     float: left;
@@ -403,7 +404,7 @@ h2 {
     .gris;
   }
   .field-group-question {
-    float:left;
+    float:left;   
     @media @narrow {
        .grid-narrow-12();
     }
@@ -497,7 +498,7 @@ h2 {
   .form-submit {
     left: -8px;
     top: -58px;
-    margin-top: 0px;
+    margin-top: 0;
   }
   fieldset {
     margin-bottom: 0;
@@ -625,7 +626,7 @@ h2 {
   #section-content {
     color: #333333;
     #region-content {
-      margin: 37px 0px 0px 10px;
+      margin: 37px 0 0 10px;
     }
   }
 }
@@ -681,7 +682,7 @@ h2 {
     ul {
       padding: 0;
       li {
-        margin: 0px 0px 15px 0px;
+        margin: 0 0 15px 0;
         span.course-section-number {
           .bold(14px);
         }
@@ -728,10 +729,10 @@ h2 {
     padding: 4px 4px 4px 8px;
   }
   td.col-2, td.col-3 {
-    padding: 0px 4px;
+    padding: 0 4px;
   }
   td.col-4 {
-    padding: 0px 0px 0px 4px;
+    padding: 0 0 0 4px;
   }
   .views-field-picture {
     .small-avatar();
@@ -766,7 +767,7 @@ h2 {
       .bold(14px);
       .left();
         .field-name-field-duration {
-          margin: 4px 0px 20px 0px;
+          margin: 4px 0 20px 0;
         }
         .field-label {
           margin-bottom: 4px;
@@ -798,7 +799,7 @@ h2 {
   float: none;
   width: 100%;
   margin-top: 4px;
-  padding: 0px;
+  padding: 0;
 }
 
 /****** Node type "Course" End ******/
@@ -807,7 +808,7 @@ h2 {
 
 .course-header {
   border-bottom: 1px dotted #AFAFAF;
-  padding: 20px 0px 16px 0px;
+  padding: 20px 0 16px 0;
   float: left;
   width: 100%;
   .provider-logo {
@@ -877,10 +878,10 @@ h2 {
   .block-system-main, 
   .block-quicktabs-user-profile-tab {
     @media @normal {
-      margin: 0px 20px 20px 20px;
+      margin: 0 20px 20px 20px;
     }
     @media @wide {
-      margin: 0px 20px 20px 20px;
+      margin: 0 20px 20px 20px;
     }
   }
   .profile {
@@ -908,7 +909,7 @@ h2 {
   width: 100%;
   .user-name {
     .left();
-    margin-left: 0px;
+    margin-left: 0;
   }
   .user-name h2, .user-profile-edit-link h2 {
     margin-bottom: 7px;
@@ -972,8 +973,8 @@ h2 {
 
 .user-profile-userpoints {
   height: 23px;
-  margin: 15px 0px 15px 40px;
-  padding: 6px 0px 0px 29px;
+  margin: 15px 0 15px 40px;
+  padding: 6px 0 0 29px;
   .bg-img('profile-crown.png');
 
 }
@@ -1017,7 +1018,7 @@ h2 {
     .border-bottom-dotted();
     #upload-form-picture {
       .left();
-      margin: 0px 10px 10px 0px;
+      margin: 0 10px 10px 0;
     }
   }
   .upload-form-links-wrapper {
@@ -1107,7 +1108,7 @@ h2 {
 
 .view-user-courses-progress-outer {
   height: 28px;
-  margin: 11px 0px 34px 0px;
+  margin: 11px 0 34px 0;
   .RoundedShape(3px);
   border: #859AA1 @border-1;
   width: 100%;
@@ -1219,13 +1220,13 @@ h2 {
   }
   .vud-widget-elearning_widget {
     @media @narrow {
-      margin: 0px 5px 0px 10px;
+      margin: 0 5px 0 10px;
     }
     @media @normal {
-      margin: 0px 20px 0px 10px;
+      margin: 0 20px 0 10px;
     }
     @media @wide {
-      margin: 0px 35px 0px 10px;
+      margin: 0 35px 0 10px;
     }
   }
 }
@@ -1261,16 +1262,16 @@ h2 {
     width: 18px;
     height: 18px;
     .bg-img('follow-flag.png');
-    margin: 10px 0px 0px 11px;
+    margin: 10px 0 0 11px;
   }
   .unflag-action {
-    background-position: -40px 0px;
+    background-position: -40px 0;
   }
   .unflag-action:hover {
-    background-position: -60px 0px;
+    background-position: -60px 0;
   }
   .flag-action:hover {
-    background-position: -20px 0px;
+    background-position: -20px 0;
   }
  
 }
@@ -1294,7 +1295,7 @@ h2 {
 }
 
 .node-question-title-section {
-  padding: 4px 0px 4px 0px;
+  padding: 4px 0 4px 0;
   .show(inline-block);
   width: 100%;
   .border-bottom-dotted();
@@ -1401,7 +1402,7 @@ h2 {
   border: 1px solid #E0E8EA;
   background-color: #f4f7f7;
   padding: 8px;
-  margin: 22px 6px 22px 0px;
+  margin: 22px 6px 22px 0;
   .RoundedShape(2px);
   em {
     font-style: normal;
@@ -1415,7 +1416,7 @@ h2 {
     .show(inline-block);
     background: #ffffff;
     margin: 0;
-    padding: 18px 0px 0px 0px;
+    padding: 18px 0 0 0;
     .border-bottom-dotted();
     box-shadow: none;
     border-radius: 0;
@@ -1447,12 +1448,12 @@ h2 {
     width: 19px;
     height: 20px;
     .bg-img('best_answer_button.png');
-    margin: 16px 0px 16px 16px;
+    margin: 16px 0 16px 16px;
   }
   a.flag-action {
-    background-position: -19px 0px;
+    background-position: -19px 0;
     &:hover {
-      background-position: 0px 0px;
+      background-position: 0 0;
     }
   }
   .best-answer-hidden {
@@ -1491,7 +1492,7 @@ h2 {
     .show(table-cell);
     vertical-align: middle;
     float: none;
-    padding: 0px 10px;
+    padding: 0 10px;
     cursor: pointer;
   }
 }
@@ -1699,7 +1700,7 @@ h2 {
     margin: 0;
     background: transparent;
     box-shadow: none;
-    padding: 16px 0px;
+    padding: 16px 0;
     border-top: 1px dotted #aeaeae;
     font-family: Arial;
     .submitted span {
@@ -1783,7 +1784,7 @@ h2 {
   .views-inline-comment-field {
     .right();
     .bg-img('ask-question.png');
-    padding: 8px 0px 8px 31px;
+    padding: 8px 0 8px 31px;
     margin-top: -16px;
     background-position: 8px center;
     background-repeat: no-repeat;
@@ -1818,7 +1819,7 @@ h2 {
     padding-left: 17px;
   }
    @media @normal {
-    padding-left: 0px;
+    padding-left: 0;
   }
 }
 
@@ -1889,11 +1890,11 @@ h2 {
     width: 15px;
     height: 15px;
     .right();
-    margin: 2px 6px 0px 0px;
+    margin: 2px 6px 0 0;
   }
   .oq-answer-form-submit {
     border: 0;
-    margin: 0px 5px 18px 0px;
+    margin: 0 5px 18px 0;
     padding: 0;
     background: 0;
     .text-orange();
@@ -1926,7 +1927,7 @@ h2 {
   .ctools-modal-abuse {
     .bg-img('flag.png');
     color: transparent;
-    margin: 0px 0px 22px 16px;
+    margin: 0 0 22px 16px;
     float: left;
     height: 20px;
     width: 20px;
@@ -1954,7 +1955,7 @@ h2 {
 
 .not-logged-in .ctools-modal-user-forms .popups-body,
 .page-user .ctools-modal-profile-form .popups-body {
-  padding: 0px 15px 15px 15px;
+  padding: 0 15px 15px 15px;
   /* use !important in order to override modal js style for user forms */
   width: auto !important;
   position: initial;
@@ -1973,8 +1974,8 @@ h2 {
 .profile-edit-form {
   margin-top: 27px;
   .form-item {
-    margin-top: 0px;
-    margin-bottom: 0px;
+    margin-top: 0;
+    margin-bottom: 0;
     label {
       .bold(12px);
       color: #505050;
@@ -2002,7 +2003,7 @@ h2 {
     .show();
     background-image: none;
     padding: 13px 13px 13px 9px;
-    margin: 0px 0px -13px 0px;
+    margin: 0 0 -13px 0;
     border: 0;
     text-align: left;
     ul {
@@ -2056,7 +2057,7 @@ h2 {
 .register-form {
   .ajax-progress.ajax-progress-throbber {
     float: right;
-    padding: 12px 6px 0px 0px;
+    padding: 12px 6px 0 0;
     .throbber {
       .bg-img('progress_orange.gif');
       .left();
@@ -2100,7 +2101,7 @@ h2 {
     }
     input.password-confirm,
     input.password-field {
-      margin-bottom: 0px;
+      margin-bottom: 0;
     }
   }
   .password-confirm {
@@ -2258,7 +2259,7 @@ h2 {
     color: transparent;
     width: 18px;
     height: 18px;
-    margin: 12px 0px 0px 11px;
+    margin: 12px 0 0 11px;
 }
 
 /** Quiz Css **/
@@ -2269,7 +2270,7 @@ h2 {
     .bold(18px);
   }
   .border-bottom-dotted();
-  padding: 5px 5px 0px;
+  padding: 5px 5px 0;
 }
 
 .quiz-report,
@@ -2367,7 +2368,7 @@ div.quiz-report {
   clear: both;
   .text-dark-grey();
   border-width: 1px;
-  box-shadow: 0px 1px 1px #EEEEEE;
+  box-shadow: 0 1px 1px #EEEEEE;
   .summary {
     .right();
     font-size: 14px;
