@@ -1606,16 +1606,19 @@ h2 {
     position: relative;
     margin-bottom: 0;
     margin-top: 0;
-    top: -5px;
+    top: -7px;
   }
 }
 
 .answer-form-edit.progress-disabled,
 .oq-review-form-edit.progress-disabled {
-  color: transparent;
-  .bg-img('progress_orange.gif');
-  width: 16px;
-  height: 16px;
+  &, 
+  &:hover {
+    color: transparent;
+    .bg-img('progress_orange.gif');
+    width: 16px;
+    height: 16px;
+  }
 }
 
 .answer-form {
