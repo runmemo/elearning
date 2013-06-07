@@ -20,8 +20,7 @@ function answers_extra_ckeditor_profile_defaults() {
         'toolbar' => '[
     [\'Bold\',\'Italic\'],
     [\'NumberedList\',\'BulletedList\',\'-\',\'Outdent\',\'Indent\'],
-    [\'Link\',\'Unlink\'],
-    [\'About\']
+    [\'Link\',\'Unlink\']
 ]',
         'expand' => 't',
         'width' => '100%',
