@@ -18,7 +18,7 @@
       <?php print $follow_flag; ?>
       <?php print render($edit_link); ?>
     </div>
-    <div class="node-question-body grid-11 alpha omega" id ='ae-question-form-wrapper'>
+    <div class="node-question-body grid-11 alpha omega">
       <?php if (isset($content['field_rating_widget'])) print render($content['field_rating_widget']); ?>
       <div class="question-body grid-10 alpha omega">
         <?php if (isset($content['body'])) print render($content['body']); ?>
