@@ -1355,7 +1355,7 @@ h2 {
 
 .block-answers-extra {
   margin: 0;
-  .form-submit {
+  .answer-form-save {
     margin-top: 9px;
     margin-bottom: 9px;
   }
@@ -1613,8 +1613,10 @@ h2 {
 
 .answer-form-edit {
   &, &:hover {
-    margin-top: 0 !important;
-    margin-right: 145px;
+    position: relative;
+    margin-bottom: 0;
+    margin-top: 0;
+    top: -5px;
   }
 }
 
@@ -1623,6 +1625,11 @@ h2 {
   color: transparent;
   .bg-img('progress_orange.gif');
   width: 16px;
+  height: 16px;
+}
+
+.answer-form {
+  float: right;
   height: 16px;
 }
 

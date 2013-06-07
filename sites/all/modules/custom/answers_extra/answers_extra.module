@@ -277,7 +277,6 @@ function answers_extra_answer_form($form, &$form_state, $nid) {
   $form = array();
   $form['#prefix'] = "<div id='node-answer-form-$nid'>";
   $form['#suffix'] = '</div>';
-  $form['#attributes'] = array('class' => 'answer-form');
 
   if (!isset($form_state['storage']['answer'])) {
     $form_state['storage']['answer'] = node_load($nid);
@@ -308,6 +307,7 @@ function answers_extra_answer_form($form, &$form_state, $nid) {
           'progress' => array('message' => ''),
         ),
       );
+      $form['#attributes'] = array('class' => 'answer-form');
       break;
     
     case 'edit' :
@@ -326,6 +326,7 @@ function answers_extra_answer_form($form, &$form_state, $nid) {
         '#type' => 'submit',
         '#submit' => array('answers_extra_answer_form_save'),
         '#value' => t('Save'),
+        '#attributes' => array('class' => array('answer-form-save')),
         '#ajax' => array(
           'callback' => 'answers_extra_answer_form_js',
           'wrapper' => "node-answer-form-$nid",
