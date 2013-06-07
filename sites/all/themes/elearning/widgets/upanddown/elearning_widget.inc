@@ -47,22 +47,4 @@ function elearning_widget_alter_template_vars($template_type, &$variables) {
   }
   $variables['current_class'] = $current_class;
   $variables['current_points'] = $points;
-  // check, whether the node belongs to the current user
-  // and define access to the links and message for tooltips
-  $node = isset($variables['entity_id']) ? node_load($variables['entity_id']) : FALSE;
-  $variables['vote_acess'] = (!$node || ($node && $node->uid == $user->uid)) ? FALSE : TRUE;
-  if ($variables['vote_acess']) {
-    $variables['title_text_up'] = $variables['class_up'] == 'up-active' ? t('Reset your vote') : t('Vote up!');
-    $variables['title_text_down'] = $variables['class_down'] == 'down-active' ? t('Reset your vote') : t('Vote down!');
-  } else {
-    $variables['title_text_up'] = t('You cannot vote up your own !content_type', array('!content_type' => $node ? $node->type : t('content')));
-    $variables['title_text_down'] = t('You cannot vote down your own !content_type', array('!content_type' => $node ? $node->type : t('content')));
-  }
-
-  // check, whether the current user has minimum required points and its not the node author.
-  if(!user_has_min_voting_points() && ($node->uid <> $user->uid)) {
-    $variables['vote_acess'] = FALSE;
-    $variables['title_text_up'] = t('You need to have !points points to be able to vote up this !content_type', array('!points' => QA_RATE_POINTS, '!content_type' => $node ? $node->type : t('content')));
-    $variables['title_text_down'] = t('You need to have !points points to be able to vote down this !content_type', array('!points' => QA_RATE_POINTS, '!content_type' => $node ? $node->type : t('content')));    
-  }
 }
