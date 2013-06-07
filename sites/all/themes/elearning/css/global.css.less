@@ -1466,7 +1466,17 @@ h2 {
     .bold(14px);
     .text-dark-grey();
   }
-  .views-field-body,
+  .views-field-body {
+    @media @narrow {
+      .grid-narrow-7();
+    }
+    @media @normal {
+     .grid-normal-7();
+    }
+    @media @wide {
+      .grid-wide-7();
+    }
+  }
   .comment-form,
   .comment-group,
   .views-field-comment-count {
@@ -1604,7 +1614,16 @@ h2 {
 .answer-form-edit {
   &, &:hover {
     margin-top: 0 !important;
-    margin-right: 85px;
+    margin-right: 30px;
+    @media @narrow {
+      .grid-narrow-2();
+    }
+    @media @normal {
+      .grid-normal-2();
+    }
+    @media @wide {
+      .grid-wide-2();
+    }
   }
 }
 
