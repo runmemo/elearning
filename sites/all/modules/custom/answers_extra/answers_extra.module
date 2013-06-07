@@ -383,7 +383,14 @@ function answers_extra_answer_form_save($form, &$form_state) {
  * Callback for answer edit js submit
  */
 function answers_extra_answer_form_js($form, &$form_state) {
-  return $form;
+
+  $answer = $form_state['storage']['answer'];
+
+  $commands[] = ajax_command_replace('#node-answer-form-'.$answer->nid, render($form));
+
+  //unset Answers
+  $commands[] = ajax_command_replace('#answer-'.$answer->nid, '');
+  return array('#type' => 'ajax', '#commands' => $commands);
 }
 
 /**
