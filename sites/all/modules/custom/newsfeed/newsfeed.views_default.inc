@@ -52,9 +52,10 @@ function newsfeed_views_default_views() {
   $handler->display->display_options['fields']['picture']['field'] = 'picture';
   $handler->display->display_options['fields']['picture']['relationship'] = 'user';
   $handler->display->display_options['fields']['picture']['label'] = '';
+  $handler->display->display_options['fields']['picture']['element_class'] = 'tiny-avatar';
   $handler->display->display_options['fields']['picture']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['picture']['empty'] = '<div class="tiny-avatar"></div>';
-  $handler->display->display_options['fields']['picture']['image_style'] = 'question_author';
+  $handler->display->display_options['fields']['picture']['image_style'] = 'user_profile_picture';
   /* Field: Message: Message Body */
   $handler->display->display_options['fields']['field_message_body']['id'] = 'field_message_body';
   $handler->display->display_options['fields']['field_message_body']['table'] = 'field_data_field_message_body';

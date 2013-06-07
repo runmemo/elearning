@@ -142,7 +142,7 @@ function course_block_view($delta = '') {
       $block['subject'] = '';
       $block['content'] = array(
         '#type' => 'markup',
-        '#markup' => '17',
+        '#markup' => l('17', 'notifications', array('attributes' => array('title' => t('Notifications')))),
       );
       return $block;
   }
