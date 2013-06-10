@@ -465,7 +465,7 @@ function answers_extra_node_insert($node) {
 function answers_extra_new_answer_notify($answer) {
   if (!module_exists('newsfeed')) {
     watchdog('answers_extra', 
-        'Enable newsfeed module to notify users of newcontent.', array(), 
+        'Enable newsfeed module to notify users of new content.', array(), 
         WATCHDOG_WARNING);
     return;
   }
