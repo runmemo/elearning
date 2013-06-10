@@ -36,6 +36,35 @@ function newsfeed_ctools_plugin_directory($owner, $plugin_type) {
 }
 
 /**
+ * Implements hook_block_info().
+ */
+function newsfeed_block_info() {
+  // Block for displaying notifications count.
+  $block['user_notifications_count'] = array(
+    'info' => t('User notifications count'),
+  );
+  return $block;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function newsfeed_block_view($delta = '') {
+  if ($delta == 'user_notifications_count') {
+    global $user;
+    if (!$user->uid) {
+      return;
+    }
+    $block = array('subject' => '');
+    $block['content'] = array(
+      '#type' => 'markup',
+      '#markup' => l('<span class="link-inner">17</span>', 'notifications', array('attributes' => array('title' => t('Notifications')), 'html' => TRUE)),
+    );
+    return $block;
+  }
+}
+
+/**
  * Creates new message with given parameters.
  * 
  * @param string $type
