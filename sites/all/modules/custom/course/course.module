@@ -98,16 +98,11 @@ function course_last_visited_node($nid, $uid = NULL) {
 }
 
 /**
- *
- * implements hook_block_info()
+ * Implements hook_block_info().
  */
 function course_block_info() {
   $blocks['registration_form'] = array(
     'info' => t('Course registertion form'),
-  );
-  // Temporary block for displaying notifications count
-  $blocks['user_notifications_count'] = array(
-    'info' => t('User notifications count'),
   );
   // Block for displaying book header
   $blocks['book_header'] = array(
@@ -121,8 +116,7 @@ function course_block_info() {
 }
 
 /**
- *
- * implements hook_block_view()
+ * Implements hook_block_view().
  */
 function course_block_view($delta = '') {
   // The $delta parameter tells us which block is being requested.
@@ -133,18 +127,6 @@ function course_block_view($delta = '') {
       return course_header_block();
     case 'registration_form':
       return registration_form_block();
-    case 'user_notifications_count':
-      global $user;
-      if (!$user->uid) {
-        return;
-      }
-      $block = array();
-      $block['subject'] = '';
-      $block['content'] = array(
-        '#type' => 'markup',
-        '#markup' => l('17', 'notifications', array('attributes' => array('title' => t('Notifications')))),
-      );
-      return $block;
   }
 }
 
