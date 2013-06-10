@@ -9,6 +9,7 @@
 function template_preprocess_course_header(&$vars) {
   $book_link = $vars['book_link'];
   $course_node = node_load($book_link['bid']);
+  $node = menu_get_object('node');
 
   // course title
   $vars['course_title'] = $course_node->title;
@@ -42,8 +43,7 @@ function template_preprocess_course_header(&$vars) {
   else {
     $vars['lesson_link'] = '';
   }
-
-  if($book_link['nid'] !== $book_link['bid']) {
+  if(($book_link['nid'] !== $book_link['bid']) && isset($node->book)) {
     $items = array(
       l(t('Blog'), 'node/'.$course_node->nid.'/blog', array('attributes' => array('class' => array('course-blog-link')))),
       l(t('Forum'), 'forum', array('attributes' => array('class' => array('course-forum-link')))),
