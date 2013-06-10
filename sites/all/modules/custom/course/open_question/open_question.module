@@ -69,6 +69,7 @@ function open_question_block_view($delta = '') {
   $answered = open_question_is_answered($question->nid);
 
   switch ($delta) {
+    
     case 'oq_answer_form_block':
       $block['subject'] = '';
 
@@ -82,21 +83,20 @@ function open_question_block_view($delta = '') {
         );
         return $block;     
       }
-      if ($answered) {
-        $feedbacks = open_question_get_answer_feedbacks($answered);
-      }
       // Add answer form.
-      $block['content']['answer_form']= drupal_get_form('open_question_answer_form', $answered, $feedbacks['count']);
+      $block['content']['answer_form']= drupal_get_form('open_question_answer_form', $answered);
       
-      // Embed view.
-      if ($feedbacks) {
-        $block['content']['questions_list'] = array(
-          '#type' => 'markup',
-          '#markup' => $feedbacks['view'],
-        );
+      // Get view with feedbacks. 
+      if ($answered) {
+        $block['content']['view'] = open_question_feedbacks_view($answered); 
       }
-      
+      else {
+        // User did not answer the question, so there are no feedbacks.
+        return;
+      }
+    
       break;
+      
     case 'oq_other_answers_block':
       $block['subject'] = '';
      
@@ -204,7 +204,7 @@ function open_question_is_answered($nid, $uid = NULL) {
  * @param $feedbacks_count
  *   Number of feedbacks with text
  */
-function open_question_answer_form($form, &$form_state, $answered, $feedbacks_count = 0) {
+function open_question_answer_form($form, &$form_state, $answered) {
 
   $form = array();
   $form['#prefix'] = '<div id="oq-answer-form-wrapper">';
@@ -266,6 +266,7 @@ function open_question_answer_form($form, &$form_state, $answered, $feedbacks_co
         // @todo add cancellation button
       }
       break;
+      
     case 'view':
       if (!empty($form_state['answer_value'])) {
         $answer_text = $form_state['answer_value'];
@@ -295,30 +296,8 @@ function open_question_answer_form($form, &$form_state, $answered, $feedbacks_co
         '#attributes' => array('class' => array('oq-answer-form-submit')),
         '#suffix' => '<div class="oq-answer-submit-sign"></div>',
       );
-      $stats = open_question_get_feedback_stats($answered);
-      if ($stats['count']) {
-        $form['view']['view_desc'] = array(
-          '#prefix' => '<div class="oq-answer-footer"><div class="oq-answer-view-description">',
-          '#suffix' => '</div>',
-          '#markup' =>
-            t('No reviews with comments'),
-        );
-        
-        if ($feedbacks_count > 0) {
-          $form['view']['view_desc']['#markup'] = format_plural($feedbacks_count, '1 review with comments:', '@count reviews with comments:');
-        }
-        
-        $form['view']['rating'] = array(
-          '#type' => 'markup',
-          '#prefix' => '<div class="oq-answer-rating">',
-          '#suffix' => '</div></div>',
-          '#markup' =>
-          t('Your average score: !average', array('!average' => $stats['average']))
-          . '<span class="answer-feedbacks-count"> ' . t('(out of !count)', array('!count' => $stats['count'])) . '</span>',
-        );
-      }
-
       break;
+      
     default :
       $form['bad_state'] = array(
         '#type' => 'markup',
@@ -382,35 +361,72 @@ function open_question_answer_submit_js($form, &$form_state) {
   return array('#type' => 'ajax', '#commands' => $commands);
 }
 
+function open_question_views_post_execute(&$view) {
+  if ($view->name  == 'oqa_feedbacks') {
+    if (!isset($view->total_rows)) {
+      $q = $view->build_info['count_query'];
+      foreach ($q->countQuery()->execute() as $row) {
+        $view->total_rows = $row->expression;
+        return;
+      }
+    }
+  }
+}
+
 /**
- * Generates embedded view with feedbacks, along with number of results.
+ * Generates embedded view with feedbacks, along with stas for results.
  * 
- * @param string $oq_nid
- *   View name.
+ * @param integer $oq_nid
+ *   Open question answer nid.
  * 
  * @return 
  *   array with HTML for a view with feedbacks and count.
  */
-function open_question_get_answer_feedbacks($oqa_nid = FALSE) {
-  if ($oqa_nid) {
-    $view = views_get_view('oqa_feedbacks');
-    if (empty($view->current_display)) {
-      if (!$view->set_display('block')) {
-        return FALSE;
-      }
-    }
-    $view->preview = TRUE;
-    $view->pre_execute(array($oqa_nid));
-    // Preview the view.
-    $output = $view->display_handler->preview();
-    // Get number of results.
-    $count = !empty($view->result) ? count($view->result) : 0;
-    $view->post_execute();
-    return array('view' => $output, 'count' => $count);
+function open_question_feedbacks_view($oqa_nid) {
+  $view = views_get_view('oqa_feedbacks');
+  $view->set_arguments(array($oqa_nid));
+  $output = array();
+  
+  $feedbacks_view_preview = $view->preview('block');
+  
+  // Markup for the view.
+  $output['reviews'] = array(
+    '#type' => 'markup',
+    '#markup' => $feedbacks_view_preview,
+    '#weight' => 1,
+  );
+  
+  // Container for feedback summary.
+  $output['summary'] = array (
+    '#weight' => 0,
+    '#prefix' => '<div class="oq-answer-feedback-summary">',
+    '#suffix' => '</div>',
+  );
+  
+  // Markup with summary of reviews.
+  $output['summary']['reviews_count'] = array(
+    '#prefix' => '<div class="oq-answer-view-description">',
+    '#suffix' => '</div>',
+    '#markup' => t('No reviews'),
+  );
+
+  if ($view->total_rows > 0) {
+    $output['summary']['reviews_count']['#markup'] = format_plural($view->total_rows, '1 review:', '@count reviews:');
   }
-  else {
-    return FALSE;
+  // Get feedback stats.
+  $stats = open_question_get_feedback_stats($oqa_nid);
+  if ($stats['count']) {
+    $output['summary']['rating'] = array(
+      '#type' => 'markup',
+      '#prefix' => '<div class="oq-answer-rating">',
+      '#suffix' => '</div>',
+      '#markup' =>
+      t('Your average score: !average', array('!average' => $stats['average']))
+      . '<span class="answer-feedbacks-count"> ' . t('(out of !count)', array('!count' => $stats['count'])) . '</span>',
+    );
   }
+ 
+  return $output;
 }
 
 
@@ -838,25 +854,36 @@ function open_question_subscriptions_reference_info() {
 
 /**
  * Implements hook_node_insert().
- *
+ */
 function open_question_node_insert($node) {
-  if ($node->type == 'open_question_feedback' && module_exists('newsfeed')) {
-    $author = user_load($node->uid);
-    $node_wrapper = entity_metadata_wrapper('node', $node);
-    // Notify answer author about new feedback.
-    $msg = t('User !user added !feedback to your answer to this question: !question.', array(
-      '!user' => l(format_username($author), 'user/' . $author->uid),
-      '!feedback' => l(t('feedback'), 'node/' . $node_wrapper->field_open_question_answer->field_open_question->value()->nid, array('fragment' => 'feedback-' . $node->nid)),
-      '!question' => l('"' . $node_wrapper->field_open_question_answer->field_open_question->value()->title . '"', 'node/' . $node_wrapper->field_open_question_answer->field_open_question->value()->nid)));
-    $uids = array(
-      $node_wrapper->field_open_question_answer->value()->uid => array(
-        'notifiers' => array(
-          'internal' => 'internal'
-        )
-      )
-    );
-    newsfeed_create_message($author->uid, $msg, $node, $uids);
+  if ($node->type == 'open_question_feedback') {
+    open_question_new_feedback_notify($node);
   }
+}
+
+/**
+ * Notifies open question answer author if new feedback is posted.
+ * 
+ * @param object $feedback
+ *   Node object of the new feedback.
+ */
+function open_question_new_feedback_notify($feedback) {
+  if (!module_exists('newsfeed')) {
+    watchdog('open_question', 'Enable newsfeed module to notify users of new content.', array(), WATCHDOG_WARNING);
+    return;
+  }
+  $feedback_wrapper = entity_metadata_wrapper('node', $feedback);
+  $fields = array(
+    'field_message_feedback' => $feedback->nid
+  );
+  $uids = array(
+    $feedback_wrapper->field_open_question_answer->value()->uid => array(
+      'notifiers' => array(
+        'internal' => 'internal'
+      )
+    )
+  );
+  newsfeed_create_message('answer_feedback_notification', $feedback->uid, $feedback, $fields, $uids);
 }
 
 /**
