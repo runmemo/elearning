@@ -1843,28 +1843,7 @@ h2 {
 }
 
 .oq-answer-form {
-  .border-bottom-dotted();
-  padding-bottom: 26px;
-  .cke_top, .cke_bottom {
-    .cke-main-panel-light-grey();
-  }
-  .cke {
-    border: @border-cke-light-grey;
-  }
-  .cke_top {
-    border-bottom: @border-cke-light-grey;
-  }
-  .cke_bottom {
-    border-top: @border-cke-light-grey;
-  }
-  .cke_toolgroup {
-    border: @border-cke-light-grey;
-    border-bottom-color: #ccd6e0;
-    .cke-tools-panel-light-grey();
-  }
-  .cke_toolbar_separator {
-    background: #e5e5e6;
-  }
+  .clearfix();
   .oq-answer-form-supplementary {
     .bold(14px);
     color: #525a61;
@@ -1882,24 +1861,6 @@ h2 {
     .bold(14px);
     .text-blue-grey();
   }
-  .oq-answer-footer {
-    clear: both;
-    padding-top: 9px;
-    border-top: 1px dotted #aeaeae;
-  }
-  .oq-answer-view-description, .oq-answer-rating {
-    .bold(13px);
-    color: #000;
-  }
-  .oq-answer-view-description {
-    .left();
-  }
-  .oq-answer-rating {
-    .right();
-  }
-  .answer-feedbacks-count {
-    color: #a1a1a1;
-  }
   .oq-answer-submit-sign {
     .bg-img('answer-edit.png');
     width: 15px;
@@ -1909,7 +1870,7 @@ h2 {
   }
   .oq-answer-form-submit {
     border: 0;
-    margin: 0 5px 18px 0;
+    margin-right: 5px;
     padding: 0;
     background: 0;
     .text-orange();
@@ -1920,6 +1881,30 @@ h2 {
   }
 }
 
+.oq-answer-feedback-summary {
+    clear: both;
+    margin-top: 18px;
+    height: 30px;
+    .border-bottom-dotted();
+    .border-top-dotted();
+}
+
+.oq-answer-view-description, 
+.oq-answer-rating {
+  .bold(13px);
+  color: #000;
+}
+.oq-answer-view-description {
+  .left();
+   line-height: 30px;
+}
+.oq-answer-rating {
+  .right();
+  line-height: 30px;
+}
+.answer-feedbacks-count {
+  color: #a1a1a1;
+}
 
 /****** Node type "Question" End ******/
 
