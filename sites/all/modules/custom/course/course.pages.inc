@@ -42,21 +42,20 @@ function template_preprocess_course_header(&$vars) {
   else {
     $vars['lesson_link'] = '';
   }
-  if ($vars['open_question_page'] == TRUE) {
+
+  if($book_link['nid'] !== $book_link['bid']) {
     $items = array(
-      l(t('Blog'), 'blog', array('attributes' => array('class' => array('open-question-blog-link')))),
-      l(t('Forum'), 'forum', array('attributes' => array('class' => array('open-question-forum-link')))),
+      l(t('Blog'), 'node/'.$course_node->nid.'/blog', array('attributes' => array('class' => array('course-blog-link')))),
+      l(t('Forum'), 'forum', array('attributes' => array('class' => array('course-forum-link')))),
     );
     $variables = array(
-      'title' => '',
       'items' => $items,
-      'type' => 'ul',
-      'attributes' => array('class' => array('open-question-links')),
+      'attributes' => array('class' => array('course-links')),
     );
-    $vars['open_question_links'] = theme_item_list($variables);
+    $vars['course_links'] = theme('item_list', $variables);
   }
   else {
-    $vars['open_question_links'] = '';
+    $vars['course_links'] = '';
   }
 }
 
