@@ -10,6 +10,57 @@
 function newsfeed_field_default_field_instances() {
   $field_instances = array();
 
+  // Exported field_instance: 'message-answer_feedback_notification-field_message_feedback'
+  $field_instances['message-answer_feedback_notification-field_message_feedback'] = array(
+    'bundle' => 'answer_feedback_notification',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => FALSE,
+        ),
+        'type' => 'entityreference_label',
+        'weight' => 0,
+      ),
+      'message_notify_email_body' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'message_notify_email_subject' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'message_notify_internal_body' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 2,
+      ),
+    ),
+    'entity_type' => 'message',
+    'field_name' => 'field_message_feedback',
+    'label' => 'Message feedback',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_buttons',
+      'weight' => 1,
+    ),
+  );
+
   // Exported field_instance: 'message-question_answer_notification-field_message_answer'
   $field_instances['message-question_answer_notification-field_message_answer'] = array(
     'bundle' => 'question_answer_notification',
@@ -149,6 +200,7 @@ function newsfeed_field_default_field_instances() {
   // Included for use with string extractors like potx.
   t('Message Answer');
   t('Message Question');
+  t('Message feedback');
   t('Message text');
   t('This is the text of all messages of this type.');
 

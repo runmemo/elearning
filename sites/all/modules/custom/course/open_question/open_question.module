@@ -838,25 +838,36 @@ function open_question_subscriptions_reference_info() {
 
 /**
  * Implements hook_node_insert().
- *
+ */
 function open_question_node_insert($node) {
-  if ($node->type == 'open_question_feedback' && module_exists('newsfeed')) {
-    $author = user_load($node->uid);
-    $node_wrapper = entity_metadata_wrapper('node', $node);
-    // Notify answer author about new feedback.
-    $msg = t('User !user added !feedback to your answer to this question: !question.', array(
-      '!user' => l(format_username($author), 'user/' . $author->uid),
-      '!feedback' => l(t('feedback'), 'node/' . $node_wrapper->field_open_question_answer->field_open_question->value()->nid, array('fragment' => 'feedback-' . $node->nid)),
-      '!question' => l('"' . $node_wrapper->field_open_question_answer->field_open_question->value()->title . '"', 'node/' . $node_wrapper->field_open_question_answer->field_open_question->value()->nid)));
-    $uids = array(
-      $node_wrapper->field_open_question_answer->value()->uid => array(
-        'notifiers' => array(
-          'internal' => 'internal'
-        )
-      )
-    );
-    newsfeed_create_message($author->uid, $msg, $node, $uids);
+  if ($node->type == 'open_question_feedback') {
+    open_question_new_feedback_notify($node);
   }
+}
+
+/**
+ * Notifies open question answer author if new feedback is posted.
+ * 
+ * @param object $feedback
+ *   Node object of the new feedback.
+ */
+function open_question_new_feedback_notify($feedback) {
+  if (!module_exists('newsfeed')) {
+    watchdog('open_question', 'Enable newsfeed module to notify users of new content.', array(), WATCHDOG_WARNING);
+    return;
+  }
+  $feedback_wrapper = entity_metadata_wrapper('node', $feedback);
+  $fields = array(
+    'field_message_feedback' => $feedback->nid
+  );
+  $uids = array(
+    $feedback_wrapper->field_open_question_answer->value()->uid => array(
+      'notifiers' => array(
+        'internal' => 'internal'
+      )
+    )
+  );
+  newsfeed_create_message('answer_feedback_notification', $feedback->uid, $feedback, $fields, $uids);
 }
 
 /**

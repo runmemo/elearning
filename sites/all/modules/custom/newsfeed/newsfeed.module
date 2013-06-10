@@ -85,13 +85,9 @@ function newsfeed_create_message($type, $uid, $node, $fields = array(), $uids = 
   $wrapper = entity_metadata_wrapper('message', $message);
   
   // Set necessary fields to use with tokens.
-  switch ($type) {
-    case 'question_answer_notification':
-      foreach ($fields as $name => $value) {
-        $wrapper->$name->set($value);
-      }
+  foreach ($fields as $name => $value) {
+    $wrapper->$name->set($value);
   }
-
   $message->save();
 
   // Add parameters in order to avoid creating message for every subscriber.
