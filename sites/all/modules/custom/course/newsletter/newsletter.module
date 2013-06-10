@@ -1,0 +1,27 @@
+<?php
+/**
+ * @file
+ * Code for the Course newsletter feature.
+ */
+
+include_once 'newsletter.features.inc';
+
+/**
+ *  Implements of hook_node_access()
+ */
+function newsletter_node_access($node, $op, $account) {
+
+  // allow teacher to create newsletter.
+  if($op == 'update' && $node->type == 'newsletter' && !course_is_teacher($node, $account)) {
+    return NODE_ACCESS_DENY;
+  }
+  
+  // Allow registered students to access the newsletter.
+  if(isset($node->type) && $node->type === 'newsletter' && $op == 'view') {
+    $item = entity_metadata_wrapper('node', $node);
+    $course = $item->field_course->value();
+    if(!course_registration_id($account->uid, $course->nid)) {
+      return NODE_ACCESS_DENY;
+    }
+  }
+}

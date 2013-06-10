@@ -1,17 +1,17 @@
 <?php
 /**
  * @file
- * course_blog.views_default.inc
+ * newsletter.views_default.inc
  */
 
 /**
  * Implements hook_views_default_views().
  */
-function course_blog_views_default_views() {
+function newsletter_views_default_views() {
   $export = array();
 
   $view = new view();
-  $view->name = 'course_blog';
+  $view->name = 'course_newsletter';
   $view->description = '';
   $view->tag = 'default';
   $view->base_table = 'node';
@@ -39,8 +39,8 @@ function course_blog_views_default_views() {
   $handler->display->display_options['header']['php']['empty'] = TRUE;
   $handler->display->display_options['header']['php']['php_output'] = '<?php
 
-  if(node_access(\'create\', \'blog\')) {
-    print l(t(\'Create Blog\'), \'node/add/blog\', array());
+  if(node_access(\'create\', \'newsletter\')) {
+    print l(t(\'Create Blog\'), \'node/add/newsletter\', array());
   }
 
   print l(t(\'Return to Class\'), \'node/\'.$view->args[0], array());
@@ -79,14 +79,14 @@ function course_blog_views_default_views() {
   $handler->display->display_options['filters']['type']['table'] = 'node';
   $handler->display->display_options['filters']['type']['field'] = 'type';
   $handler->display->display_options['filters']['type']['value'] = array(
-    'blog' => 'blog',
+    'newsletter' => 'newsletter',
   );
   $handler->display->display_options['filters']['type']['group'] = 1;
 
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page');
   $handler->display->display_options['path'] = 'node/%/blog';
-  $translatables['course_blog'] = array(
+  $translatables['course_newsletter'] = array(
     t('Master'),
     t('Course Blog'),
     t('more'),
@@ -105,7 +105,7 @@ function course_blog_views_default_views() {
     t('All'),
     t('Page'),
   );
-  $export['course_blog'] = $view;
+  $export['course_newsletter'] = $view;
 
   return $export;
 }
