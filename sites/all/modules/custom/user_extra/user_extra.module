@@ -91,6 +91,7 @@ function user_extra_form_alter(&$form, &$form_state, $form_id) {
     $form['pass']['#prefix'] = '<div class="login-form-reset">' . l(t('Forgotten your password?'), 'user/password', array('attributes' => array('class' => array('login-form-additional-link')))) . '</div>';
     $form['pass']['#attributes']['class'][] = 'login-form-pass-edit';
     $form['actions']['submit']['#attributes']['class'][] = 'login-form-submit';
+    $form['actions']['submit']['#id'] = 'main-login-submit';
     $form['actions']['fb_submit'] = array(
       '#type' => 'submit',
       '#value' => t('Login via Facebook'),
