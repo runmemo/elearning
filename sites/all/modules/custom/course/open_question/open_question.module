@@ -865,7 +865,7 @@ function open_question_node_insert($node) {
  * Notifies open question answer author if new feedback is posted.
  * 
  * @param object $feedback
- *   Node object of the new feedback.
+ *   Node object of new feedback.
  */
 function open_question_new_feedback_notify($feedback) {
   if (!module_exists('newsfeed')) {
@@ -890,48 +890,53 @@ function open_question_new_feedback_notify($feedback) {
  * Implements hook_comment_insert().
  * 
  * Creates notification message on commenting feedback.
- *
+ */
 function open_question_comment_insert($comment) {
   $node = node_load($comment->nid);
-  if ($node->type == 'open_question_feedback' && module_exists('newsfeed')) {
-    $node_wrapper = entity_metadata_wrapper('node', $node);
-    $question_nid = $node_wrapper->field_open_question_answer->field_open_question->value()->nid;
-    $main_url = 'node/' . $question_nid;
-    if ($comment->uid == $node_wrapper->field_open_question_answer->value()->uid) {
-      // If comment author is answer author, send message to feedback author.
-      $uid = $node->uid;
-      $actor_uid = $comment->uid;
-      $pattern = 'User !user added !comment to your !feedback to this !answer_question.';
-      $fragment = 'review-' . $node->nid;
-      $comment_param = array('query' => array('comment' => $comment->cid));
-      $answer_question = l(t('answer'), $main_url, array('fragment' => 'answer-' . $node_wrapper->field_open_question_answer->value()->nid));
-    } elseif ($comment->uid == $node->uid) {
-      // If comment author is feedback author, send message to answer author.
-      $uid = $node_wrapper->field_open_question_answer->value()->uid;
-      $actor_uid = $node->uid;
-      $pattern = 'User !user added !comment to this !feedback to your answer to this question: !answer_question.';
-      $fragment = 'feedback-' . $node->nid;
-      $comment_param = array('fragment' => 'comment-' . $comment->cid);
-      $answer_question = l('"' . $node_wrapper->field_open_question_answer->field_open_question->value()->title . '"', $main_url);
-    } else {
-      $uid = FALSE;
-    }
-    if ($uid) {
-      $actor = user_load($actor_uid);
-      $msg = t($pattern, array(
-        '!user' => l(format_username($actor), 'user/' . $actor_uid),
-        '!comment' => l(t('comment'), $main_url, $comment_param),
-        '!feedback' => l(t('feedback'), $main_url, array('fragment' => $fragment)),
-        '!answer_question' => $answer_question));
-      $uids = array(
-        $uid => array(
-          'notifiers' => array(
-            'internal' => 'internal'
-          )
-        )
-      );
-      newsfeed_create_message($actor_uid, $msg, $node, $uids);
-    }
+  if ($node->type == 'open_question_feedback') {
+    open_question_new_feedback_comment_notify($comment, $node);
   }
 }
-*/
+
+/**
+ * Notifies open question answer author or feedback author if new comment is posted.
+ * 
+ * @param object $comment
+ *   Comment object of new comment.
+ * @param object $feedback
+ *   Node object of the feedback.
+ */
+function open_question_new_feedback_comment_notify($comment, $feedback) {
+  if (!module_exists('newsfeed')) {
+    watchdog('open_question', 'Enable newsfeed module to notify users of new content.', array(), WATCHDOG_WARNING);
+    return;
+  }
+  $feedback_wrapper = entity_metadata_wrapper('node', $feedback);
+  if ($comment->uid == $feedback_wrapper->field_open_question_answer->value()->uid) {
+    // If comment author is answer author, send message to feedback author.
+    $type = 'oqaf_reviewer_comment_notification';
+    $uid = $feedback->uid;
+  } elseif ($comment->uid == $feedback->uid) {
+    // If comment author is feedback author, send message to answer author.
+    $type = 'oqaf_author_comment_notification';
+    $uid = $feedback_wrapper->field_open_question_answer->value()->uid;
+  } else {
+    $uid = FALSE;
+  }
+  if (!$uid) {
+    watchdog('open_question', 'Wrong uid on inserting new comment # @cid for feedback # @nid', array('@cid' => $comment->cid, '@nid' => $feedback->nid), WATCHDOG_WARNING);
+    return;
+  }
+  $fields = array(
+    'field_message_comment' => $comment->cid,
+    'field_message_feedback' => $feedback->nid
+  );
+  $uids = array(
+    $uid => array(
+      'notifiers' => array(
+        'internal' => 'internal'
+      )
+    )
+  );
+  newsfeed_create_message($type, $comment->uid, $feedback, $fields, $uids);
+}

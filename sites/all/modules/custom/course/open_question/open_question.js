@@ -15,7 +15,7 @@
       }
       
       var comment = new RegExp('[\\?&]comment=([^&#]*)').exec(window.location.href);
-      var review = new RegExp('[\\#]review([^&#]*)').exec(window.location.href);
+      var review = new RegExp('[\\#](review|answer)([^&#]*)').exec(window.location.href);
       if (comment || review) {
         $('a[href="#qt-open_question_tabs-ui-tabs1"]', context).parent().removeClass('ui-tabs-selected').removeClass('ui-state-active');
         $('a[href="#qt-open_question_tabs-ui-tabs2"]', context).parent().addClass('ui-tabs-selected ui-state-active');
