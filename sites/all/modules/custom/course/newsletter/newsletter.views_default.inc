@@ -38,13 +38,14 @@ function newsletter_views_default_views() {
   $handler->display->display_options['header']['php']['field'] = 'php';
   $handler->display->display_options['header']['php']['empty'] = TRUE;
   $handler->display->display_options['header']['php']['php_output'] = '<?php
+  $course_link = course_last_visited_node($view->args[0]);
 
   $compressed_path = relevant_answers_compress_string($view->args[0]);
   if(node_access(\'create\', \'newsletter\')) {
     print l(t(\'Create Blog\'), \'node/add/newsletter\', array(\'query\' => array(\'path\' => $compressed_path)));
   }
 
-  print l(t(\'Return to Class\'), \'node/\'.$view->args[0], array(\'attributes\' => array(\'class\' => \'node-question-return-link\')));
+  print l(t(\'Return to Class\'), \'node/\'.$course_link, array(\'attributes\' => array(\'class\' => \'node-question-return-link\')));
 
   print flag_create_link(\'subscriptions_course_blog\', $view->args[0]);
   ?>';
