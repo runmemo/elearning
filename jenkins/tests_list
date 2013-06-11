@@ -1,2 +1,8 @@
-CourseTestCase
+CourseNavigationTestCase
+CourseUnitTestCase
+CourseOutlineTestCase
+CreditTestCase
+OpenQuestionCase
+OpenQuestionAccessTestCase
 OpenQuestionUnitTest
+CourseRegistrationTestCase
