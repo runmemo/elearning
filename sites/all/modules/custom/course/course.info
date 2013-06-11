@@ -69,7 +69,6 @@ features[variable][] = node_submitted_lesson
 features[flag][] = course_item_complete
 features[rules_config][] = rules_lesson_video_complete
 features[rules_config][] = rules_open_question_viewed
-features[user_permission][] = access absolute messages
 features[user_permission][] = access comments
 features[user_permission][] = administer comments
 features[user_permission][] = edit own comments
