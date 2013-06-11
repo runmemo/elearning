@@ -18,6 +18,9 @@ chmod 777 /tmp/tests/
 
 cd /var/www/html/coursehub
 
+# Pull from master.
+/bin/sh -x jenkins/staging_pull.sh
+
 alias drush="drush -l http://$(hostname)"
 drush status
 drush updatedb --yes
