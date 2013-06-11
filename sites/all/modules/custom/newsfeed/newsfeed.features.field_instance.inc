@@ -61,6 +61,57 @@ function newsfeed_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'message-course_newsletter_notification-field_message_blog'
+  $field_instances['message-course_newsletter_notification-field_message_blog'] = array(
+    'bundle' => 'course_newsletter_notification',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => FALSE,
+        ),
+        'type' => 'entityreference_label',
+        'weight' => 0,
+      ),
+      'message_notify_email_body' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'message_notify_email_subject' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'message_notify_internal_body' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'message',
+    'field_name' => 'field_message_blog',
+    'label' => 'Message Blog',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_buttons',
+      'weight' => 1,
+    ),
+  );
+
   // Exported field_instance: 'message-oqaf_author_comment_notification-field_message_comment'
   $field_instances['message-oqaf_author_comment_notification-field_message_comment'] = array(
     'bundle' => 'oqaf_author_comment_notification',
@@ -403,6 +454,7 @@ function newsfeed_field_default_field_instances() {
   // Translatables
   // Included for use with string extractors like potx.
   t('Message Answer');
+  t('Message Blog');
   t('Message Comment');
   t('Message Question');
   t('Message feedback');
