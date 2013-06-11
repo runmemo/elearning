@@ -78,7 +78,15 @@ function newsletter_flag_default_flags() {
     'show_contextual_link' => 0,
     'i18n' => 0,
     'api_version' => 3,
+    'import_roles' => array(
+      'flag' => array(
+        0 => 2,
+      ),
+      'unflag' => array(
+        0 => 2,
+      ),
+    ),
   );
-  
+
   return $flags;
 }
