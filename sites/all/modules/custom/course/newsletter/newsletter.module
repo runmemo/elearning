@@ -1,0 +1,70 @@
+<?php
+/**
+ * @file
+ * Code for the Course newsletter feature.
+ */
+
+include_once 'newsletter.features.inc';
+
+/**
+ * Implements hook_node_access().
+ */
+function newsletter_node_access($node, $op, $account) {
+  // Allow teacher to create newsletter.
+  if($op == 'update' && $node->type == 'newsletter' && !course_is_teacher($node, $account)) {
+    return NODE_ACCESS_DENY;
+  }
+  
+  // Allow registered students to access the newsletter.
+  if(isset($node->type) && $node->type === 'newsletter' && $op == 'view') {
+    $item = entity_metadata_wrapper('node', $node);
+    $course = $item->field_course->value();
+    if(!course_registration_id($account->uid, $course->nid)) {
+      return NODE_ACCESS_DENY;
+    }
+  }
+}
+
+/*
+ * Implements hook_form_FORM_ID_alter.
+ *
+ */
+function newsletter_form_newsletter_node_form_alter(&$form, &$form_state) {
+  $compressed_path = isset($_GET['path']) ? $_GET['path'] : '';
+  if ($compressed_path) {
+    $original_path = relevant_answers_decompress_string($compressed_path);
+    $langcode = field_language('node', $form_state['node'], 'field_course');
+    $form['field_course'][$langcode]['#default_value'][] = $original_path;
+    $form['field_course']['#disabled'] = TRUE;
+  }
+}
+
+/**
+ * Implements hook_node_insert().
+ */
+function newsletter_node_insert($node) {
+  if ($node->type == 'newsletter') {
+    newsletter_course_blog_post_notify($node);
+  }
+}
+
+/**
+ * Notifies all course blog subscribers if new post is added.
+ * 
+ * @param object $newsletter
+ *   Node object of the new blog post.
+ */
+function newsletter_course_blog_post_notify($newsletter) {
+  if (!module_exists('newsfeed')) {
+    watchdog('newsletter', 'Enable newsfeed module to notify users of new content.', array(), WATCHDOG_WARNING);
+    return;
+  }
+  $newsletter_wrapper = entity_metadata_wrapper('node', $newsletter);
+  // Load course, in order to pass it to message_subscribe_send_message()
+  // and get all course blog subscribers.
+  $course = $newsletter_wrapper->field_course->value();
+  $fields = array(
+    'field_message_blog' => $newsletter->nid,
+  );
+  newsfeed_create_message('course_newsletter_notification', $newsletter->uid, $course, $fields);
+}

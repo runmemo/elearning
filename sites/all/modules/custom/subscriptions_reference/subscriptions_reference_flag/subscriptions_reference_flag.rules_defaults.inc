@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * subscriptions_question.rules_defaults.inc
+ * subscriptions_reference_flag.rules_defaults.inc
  */
 
 /**

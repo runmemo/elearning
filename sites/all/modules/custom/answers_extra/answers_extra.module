@@ -471,7 +471,7 @@ function answers_extra_new_answer_notify($answer) {
   }
   $answer_wrapper = entity_metadata_wrapper('node', $answer);
   // Load question, in order to pass it to message_subscribe_send_message()
-  // and get all question subscibers.
+  // and get all question subscribers.
   $question = $answer_wrapper->field_answer_question->value();
   $fields = array(
     'field_message_answer' => $answer->nid,

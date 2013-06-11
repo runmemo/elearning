@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * subscriptions_question.features.inc
+ * subscriptions_reference_flag.features.inc
  */
 
 /**
@@ -46,7 +46,7 @@ function subscriptions_reference_flag_flag_default_flags() {
     'show_on_teaser' => 1,
     'i18n' => 0,
     'api_version' => 3,
-    'module' => 'test',
+    'module' => 'subscriptions_reference_flag',
     'locked' => array(
       0 => 'name',
     ),

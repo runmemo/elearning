@@ -1,18 +1,18 @@
 <?php
 /**
  * @file
- * course_blog.features.field_instance.inc
+ * newsletter.features.field_instance.inc
  */
 
 /**
  * Implements hook_field_default_field_instances().
  */
-function course_blog_field_default_field_instances() {
+function newsletter_field_default_field_instances() {
   $field_instances = array();
 
-  // Exported field_instance: 'node-blog-body'
-  $field_instances['node-blog-body'] = array(
-    'bundle' => 'blog',
+  // Exported field_instance: 'node-newsletter-body'
+  $field_instances['node-newsletter-body'] = array(
+    'bundle' => 'newsletter',
     'default_value' => NULL,
     'deleted' => 0,
     'description' => '',
@@ -54,9 +54,9 @@ function course_blog_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-blog-field_course'
-  $field_instances['node-blog-field_course'] = array(
-    'bundle' => 'blog',
+  // Exported field_instance: 'node-newsletter-field_course'
+  $field_instances['node-newsletter-field_course'] = array(
+    'bundle' => 'newsletter',
     'default_value' => NULL,
     'deleted' => 0,
     'description' => '',

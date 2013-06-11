@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * course_blog.features.field_base.inc
+ * newsletter.features.field_base.inc
  */
 
 /**
  * Implements hook_field_default_field_bases().
  */
-function course_blog_field_default_field_bases() {
+function newsletter_field_default_field_bases() {
   $field_bases = array();
 
   // Exported field_base: 'field_course'

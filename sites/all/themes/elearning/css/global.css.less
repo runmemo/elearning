@@ -2248,6 +2248,10 @@ h2 {
       margin-top: 5px;
     }
   }
+
+  #edit-revalidate {
+    clear: both;
+  }
 }
 
 /** Css for href edit links **/
@@ -2284,13 +2288,18 @@ h2 {
     td {
       .text-dark-grey();
       background-color: transparent;
-      padding: 15px;
+      padding: 15px 15px;
       p {
         margin-bottom: 0;
         .bold(14px);
       }
     }
   }
+}
+
+.quiz-report table td{
+  padding: 15px 15px 10px;
+  vertical-align: top;
 }
 
 div.quiz-report {
@@ -2312,6 +2321,7 @@ div.quiz-report {
   }
   .dd {
     clear: both;
+    margin-top: 0;
   }
 }
 
@@ -2341,20 +2351,19 @@ div.quiz-report {
 
 .multichoice-icon-cell {
   width: 20px;
+  height: 20px;
 }
 
 .multichoice-icon {
   .bg-img('quiz-result-icons.png');
   height: 16px;
   width: 16px;
-}
-
-.multichoice-icon.wrong {
-  background-position: 0 -18px;
-}
-
-.multichoice-icon.should {
-  background-position: 0 0;
+  &.wrong {
+    background-position: 0 -18px;
+  }
+  &.should {
+    background-position: 0 0;
+  }
 }
 
 #quiz_score_possible {

@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * subscriptions_question.features.user_permission.inc
+ * subscriptions_reference_flag.features.user_permission.inc
  */
 
 /**
