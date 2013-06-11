@@ -209,7 +209,7 @@ function course_theme() {
 function course_node_view($node, $view_mode) {
   //unset Book Links
   hide($node->content['links']['book']);
-
+  
   // Redirect to fist lesson from unit content type page
   if ($node->type === 'unit' && $view_mode == 'full') {
     $book_link = $node->book;
@@ -588,7 +588,7 @@ function course_is_teacher($node, $account) {
   }
   // Compare uid of course teacher and account.
   $item = entity_metadata_wrapper('node', $node);
-  $teacher = $item->book->field_teacher->uid->raw();
+  $teacher = $item->book->field_teacher->raw();
   if ($teacher == $account->uid) {
     // Account is a teacher of the course.
     return TRUE;

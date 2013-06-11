@@ -5,18 +5,7 @@
  */
 function course_user_default_permissions() {
   $permissions = array();
-  
-  // Exported permission: access absolute messages.
-  $permissions['access absolute messages'] = array(
-    'name' => 'access absolute messages',
-    'roles' => array(
-      'administrator' => 'administrator',
-      'anonymous user' => 'anonymous user',
-      'authenticated user' => 'authenticated user',
-    ),
-    'module' => 'absolute_messages',
-  );
-  
+   
   // Exported permission: access comments.
   $permissions['access comments'] = array(
     'name' => 'access comments',

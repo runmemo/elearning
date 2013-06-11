@@ -31,6 +31,16 @@ function user_extra_user_default_permissions() {
     ),
     'module' => 'node',
   );
+  
+   // Exported permission: access absolute messages.
+  $permissions['access absolute messages'] = array(
+    'name' => 'access absolute messages',
+    'roles' => array(
+      'anonymous user' => 'anonymous user',
+      'authenticated user' => 'authenticated user',
+    ),
+    'module' => 'absolute_messages',
+  );
 
   return $permissions;
 }

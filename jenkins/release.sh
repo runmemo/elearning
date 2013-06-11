@@ -5,5 +5,5 @@ git pull
 drush updatedb -y
 
 #run tests
-/bin/sh -x /var/www/html/courshub/jenkins/tests_run.sh
+/bin/sh -x /var/www/html/coursehub/jenkins/tests_run.sh
 

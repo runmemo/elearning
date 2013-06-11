@@ -42,6 +42,7 @@ class CourseTestCase extends DrupalWebTestCase {
     );
     $course =  $this->drupalCreateNode($settings);
     $course->book['bid'] = $course->nid;
+    $course->field_teacher[LANGUAGE_NONE][0]['uid'] = $uid;
     node_save($course);
     return $course;
   }
