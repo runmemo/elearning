@@ -89,7 +89,7 @@ function newsletter_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_select',
-      'weight' => -3,
+      'weight' => -6,
     ),
   );
 
