@@ -22,7 +22,8 @@ alias drush="drush -l http://$(hostname)"
 drush status
 drush updatedb --yes
 drush cache-clear all
-for testname in `cat ./scripts/Jenkins/tests_list`; do
+ls
+for testname in `cat ./jenkins/tests_list`; do
 drush test-run --jenkins=/tmp/tests/ ${testname}
   if [ $? -ne 0 ]; then
     echo "Failed to run test ${testname}"
