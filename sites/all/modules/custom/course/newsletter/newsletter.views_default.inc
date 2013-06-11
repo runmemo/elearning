@@ -47,7 +47,8 @@ function newsletter_views_default_views() {
 
   print l(t(\'Return to Class\'), \'node/\'.$course_link, array(\'attributes\' => array(\'class\' => \'node-question-return-link\')));
 
-?>';
+  print flag_create_link(\'subscriptions_course_blog\', $view->args[0]);
+  ?>';
   /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
