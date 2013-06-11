@@ -22,6 +22,7 @@ dependencies[] = views
 dependencies[] = vud_field
 dependencies[] = views_php
 dependencies[] = subscriptions_reference
+dependencies[] = userpoints_rules
 
 features[context][] = open_question
 features[ctools][] = context:context:3
