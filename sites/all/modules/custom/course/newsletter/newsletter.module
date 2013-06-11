@@ -25,3 +25,17 @@ function newsletter_node_access($node, $op, $account) {
     }
   }
 }
+
+/*
+ * Implements hook_form_FORM_ID_alter.
+ *
+ */
+function newsletter_form_newsletter_node_form_alter(&$form, &$form_state) {
+  $compressed_path = isset($_GET['path']) ? $_GET['path'] : '';
+  if ($compressed_path) {
+    $original_path = relevant_answers_decompress_string($compressed_path);
+    $langcode = field_language('node', $form_state['node'], 'field_course');
+    $form['field_course'][$langcode]['#default_value'][] = $original_path;
+    $form['field_course']['#disabled'] = TRUE;
+  }
+}
