@@ -15,19 +15,55 @@ class CoursePointsTestCase extends DrupalUnitTestCase {
     );
   }
 
-  function testProcessUserPoints() {
-    $params = array(
-      'points' => -5
-    );
-    $result = course_points_process_points($params, 5);
-    $message = 'A zero value should return FALSE.';
-    $this->assertFalse($result, $message);
-    $result = course_points_process_points($params, 0);
-    $message = 'A negative value should return TRUE.';
-    $this->assertTrue($result, $message);
-    $result = course_points_process_points($params, 6);
-    $message = 'A positive value should return FALSE.';
-    $this->assertFalse($result, $message);
+  function testUserpointsPositive() {
+    
+    // Test that points are reduced if current value is relatively big.
+    $params = array('points' => -5, );
+    course_points_make_positive($params, 10);
+    $new_points = $params['points'];
+    $this->assertEqual($new_points, -5, 'Positive value is reduced.');
+    
+    // Positive value is added to positive points.
+    $params = array('points' => 5, );
+    course_points_make_positive($params, 10);
+    $new_points = $params['points'];
+    $this->assertEqual($new_points, 5, 'Positive value is added to positive points.');
+    
+    
+    // Test that zero value will not be reduced.
+    $params = array('points' => -5, );
+    course_points_make_positive($params, 0);
+    $new_points = $params['points'];
+    $this->assertEqual($new_points, 0, 'Zero is not reduced.');
+    
+    // Test that small value will be reduced to zero.
+    $params = array('points' => -5, );
+    course_points_make_positive($params, 3);
+    $new_points = $params['points'];
+    $this->assertEqual($new_points, -3, 'Small value is reduced to zero.');
+  
+    // Test that negative userpoints will be adjusted to be positive.
+    $params = array('points' => -5, );
+    course_points_make_positive($params, -10);
+    $new_points = $params['points'];
+    $this->assertEqual($new_points, 10, 'Negative value turns to zero.');
+    
+    // Positive added to big negative goes to zero.
+    $params = array('points' => 5, );
+    course_points_make_positive($params, -10);
+    $new_points = $params['points'];
+    $this->assertEqual($new_points, 10, 'Positive added to negative sets points to zero.');
+    
+    // Positive added to small negative is not affected.
+      $params = array('points' => 5, );
+    course_points_make_positive($params, -2);
+    $new_points = $params['points'];
+    $this->assertEqual($new_points, 5, 'Positive added to small negative is not affected.');
+    
+    // Check that if points are not set, nothing happens.
+    $params = array('some value' => -5, );
+    course_points_make_positive($params, -10);
+    $this->assertTrue(!isset($params['points']), 'Points are not added to params if not set.');
   }
 
 }

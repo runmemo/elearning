@@ -41,9 +41,9 @@ function course_points_block_view($delta ='') {
  * Prevents account's userpoints from going (further) negative.
  */
 function course_points_userpoints($op, &$params) {
-  if ($op == 'points before' && isset($params['points']) && $params['points'] < 0) {
+  if ($op == 'points before') {
     $current_points = userpoints_get_current_points($params['uid'], $params['tid']);
-    course_points_process_points($params, $current_points);
+    course_points_make_positive($params, $current_points);
   }
 }
 
@@ -53,15 +53,18 @@ function course_points_userpoints($op, &$params) {
  * 
  * @param array $params
  *   Userpoints transaction parameters.
+ * 
  * @param integer $current_points
  *   Current user points amount.
  */
-function course_points_process_points(&$params, $current_points) {
-  $new_points = $current_points + $params['points'];
-  // If points are going to be negative or negative already amend current
-  // transaction's points in order to set points to zero.
-  if ($new_points < 0) {
-    $params['points'] = 0 - $current_points;
-    return TRUE;
+function course_points_make_positive(&$params, $current_points) {
+  if (isset($params['points'])) {
+    $change = $params['points'];
+    $new_points = $current_points + $change;
+    // If points are going to be negative or negative already amend current
+    // transaction's points in order to set points to zero.
+    if ($new_points < 0) {
+      $params['points'] = -$current_points;
+    }
   }
 }
