@@ -189,7 +189,19 @@ class CourseUnitTestCase extends DrupalUnitTestCase {
       'group' => 'Course',
     );
   }
-
+  
+  // @todo remove function once this issue is resolved: 
+  //   https://drupal.org/node/1823504
+  function setUp() {
+    parent::setUp();
+    global $language;
+    
+    // Set to English to prevent exceptions from utf8_truncate() from t()
+    // during install if the current language is not 'en'.
+    // The following array/object conversion is copied from language_default().
+    $language = (object) array('language' => 'en', 'name' => 'English', 'native' => 'English', 'direction' => 0, 'enabled' => 1, 'plurals' => 0, 'formula' => '', 'domain' => '', 'prefix' => '', 'weight' => 0, 'javascript' => '');
+  }
+  
   /**
    * @see _course_get_tree_items($tree) 
    */
