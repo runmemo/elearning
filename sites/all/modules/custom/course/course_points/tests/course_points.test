@@ -2,16 +2,16 @@
 
 /**
  * @file
- * answers_extra.test contains test case for Answers Extra module.
+ * course_points.test contains test case for Course Points module.
  */
 
-class AnswersExtraTestCase extends DrupalUnitTestCase {
+class CoursePointsTestCase extends DrupalUnitTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => 'Answers Extra Unit Test Case',
-      'description' => 'Answers Extra module unit tests',
-      'group' => 'Userpoints',
+      'name' => 'Course Points Unit Test Case',
+      'description' => 'Course Points module unit tests',
+      'group' => 'Course',
     );
   }
 
@@ -19,13 +19,13 @@ class AnswersExtraTestCase extends DrupalUnitTestCase {
     $params = array(
       'points' => -5
     );
-    $result = answers_extra_process_points($params, 5);
+    $result = course_points_process_points($params, 5);
     $message = 'A zero value should return FALSE.';
     $this->assertFalse($result, $message);
-    $result = answers_extra_process_points($params, 0);
+    $result = course_points_process_points($params, 0);
     $message = 'A negative value should return TRUE.';
     $this->assertTrue($result, $message);
-    $result = answers_extra_process_points($params, 6);
+    $result = course_points_process_points($params, 6);
     $message = 'A positive value should return FALSE.';
     $this->assertFalse($result, $message);
   }
