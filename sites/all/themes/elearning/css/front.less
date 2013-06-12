@@ -26,12 +26,15 @@
   }
   .views-field-field-image {
     img {
-      border: 7px solid transparent;
-      border-image: url(../images/slider-bottom.png) 7 0 stretch;
-      border-top: 0;
-      border-right: 0;
-      border-left: 0;
       padding-bottom: 3px;
+    }
+    &:after {
+       position: absolute;
+      .show(block);
+      content: "";
+      .bg-img('slider-bottom.png');
+      width: 864px;
+      height: 7px;
     }
   }
 }
