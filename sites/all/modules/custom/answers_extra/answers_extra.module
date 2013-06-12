@@ -235,13 +235,26 @@ function answers_extra_preprocess_views_view_fields(&$vars) {
 function answers_extra_userpoints($op, &$params) {
   if ($op == 'points before' && isset($params['points']) && $params['points'] < 0) {
     $current_points = userpoints_get_current_points($params['uid'], $params['tid']);
-    $new_points = $current_points + $params['points'];
-    // If points are going to be negative or negative already cancel current transaction
-    // and perform transaction, that set points to zero.
-    if ($new_points < 0) {
-      $params['points'] = 0 - $current_points;
-      return TRUE;
-    }
+    answers_extra_process_points($params, $current_points);
+  }
+}
+
+/**
+ * Processes transaction's points and changes amount in case of new amount
+ * is going to be negative.
+ * 
+ * @param array $params
+ *   Userpoints transaction parameters.
+ * @param integer $current_points
+ *   Current user points amount.
+ */
+function answers_extra_process_points(&$params, $current_points) {
+  $new_points = $current_points + $params['points'];
+  // If points are going to be negative or negative already amend current
+  // transaction's points in order to set points to zero.
+  if ($new_points < 0) {
+    $params['points'] = 0 - $current_points;
+    return TRUE;
   }
 }
 

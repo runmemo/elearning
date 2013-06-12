@@ -13,6 +13,8 @@ dependencies[] = userpoints_rules
 dependencies[] = voting_rules
 dependencies[] = strongarm
 
+files[] = tests/answers_extra.test
+
 features[ckeditor_profile][] = Advanced
 features[ckeditor_profile][] = CKEditor Global Profile
 features[ckeditor_profile][] = Full

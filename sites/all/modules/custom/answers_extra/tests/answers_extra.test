@@ -1,0 +1,33 @@
+<?php
+
+/**
+ * @file
+ * answers_extra.test contains test case for Answers Extra module.
+ */
+
+class AnswersExtraTestCase extends DrupalUnitTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Answers Extra Unit Test Case',
+      'description' => 'Answers Extra module unit tests',
+      'group' => 'Userpoints',
+    );
+  }
+
+  function testProcessUserPoints() {
+    $params = array(
+      'points' => -5
+    );
+    $result = answers_extra_process_points($params, 5);
+    $message = 'A zero value should return FALSE.';
+    $this->assertFalse($result, $message);
+    $result = answers_extra_process_points($params, 0);
+    $message = 'A negative value should return TRUE.';
+    $this->assertTrue($result, $message);
+    $result = answers_extra_process_points($params, 6);
+    $message = 'A positive value should return FALSE.';
+    $this->assertFalse($result, $message);
+  }
+
+}

@@ -6,3 +6,4 @@ OpenQuestionCase
 OpenQuestionAccessTestCase
 OpenQuestionUnitTest
 CourseRegistrationTestCase
+AnswersExtraTestCase
