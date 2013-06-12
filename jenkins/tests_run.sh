@@ -18,7 +18,7 @@ chmod 777 /tmp/tests/
 
 cd /var/www/html/coursehub
 
-alias drush="drush -l http://$(hostname)"
+alias drush="drush -l test.coursehub.ru"
 drush status
 drush updatedb --yes
 drush cache-clear all
