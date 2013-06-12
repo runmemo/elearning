@@ -228,12 +228,18 @@
 .main-menu-border() {
   border: none;
   height: 17px;
-  padding: 8px 20px 6px 20px;
+  padding: 10px 24px 6px 20px;
   margin: 4px 0px 0px 0px;
-  @media @narrow {
-    border: 3px solid transparent;
-    border-left: 0;
-    border-image: url(../images/line-main-menu.png) 0 3 stretch;
+  &:after {
+    position: absolute;
+    .show(inline);
+    content: "";
+    .bg-img('line-main-menu.png');
+    background-repeat: repeat;
+    width: 3px;
+    height: 30px;
+    right: 0;
+    top: 4px;
   }
 }
 
