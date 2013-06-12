@@ -1208,15 +1208,7 @@ h2 {
     }
   }
   .vud-widget-elearning_widget {
-    @media @narrow {
-      margin: 0 5px 0 10px;
-    }
-    @media @normal {
-      margin: 0 20px 0 10px;
-    }
-    @media @wide {
-      margin: 0 35px 0 10px;
-    }
+    margin-left: 10px;
   }
 }
 
@@ -1300,7 +1292,6 @@ h2 {
 
 .node-question-picture-points {
   .left();
-  
   @media @narrow {
     margin-right: 15px;
   }
@@ -1325,6 +1316,23 @@ h2 {
   }
   .node-supplementary-wrapper {
     margin-top: 22px;
+  }
+  .field-name-field-rating-widget {
+    .left();
+  }
+}
+
+.node-question-body .field-name-field-rating-widget,
+.view-question-answers .views-answer-widgets , 
+.view-answer-feedbacks .views-answer-widgets  {
+  @media @narrow {
+    width: 45px;
+  }
+  @media @normal {
+    width: 46px;
+  }
+  @media @wide {
+    width: 61px;
   }
 }
 
@@ -1590,6 +1598,7 @@ h2 {
     margin-right: 8px;
     position: absolute;
     right: 0;
+    filter: none;
   }
 }
 
