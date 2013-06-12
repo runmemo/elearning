@@ -18,12 +18,12 @@ chmod 777 /tmp/tests/
 
 cd /var/www/html/coursehub
 
-alias drush="drush -l http://test.coursehub.ru"
-drush status
-drush updatedb --yes
-drush cache-clear all
+alias drush_test="drush -l http://test.coursehub.ru"
+drush_test status
+drush_test updatedb --yes
+drush_test cache-clear all
 for testname in `cat ./jenkins/tests_list`; do
-drush test-run --xml=/tmp/tests/ ${testname}
+drush_test test-run --xml=/tmp/tests/ ${testname}
   if [ $? -ne 0 ]; then
     echo "Failed to run test ${testname}"
     exit 1
