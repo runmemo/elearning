@@ -22,7 +22,7 @@ drush status
 drush updatedb --yes
 drush cache-clear all
 for testname in `cat ./jenkins/tests_list`; do
-drush -l http://test.coursehub.ru test-run --xml=/tmp/tests/ ${testname}
+drush -l http://test.coursehub.ru test-run --jenkins=/tmp/tests/ ${testname}
   if [ $? -ne 0 ]; then
     echo "Failed to run test ${testname}"
     exit 1
