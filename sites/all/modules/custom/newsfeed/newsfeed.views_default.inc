@@ -23,7 +23,6 @@ function newsfeed_views_default_views() {
   /* Display: Master */
   $handler = $view->new_display('default', 'Master', 'default');
   $handler->display->display_options['title'] = 'Notifications';
-  $handler->display->display_options['css_class'] = 'views-view-newsfeed';
   $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['access']['type'] = 'role';
   $handler->display->display_options['access']['role'] = array(
@@ -34,7 +33,20 @@ function newsfeed_views_default_views() {
   $handler->display->display_options['exposed_form']['type'] = 'basic';
   $handler->display->display_options['pager']['type'] = 'none';
   $handler->display->display_options['style_plugin'] = 'default';
+  $handler->display->display_options['style_options']['grouping'] = array(
+    0 => array(
+      'field' => 'status',
+      'rendered' => 0,
+      'rendered_strip' => 0,
+    ),
+  );
   $handler->display->display_options['row_plugin'] = 'fields';
+  /* Header: Global: Text area */
+  $handler->display->display_options['header']['area']['id'] = 'area';
+  $handler->display->display_options['header']['area']['table'] = 'views';
+  $handler->display->display_options['header']['area']['field'] = 'area';
+  $handler->display->display_options['header']['area']['content'] = 'New events:';
+  $handler->display->display_options['header']['area']['format'] = 'filtered_html';
   /* No results behavior: Global: Text area */
   $handler->display->display_options['empty']['area']['id'] = 'area';
   $handler->display->display_options['empty']['area']['table'] = 'views';
@@ -46,12 +58,43 @@ function newsfeed_views_default_views() {
   $handler->display->display_options['relationships']['user']['id'] = 'user';
   $handler->display->display_options['relationships']['user']['table'] = 'message';
   $handler->display->display_options['relationships']['user']['field'] = 'user';
+  /* Field: Message-User instance: Message status */
+  $handler->display->display_options['fields']['status']['id'] = 'status';
+  $handler->display->display_options['fields']['status']['table'] = 'message_user';
+  $handler->display->display_options['fields']['status']['field'] = 'status';
+  $handler->display->display_options['fields']['status']['label'] = '';
+  $handler->display->display_options['fields']['status']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['status']['type'] = 'custom';
+  $handler->display->display_options['fields']['status']['type_custom_true'] = '<div class="message-status read"></div>';
+  $handler->display->display_options['fields']['status']['type_custom_false'] = '<div class="message-status unread"></div>';
+  $handler->display->display_options['fields']['status']['not'] = 0;
+  /* Field: Message status for class */
+  $handler->display->display_options['fields']['status_1']['id'] = 'status_1';
+  $handler->display->display_options['fields']['status_1']['table'] = 'message_user';
+  $handler->display->display_options['fields']['status_1']['field'] = 'status';
+  $handler->display->display_options['fields']['status_1']['ui_name'] = 'Message status for class';
+  $handler->display->display_options['fields']['status_1']['label'] = '';
+  $handler->display->display_options['fields']['status_1']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['status_1']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['status_1']['type'] = 'custom';
+  $handler->display->display_options['fields']['status_1']['type_custom_true'] = 'read';
+  $handler->display->display_options['fields']['status_1']['type_custom_false'] = 'unread';
+  $handler->display->display_options['fields']['status_1']['not'] = 0;
+  /* Field: Message: Timestamp */
+  $handler->display->display_options['fields']['timestamp']['id'] = 'timestamp';
+  $handler->display->display_options['fields']['timestamp']['table'] = 'message';
+  $handler->display->display_options['fields']['timestamp']['field'] = 'timestamp';
+  $handler->display->display_options['fields']['timestamp']['label'] = '';
+  $handler->display->display_options['fields']['timestamp']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['timestamp']['date_format'] = 'custom';
+  $handler->display->display_options['fields']['timestamp']['custom_date_format'] = 'd/m/Y';
   /* Field: User: Picture */
   $handler->display->display_options['fields']['picture']['id'] = 'picture';
   $handler->display->display_options['fields']['picture']['table'] = 'users';
   $handler->display->display_options['fields']['picture']['field'] = 'picture';
   $handler->display->display_options['fields']['picture']['relationship'] = 'user';
   $handler->display->display_options['fields']['picture']['label'] = '';
+  $handler->display->display_options['fields']['picture']['exclude'] = TRUE;
   $handler->display->display_options['fields']['picture']['element_class'] = 'tiny-avatar';
   $handler->display->display_options['fields']['picture']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['picture']['empty'] = '<div class="tiny-avatar"></div>';
@@ -61,16 +104,10 @@ function newsfeed_views_default_views() {
   $handler->display->display_options['fields']['message_render']['table'] = 'message';
   $handler->display->display_options['fields']['message_render']['field'] = 'message_render';
   $handler->display->display_options['fields']['message_render']['label'] = '';
+  $handler->display->display_options['fields']['message_render']['element_class'] = 'status-[status_1]';
   $handler->display->display_options['fields']['message_render']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['message_render']['partials'] = 1;
   $handler->display->display_options['fields']['message_render']['partials_delta'] = '1';
-  /* Field: Message: Timestamp */
-  $handler->display->display_options['fields']['timestamp']['id'] = 'timestamp';
-  $handler->display->display_options['fields']['timestamp']['table'] = 'message';
-  $handler->display->display_options['fields']['timestamp']['field'] = 'timestamp';
-  $handler->display->display_options['fields']['timestamp']['label'] = '';
-  $handler->display->display_options['fields']['timestamp']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['timestamp']['date_format'] = 'medium_dot';
   /* Sort criterion: Message: Timestamp */
   $handler->display->display_options['sorts']['timestamp']['id'] = 'timestamp';
   $handler->display->display_options['sorts']['timestamp']['table'] = 'message';

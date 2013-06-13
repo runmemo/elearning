@@ -381,10 +381,10 @@ function registration_node_view($node, $view_mode) {
     }
     global $user;
     // find whether user has permission to see this node.
-    $access = registration_user_access($node, $user);
+    $access = registration_view_access($node, $user);
     $context_access = 'none';
     if (isset($access)) { // content is part of the course
-      if ($access) {
+      if ($access || node_access($node, 'update', $user)) {
         $context_access = 'true';
       }
       else { // user does not have access to course item
@@ -398,6 +398,31 @@ function registration_node_view($node, $view_mode) {
     }
   }
 }
+
+/**
+ * Function for access control to course items.
+ * 
+ * $param object $node
+ *   Represents node that we 
+ */
+function registration_view_access($node, $account) {
+  
+  if (!isset($node->book)) { // this node is not part of a book
+    return NULL;
+  }
+
+  $book = $node->book;
+  if ($book['depth'] != 3) {
+    // here we just check whether it's course item level
+    return NULL;
+  }
+
+  // Check if user is registered to the course.
+  $rid = course_registration_id($account->uid, $book['bid']);
+
+  return (bool) $rid;   
+}
+
 
 /**
  * Registration form submit hook

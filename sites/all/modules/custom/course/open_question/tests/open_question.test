@@ -315,7 +315,7 @@ class OpenQuestionUnitTest extends DrupalUnitTestCase {
   }
   
   function testOqCreditImplementation() {
-    $credit_info = open_question_credit_info();
+    $credit_info = module_invoke('open_question', 'credit_info');
     $bundle_exits = FALSE;
     foreach ($credit_info as $bundle_info) {
       if ($bundle_info['bundle'] = 'open_question') {

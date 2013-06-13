@@ -37,6 +37,10 @@ function newsletter_views_default_views() {
   $handler->display->display_options['header']['php']['table'] = 'views';
   $handler->display->display_options['header']['php']['field'] = 'php';
   $handler->display->display_options['header']['php']['empty'] = TRUE;
+  // @todo Barinder: 
+  // 1. refactor this to normal PHP code. What I see in header content has nothing to do with the view.
+  // 2. change 'Create Blog' to 'New Announcement'.
+  // @todo Ilya: I don't see follow flag as a Student user in my Dev.
   $handler->display->display_options['header']['php']['php_output'] = '<?php
   $course_link = course_last_visited_node($view->args[0]);
 

@@ -4,12 +4,12 @@
 /**
  * Implements hook_credit_info()
  */
-function quiz_credit_credit_info() {
+function quiz_extra_credit_info() {
   $results = array();
   $results['quiz'] = array (
     'bundle' => 'quiz',
     // callback function must return value between 0 and 1.
-    'result_callback' => 'quiz_credit_calculate',
+    'result_callback' => 'quiz_extra_calculate_credit',
     
   );
   return $results;
@@ -17,9 +17,9 @@ function quiz_credit_credit_info() {
 
 /**
  * Calculates credit awared for completion of a quiz to a user
- * @see quiz_credit_credit_info()
+ * @see quiz_extra_credit_info()
  */
-function quiz_credit_calculate($quiz_node, $account) {
+function quiz_extra_calculate_credit($quiz_node, $account) {
   if ($quiz_node->type !== 'quiz') {
     return .0;
   }

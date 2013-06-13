@@ -22,9 +22,12 @@ drush status
 drush updatedb --yes
 drush cache-clear all
 for testname in `cat ./jenkins/tests_list`; do
-drush -l http://test.coursehub.ru test-run --jenkins=/tmp/tests/ ${testname}
+  START_TIME=$SECONDS
+  drush -l http://test.coursehub.ru test-run --jenkins=/tmp/tests/ ${testname}
   if [ $? -ne 0 ]; then
     echo "Failed to run test ${testname}"
     exit 1
   fi
+  ELAPSED_TIME=$(($SECONDS - $START_TIME))
+  echo "Test ${testname} complete in: $(($ELAPSED_TIME/60)) min $(($ELAPSED_TIME%60)) sec." 
 done

@@ -6,6 +6,13 @@
  */
 
 
+function credit_hook_info() {
+  $hooks['credit_info'] = array(
+    'group' => 'credit',
+  );
+  return $hooks;
+}
+
 // @todo validation should check other objects with weight and limit it with total credits on course
 // @todo total credits - on course content type 
 
