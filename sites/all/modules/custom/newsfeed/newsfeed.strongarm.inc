@@ -201,6 +201,7 @@ function newsfeed_strongarm() {
   $strongarm->api_version = 1;
   $strongarm->name = 'message_subscribe_default_notifiers';
   $strongarm->value = array(
+    'email' => 'email',
     'internal' => 'internal',
   );
   $export['message_subscribe_default_notifiers'] = $strongarm;
