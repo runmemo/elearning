@@ -77,36 +77,3 @@ function open_question_flag_default_flags() {
   );
   return $flags;
 }
-
-/**
- * Implements hook_node_info().
- */
-function open_question_node_info() {
-  $items = array(
-    'open_question' => array(
-      'name' => t('Open Question'),
-      'base' => 'node_content',
-      'description' => t('Represents open questions that can be part of the course and can be answered by a student.'),
-      'has_title' => '1',
-      'title_label' => t('Title'),
-      'help' => '',
-    ),
-    'open_question_answer' => array(
-      'name' => t('Open Question Answer'),
-      'base' => 'node_content',
-      'description' => '',
-      'has_title' => '1',
-      'title_label' => t('Title'),
-      'help' => '',
-    ),
-    'open_question_feedback' => array(
-      'name' => t('Open Question Feedback'),
-      'base' => 'node_content',
-      'description' => t('Feedback provided to the user by other students on the Open Questions page.'),
-      'has_title' => '1',
-      'title_label' => t('Title'),
-      'help' => '',
-    ),
-  );
-  return $items;
-}
