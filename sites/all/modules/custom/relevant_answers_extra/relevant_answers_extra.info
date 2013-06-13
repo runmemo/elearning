@@ -20,3 +20,5 @@ features[variable][] = menu_options_question
 features[variable][] = menu_parent_question
 features[variable][] = node_preview_question
 features[variable][] = node_submitted_question
+
+features[views_view][] = course_questions
