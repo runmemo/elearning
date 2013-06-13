@@ -204,7 +204,7 @@ function answers_extra_subscriptions_reference_info() {
 function answers_extra_preprocess_views_view_fields(&$vars) {
   $view = $vars['view'];
  // print_nice($view, 3);
-  $question_list_views = array('relevant_questions_list', 'user_questions_list');
+  $question_list_views = array('relevant_questions_list', 'user_questions_list', 'course_questions');
   if (!in_array($view->name, $question_list_views)) {
     return;
   }
