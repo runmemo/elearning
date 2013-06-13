@@ -51,17 +51,117 @@ function newsfeed_block_info() {
  */
 function newsfeed_block_view($delta = '') {
   if ($delta == 'user_notifications_count') {
-    global $user;
-    if (!$user->uid) {
-      return;
-    }
-    $block = array('subject' => '');
-    $block['content'] = array(
-      '#type' => 'markup',
-      '#markup' => l('<span class="link-inner">17</span>', 'notifications', array('attributes' => array('title' => t('Notifications')), 'html' => TRUE)),
-    );
-    return $block;
+    return newsfeed_notifications_block();
   }
+}
+
+/**
+ * Generates notifications block for the current user if the use is logged in.
+ * 
+ * @return array
+ *   Block's content array.
+ */
+function newsfeed_notifications_block() {
+  global $user;
+  if (!$user->uid) {
+    return;
+  }
+  $count = newsfeed_get_unread_messages_count($user->uid);
+  $block = array('subject' => '');
+  $block['content'] = array(
+    '#type' => 'markup',
+    '#markup' => l('<span class="link-inner">' . $count . '</span>', 'notifications', array('attributes' => array('title' => t('Notifications')), 'html' => TRUE)),
+  );
+  return $block;
+}
+
+
+/**
+ * Calculates number of unread messages for the user.
+ * 
+ * @param integer $uid
+ *   User ID.
+ * @return integer
+ *   Number of unread messages.
+ */
+function newsfeed_get_unread_messages_count($uid) {
+  if (!$uid) {
+    return FALSE;
+  }
+  $query = db_select('message_user', 'mu')
+    ->condition('uid', $uid)
+    ->condition('status', 0);
+  $query->addExpression('COUNT(*)', 'count');
+  $db_result = $query->execute();
+  $result = $db_result->fetch();
+
+  return isset($result->count) ? $result->count : 0;
+}
+
+/**
+ * Inserts new record in the table for message-user instances.
+ * 
+ * @param integer $mid
+ *   Message ID.
+ * @param integer $uid
+ *   User ID.
+ * @param integer $status
+ *   Message status.
+ */
+function newsfeed_insert($mid, $uid, $status = 0) {
+  $record = array('mid' => $mid, 'uid' => $uid, 'status' => $status);
+  drupal_write_record('message_user', $record);
+}
+
+/**
+ * Removes all records for the given message ID
+ * from the table for message-user instances.
+ * 
+ * @param integer $mid
+ *   Message ID.
+ */
+function newsfeed_remove($mid) {
+  db_delete('message_user')
+    ->condition('mid', $mid)
+    ->execute();
+}
+
+/**
+ * Updates message status for the given user.
+ * 
+ * @param integer $mid
+ *   Message ID.
+ * @param integer $uid
+ *   User ID.
+ */
+function newsfeed_update_message_status($mid, $uid, $status) {
+  db_update('message_user')
+    ->fields(array('status' => $status))
+    ->condition('mid', $mid)
+    ->condition('uid', $uid)
+    ->execute();
+}
+
+/**
+ * Gets status of the given message.
+ * 
+ * @param integer $mid
+ *   Message ID.
+ * @param integer $uid
+ *   User ID.
+ * 
+ * @return integer
+ *   Message status.
+ */
+function newsfeed_get_message_status($mid, $uid) {
+  $query = db_select('message_user', 'mu')
+    ->fields('mu', array('status'))
+    ->condition('mid', $mid)
+    ->condition('uid', $uid);
+  $db_result = $query->execute();
+  $result = $db_result->fetch();
+  
+  return isset($result->status) ? $result->status : NULL;
 }
 
 /**
@@ -138,8 +238,6 @@ function newsfeed_message_subscribe_get_subscribers_alter(&$uids, $values) {
  */
 function newsfeed_entity_delete($entity, $entity_type) {
   if ($entity_type == 'message') {
-    db_delete('message_user')
-      ->condition('mid', $entity->mid)
-      ->execute();
+    newsfeed_remove($entity->mid);
   }
 }

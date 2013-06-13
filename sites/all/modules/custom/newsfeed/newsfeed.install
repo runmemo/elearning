@@ -5,7 +5,6 @@
  * newsfeed.install
  */
 
-
 /**
  * Implements hook_schema().
  * 
@@ -13,7 +12,7 @@
  */
 function newsfeed_schema() {
   $schema = array();
-  
+
   $schema['message_user'] = array(
     'description' => 'Table for storing Message - User instances',
     'fields' => array(
@@ -23,29 +22,41 @@ function newsfeed_schema() {
         'not null' => TRUE,
         'default' => 0,
       ),
-       'uid' => array(
+      'uid' => array(
         'description' => 'Id of the user.',
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
       ),
-     ),
+    ),
     'primary key' => array('mid', 'uid'),
     'indexes' => array(
       'user_registration' => array('mid', 'uid'),
     ),
     'foreign keys' => array(
       'mid' => array(
-          'table' => 'message',
-          'columns' => array('mid' => 'mid'),
-      ),  
+        'table' => 'message',
+        'columns' => array('mid' => 'mid'),
+      ),
       'uid' => array(
-          'table' => 'users',
-          'columns' => array('uid' => 'uid'),
-      ),  
+        'table' => 'users',
+        'columns' => array('uid' => 'uid'),
+      ),
     ),
-     
   );
 
   return $schema;
+}
+
+/**
+ * Adds new field 'status' to the 'message_user' table.
+ */
+function newsfeed_update_7000() {
+  $spec = array(
+    'description' => 'Status of the message: read/unread',
+    'type' => 'int',
+    'not null' => TRUE,
+    'default' => 0,
+  );
+  db_add_field('message_user', 'status', $spec);
 }

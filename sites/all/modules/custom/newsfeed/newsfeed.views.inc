@@ -57,6 +57,7 @@ function newsfeed_views_data() {
       'help' => t('Use this relationship in order to load Message fields.'),
     ),
   );
+
   $data['message_user']['uid'] = array(
     'title' => t('Instance user ID'),
     'help' => t('User ID'),
@@ -85,5 +86,22 @@ function newsfeed_views_data() {
       'help' => t('Use this relationship in order to load User fields.'),
     ),
   );
+
+  $data['message_user']['status'] = array(
+    'title' => t('Message status'),
+    'help' => t('Boolean, indicating whether message is read.'),
+    'field' => array(
+      'handler' => 'views_handler_field_boolean',
+      'click sortable' => TRUE,
+    ),
+    'filter' => array(
+      'title' => t('Message status fliter'),
+      'handler' => 'views_handler_filter_boolean_operator',
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+  );
+
   return $data;
 }
