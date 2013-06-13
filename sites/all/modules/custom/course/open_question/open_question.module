@@ -6,6 +6,19 @@
  */
 include_once 'open_question.features.inc';
 
+function open_question_hook_info() {
+  
+  $hooks['block_info']['group'] = 'block';
+  $hooks['block_view']['group'] = 'block';
+  
+  $hooks['node_view']['group'] = 'node';
+  $hooks['node_insert']['group'] = 'node';
+  
+  $hooks['comment_insert']['group'] = 'comment';
+  
+  return $hooks;
+}
+
 /**
  * Implements hook_init().
  */
@@ -26,18 +39,6 @@ function open_question_init() {
 }
 
 
-/**
- * Implements hook_block_info().
- */
-function open_question_block_info() {
-  $blocks['oq_answer_form_block'] = array(
-    'info' => t('OQ Answer Form Block'),
-  );
-  $blocks['oq_other_answers_block'] = array(
-    'info' => t('OQ Answers Review List'),
-  );
-  return $blocks;
-}
 
 /**
  * Implements hook_permission().
@@ -49,71 +50,6 @@ function open_question_permission() {
       'description' => t('Allows user to create open questions.'),
     )
   );
-}
-
-/**
- * Implements hook_block_view().
- */
-function open_question_block_view($delta = '') {
-  $block = array();
-  if (!in_array($delta, array('oq_answer_form_block','oq_other_answers_block'))) {
-    return $block;
-  }
-  $question = menu_get_object('node');
-  if (!$question || $question->type != 'open_question') {
-    watchdog('open question', 
-        'Open question block %delta is displayed on non question page: %path', 
-       array('%path' => current_path(), '%delta' => $delta), WATCHDOG_WARNING);
-    return;
-  }
-  $answered = open_question_is_answered($question->nid);
-
-  switch ($delta) {
-    
-    case 'oq_answer_form_block':
-      $block['subject'] = '';
-
-      if (!node_access('create', 'open_question_answer')) {
-        // User does not have rights to see the form.
-        $block['content'] = array (
-          '#type' => 'markup',
-          '#prefix' => '<p class="oq-review-no-access">',
-          '#suffix' => '</p>',
-          '#markup' => t('You need to register to answer this question.'),
-        );
-        return $block;     
-      }
-      // Add answer form.
-      $block['content']['answer_form']= drupal_get_form('open_question_answer_form', $answered);
-      
-      // Get view with feedbacks. 
-      if ($answered) {
-        $block['content']['view'] = open_question_feedbacks_view($answered); 
-      }
-      else {
-        // User did not answer the question, so there are no feedbacks.
-        return;
-      }
-    
-      break;
-      
-    case 'oq_other_answers_block':
-      $block['subject'] = '';
-     
-      if ($answered) {
-        $block['content'] = open_question_review_list_view();
-      }
-      else {
-        $block['content']['message'] = array(
-         '#type' => 'markup',
-         '#prefix' => '<p class="oq-review-no-access">',
-         '#suffix' => '</p>',
-         '#markup' => t('You need to answer question before you can review answers of other students.'),
-        );
-      }
-    break;
-  }
-  return $block;
 }
 
 /*
@@ -143,57 +79,6 @@ function open_question_review_list_view($oq_nid = 0) {
     '#markup' => $review_list_view->preview(),
   );
   return $block_content;
-}
-
-/**
- * Implementation of hook_rules_event_info()
- */
-function open_question_rules_event_info() {
-  return array(
-    'open_question_answered' => array(
-      'label' => t('Open question complete'),
-      'module' => 'open_question',
-      'group' => 'Course' ,
-      'variables' => array(
-        'answered_by' => array('type' => 'user', 'label' => t('User who answered the open question.')),
-        'open_question' => array('type' => 'node', 'label' => t('The open question that was answered.')),
-      ),
-    ),
-  );
-}
-
-/**
- * Gets nid of answer by user to open question.
- * 
- * @param integer $nid
- * @param integer $uid
- * 
- * @return integer
- *   Nid of user's answer to open question
- */
-function open_question_is_answered($nid, $uid = NULL) {
-  if (is_null($uid)) {
-    global $user;
-    $uid = $user->uid;
-  }
-  // Count number of answers given by user.
-  $query = new EntityFieldQuery();
-  $query->entityCondition('entity_type', 'node')
-      ->entityCondition('bundle', 'open_question_answer')
-      ->propertyCondition('status', 1)
-      ->propertyCondition('uid', $uid)
-      ->fieldCondition('field_open_question', 'target_id', $nid)
-      ->range(0, 1); // This is just to improve db performance.
-
-  $result = $query->execute();
-
-  foreach ($result as $entity_type => $entities) {
-    foreach ($entities as $entity_id => $entity) {
-      return $entity_id;
-    }
-  }
-
-  return FALSE;
 }
 
 /**
@@ -372,63 +257,6 @@ function open_question_views_post_execute(&$view) {
     }
   }
 }
-
-/**
- * Generates embedded view with feedbacks, along with stas for results.
- * 
- * @param integer $oq_nid
- *   Open question answer nid.
- * 
- * @return 
- *   array with HTML for a view with feedbacks and count.
- */
-function open_question_feedbacks_view($oqa_nid) {
-  $view = views_get_view('oqa_feedbacks');
-  $view->set_arguments(array($oqa_nid));
-  $output = array();
-  
-  $feedbacks_view_preview = $view->preview('block');
-  
-  // Markup for the view.
-  $output['reviews'] = array(
-    '#type' => 'markup',
-    '#markup' => $feedbacks_view_preview,
-    '#weight' => 1,
-  );
-  
-  // Container for feedback summary.
-  $output['summary'] = array (
-    '#weight' => 0,
-    '#prefix' => '<div class="oq-answer-feedback-summary">',
-    '#suffix' => '</div>',
-  );
-  
-  // Markup with summary of reviews.
-  $output['summary']['reviews_count'] = array(
-    '#prefix' => '<div class="oq-answer-view-description">',
-    '#suffix' => '</div>',
-    '#markup' => t('No reviews'),
-  );
-
-  if ($view->total_rows > 0) {
-    $output['summary']['reviews_count']['#markup'] = format_plural($view->total_rows, '1 review:', '@count reviews:');
-  }
-  // Get feedback stats.
-  $stats = open_question_get_feedback_stats($oqa_nid);
-  if ($stats['count']) {
-    $output['summary']['rating'] = array(
-      '#type' => 'markup',
-      '#prefix' => '<div class="oq-answer-rating">',
-      '#suffix' => '</div>',
-      '#markup' =>
-      t('Your average score: !average', array('!average' => $stats['average']))
-      . '<span class="answer-feedbacks-count"> ' . t('(out of !count)', array('!count' => $stats['count'])) . '</span>',
-    );
-  }
- 
-  return $output;
-}
-
 
 /**
  * Implements hook_forms().
@@ -732,14 +560,6 @@ function oq_review_form_submit($form, &$form_state) {
   $form_state['rebuild'] = TRUE;
 }
 
-/**
- * Implements hook_node_view().
- */
-function open_question_node_view($node, $view_mode, $langcode) {
-  if ($node->type == 'open_question') {
-    drupal_add_js(drupal_get_path('module', 'open_question') . '/open_question.js');
-  }
-}
 
 /**
  * Calculates basic stats for feedbacks to an open question answer.
@@ -787,154 +607,4 @@ function open_question_field_formatter_view($entity_type, $entity, $field, $inst
     '#markup' => t('Rating') . ': ' . $items[0]['user'] / 20,
   );
   return $elements;
-}
-
-/**
- * Implements hook_credit_result_info() from credit module.
- */
-function open_question_credit_info() {
-  $info = array();
-  $info['oq'] = array(
-    'bundle' => 'open_question',
-    'result_callback' => 'open_question_result'
-  );
-  return $info;
-}
- 
-/**
- * Gets result of open question completion for specific user.
- * 
- * @param object $node
- * @param object $account
- * 
- * @return
- *   real result of open question competion in a range from 0 to 1.
- */
-function open_question_result($node, $account) {
- 
-  // Find answer of the user for this node.
-  $query = new EntityFieldQuery();
-  $query->entityCondition('entity_type', 'node')
-        ->entityCondition('bundle', 'open_question_answer')
-        ->propertyCondition('status', 1)
-        ->propertyCondition('uid', $account->uid)
-        ->fieldCondition('field_open_question', 'target_id', $node->nid, '=')
-        ->range(0, 1);
-  
-  $result = $query->execute();
-  
-  if (isset($result['node'])) {
-    $answers_nids = array_keys($result['node']);
-    $answer_nid = $answers_nids[0];
-    $stats =  open_question_get_feedback_stats($answer_nid); 
-    if ($stats['count'] > 0) { // @todo give admin an option to chose number of feedbacks
-      $result =  $stats['average'] / 5.0;
-      return $result;
-    }
-  } 
-  // User did not answer that open question yet 
-  // or nobody provided user with feedback .
-  return .0;
-}
-
-
-
-/**
- * Implements hook_subscriptions_reference_info().
- */
-function open_question_subscriptions_reference_info() {
-   return array(
-    'oq_subscribe_feedbacks' => array( // Should unique accross modules that implement that hook.
-      'parent' => 'open_question_answer',  // Is being referenced.
-      'child' => 'open_question_feedback',    // Contains the field.
-      'field' => 'field_open_question_answer',
-      'ref_item' => 'target_id'), // Name of the field.
-  );
-}
-
-/**
- * Implements hook_node_insert().
- */
-function open_question_node_insert($node) {
-  if ($node->type == 'open_question_feedback') {
-    open_question_new_feedback_notify($node);
-  }
-}
-
-/**
- * Notifies open question answer author if new feedback is posted.
- * 
- * @param object $feedback
- *   Node object of new feedback.
- */
-function open_question_new_feedback_notify($feedback) {
-  if (!module_exists('newsfeed')) {
-    watchdog('open_question', 'Enable newsfeed module to notify users of new content.', array(), WATCHDOG_WARNING);
-    return;
-  }
-  $feedback_wrapper = entity_metadata_wrapper('node', $feedback);
-  $fields = array(
-    'field_message_feedback' => $feedback->nid
-  );
-  $uids = array(
-    $feedback_wrapper->field_open_question_answer->value()->uid => array(
-      'notifiers' => array(
-        'internal' => 'internal'
-      )
-    )
-  );
-  newsfeed_create_message('answer_feedback_notification', $feedback->uid, $feedback, $fields, $uids);
-}
-
-/**
- * Implements hook_comment_insert().
- * 
- * Creates notification message on commenting feedback.
- */
-function open_question_comment_insert($comment) {
-  $node = node_load($comment->nid);
-  if ($node->type == 'open_question_feedback') {
-    open_question_new_feedback_comment_notify($comment, $node);
-  }
-}
-
-/**
- * Notifies open question answer author or feedback author if new comment is posted.
- * 
- * @param object $comment
- *   Comment object of new comment.
- * @param object $feedback
- *   Node object of the feedback.
- */
-function open_question_new_feedback_comment_notify($comment, $feedback) {
-  if (!module_exists('newsfeed')) {
-    watchdog('open_question', 'Enable newsfeed module to notify users of new content.', array(), WATCHDOG_WARNING);
-    return;
-  }
-  $feedback_wrapper = entity_metadata_wrapper('node', $feedback);
-  if ($comment->uid == $feedback_wrapper->field_open_question_answer->value()->uid) {
-    // If comment author is answer author, send message to feedback author.
-    $type = 'oqaf_reviewer_comment_notification';
-    $uid = $feedback->uid;
-  } elseif ($comment->uid == $feedback->uid) {
-    // If comment author is feedback author, send message to answer author.
-    $type = 'oqaf_author_comment_notification';
-    $uid = $feedback_wrapper->field_open_question_answer->value()->uid;
-  } else {
-    $uid = FALSE;
-  }
-  if (!$uid) {
-    watchdog('open_question', 'Wrong uid on inserting new comment # @cid for feedback # @nid', array('@cid' => $comment->cid, '@nid' => $feedback->nid), WATCHDOG_WARNING);
-    return;
-  }
-  $fields = array(
-    'field_message_comment' => $comment->cid,
-    'field_message_feedback' => $feedback->nid
-  );
-  $uids = array(
-    $uid => array(
-      'notifiers' => variable_get('message_subscribe_default_notifiers', array('internal' => 'internal')),
-    )
-  );
-  newsfeed_create_message($type, $comment->uid, $feedback, $fields, $uids);
 }
