@@ -24,6 +24,7 @@ function newsletter_views_default_views() {
   $handler = $view->new_display('default', 'Master', 'default');
   $handler->display->display_options['title'] = 'Course Blog';
   $handler->display->display_options['use_more_always'] = FALSE;
+  $handler->display->display_options['group_by'] = TRUE;
   $handler->display->display_options['access']['type'] = 'perm';
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
@@ -31,35 +32,77 @@ function newsletter_views_default_views() {
   $handler->display->display_options['pager']['type'] = 'full';
   $handler->display->display_options['pager']['options']['items_per_page'] = '10';
   $handler->display->display_options['style_plugin'] = 'default';
-  $handler->display->display_options['row_plugin'] = 'node';
+  $handler->display->display_options['row_plugin'] = 'fields';
+  $handler->display->display_options['row_options']['default_field_elements'] = FALSE;
   /* Header: Global: PHP */
   $handler->display->display_options['header']['php']['id'] = 'php';
   $handler->display->display_options['header']['php']['table'] = 'views';
   $handler->display->display_options['header']['php']['field'] = 'php';
   $handler->display->display_options['header']['php']['empty'] = TRUE;
-  // @todo Barinder: 
-  // 1. refactor this to normal PHP code. What I see in header content has nothing to do with the view.
-  // 2. change 'Create Blog' to 'New Announcement'.
-  // @todo Ilya: I don't see follow flag as a Student user in my Dev.
   $handler->display->display_options['header']['php']['php_output'] = '<?php
-  $course_link = course_last_visited_node($view->args[0]);
+    $compressed_path = relevant_answers_compress_string($view->args[0]);
+    if(node_access(\'create\', \'newsletter\')) {
+      print l(t(\'Create Blog\'), \'node/add/newsletter\', array(\'query\' => array(\'path\' => $compressed_path)));
+    }
 
-  $compressed_path = relevant_answers_compress_string($view->args[0]);
-  if(node_access(\'create\', \'newsletter\')) {
-    print l(t(\'Create Blog\'), \'node/add/newsletter\', array(\'query\' => array(\'path\' => $compressed_path)));
-  }
-
-  print l(t(\'Return to Class\'), \'node/\'.$course_link, array(\'attributes\' => array(\'class\' => \'node-question-return-link\')));
-
-  print flag_create_link(\'subscriptions_course_blog\', $view->args[0]);
-  ?>';
+    print flag_create_link(\'subscriptions_course_blog\', $view->args[0]);
+    ?>';
+  /* Relationship: Content: Author */
+  $handler->display->display_options['relationships']['uid']['id'] = 'uid';
+  $handler->display->display_options['relationships']['uid']['table'] = 'node';
+  $handler->display->display_options['relationships']['uid']['field'] = 'uid';
+  /* Relationship: Comment: Comments of the node */
+  $handler->display->display_options['relationships']['cid']['id'] = 'cid';
+  $handler->display->display_options['relationships']['cid']['table'] = 'node';
+  $handler->display->display_options['relationships']['cid']['field'] = 'cid';
+  /* Field: Content: Post date */
+  $handler->display->display_options['fields']['created']['id'] = 'created';
+  $handler->display->display_options['fields']['created']['table'] = 'node';
+  $handler->display->display_options['fields']['created']['field'] = 'created';
+  $handler->display->display_options['fields']['created']['label'] = '';
+  $handler->display->display_options['fields']['created']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['created']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['created']['date_format'] = 'custom';
+  $handler->display->display_options['fields']['created']['custom_date_format'] = 'd/m/Y';
+  /* Field: COUNT(Comment: Nid) */
+  $handler->display->display_options['fields']['nid']['id'] = 'nid';
+  $handler->display->display_options['fields']['nid']['table'] = 'comment';
+  $handler->display->display_options['fields']['nid']['field'] = 'nid';
+  $handler->display->display_options['fields']['nid']['relationship'] = 'cid';
+  $handler->display->display_options['fields']['nid']['group_type'] = 'count';
+  $handler->display->display_options['fields']['nid']['label'] = '';
+  $handler->display->display_options['fields']['nid']['element_label_colon'] = FALSE;
   /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['label'] = '';
+  $handler->display->display_options['fields']['title']['exclude'] = TRUE;
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
+  $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
+  /* Field: Content: Body */
+  $handler->display->display_options['fields']['body']['id'] = 'body';
+  $handler->display->display_options['fields']['body']['table'] = 'field_data_body';
+  $handler->display->display_options['fields']['body']['field'] = 'body';
+  $handler->display->display_options['fields']['body']['label'] = '';
+  $handler->display->display_options['fields']['body']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['body']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['body']['type'] = 'text_plain';
+  /* Field: User: Name */
+  $handler->display->display_options['fields']['name']['id'] = 'name';
+  $handler->display->display_options['fields']['name']['table'] = 'users';
+  $handler->display->display_options['fields']['name']['field'] = 'name';
+  $handler->display->display_options['fields']['name']['relationship'] = 'uid';
+  $handler->display->display_options['fields']['name']['label'] = '';
+  $handler->display->display_options['fields']['name']['alter']['alter_text'] = TRUE;
+  $handler->display->display_options['fields']['name']['alter']['text'] = '<div class="field-group-blog">
+    <div class="field-title">[title]</div>
+    <div class="field-body">[body]</div>
+    <div class="field-author">[name]</div>
+  </div>';
+  $handler->display->display_options['fields']['name']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['name']['link_to_user'] = FALSE;
   /* Sort criterion: Content: Post date */
   $handler->display->display_options['sorts']['created']['id'] = 'created';
   $handler->display->display_options['sorts']['created']['table'] = 'node';
@@ -67,7 +110,7 @@ function newsletter_views_default_views() {
   $handler->display->display_options['sorts']['created']['order'] = 'DESC';
   /* Contextual filter: Content: Course (field_course) */
   $handler->display->display_options['arguments']['field_course_target_id']['id'] = 'field_course_target_id';
-  $handler->display->display_options['arguments']['field_course_target_id']['table'] = 'field_data_field_course';
+  $handler->display->display_options['arguments']['field_course_target_id']['table'] =   'field_data_field_course';
   $handler->display->display_options['arguments']['field_course_target_id']['field'] = 'field_course_target_id';
   $handler->display->display_options['arguments']['field_course_target_id']['default_action'] = 'empty';
   $handler->display->display_options['arguments']['field_course_target_id']['default_argument_type'] = 'node';
@@ -109,9 +152,14 @@ function newsletter_views_default_views() {
     t('‹ previous'),
     t('next ›'),
     t('last »'),
+    t('author'),
+    t('Comments'),
+    t('.'),
+    t(','),
     t('All'),
     t('Page'),
   );
+
   $export['course_newsletter'] = $view;
 
   return $export;
