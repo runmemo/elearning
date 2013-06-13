@@ -933,9 +933,7 @@ function open_question_new_feedback_comment_notify($comment, $feedback) {
   );
   $uids = array(
     $uid => array(
-      'notifiers' => array(
-        'internal' => 'internal'
-      )
+      'notifiers' => variable_get('message_subscribe_default_notifiers', array('internal' => 'internal')),
     )
   );
   newsfeed_create_message($type, $comment->uid, $feedback, $fields, $uids);
