@@ -7,9 +7,12 @@ dependencies[] = quiz
 dependencies[] = context
 dependencies[] = multichoice
 dependencies[] = strongarm
+dependencies[] = credit
 
 features[context][] = quiz
 features[ctools][] = context:context:3
 features[ctools][] = strongarm:strongarm:1
 features[features_api][] = api:1
 features[variable][] = node_submitted_quiz
+
+features[field_instance][] = node-quiz-field_course_credit
