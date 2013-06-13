@@ -7,7 +7,7 @@
 /**
  * Implements hook_field_default_field_instances().
  */
-function quiz_credit_field_default_field_instances() {
+function quiz_field_default_field_instances() {
   $field_instances = array();
 
   // Exported field_instance: 'node-open_question-field_course_credit'
