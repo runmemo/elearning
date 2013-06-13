@@ -15,7 +15,6 @@ function open_question_node_view($node, $view_mode, $langcode) {
 function open_question_node_insert($node) {
   if ($node->type == 'open_question_feedback') {
     open_question_new_feedback_notify($node);
-    module_invoke('newsfeed', $hook);
   }
 }
 
