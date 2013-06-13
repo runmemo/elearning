@@ -275,7 +275,15 @@ function course_node_view($node, $view_mode) {
  */
 function course_header_block() {
   $block = array();
-  $node = menu_get_object('node');
+  $active_contexts = context_active_contexts();
+
+  if (isset($active_contexts['course_pages'])) { // on course 
+    $node = node_load(arg(1));
+  }
+  else {
+    $node = menu_get_object('node');
+  }
+ 
   if (!$node) {
     watchdog('block header', 'Block with header of the course was shown in the wrong place.', array(), WATCHDOG_WARNING);
     return $block;
