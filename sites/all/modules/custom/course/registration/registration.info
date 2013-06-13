@@ -8,4 +8,4 @@ files[] = registration.inc
 files[] = registration.admin.inc
 files[] = tests/registration.test
 
-dependencies[] = course
+dependencies[] = entity

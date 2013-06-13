@@ -105,31 +105,3 @@ function registration_cancel($uid, $nid) {
 
   return TRUE;
 }
-
-/**
- * Permissions helper function that checks whether user is registered for a course
- * that contains page he is currently viewing.
- * @global type $user
- */
-function registration_user_access($node, $account) {
-
-  if (!isset($node->book)) { // this node is not part of a book
-    return NULL;
-  }
-
-  $book = $node->book;
-  if ($book['depth'] != 3) {
-    // here we just check whether it's course item level
-    return NULL;
-  }
-  
-  $course_nid = $book['bid'];
-
-  // Check if user is teacher of this course.
-  if (course_is_teacher($node, $account)) {
-    return TRUE;
-  }
-  // Check if user is registered to the course.
-  $rid = course_registration_id($account->uid, $course_nid);
-  return (bool) $rid; 
-}
