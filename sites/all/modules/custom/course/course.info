@@ -82,3 +82,4 @@ features[menu_links][] = user-menu:user/logout
 features[views_view][] = course_teachers
 features[views_view][] = course_students
 features[views_view][] = user_courses
+features[context][] = course_pages
