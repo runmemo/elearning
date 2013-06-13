@@ -204,3 +204,32 @@ function quick_question_submit_callback($form, &$form_state) {
   $commands[] = ajax_command_replace('#quick-question-wrapper', render($form));
   return array('#type' => 'ajax', '#commands' => $commands);
 }
+
+/**
+ * Implements hook_views_pre_rende
+ */
+function relevant_answers_extra_views_pre_render(&$view) {
+  if ($view->name == 'course_questions') {
+
+    $links = array();
+
+    $original_path = implode('/', $view->args);
+    $compressed_path = relevant_answers_compress_string($original_path);
+    
+    //Add links to the relevant questions views
+    if (user_access('create question content')) {
+      $links[] = array(
+        'title' => t('Ask Question'), 
+        'href' => 'node/add/question',
+        'query' => array(
+          'path' => $compressed_path,
+          drupal_get_destination()
+        ),
+        'attributes' => array(
+          'class' => array('add-question')
+        )
+      );
+    }
+    $view->attachment_before = theme('links', array('links' => $links, 'attributes' => array('class' => array('inline'))));
+  }
+}

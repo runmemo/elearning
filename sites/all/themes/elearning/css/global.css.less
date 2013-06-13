@@ -810,6 +810,10 @@ h2 {
     .course-title {
       font-weight: bold;
       font-size: 20px;
+      .course-title-link {
+        .link();
+        .text-orange();
+      }
     }
     .teacher-name .field {
       color:#435e7b;
@@ -835,18 +839,26 @@ h2 {
       a:link, a:visited {
         color: #444444;
       }
-      a:hover, a:active {
+      a:hover, a.active {
         .caption-orange();
       }
+      &.first a {
+        .bg-img('blog-link.png');
+        background-position: 100% 15%;
+      }
+      &.last a{
+        .bg-img('forum-link.png');
+        background-position: center 15%;
+      }    
+      &.first a.active,
+      &.first a:hover {
+        .bg-img('blog-active.png');
+      }
+      &.last a.active,
+      &.last a:hover {
+        .bg-img('forum-active.png');
+      }
     }
-    li.first {
-      .bg-img('blog-link.png');
-      background-position: 80% 15%;
-    }
-    li.last {
-      .bg-img('forum-link.png');
-      background-position: 80% 15%;
-    }    
   }
 }  
 
@@ -2388,6 +2400,34 @@ div.quiz-report {
     }
     .wrong {
       color: #d0471b;
+    }
+  }
+}
+
+.view-course-questions {
+  .view-filters{
+    float: left;
+    .views-exposed-form {
+      .views-widget,
+      label {
+        float: left;
+        padding-right: 10px;
+      }
+      .views-submit-button {
+        padding: 0;
+      }
+    }
+  }
+  .attachment-before {
+    float: right;
+    .add-question {
+      .link();
+      .text-orange();
+      .bold(14px);
+      float: left;
+      margin-top: 10px;
+      .bg-img('ask-question.png');
+      .link-image-left(20px);
     }
   }
 }

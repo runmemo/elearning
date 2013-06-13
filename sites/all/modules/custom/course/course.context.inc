@@ -69,9 +69,44 @@ function course_context_default_contexts() {
   );
   $context->condition_mode = 1;
   $export['course_item'] = $context;
+
+  $context = new stdClass();
+  $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
+  $context->api_version = 3;
+  $context->name = 'course_pages';
+  $context->description = '';
+  $context->tag = 'Page';
+  $context->conditions = array(
+    'views' => array(
+      'values' => array(
+        'course_newsletter' => 'course_newsletter',
+        'course_newsletter:page' => 'course_newsletter:page',
+        'course_questions' => 'course_questions',
+        'course_questions:page' => 'course_questions:page',
+      ),
+    ),
+  );
+  $context->reactions = array(
+    'block' => array(
+      'blocks' => array(
+        'course-book_header' => array(
+          'module' => 'course',
+          'delta' => 'book_header',
+          'region' => 'preface_first',
+          'weight' => '-10',
+        ),
+      ),
+    ),
+    'delta' => array(
+      'delta_template' => 'course_pages',
+    ),
+  );
+  $context->condition_mode = 0;
+  $export['course_pages'] = $context;
   
   // Translatables
   // Included for use with string extractors like potx.
+  t('Page');
   t('Node');
   t('When teacher is viewing course item');
 
