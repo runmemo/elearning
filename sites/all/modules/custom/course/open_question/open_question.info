@@ -6,8 +6,6 @@ version = 7.x-1.0
 
 files[] = tests/open_question.test
 
-dependencies[] = common_tools
-dependencies[] = ctools
 dependencies[] = entityreference
 dependencies[] = features
 dependencies[] = fivestar
