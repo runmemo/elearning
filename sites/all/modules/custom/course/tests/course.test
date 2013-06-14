@@ -99,7 +99,7 @@ class CourseNavigationTestCase extends CourseTestCase {
   }
 
   function setUp() {
-    parent::setUp(); // @todo get rid of dependencies
+    parent::setUp();
     $this->student = $this->drupalCreateUser(array('access content'));
     $this->nodes = $this->populateTestCourse($this->course);
     
