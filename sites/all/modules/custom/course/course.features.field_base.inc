@@ -261,6 +261,7 @@ function course_field_default_field_bases() {
       ),
     ),
     'locked' => 0,
+    // @todo change to entity reference (see https://drupal.org/node/1354482)
     'module' => 'user_reference',
     'settings' => array(
       'referenceable_roles' => array(
