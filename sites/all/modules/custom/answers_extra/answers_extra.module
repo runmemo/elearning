@@ -183,20 +183,6 @@ function quick_answer_submit_callback($form, &$form_state) {
   return array('#type' => 'ajax', '#commands' => $commands);
 }
 
-
-/**
- * Implements hook_subscriptions_reference_info()
- */
-function answers_extra_subscriptions_reference_info() {
-  return array(
-    'question_answers' => array(
-      'parent' => 'question',
-      'child' => 'answer',
-      'field' => 'field_answer_question',
-      'ref_item' => 'nid',
-  ));
-}
-
 /**
  *  Implements hook_preprocess_views_view_fields 
  *  for relevant_questions_list view.
