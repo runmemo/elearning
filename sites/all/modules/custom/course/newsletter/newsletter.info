@@ -11,7 +11,6 @@ features[features_api][] = api:1
 features[field_base][] = field_course
 features[field_instance][] = node-newsletter-body
 features[field_instance][] = node-newsletter-field_course
-features[flag][] = subscriptions_course_blog
 features[node][] = newsletter
 features[user_permission][] = create newsletter content
 features[user_permission][] = delete any newsletter content

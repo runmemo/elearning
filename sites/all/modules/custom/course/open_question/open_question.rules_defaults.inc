@@ -95,7 +95,7 @@ function open_question_default_rules_configuration() {
   $items['rules_subscribe_author_to_open_question_answer'] = entity_import('rules_config', '{ "rules_subscribe_author_to_open_question_answer" : {
       "LABEL" : "Subscribe Author to Open Question Answer",
       "PLUGIN" : "reaction rule",
-      "REQUIRES" : [ "rules", "subscriptions_reference" ],
+      "REQUIRES" : [ "rules", "newsfeed" ],
       "ON" : [ "node_insert" ],
       "IF" : [
         { "node_is_of_type" : {
@@ -106,7 +106,7 @@ function open_question_default_rules_configuration() {
       ],
       "DO" : [
         { "flag_flagnode" : {
-            "flag" : "subscriptions_reference_flag",
+            "flag" : "follow_content",
             "node" : [ "node" ],
             "flagging_user" : [ "node:author" ],
             "permission_check" : 0

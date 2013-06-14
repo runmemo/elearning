@@ -22,7 +22,7 @@ function template_preprocess_course_header(&$vars) {
     $course_link = course_last_visited_node($course_node->nid);
     $vars['course_title'] = l($course_node->title, 'node/'.$course_link, array('attributes' => $attributes));
     if(arg(2) == 'blog') {
-      $vars['follow_link'] =  flag_create_link('subscriptions_course_blog', $course_node->nid);
+      $vars['follow_link'] =  flag_create_link('follow_content', $course_node->nid);
     }
   }
   else {
