@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * newsfeed.features.inc
- */
 
 /**
  * Implements hook_default_message_type().

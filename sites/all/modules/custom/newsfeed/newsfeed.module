@@ -4,7 +4,15 @@
  * @file
  * Code for the Newsfeed feature.
  */
-include_once 'newsfeed.features.inc';
+
+/**
+ * Implementes hook_hook_info().
+ */
+function newsfeed_hook_info() {
+  $hooks['flag_default_flags']['group'] = 'flag_default';
+  $hooks['default_message_type']['group'] = 'message_default';
+  return $hooks;
+}
 
 /**
  * Implements hook_ctools_plugin_api().
