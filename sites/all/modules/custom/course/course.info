@@ -5,16 +5,9 @@ package = Course
 version = 7.x-1.0
 
 dependencies[] = book
-dependencies[] = file
-dependencies[] = media
 dependencies[] = user_reference
-dependencies[] = date
 dependencies[] = entityreference
-dependencies[] = image
 dependencies[] = features
-dependencies[] = file_entity
-dependencies[] = strongarm
-dependencies[] = entity
 
 files[] = course.inc
 files[] = views/course.views_default.inc
