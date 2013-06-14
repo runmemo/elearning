@@ -21,6 +21,7 @@
    <div class="title-wrapper">
       <div class="course-title">
         <?php print $course_title; ?>
+        <?php print $follow_link; ?>
       </div>
       <div class="teacher-name">
         <?php print $teacher_name . '&nbsp;' . $teacher_surname; ?>
