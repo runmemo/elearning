@@ -75,30 +75,60 @@ function newsletter_course_blog_post_notify($newsletter) {
  */
 function newsletter_preprocess_views_view_fields(&$vars) {
   $view = $vars['view'];
- // print_nice($view, 3);
-  $question_list_views = array('course_newsletter');
-  if (!in_array($view->name, $question_list_views)) {
+  if (!in_array($view->name, array('course_newsletter'))) {
     return;
   }
+
   $row = $vars['row'];
-  if (isset($row->comment_node_nid)) {
-    $comments = $row->comment_node_nid;
-    $ccs_classes = 'field-comment-count';
-    if (!$comments) {
-      $ccs_classes = $ccs_classes . ' zero';
+  if (isset($vars['fields']['nothing'])) {
+    $count = rand(0, 1); //@todo barinder:  Temporary code, get rid off custom field and merge it with post date field.
+    $css_classes = 'field-answers-count';
+    if (!$count) {
+      $css_classes = $css_classes . ' zero';
     }
+
     $output = 
      '<div class="field-group-stats">' .
        '<div class="field-created">' .
          date('d/m/Y', $row->node_created) .
        '</div>' .
-       '<div class="' . $ccs_classes .  '">' .
-         format_plural($comments, '1 <br />Reply', '@count <br />Replies') . 
+       '<div class="' . $css_classes .  '">' .
+         format_plural($count, '1 <br />Answer', '@count <br />Answers') . 
        '</div>' .
      '</div>';
 
     // Replace content of the field.
-    $comment_count_field = $vars['fields']['nid'];
-    $comment_count_field->content = $output;
-  }  
+    $answer_count_field = $vars['fields']['nothing'];
+    $answer_count_field->content = $output;
+  }
+}
+
+/**
+ * Implements hook_views_pre_rende
+ */
+function newsletter_views_pre_render(&$view) {
+  if ($view->name == 'course_newsletter') {
+    $compressed_path = relevant_answers_compress_string($view->args[0]);
+    if(node_access('create', 'newsletter')) {
+
+      $links = array();
+      $compressed_path = relevant_answers_compress_string($view->args[0]);
+    
+      //Add links to the relevant questions views
+      if (node_access('create', 'newsletter')) {
+        $links[] = array(
+          'title' => t('Create Blog'), 
+          'href' => 'node/add/newsletter',
+          'query' => array(
+            'path' => $compressed_path,
+            drupal_get_destination()
+          ),
+          'attributes' => array(
+            'class' => array('add-blog')
+          )
+        );
+      }
+      $view->attachment_before = theme('links', array('links' => $links, 'attributes' => array('class' => array('inline'))));
+    }
+  }
 }
