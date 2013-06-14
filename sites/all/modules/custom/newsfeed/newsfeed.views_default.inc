@@ -58,16 +58,13 @@ function newsfeed_views_default_views() {
   $handler->display->display_options['relationships']['user']['id'] = 'user';
   $handler->display->display_options['relationships']['user']['table'] = 'message';
   $handler->display->display_options['relationships']['user']['field'] = 'user';
-  /* Field: Message-User instance: Message status */
-  $handler->display->display_options['fields']['status']['id'] = 'status';
-  $handler->display->display_options['fields']['status']['table'] = 'message_user';
-  $handler->display->display_options['fields']['status']['field'] = 'status';
-  $handler->display->display_options['fields']['status']['label'] = '';
-  $handler->display->display_options['fields']['status']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['status']['type'] = 'custom';
-  $handler->display->display_options['fields']['status']['type_custom_true'] = '<div class="message-status read"></div>';
-  $handler->display->display_options['fields']['status']['type_custom_false'] = '<div class="message-status unread"></div>';
-  $handler->display->display_options['fields']['status']['not'] = 0;
+  /* Field: Message: Message ID */
+  $handler->display->display_options['fields']['mid']['id'] = 'mid';
+  $handler->display->display_options['fields']['mid']['table'] = 'message';
+  $handler->display->display_options['fields']['mid']['field'] = 'mid';
+  $handler->display->display_options['fields']['mid']['label'] = '';
+  $handler->display->display_options['fields']['mid']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['mid']['element_label_colon'] = FALSE;
   /* Field: Message status for class */
   $handler->display->display_options['fields']['status_1']['id'] = 'status_1';
   $handler->display->display_options['fields']['status_1']['table'] = 'message_user';
@@ -80,6 +77,35 @@ function newsfeed_views_default_views() {
   $handler->display->display_options['fields']['status_1']['type_custom_true'] = 'read';
   $handler->display->display_options['fields']['status_1']['type_custom_false'] = 'unread';
   $handler->display->display_options['fields']['status_1']['not'] = 0;
+  /* Field: Message status for grouping */
+  $handler->display->display_options['fields']['status']['id'] = 'status';
+  $handler->display->display_options['fields']['status']['table'] = 'message_user';
+  $handler->display->display_options['fields']['status']['field'] = 'status';
+  $handler->display->display_options['fields']['status']['ui_name'] = 'Message status for grouping';
+  $handler->display->display_options['fields']['status']['label'] = '';
+  $handler->display->display_options['fields']['status']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['status']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['status']['type'] = 'custom';
+  $handler->display->display_options['fields']['status']['type_custom_true'] = '<div class="read"></div>';
+  $handler->display->display_options['fields']['status']['type_custom_false'] = '<div class="unread"></div>';
+  $handler->display->display_options['fields']['status']['not'] = 0;
+  /* Field: Message Status Form */
+  $handler->display->display_options['fields']['php']['id'] = 'php';
+  $handler->display->display_options['fields']['php']['table'] = 'views';
+  $handler->display->display_options['fields']['php']['field'] = 'php';
+  $handler->display->display_options['fields']['php']['ui_name'] = 'Message Status Form';
+  $handler->display->display_options['fields']['php']['label'] = '';
+  $handler->display->display_options['fields']['php']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['php']['use_php_setup'] = 1;
+  $handler->display->display_options['fields']['php']['php_setup'] = 'require_once DRUPAL_ROOT . \'/sites/all/modules/custom/newsfeed/newsfeed.module\';';
+  $handler->display->display_options['fields']['php']['php_value'] = 'require_once DRUPAL_ROOT . \'/sites/all/modules/custom/newsfeed/newsfeed.module\';';
+  $handler->display->display_options['fields']['php']['php_output'] = '<?php
+    $args = array($row->mid, $view->args[0], $row->status_1);
+    $form = drupal_get_form(\'newsfeed_message_status_form_\' . $row->mid, $args);
+    print drupal_render($form);
+    ?>';
+  $handler->display->display_options['fields']['php']['use_php_click_sortable'] = '0';
+  $handler->display->display_options['fields']['php']['php_click_sortable'] = '';
   /* Field: Message: Timestamp */
   $handler->display->display_options['fields']['timestamp']['id'] = 'timestamp';
   $handler->display->display_options['fields']['timestamp']['table'] = 'message';
@@ -88,17 +114,6 @@ function newsfeed_views_default_views() {
   $handler->display->display_options['fields']['timestamp']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['timestamp']['date_format'] = 'custom';
   $handler->display->display_options['fields']['timestamp']['custom_date_format'] = 'd/m/Y';
-  /* Field: User: Picture */
-  $handler->display->display_options['fields']['picture']['id'] = 'picture';
-  $handler->display->display_options['fields']['picture']['table'] = 'users';
-  $handler->display->display_options['fields']['picture']['field'] = 'picture';
-  $handler->display->display_options['fields']['picture']['relationship'] = 'user';
-  $handler->display->display_options['fields']['picture']['label'] = '';
-  $handler->display->display_options['fields']['picture']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['picture']['element_class'] = 'tiny-avatar';
-  $handler->display->display_options['fields']['picture']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['picture']['empty'] = '<div class="tiny-avatar"></div>';
-  $handler->display->display_options['fields']['picture']['image_style'] = 'user_profile_picture';
   /* Field: Message: Render message (Get text) */
   $handler->display->display_options['fields']['message_render']['id'] = 'message_render';
   $handler->display->display_options['fields']['message_render']['table'] = 'message';
@@ -108,6 +123,10 @@ function newsfeed_views_default_views() {
   $handler->display->display_options['fields']['message_render']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['message_render']['partials'] = 1;
   $handler->display->display_options['fields']['message_render']['partials_delta'] = '1';
+  /* Sort criterion: Message-User instance: Message status */
+  $handler->display->display_options['sorts']['status']['id'] = 'status';
+  $handler->display->display_options['sorts']['status']['table'] = 'message_user';
+  $handler->display->display_options['sorts']['status']['field'] = 'status';
   /* Sort criterion: Message: Timestamp */
   $handler->display->display_options['sorts']['timestamp']['id'] = 'timestamp';
   $handler->display->display_options['sorts']['timestamp']['table'] = 'message';

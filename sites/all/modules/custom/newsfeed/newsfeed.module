@@ -42,6 +42,7 @@ function newsfeed_block_info() {
   // Block for displaying notifications count.
   $block['user_notifications_count'] = array(
     'info' => t('User notifications count'),
+    'cache' => DRUPAL_NO_CACHE,
   );
   return $block;
 }
@@ -66,11 +67,14 @@ function newsfeed_notifications_block() {
   if (!$user->uid) {
     return;
   }
-  $count = newsfeed_get_unread_messages_count($user->uid);
+  if (!isset($_SESSION['unread_messages_count'])) {
+    $_SESSION['unread_messages_count'] = newsfeed_get_unread_messages_count($user->uid);
+  }
+  $title = $_SESSION['unread_messages_count'] == 0 ? t('You have no unread notifications') : t('Notifications');
   $block = array('subject' => '');
   $block['content'] = array(
     '#type' => 'markup',
-    '#markup' => l('<span class="link-inner">' . $count . '</span>', 'notifications', array('attributes' => array('title' => t('Notifications')), 'html' => TRUE)),
+    '#markup' => l('<span id="js-newsfeed-unread-count" class="link-inner">' . $_SESSION['unread_messages_count'] . '</span>', 'notifications', array('attributes' => array('title' => $title), 'html' => TRUE)),
   );
   return $block;
 }
@@ -129,17 +133,20 @@ function newsfeed_remove($mid) {
 /**
  * Updates message status for the given user.
  * 
- * @param integer $mid
- *   Message ID.
+ * @param array $mids
+ *   Array with message IDs.
  * @param integer $uid
  *   User ID.
+ * @param integer $status
+ *   New message status.
  */
-function newsfeed_update_message_status($mid, $uid, $status) {
-  db_update('message_user')
+function newsfeed_update_message_status_multiple($mids, $uid, $status) {
+  $query = db_update('message_user')
     ->fields(array('status' => $status))
-    ->condition('mid', $mid)
+    ->condition('mid', $mids, 'IN')
     ->condition('uid', $uid)
     ->execute();
+  return $query;
 }
 
 /**
@@ -240,4 +247,90 @@ function newsfeed_entity_delete($entity, $entity_type) {
   if ($entity_type == 'message') {
     newsfeed_remove($entity->mid);
   }
+}
+
+/**
+ * Implements hook_forms().
+ */
+function newsfeed_forms($form_id, $args) {
+  $forms = array();
+  if (strpos($form_id, 'newsfeed_message_status_form_') === 0) {
+    $forms[$form_id] = array(
+      'callback' => 'newsfeed_message_status_form',
+      'callback arguments' => $args,
+    );
+  }
+  return $forms;
+}
+
+/**
+ * Form for setting message status.
+ */
+function newsfeed_message_status_form($form, &$form_state, $args) {
+  $form = array();
+  
+  $mid = $args[0];
+  $uid = $args[1];
+  $status = $args[2];
+  
+  $form['#prefix'] = '<div id="newsfeed-message-form-wrapper-' . $mid . '">';
+  $form['#suffix'] = '</div>';
+  $form['#attributes']['class'][] = 'newsfeed-message-form';
+
+  if (is_null($status)) {
+    $status = newsfeed_get_message_status($mid, $uid);
+  }
+  
+  $form_state['storage']['mid'] = !isset($form_state['storage']['mid']) ? $mid : $form_state['storage']['mid'];
+  $form_state['storage']['uid'] = !isset($form_state['storage']['uid']) ? $uid : $form_state['storage']['uid'];
+  $form_state['storage']['status'] = !isset($form_state['storage']['status']) ? $status : $form_state['storage']['status'];
+  
+  if ($form_state['storage']['status'] == 1) {
+    $form['read'] = array(
+      '#markup' => '<div class="message-status read"></div>',
+    );
+  }
+  elseif ($form_state['storage']['status'] == 0) {
+    $form['new_status'] = array(
+      '#type' => 'hidden',
+      '#value' => 1,
+    );
+    $form['unread'] = array(
+      '#type' => 'submit',
+      '#value' => '',
+      '#ajax' => array(
+        'callback' => 'newsfeed_message_status_form_js',
+        'wrapper' => 'newsfeed-message-form-wrapper',
+        'progress' => array('message' => ''),
+      ),
+      '#attributes' => array('class' => array('message-status', 'unread'), 'title' => t('Mark as read')),
+    );
+  }
+  
+  return $form;
+}
+
+/** 
+ * AJAX callback function for newsfeed_message_status_form().
+ */
+function newsfeed_message_status_form_js($form, &$form_state) {
+  $commands[] = ajax_command_replace('#newsfeed-message-form-wrapper-' . $form_state['storage']['mid'], render($form));
+  // Update count for notifications block.
+  $new_count = isset($_SESSION['unread_messages_count']) ? $_SESSION['unread_messages_count'] - 1 : newsfeed_get_unread_messages_count($form_state['storage']['uid']) - 1;
+  $_SESSION['unread_messages_count'] = $new_count >= 0 ? $new_count : 0;
+  $commands[] = ajax_command_replace('#js-newsfeed-unread-count', '<span id="js-newsfeed-unread-count" class="link-inner">' . $new_count . '</span>');
+  return array('#type' => 'ajax', '#commands' => $commands);
+}
+
+/**
+ * Implements hook FORM_ID_submit for newsfeed_message_status_form().
+ */
+function newsfeed_message_status_form_submit($form, &$form_state) {
+  $updated = newsfeed_update_message_status_multiple(array($form_state['storage']['mid']), $form_state['storage']['uid'], $form_state['values']['new_status']);
+  if ($updated) {
+    $form_state['storage']['status'] = $form_state['values']['new_status'];
+  } else {
+    watchdog('newsfeed', 'Message #@mid status update failed.', array('@mid' => $form_state['storage']['mid']), WATCHDOG_WARNING);
+  }
+  $form_state['rebuild'] = TRUE;
 }
