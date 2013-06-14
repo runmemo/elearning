@@ -5,16 +5,10 @@ package = Course
 version = 7.x-1.0
 project = lesson
 
-dependencies[] = ctools
 dependencies[] = entityreference
-dependencies[] = options
 dependencies[] = strongarm
-dependencies[] = text
 dependencies[] = features
-dependencies[] = quicktabs
-dependencies[] = flag
-dependencies[] = rules
-dependencies[] = userpoints_rules
+
 
 features[features_api][] = api:1
 

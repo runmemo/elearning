@@ -99,7 +99,7 @@ class CourseNavigationTestCase extends CourseTestCase {
   }
 
   function setUp() {
-    parent::setUp('lesson'); // @todo get rid of dependencies
+    parent::setUp();
     $this->student = $this->drupalCreateUser(array('access content'));
     $this->nodes = $this->populateTestCourse($this->course);
     
@@ -118,12 +118,12 @@ class CourseNavigationTestCase extends CourseTestCase {
     // Creating a course with the following structure:
     $outline = array(
       'unit1' => array(// 0 
-        'lesson1' => 'lesson', // 1
-        'lesson2' => 'lesson', // 2
+        'lesson1' => 'page', // 1
+        'lesson2' => 'page', // 2
       ),
       'unit2' => array(// 3
-        'lesson3' => 'lesson', // 4
-        'lesson4' => 'lesson', // 5
+        'lesson3' => 'page', // 4
+        'lesson4' => 'page', // 5
       ),
     );
     return $this->populateCourse($course, $outline);
@@ -135,7 +135,7 @@ class CourseNavigationTestCase extends CourseTestCase {
   function testUnitRedirect() {
     $nodes = $this->populateTestCourse();
     $this->drupalGet('node/' . $nodes[0]->nid); // open Unit 1
-    $this->assertRaw('node-type-lesson', 'User is redirected to a lesson of the unit.');
+    $this->assertRaw('node-type-page', 'User is redirected to a lesson of the unit.');
   }
 
   function testCourseProgress() {
