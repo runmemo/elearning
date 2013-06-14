@@ -1,5 +1,0 @@
-name = Subscriptions Rules
-core = 7.x
-package = PCMS
-php = 5.2.4
-dependencies[] = subscriptions
