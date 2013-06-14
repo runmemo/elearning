@@ -210,12 +210,6 @@ function registration_views_api() {
   );
 }
 
-function registration_form_block() {
-  $block = array();
-  $block['subject'] = t('Course registration');
-  $block['content'][] = drupal_get_form('course_registration_form');
-  return $block;
-}
 
 /**
  * Implements hook_context_plugins().

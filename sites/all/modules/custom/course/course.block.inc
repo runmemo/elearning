@@ -33,7 +33,7 @@ function course_block_view($delta = '') {
     case 'book_header':
       return course_header_block();
     case 'registration_form':
-      return registration_form_block();
+      return course_registration_form_block();
   }
 }
 
@@ -57,7 +57,7 @@ function course_item_links() {
 /**
  * Builds content for regitration form block.
  */
-function registration_form_block() {
+function course_registration_form_block() {
   $block = array();
   $block['subject'] = t('Course registration');
   $block['content'][] = drupal_get_form('course_registration_form');
