@@ -11,7 +11,8 @@ function template_preprocess_course_header(&$vars) {
   $course_node = node_load($book_link['bid']);
   $node = menu_get_object('node');
   $active_contexts = context_active_contexts();
-  
+  $vars['follow_link'] = '';
+
   // course title
   if (isset($active_contexts['course_pages'])) {
     $attributes = array(
@@ -20,6 +21,9 @@ function template_preprocess_course_header(&$vars) {
     );
     $course_link = course_last_visited_node($course_node->nid);
     $vars['course_title'] = l($course_node->title, 'node/'.$course_link, array('attributes' => $attributes));
+    if(arg(2) == 'blog') {
+      $vars['follow_link'] =  flag_create_link('subscriptions_course_blog', $course_node->nid);
+    }
   }
   else {
     $vars['course_title'] = $course_node->title;

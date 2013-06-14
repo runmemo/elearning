@@ -24,7 +24,6 @@ function newsletter_views_default_views() {
   $handler = $view->new_display('default', 'Master', 'default');
   $handler->display->display_options['title'] = 'Course Blog';
   $handler->display->display_options['use_more_always'] = FALSE;
-  $handler->display->display_options['group_by'] = TRUE;
   $handler->display->display_options['access']['type'] = 'perm';
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
@@ -34,27 +33,10 @@ function newsletter_views_default_views() {
   $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['row_plugin'] = 'fields';
   $handler->display->display_options['row_options']['default_field_elements'] = FALSE;
-  /* Header: Global: PHP */
-  $handler->display->display_options['header']['php']['id'] = 'php';
-  $handler->display->display_options['header']['php']['table'] = 'views';
-  $handler->display->display_options['header']['php']['field'] = 'php';
-  $handler->display->display_options['header']['php']['empty'] = TRUE;
-  $handler->display->display_options['header']['php']['php_output'] = '<?php
-    $compressed_path = relevant_answers_compress_string($view->args[0]);
-    if(node_access(\'create\', \'newsletter\')) {
-      print l(t(\'Create Blog\'), \'node/add/newsletter\', array(\'query\' => array(\'path\' => $compressed_path)));
-    }
-
-    print flag_create_link(\'subscriptions_course_blog\', $view->args[0]);
-    ?>';
   /* Relationship: Content: Author */
   $handler->display->display_options['relationships']['uid']['id'] = 'uid';
   $handler->display->display_options['relationships']['uid']['table'] = 'node';
   $handler->display->display_options['relationships']['uid']['field'] = 'uid';
-  /* Relationship: Comment: Comments of the node */
-  $handler->display->display_options['relationships']['cid']['id'] = 'cid';
-  $handler->display->display_options['relationships']['cid']['table'] = 'node';
-  $handler->display->display_options['relationships']['cid']['field'] = 'cid';
   /* Field: Content: Post date */
   $handler->display->display_options['fields']['created']['id'] = 'created';
   $handler->display->display_options['fields']['created']['table'] = 'node';
@@ -64,14 +46,13 @@ function newsletter_views_default_views() {
   $handler->display->display_options['fields']['created']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['created']['date_format'] = 'custom';
   $handler->display->display_options['fields']['created']['custom_date_format'] = 'd/m/Y';
-  /* Field: COUNT(Comment: Nid) */
-  $handler->display->display_options['fields']['nid']['id'] = 'nid';
-  $handler->display->display_options['fields']['nid']['table'] = 'comment';
-  $handler->display->display_options['fields']['nid']['field'] = 'nid';
-  $handler->display->display_options['fields']['nid']['relationship'] = 'cid';
-  $handler->display->display_options['fields']['nid']['group_type'] = 'count';
-  $handler->display->display_options['fields']['nid']['label'] = '';
-  $handler->display->display_options['fields']['nid']['element_label_colon'] = FALSE;
+  /* Field: Global: Custom text */
+  $handler->display->display_options['fields']['nothing']['id'] = 'nothing';
+  $handler->display->display_options['fields']['nothing']['table'] = 'views';
+  $handler->display->display_options['fields']['nothing']['field'] = 'nothing';
+  $handler->display->display_options['fields']['nothing']['label'] = '';
+  $handler->display->display_options['fields']['nothing']['alter']['text'] = 'answers';
+  $handler->display->display_options['fields']['nothing']['element_label_colon'] = FALSE;
   /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
@@ -97,10 +78,10 @@ function newsletter_views_default_views() {
   $handler->display->display_options['fields']['name']['label'] = '';
   $handler->display->display_options['fields']['name']['alter']['alter_text'] = TRUE;
   $handler->display->display_options['fields']['name']['alter']['text'] = '<div class="field-group-blog">
-    <div class="field-title">[title]</div>
-    <div class="field-body">[body]</div>
-    <div class="field-author">[name]</div>
-  </div>';
+      <div class="field-title">[title]</div>
+      <div class="field-body">[body]</div>
+      <div class="field-author">[name]</div>
+    </div>';
   $handler->display->display_options['fields']['name']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['name']['link_to_user'] = FALSE;
   /* Sort criterion: Content: Post date */
@@ -110,7 +91,7 @@ function newsletter_views_default_views() {
   $handler->display->display_options['sorts']['created']['order'] = 'DESC';
   /* Contextual filter: Content: Course (field_course) */
   $handler->display->display_options['arguments']['field_course_target_id']['id'] = 'field_course_target_id';
-  $handler->display->display_options['arguments']['field_course_target_id']['table'] =   'field_data_field_course';
+  $handler->display->display_options['arguments']['field_course_target_id']['table'] = 'field_data_field_course';
   $handler->display->display_options['arguments']['field_course_target_id']['field'] = 'field_course_target_id';
   $handler->display->display_options['arguments']['field_course_target_id']['default_action'] = 'empty';
   $handler->display->display_options['arguments']['field_course_target_id']['default_argument_type'] = 'node';
@@ -153,9 +134,8 @@ function newsletter_views_default_views() {
     t('next ›'),
     t('last »'),
     t('author'),
-    t('Comments'),
-    t('.'),
-    t(','),
+    t('answers'),
+    t('PHP'),
     t('All'),
     t('Page'),
   );
