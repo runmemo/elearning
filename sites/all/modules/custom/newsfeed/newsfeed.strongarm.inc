@@ -210,7 +210,7 @@ function newsfeed_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'message_subscribe_flag_prefix';
-  $strongarm->value = 'subscriptions';
+  $strongarm->value = 'follow';
   $export['message_subscribe_flag_prefix'] = $strongarm;
 
   return $export;
