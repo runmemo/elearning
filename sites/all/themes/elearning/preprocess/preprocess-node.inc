@@ -43,7 +43,6 @@ function elearning_alpha_preprocess_node_question(&$vars) {
     )
   );
   $vars['created_formatted'] = t('@time ago', array('@time' => format_interval(REQUEST_TIME - $vars['created'], 1)));
-  $vars['follow_flag'] = flag_create_link('follow_content', $vars['nid']);
 
   if(node_access('update', $vars['node'])) {
     $vars['edit_link'] = l('', 'node/'.$vars['nid'].'/edit', array('attributes' => array('title' => t('Edit'), 'class' => 'edit-link')));
