@@ -70,8 +70,8 @@ function user_extra_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'user-user-field_name'
-  $field_instances['user-user-field_name'] = array(
+  // Exported field_instance: 'user-user-field_first_name'
+  $field_instances['user-user-field_first_name'] = array(
     'bundle' => 'user',
     'default_value' => NULL,
     'deleted' => 0,
@@ -93,7 +93,7 @@ function user_extra_field_default_field_instances() {
       ),
     ),
     'entity_type' => 'user',
-    'field_name' => 'field_name',
+    'field_name' => 'field_first_name',
     'label' => ('First Name'),
     'required' => 1,
     'settings' => array(
