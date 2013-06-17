@@ -64,7 +64,8 @@ function newsletter_course_blog_post_notify($newsletter) {
   // and get all course blog subscribers.
   $course = $newsletter_wrapper->field_course->value();
   $fields = array(
-    'field_message_blog' => $newsletter->nid,
+    'field_course' => $course->nid,
+    'field_message_blog_title' => $newsletter->title,
   );
   newsfeed_create_message('course_newsletter_notification', $newsletter->uid, $course, $fields);
 }

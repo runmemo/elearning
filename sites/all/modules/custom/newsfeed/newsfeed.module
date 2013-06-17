@@ -65,7 +65,7 @@ function newsfeed_block_view($delta = '') {
 }
 
 /**
- * Generates notifications block for the current user if the use is logged in.
+ * Generates notifications block for the current user if the user is logged in.
  * 
  * @return array
  *   Block's content array.
@@ -75,9 +75,7 @@ function newsfeed_notifications_block() {
   if (!$user->uid) {
     return;
   }
-  if (!isset($_SESSION['unread_messages_count'])) {
-    $_SESSION['unread_messages_count'] = newsfeed_get_unread_messages_count($user->uid);
-  }
+  $_SESSION['unread_messages_count'] = newsfeed_get_unread_messages_count($user->uid);
   $title = $_SESSION['unread_messages_count'] == 0 ? t('You have no unread notifications') : t('Notifications');
   $block = array('subject' => '');
   $block['content'] = array(
@@ -341,4 +339,92 @@ function newsfeed_message_status_form_submit($form, &$form_state) {
     watchdog('newsfeed', 'Message #@mid status update failed.', array('@mid' => $form_state['storage']['mid']), WATCHDOG_WARNING);
   }
   $form_state['rebuild'] = TRUE;
+}
+
+/**
+ * Implements hook_init().
+ */
+function newsfeed_init() {
+  if (arg(2) == 'blog' && is_numeric(arg(1))) {
+    global $user;
+    newsfeed_update_unread_messages('newsletter', $user->uid, arg(1));
+  }
+}
+
+
+/**
+ * Implements hook_node_view().
+ */
+function newsfeed_node_view($node, $view_mode, $langcode) {
+  if ($node->type == 'question' || $node->type == 'open_question') {
+    global $user;
+    newsfeed_update_unread_messages($node->type, $user->uid, $node->nid);
+  }
+}
+
+/**
+ * Finds related unread messages and updates their status.
+ * 
+ * @param string $type
+ *   Node type.
+ * @param integer $uid
+ *   User ID.
+ * @param integer $nid
+ *   Node ID.
+ */
+function newsfeed_update_unread_messages($type, $uid, $nid) {
+  $field = FALSE;
+  if ($type == 'question') {
+    $field = 'field_message_question';
+  }
+  elseif ($type == 'open_question') {
+    $field = 'field_message_open_question';
+  }
+  elseif ($type == 'newsletter') {
+    $field = 'field_course';
+  }
+  $unread_messages = newsfeed_get_related_unread_messages($field, $uid, $nid);
+  if ($unread_messages) {
+    $updated = newsfeed_update_message_status_multiple($unread_messages, $uid, 1);
+    if ($updated) {
+      $_SESSION['unread_messages_count'] = isset($_SESSION['unread_messages_count']) ? $_SESSION['unread_messages_count'] - count($unread_messages) : newsfeed_get_unread_messages_count($uid);
+    }
+  }
+}
+
+/**
+ * Collects related unread messages.
+ * 
+ * @param string $field
+ *   Message field name.
+ * @param integer $uid
+ *   User ID.
+ * @param integer $nid
+ *   Node ID.
+ */
+function newsfeed_get_related_unread_messages($field, $uid, $nid) {
+  if (!$field) {
+    return FALSE;
+  }
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'message')
+    ->fieldCondition($field, 'target_id', $nid)
+    ->addMetaData('message_uid', $uid)
+    ->addTag('newsfeed_related_message');
+  $result = $query->execute();
+  if ($result) {
+    $result = array_keys($result['message']);
+  }
+  return !empty($result) ? $result : FALSE;
+}
+
+/**
+ * Implements hook_query_TAG_alter() for 'newsfeed_related_message' tag.
+ * 
+ * Adds join for 'message_user' table in order to get user related messages.
+ */
+function newsfeed_query_newsfeed_related_message_alter(QueryAlterableInterface $query) {
+  $query->join('message_user', 'mu', $query->getMetaData('base_table') . '0.entity_id = mu.mid');
+  $query->condition('mu.uid', $query->getMetaData('message_uid'))
+  ->condition('mu.status', 0);
 }
