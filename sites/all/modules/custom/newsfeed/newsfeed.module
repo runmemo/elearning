@@ -77,10 +77,11 @@ function newsfeed_notifications_block() {
   }
   $_SESSION['unread_messages_count'] = newsfeed_get_unread_messages_count($user->uid);
   $title = $_SESSION['unread_messages_count'] == 0 ? t('You have no unread notifications') : t('Notifications');
+  $class = $_SESSION['unread_messages_count'] > 99 ? 'link-font-small' : 'link-font-default';
   $block = array('subject' => '');
   $block['content'] = array(
     '#type' => 'markup',
-    '#markup' => l('<span id="js-newsfeed-unread-count" class="link-inner">' . $_SESSION['unread_messages_count'] . '</span>', 'notifications', array('attributes' => array('title' => $title), 'html' => TRUE)),
+    '#markup' => '<div class="newsfeed-link-border"></div>' . l('<span id="js-newsfeed-unread-count" class="link-inner">' . $_SESSION['unread_messages_count'] . '</span>', 'notifications', array('attributes' => array('title' => $title, 'class' => array($class)), 'html' => TRUE)) . '<div class="newsfeed-link-border"></div>',
   );
   return $block;
 }
