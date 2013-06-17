@@ -28,10 +28,10 @@
         </div>
       </div>
       <div class="user-profile-fields omega">
-        <?php if (isset($field_name) || isset($field_surname)) : ?>
+        <?php if (isset($field_first_name) || isset($field_surname)) : ?>
           <div class="user-profile-name-surname">
             <div class="user-profile-name-surname-caption"><?php print t('Name', array(), array('conext' =>'user full name')); ?></div>
-            <?php if (isset($field_name)) print render($user_profile['field_name']); ?>
+            <?php if (isset($field_first_name)) print render($user_profile['field_first_name']); ?>
             <?php if (isset($field_surname)) print render($user_profile['field_surname']); ?>
           </div>
         <?php endif; ?>

@@ -93,7 +93,7 @@ function elearning_preprocess_certificate_certificate(&$variables) {
   }
   $variables['course']['grade_name'] = $grade_name;
   $variables['course']['grade_score'] = $credits . ' ' . t('(out of !count)', array('!count' => 100));;
-  $variables['course']['teacher_name'] = $node_wrapper->field_teacher->field_name->raw();
+  $variables['course']['teacher_name'] = $node_wrapper->field_teacher->field_first_name->raw();
   $variables['course']['teacher_surname'] = $node_wrapper->field_teacher->field_surname->raw();
 
   // Get logo of course provider.

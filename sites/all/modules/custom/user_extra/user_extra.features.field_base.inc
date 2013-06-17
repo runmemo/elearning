@@ -40,13 +40,13 @@ function user_extra_field_default_field_bases() {
     'type' => 'datetime',
   );
 
-  // Exported field_base: 'field_name'
-  $field_bases['field_name'] = array(
+  // Exported field_base: 'field_first_name'
+  $field_bases['field_first_name'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
-    'field_name' => 'field_name',
+    'field_name' => 'field_first_name',
     'foreign keys' => array(
       'format' => array(
         'columns' => array(

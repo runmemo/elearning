@@ -60,7 +60,7 @@ function elearning_alpha_preprocess_views_view__user_courses(&$vars) {
     $header = t('My courses');
   } else {
     $account_wrapper = entity_metadata_wrapper('user', $account);
-    $name = $account_wrapper->field_name->value();
+    $name = $account_wrapper->field_first_name->value();
     $header =  t('@name attends courses', array('@name' => $name));
   }
   // Wrap header for styling pursposes.
