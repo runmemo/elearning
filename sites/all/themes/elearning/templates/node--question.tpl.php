@@ -15,7 +15,7 @@
       <?php if (isset($title)) : ?>
         <h1><?php print $title ?></h1>
       <?php endif; ?>
-      <?php print $follow_flag; ?>
+      <?php print $content['follow_flag']; ?>
       <?php print render($edit_link); ?>
     </div>
     <div class="node-question-body grid-11 alpha omega">
