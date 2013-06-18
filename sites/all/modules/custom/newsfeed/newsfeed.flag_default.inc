@@ -4,9 +4,9 @@
 /**
  * Implements hook_flag_default_flags().
  */
-function newsletter_flag_default_flags() {
+function newsfeed_flag_default_flags() {
   $flags = array();
-  // Exported flag: "Follow Course Blog".
+  // Exported flag: "Follow content".
   $flags['follow_content'] = array(
     'entity_type' => 'node',
     'title' => 'Follow content',
@@ -42,7 +42,7 @@ function newsletter_flag_default_flags() {
     'import_roles' => array(
       'flag' => array(
         0 => 2,
-      ),
+    ),
       'unflag' => array(
         0 => 2,
       ),

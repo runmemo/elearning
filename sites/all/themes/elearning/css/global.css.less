@@ -76,31 +76,30 @@ h2 {
   .left();
   margin-left: 26px;
   .content {
-    .bold(14px);
-    text-align: center;
+    width: 52px;
+    height: 45px;
+    .bg-img('userpoints-circle.png');
+    background-position: center;
     a {
-      .left();
-      .show(table);
+      .bold(14px);
       .link();
+      .left();
       color: white;
-      width: 52px;
-      height: 45px;
-      .bg-img('userpoints-circle.png');
-      background-position: center;
-      &:after, &:before {
-         position: absolute;
-        .show(block);
-        content: "";
-        .bg-img('line-main-menu.png');
-        background-repeat: repeat;
-        width: 3px;
-        height: 45px;
-      }
+      padding: 14px 0px;
+      width: 46px;
+      text-align: center;
     }
-  }
-  .link-inner {
-    .show(table-cell);
-    vertical-align: middle;
+    a.link-font-small {
+      .bold(12px);
+      padding: 15px 0px;
+    }
+    .newsfeed-link-border {
+      .left();
+      .bg-img('line-main-menu.png');
+      background-repeat: repeat;
+      width: 3px;
+      height: 45px;
+    }
   }
 }
 

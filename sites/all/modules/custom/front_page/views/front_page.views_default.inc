@@ -86,13 +86,32 @@ function front_page_views_default_views() {
     'image_style' => 'provider_home_picture',
     'image_link' => '',
   );
-  /* Field: Content: Teacher */
-  $handler->display->display_options['fields']['field_teacher']['id'] = 'field_teacher';
-  $handler->display->display_options['fields']['field_teacher']['table'] = 'field_data_field_teacher';
-  $handler->display->display_options['fields']['field_teacher']['field'] = 'field_teacher';
-  $handler->display->display_options['fields']['field_teacher']['label'] = 'Lector';
-  $handler->display->display_options['fields']['field_teacher']['element_class'] = 'home-courses-teacher';
-  $handler->display->display_options['fields']['field_teacher']['element_default_classes'] = FALSE;
+  /* Field: User: First Name */
+  $handler->display->display_options['fields']['field_name']['id'] = 'field_name';
+  $handler->display->display_options['fields']['field_name']['table'] = 'field_data_field_name';
+  $handler->display->display_options['fields']['field_name']['field'] = 'field_name';
+  $handler->display->display_options['fields']['field_name']['relationship'] = 'field_teacher_uid';
+  $handler->display->display_options['fields']['field_name']['label'] = '';
+  $handler->display->display_options['fields']['field_name']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_name']['element_label_colon'] = FALSE;
+  /* Field: User: Surname */
+  $handler->display->display_options['fields']['field_surname']['id'] = 'field_surname';
+  $handler->display->display_options['fields']['field_surname']['table'] = 'field_data_field_surname';
+  $handler->display->display_options['fields']['field_surname']['field'] = 'field_surname';
+  $handler->display->display_options['fields']['field_surname']['relationship'] = 'field_teacher_uid';
+  $handler->display->display_options['fields']['field_surname']['label'] = '';
+  $handler->display->display_options['fields']['field_surname']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_surname']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_surname']['type'] = 'text_plain';
+  /* Field: Global: Custom text */
+  $handler->display->display_options['fields']['nothing']['id'] = 'nothing';
+  $handler->display->display_options['fields']['nothing']['table'] = 'views';
+  $handler->display->display_options['fields']['nothing']['field'] = 'nothing';
+  $handler->display->display_options['fields']['nothing']['label'] = 'Lector:';
+  $handler->display->display_options['fields']['nothing']['alter']['text'] = '[field_name] [field_surname]';
+  $handler->display->display_options['fields']['nothing']['element_class'] = 'home-courses-teacher';
+  $handler->display->display_options['fields']['nothing']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['nothing']['element_default_classes'] = FALSE;
   /* Field: Content: Provider */
   $handler->display->display_options['fields']['field_provider']['id'] = 'field_provider';
   $handler->display->display_options['fields']['field_provider']['table'] = 'field_data_field_provider';

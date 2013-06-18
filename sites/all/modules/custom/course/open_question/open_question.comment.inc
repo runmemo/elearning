@@ -44,7 +44,8 @@ function open_question_new_feedback_comment_notify($comment, $feedback) {
   }
   $fields = array(
     'field_message_comment' => $comment->cid,
-    'field_message_feedback' => $feedback->nid
+    'field_message_feedback' => $feedback->nid,
+    'field_message_open_question' => $feedback_wrapper->field_open_question_answer->field_open_question->value()->nid,
   );
   $uids = array(
     $uid => array(
