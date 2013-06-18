@@ -118,7 +118,7 @@ function newsletter_views_pre_render(&$view) {
       //Add links to the relevant questions views
       if (node_access('create', 'newsletter')) {
         $links[] = array(
-          'title' => t('Create Blog'), 
+          'title' => t('New post'), 
           'href' => 'node/add/newsletter',
           'query' => array(
             'path' => $compressed_path,
