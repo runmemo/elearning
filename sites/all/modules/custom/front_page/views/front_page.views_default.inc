@@ -87,13 +87,14 @@ function front_page_views_default_views() {
     'image_link' => '',
   );
   /* Field: User: First Name */
-  $handler->display->display_options['fields']['field_name']['id'] = 'field_name';
-  $handler->display->display_options['fields']['field_name']['table'] = 'field_data_field_name';
-  $handler->display->display_options['fields']['field_name']['field'] = 'field_name';
-  $handler->display->display_options['fields']['field_name']['relationship'] = 'field_teacher_uid';
-  $handler->display->display_options['fields']['field_name']['label'] = '';
-  $handler->display->display_options['fields']['field_name']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['field_name']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_first_name']['id'] = 'field_first_name';
+  $handler->display->display_options['fields']['field_first_name']['table'] = 'field_data_field_first_name';
+  $handler->display->display_options['fields']['field_first_name']['field'] = 'field_first_name';
+  $handler->display->display_options['fields']['field_first_name']['relationship'] = 'field_teacher_uid';
+  $handler->display->display_options['fields']['field_first_name']['label'] = '';
+  $handler->display->display_options['fields']['field_first_name']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_first_name']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_first_name']['type'] = 'text_plain';
   /* Field: User: Surname */
   $handler->display->display_options['fields']['field_surname']['id'] = 'field_surname';
   $handler->display->display_options['fields']['field_surname']['table'] = 'field_data_field_surname';
@@ -108,7 +109,7 @@ function front_page_views_default_views() {
   $handler->display->display_options['fields']['nothing']['table'] = 'views';
   $handler->display->display_options['fields']['nothing']['field'] = 'nothing';
   $handler->display->display_options['fields']['nothing']['label'] = 'Lector:';
-  $handler->display->display_options['fields']['nothing']['alter']['text'] = '[field_name] [field_surname]';
+  $handler->display->display_options['fields']['nothing']['alter']['text'] = '[field_first_name] [field_surname]';
   $handler->display->display_options['fields']['nothing']['element_class'] = 'home-courses-teacher';
   $handler->display->display_options['fields']['nothing']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['nothing']['element_default_classes'] = FALSE;
