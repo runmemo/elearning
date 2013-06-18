@@ -350,13 +350,14 @@ function _course_get_tree_items($tree, $load_type = FALSE) {
  *   Array of nids of nodes that are part of the course.
  */
 function course_get_items($course_item) {
+  if(!isset($course_item->book)) {
+    return array();
+  }
   // Check if values exist in cache (cache item per book). 
   if ($cached = cache_get('course_get_items_' . $course_item->book['bid'])) {
     return $cached->data;
   }
-  if(!isset($course_item->book)) {
-    return array();
-  }
+ 
   // Get items from the course book.
   $tree = menu_tree_all_data($course_item->book['menu_name'], NULL, 3);
   $items = _course_get_tree_items($tree);
