@@ -20,6 +20,7 @@
 .flag-best-answer .best-answer-marked,
 .flag-opaf-useful .flag,
 .flag-abuse-content .flag,
+.flag-follow-content .flag,
 .up-inactive {
   display: inline;
   position: relative;
@@ -38,6 +39,7 @@
 .flag-best-answer .best-answer-marked:hover:after,
 .flag-abuse-content .flag:hover:after,
 .flag-opaf-useful .flag:hover:after,
+.flag-follow-content .flag:hover:after,
 .up-inactive:hover:after{
   background: #fdfdfd;
   bottom: -21px;
@@ -63,6 +65,7 @@
 .flag-best-answer .question-author:hover:before,
 .flag-opaf-useful .flag:hover:before,
 .flag-abuse-content .flag:hover:before,
+.flag-follow-content .flag:hover:before,
 .up-inactive:hover:before{
   .arrow(left, 8px, #fff);
   bottom: 20px;
@@ -82,7 +85,8 @@
 }
 
 .edit-link:hover:after,
-.flag-subscriptions-reference-flag .flag:hover:after {
+.flag-subscriptions-reference-flag .flag:hover:after,
+.flag-follow-content .flag:hover:after {
   left: -100%;
   bottom: 28px;
 }
@@ -107,6 +111,7 @@
 // For some elements tts required to show hovertips on top of the element
 .edit-link:hover:before,
 .flag-subscriptions-reference-flag .flag:hover:before,
+.flag-follow-content .flag:hover:before,
 .view-feedback-comments .views-inline-comment-field a.comment-link:hover:before,
 .star a:hover:before {
   .arrow(bottom, 8px, #fff);
