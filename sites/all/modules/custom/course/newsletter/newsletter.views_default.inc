@@ -88,7 +88,7 @@ function newsletter_views_default_views() {
   $handler->display->display_options['fields']['field_surname']['alter']['text'] = '<div class="field-group-blog">
     <div class="field-title">[title]</div>
     <div class="field-body">[body]</div>
-    <div class="field-author">Author: [field_first_name] [field_surname] </div>
+    <div class="field-author">'.t('Author').': [field_first_name] [field_surname] </div>
   </div>';
   $handler->display->display_options['fields']['field_surname']['element_label_colon'] = FALSE;
   /* Sort criterion: Content: Post date */
