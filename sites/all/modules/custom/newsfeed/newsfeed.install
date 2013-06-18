@@ -60,3 +60,10 @@ function newsfeed_update_7000() {
   );
   db_add_field('message_user', 'status', $spec);
 }
+
+/**
+ * Removes field_message_blog_title from message.
+ */
+function newsfeed_update_7001() {
+  field_delete_field('field_message_blog_title');
+}

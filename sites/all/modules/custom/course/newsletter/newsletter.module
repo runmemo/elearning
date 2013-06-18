@@ -65,7 +65,7 @@ function newsletter_course_blog_post_notify($newsletter) {
   $course = $newsletter_wrapper->field_course->value();
   $fields = array(
     'field_course' => $course->nid,
-    'field_message_blog_title' => $newsletter->title,
+    'field_message_newsletter' => $newsletter->nid,
   );
   newsfeed_create_message('course_newsletter_notification', $newsletter->uid, $course, $fields);
 }

@@ -171,8 +171,8 @@ function newsfeed_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'message-course_newsletter_notification-field_message_blog_title'
-  $field_instances['message-course_newsletter_notification-field_message_blog_title'] = array(
+  // Exported field_instance: 'message-course_newsletter_notification-field_message_newsletter'
+  $field_instances['message-course_newsletter_notification-field_message_newsletter'] = array(
     'bundle' => 'course_newsletter_notification',
     'default_value' => NULL,
     'deleted' => 0,
@@ -180,10 +180,12 @@ function newsfeed_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'above',
-        'module' => 'text',
-        'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 2,
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => FALSE,
+        ),
+        'type' => 'entityreference_label',
+        'weight' => 3,
       ),
       'message_notify_email_body' => array(
         'label' => 'above',
@@ -205,21 +207,22 @@ function newsfeed_field_default_field_instances() {
       ),
     ),
     'entity_type' => 'message',
-    'field_name' => 'field_message_blog_title',
-    'label' => 'Blog title',
+    'field_name' => 'field_message_newsletter',
+    'label' => 'Message Newsletter',
     'required' => 0,
     'settings' => array(
-      'text_processing' => 0,
       'user_register_form' => FALSE,
     ),
     'widget' => array(
       'active' => 1,
-      'module' => 'text',
+      'module' => 'entityreference',
       'settings' => array(
+        'match_operator' => 'CONTAINS',
+        'path' => '',
         'size' => 60,
       ),
-      'type' => 'text_textfield',
-      'weight' => 4,
+      'type' => 'entityreference_autocomplete',
+      'weight' => 5,
     ),
   );
 
@@ -690,10 +693,10 @@ function newsfeed_field_default_field_instances() {
 
   // Translatables
   // Included for use with string extractors like potx.
-  t('Blog title');
   t('Course');
   t('Message Answer');
   t('Message Comment');
+  t('Message Newsletter');
   t('Message Open Question');
   t('Message Question');
   t('Message feedback');
