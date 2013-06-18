@@ -82,7 +82,7 @@ function newsletter_preprocess_views_view_fields(&$vars) {
 
   $row = $vars['row'];
   if (isset($vars['fields']['nothing'])) {
-    $count = rand(0, 1); //@todo barinder:  Temporary code, get rid off custom field and merge it with post date field.
+    $count = get_relevant_questions_count('node/'.$row->nid);
     $css_classes = 'field-answers-count';
     if (!$count) {
       $css_classes = $css_classes . ' zero';
@@ -105,7 +105,26 @@ function newsletter_preprocess_views_view_fields(&$vars) {
 }
 
 /**
- * Implements hook_views_pre_rende
+ * Returns count of questions related to path.
+ */
+function get_relevant_questions_count($path = NULL) {
+  if(!$path) {
+    return;
+  }
+
+  $result = db_select('field_data_field_question_path', 'fqp')
+          ->fields('fqp', array('entity_id'))
+          ->condition('fqp.field_question_path_value', $path) // Check path
+          ->condition('fqp.entity_type', 'node') // Check entity is node
+          ->condition('fqp.bundle', 'question') // Check node is of question type.
+          ->condition('fqp.deleted', 0) // A boolean indicating whether this data item has been deleted
+          ->execute();
+
+  return $result->rowCount();
+}
+
+/**
+ * Implements hook_views_pre_render
  */
 function newsletter_views_pre_render(&$view) {
   if ($view->name == 'course_newsletter') {
