@@ -35,7 +35,7 @@
     </div>
     <div class="node-course-basic-info">
       <div class="node-course-teacher-parameters">
-        <h2><?php print $teacher['name'] . $teacher['surname']; ?></h2>
+        <h2><?php print $teacher['teacher_name'] ?></h2>
         <div class="node-course-teacher-button">
           <div class="teacher-avatar">
             <?php print $teacher['avatar']; ?>
