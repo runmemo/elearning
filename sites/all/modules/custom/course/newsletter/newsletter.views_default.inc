@@ -70,20 +70,27 @@ function newsletter_views_default_views() {
   $handler->display->display_options['fields']['body']['exclude'] = TRUE;
   $handler->display->display_options['fields']['body']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['body']['type'] = 'text_plain';
-  /* Field: User: Name */
-  $handler->display->display_options['fields']['name']['id'] = 'name';
-  $handler->display->display_options['fields']['name']['table'] = 'users';
-  $handler->display->display_options['fields']['name']['field'] = 'name';
-  $handler->display->display_options['fields']['name']['relationship'] = 'uid';
-  $handler->display->display_options['fields']['name']['label'] = '';
-  $handler->display->display_options['fields']['name']['alter']['alter_text'] = TRUE;
-  $handler->display->display_options['fields']['name']['alter']['text'] = '<div class="field-group-blog">
-      <div class="field-title">[title]</div>
-      <div class="field-body">[body]</div>
-      <div class="field-author">[name]</div>
-    </div>';
-  $handler->display->display_options['fields']['name']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['name']['link_to_user'] = FALSE;
+  /* Field: User: First Name */
+  $handler->display->display_options['fields']['field_first_name']['id'] = 'field_first_name';
+  $handler->display->display_options['fields']['field_first_name']['table'] = 'field_data_field_first_name';
+  $handler->display->display_options['fields']['field_first_name']['field'] = 'field_first_name';
+  $handler->display->display_options['fields']['field_first_name']['relationship'] = 'uid';
+  $handler->display->display_options['fields']['field_first_name']['label'] = '';
+  $handler->display->display_options['fields']['field_first_name']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_first_name']['element_label_colon'] = FALSE;
+  /* Field: User: Surname */
+  $handler->display->display_options['fields']['field_surname']['id'] = 'field_surname';
+  $handler->display->display_options['fields']['field_surname']['table'] = 'field_data_field_surname';
+  $handler->display->display_options['fields']['field_surname']['field'] = 'field_surname';
+  $handler->display->display_options['fields']['field_surname']['relationship'] = 'uid';
+  $handler->display->display_options['fields']['field_surname']['label'] = '';
+  $handler->display->display_options['fields']['field_surname']['alter']['alter_text'] = TRUE;
+  $handler->display->display_options['fields']['field_surname']['alter']['text'] = '<div class="field-group-blog">
+    <div class="field-title">[title]</div>
+    <div class="field-body">[body]</div>
+    <div class="field-author">Author: [field_first_name] [field_surname] </div>
+  </div>';
+  $handler->display->display_options['fields']['field_surname']['element_label_colon'] = FALSE;
   /* Sort criterion: Content: Post date */
   $handler->display->display_options['sorts']['created']['id'] = 'created';
   $handler->display->display_options['sorts']['created']['table'] = 'node';
@@ -91,7 +98,7 @@ function newsletter_views_default_views() {
   $handler->display->display_options['sorts']['created']['order'] = 'DESC';
   /* Contextual filter: Content: Course (field_course) */
   $handler->display->display_options['arguments']['field_course_target_id']['id'] = 'field_course_target_id';
-  $handler->display->display_options['arguments']['field_course_target_id']['table'] = 'field_data_field_course';
+  $handler->display->display_options['arguments']['field_course_target_id']['table'] =  'field_data_field_course';
   $handler->display->display_options['arguments']['field_course_target_id']['field'] = 'field_course_target_id';
   $handler->display->display_options['arguments']['field_course_target_id']['default_action'] = 'empty';
   $handler->display->display_options['arguments']['field_course_target_id']['default_argument_type'] = 'node';
@@ -135,7 +142,6 @@ function newsletter_views_default_views() {
     t('last »'),
     t('author'),
     t('answers'),
-    t('PHP'),
     t('All'),
     t('Page'),
   );
