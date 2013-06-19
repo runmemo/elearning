@@ -7,3 +7,5 @@ OpenQuestionAccessTestCase
 OpenQuestionUnitTest
 CourseRegistrationTestCase
 CoursePointsTestCase
+NewsfeedCreateSingleCase
+NewsfeedCreateMultipleCase

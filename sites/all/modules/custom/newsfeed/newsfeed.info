@@ -63,5 +63,7 @@ features_exclude[field][message-oqaf_author_comment_notification-field_message_o
 features_exclude[field][message-oqaf_reviewer_comment_notification-field_message_open_question] = message-oqaf_reviewer_comment_notification-field_message_open_question
 features_exclude[field][message-course_newsletter_notification-field_course] = message-course_newsletter_notification-field_course
 features_exclude[field][message-course_newsletter_notification-field_message_newsletter] = message-course_newsletter_notification-field_message_newsletter
+
+files[] = tests/newsfeed.test
 files[] = plugins/notifier/internal/internal.inc
 files[] = plugins/notifier/internal/MessageNotifierInternal.class.php

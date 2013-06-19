@@ -1,0 +1,216 @@
+<?php
+
+/**
+ * @file
+ * 
+ * Test cases for the Newsfeed feature.
+ */
+
+/**
+ * Base class for newsfeed tests.
+ */
+class NewsfeedBaseCase extends DrupalWebTestCase {
+
+  function setUp() {
+    parent::setUp('message', 'message_notify', 'message_subscribe', 'flag', 'entityreference', 'views_php', 'newsfeed');
+
+    // Run update function in order to get new DB field.
+    newsfeed_update_7000();
+
+    $this->referenced_node = $this->drupalCreateNode();
+    $this->receiver = $this->drupalCreateUser();
+    $this->actor = $this->drupalCreateUser();
+
+    // Create test message type.
+    $message_type = message_type_create('foo', array('message_text' => array(LANGUAGE_NONE => array(array('value' => 'Example text.')))));
+    $message_type->save();
+
+    // Create an entity reference field.
+    $field = array(
+      'translatable' => FALSE,
+      'entity_types' => array('message'),
+      'settings' => array(
+        'handler' => 'base',
+        'target_type' => 'node',
+        'handler_settings' => array(
+          'target_bundles' => array(),
+        ),
+      ),
+      'field_name' => 'field_node_ref',
+      'type' => 'entityreference',
+    );
+    $field = field_create_field($field);
+    $instance = array(
+      'field_name' => 'field_node_ref',
+      'bundle' => 'foo',
+      'entity_type' => 'message',
+    );
+    field_create_instance($instance);
+  }
+
+  /**
+   * Checks for instance between user and message.
+   * 
+   * @param integer $mid
+   * @param integer $uid
+   * @return boolean
+   */
+  function checkMessageUserInstance($mid, $uid) {
+    $query = db_select('message_user', 'mu')->fields('mu', array('mid'))
+      ->condition('uid', $uid)
+      ->condition('mid', $mid);
+    $db_result = $query->execute();
+    $result = $db_result->fetch();
+
+    return isset($result->mid);
+  }
+
+}
+
+/**
+ * Tests creating message for single receiver.
+ */
+class NewsfeedCreateSingleCase extends NewsfeedBaseCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Newsfeed Create Single Message Test',
+      'description' => 'Test for creating message for one receiver.',
+      'group' => 'Course',
+    );
+  }
+
+  function setUp() {
+    parent::setUp();
+  }
+
+  function testCreateSingle() {
+    $fields = array(
+      'field_node_ref' => $this->referenced_node->nid
+    );
+    $uids = array(
+      $this->receiver->uid => array(
+        'notifiers' => array(
+          'internal' => 'internal'
+        )
+      )
+    );
+    // Check for creating message.
+    $result = newsfeed_create_message('foo', $this->actor->uid, $this->referenced_node, $fields, $uids);
+    $this->assertTrue(isset($result->mid), 'Message has been created');
+    // Check, that actor is message author.
+    $this->assertEqual($result->uid, $this->actor->uid, 'Message has been assigned to the right user.');
+    $message = message_load($result->mid);
+    // Check for message text.
+    $this->assertEqual($message->getType()->message_text[LANGUAGE_NONE][0]['value'], 'Example text.', 'Message type text has been saved.');
+    // Check for instance between users and message.
+    $this->assertTrue($this->checkMessageUserInstance($result->mid, $this->receiver->uid), 'There is instance between receiver and message.');
+    $this->assertFalse($this->checkMessageUserInstance($result->mid, $this->actor->uid), 'There is no instance between autor and message.');
+    // Check for message status.
+    $status = newsfeed_get_message_status($result->mid, $this->receiver->uid);
+    $this->assertEqual($status, 0, 'Created message has status 0 for receiver');
+    $status = newsfeed_get_message_status($result->mid, $this->actor->uid);
+    $this->assertNull($status, "Created message doesn't have status for actor");
+    // Check for the count of receiver's messages.
+    $receiver_messages_count = newsfeed_get_unread_messages_count($this->receiver->uid);
+    $this->assertEqual($receiver_messages_count, 1, 'Receiver has 1 unread message.');
+    // Check updating message status on viewing content.
+    newsfeed_update_unread_messages('field_node_ref', $this->receiver->uid, $this->referenced_node->nid);
+    $receiver_messages_count = newsfeed_get_unread_messages_count($this->receiver->uid);
+    $this->assertEqual($receiver_messages_count, 0, 'Receiver has no unread messages after update.');
+    $this->assertTrue(isset($_SESSION['unread_messages_count']), 'Messages count has been updated.');
+  }
+
+}
+
+/**
+ * Tests creating message for multiple receivers.
+ */
+class NewsfeedCreateMultipleCase extends NewsfeedBaseCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Newsfeed Create Multiple Messages Test',
+      'description' => 'Test for creating message for multiple receivers.',
+      'group' => 'Course',
+    );
+  }
+
+  function setUp() {
+    parent::setUp();
+    // Create test flag.
+    $flag_data = array(
+      'entity_type' => 'node',
+      'name' => 'follow_test_flag',
+      'title' => 'Test Flag',
+      'global' => 0,
+      'types' => array(),
+      'flag_short' => 'Flag this item',
+      'flag_long' => '',
+      'flag_message' => '',
+      'unflag_short' => 'Unflag this item',
+      'unflag_long' => '',
+      'unflag_message' => '',
+      'unflag_denied_text' => 'You may not unflag this item',
+      'link_type' => 'normal',
+      'weight' => 0,
+      'show_on_form' => 0,
+      'access_author' => '',
+      'show_contextual_link' => 0,
+      'show_in_links' => array(
+        'full' => 1,
+        'teaser' => 1,
+      ),
+      'i18n' => 0,
+      'api_version' => 3,
+    );
+    $flag = flag_flag::factory_by_array($flag_data);
+    $flag->save();
+    // Reset cache so permissions show up.
+    drupal_static_reset('flag_get_flags');
+    // Reset permissions so that permissions for this flag are available.
+    $this->checkPermissions(array(), TRUE);
+    $this->flag = $flag;
+
+    // Create test users who can flag and unflag.
+    $this->subscriber_1 = $this->drupalCreateUser(array('flag follow_test_flag', 'unflag follow_test_flag'));
+    $this->subscriber_2 = $this->drupalCreateUser(array('flag follow_test_flag', 'unflag follow_test_flag'));
+    $this->subscriber_3 = $this->drupalCreateUser(array('flag follow_test_flag', 'unflag follow_test_flag'));
+
+    $this->follow_node = $this->drupalCreateNode();
+
+    // Flag test node.
+    flag('flag', 'follow_test_flag', $this->follow_node->nid, $this->subscriber_1);
+    flag('flag', 'follow_test_flag', $this->follow_node->nid, $this->subscriber_2);
+  }
+
+  function testCreateMultiple() {
+    $fields = array(
+      'field_node_ref' => $this->follow_node->nid
+    );
+
+    // Check for creating message.
+    $result = newsfeed_create_message('foo', $this->subscriber_1->uid, $this->follow_node, $fields);
+    $this->assertTrue(isset($result->mid), 'Message has been created');
+    // Check, that subscriber_1 is message author.
+    $this->assertEqual($result->uid, $this->subscriber_1->uid, 'Message has been assigned to the right user.');
+    $message = message_load($result->mid);
+    // Check for message text.
+    $this->assertEqual($message->getType()->message_text[LANGUAGE_NONE][0]['value'], 'Example text.', 'Message type text has been saved.');
+    // Check for instance between users and message.
+    $this->assertFalse($this->checkMessageUserInstance($result->mid, $this->subscriber_1->uid), 'There is no instance between subscriber and message, because subscriber is message author.');
+    $this->assertTrue($this->checkMessageUserInstance($result->mid, $this->subscriber_2->uid), 'There is instance between subscriber and message, because subscriber is subscribed to the node.');
+    $this->assertFalse($this->checkMessageUserInstance($result->mid, $this->subscriber_3->uid), 'There is no instance between subscriber and message, because subscriber is not subscribed to the node.');
+    // Check for the count of receiver's messages.
+    $messages_count = newsfeed_get_unread_messages_count($this->subscriber_1->uid);
+    $this->assertEqual($messages_count, 0, 'Message autor has 0 unread messages.');
+    $messages_count = newsfeed_get_unread_messages_count($this->subscriber_2->uid);
+    $this->assertEqual($messages_count, 1, 'Subscriber has 1 unread message.');
+    // Check updating message status on viewing content.
+    newsfeed_update_unread_messages('field_node_ref', $this->subscriber_2->uid, $this->follow_node->nid);
+    $messages_count = newsfeed_get_unread_messages_count($this->subscriber_2->uid);
+    $this->assertEqual($messages_count, 0, 'Subscriber has no unread messages after update.');
+    $this->assertTrue(isset($_SESSION['unread_messages_count']), 'Messages count has been updated.');
+  }
+
+}

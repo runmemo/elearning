@@ -31,7 +31,9 @@ function newsfeed_ctools_plugin_api() {
  * Implements hook_views_api().
  */
 function newsfeed_views_api() {
-  return array("api" => "3.0");
+  return array(
+    'api' => '3.0',
+    'path' => drupal_get_path('module', 'newsfeed') . '/views',);
 }
 
 /**
@@ -220,7 +222,7 @@ function newsfeed_create_message($type, $uid, $node, $fields = array(), $uids = 
     $subscribe_options['uids'] = $uids;
   }
 
-  message_subscribe_send_message('node', $node, $message, $notify_options, $subscribe_options);
+  return message_subscribe_send_message('node', $node, $message, $notify_options, $subscribe_options);
 }
 
 /**
@@ -348,7 +350,7 @@ function newsfeed_message_status_form_submit($form, &$form_state) {
 function newsfeed_init() {
   if (arg(2) == 'blog' && is_numeric(arg(1))) {
     global $user;
-    newsfeed_update_unread_messages('newsletter', $user->uid, arg(1));
+    newsfeed_update_unread_messages('field_course', $user->uid, arg(1));
   }
 }
 
@@ -359,31 +361,21 @@ function newsfeed_init() {
 function newsfeed_node_view($node, $view_mode, $langcode) {
   if ($node->type == 'question' || $node->type == 'open_question') {
     global $user;
-    newsfeed_update_unread_messages($node->type, $user->uid, $node->nid);
+    newsfeed_update_unread_messages('field_message_' . $node->type, $user->uid, $node->nid);
   }
 }
 
 /**
  * Finds related unread messages and updates their status.
  * 
- * @param string $type
- *   Node type.
+ * @param string $field
+ *   Message field name.
  * @param integer $uid
  *   User ID.
  * @param integer $nid
  *   Node ID.
  */
-function newsfeed_update_unread_messages($type, $uid, $nid) {
-  $field = FALSE;
-  if ($type == 'question') {
-    $field = 'field_message_question';
-  }
-  elseif ($type == 'open_question') {
-    $field = 'field_message_open_question';
-  }
-  elseif ($type == 'newsletter') {
-    $field = 'field_course';
-  }
+function newsfeed_update_unread_messages($field, $uid, $nid) {
   $unread_messages = newsfeed_get_related_unread_messages($field, $uid, $nid);
   if ($unread_messages) {
     $updated = newsfeed_update_message_status_multiple($unread_messages, $uid, 1);
