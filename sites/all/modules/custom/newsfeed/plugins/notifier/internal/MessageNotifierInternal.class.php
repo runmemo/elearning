@@ -9,7 +9,7 @@
 class MessageNotifierInternal extends MessageNotifierBase {
 
   public function deliver(array $output = array()) {
-    newsfeed_insert($this->plugin['options']['mid'], $this->message->uid, 0);
+    newsfeed_insert($this->plugin['options']['mid'], $this->message->uid);
     return TRUE;
   }
 

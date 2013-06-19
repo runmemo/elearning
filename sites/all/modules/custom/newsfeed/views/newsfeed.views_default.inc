@@ -35,7 +35,7 @@ function newsfeed_views_default_views() {
   $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['style_options']['grouping'] = array(
     0 => array(
-      'field' => 'status',
+      'field' => 'flagged',
       'rendered' => 0,
       'rendered_strip' => 0,
     ),
@@ -58,54 +58,46 @@ function newsfeed_views_default_views() {
   $handler->display->display_options['relationships']['user']['id'] = 'user';
   $handler->display->display_options['relationships']['user']['table'] = 'message';
   $handler->display->display_options['relationships']['user']['field'] = 'user';
-  /* Field: Message: Message ID */
-  $handler->display->display_options['fields']['mid']['id'] = 'mid';
-  $handler->display->display_options['fields']['mid']['table'] = 'message';
-  $handler->display->display_options['fields']['mid']['field'] = 'mid';
-  $handler->display->display_options['fields']['mid']['label'] = '';
-  $handler->display->display_options['fields']['mid']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['mid']['element_label_colon'] = FALSE;
-  /* Field: Message status for class */
-  $handler->display->display_options['fields']['status_1']['id'] = 'status_1';
-  $handler->display->display_options['fields']['status_1']['table'] = 'message_user';
-  $handler->display->display_options['fields']['status_1']['field'] = 'status';
-  $handler->display->display_options['fields']['status_1']['ui_name'] = 'Message status for class';
-  $handler->display->display_options['fields']['status_1']['label'] = '';
-  $handler->display->display_options['fields']['status_1']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['status_1']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['status_1']['type'] = 'custom';
-  $handler->display->display_options['fields']['status_1']['type_custom_true'] = 'read';
-  $handler->display->display_options['fields']['status_1']['type_custom_false'] = 'unread';
-  $handler->display->display_options['fields']['status_1']['not'] = 0;
-  /* Field: Message status for grouping */
-  $handler->display->display_options['fields']['status']['id'] = 'status';
-  $handler->display->display_options['fields']['status']['table'] = 'message_user';
-  $handler->display->display_options['fields']['status']['field'] = 'status';
-  $handler->display->display_options['fields']['status']['ui_name'] = 'Message status for grouping';
-  $handler->display->display_options['fields']['status']['label'] = '';
-  $handler->display->display_options['fields']['status']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['status']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['status']['type'] = 'custom';
-  $handler->display->display_options['fields']['status']['type_custom_true'] = '<div class="read"></div>';
-  $handler->display->display_options['fields']['status']['type_custom_false'] = '<div class="unread"></div>';
-  $handler->display->display_options['fields']['status']['not'] = 0;
-  /* Field: Message Status Form */
-  $handler->display->display_options['fields']['php']['id'] = 'php';
-  $handler->display->display_options['fields']['php']['table'] = 'views';
-  $handler->display->display_options['fields']['php']['field'] = 'php';
-  $handler->display->display_options['fields']['php']['ui_name'] = 'Message Status Form';
-  $handler->display->display_options['fields']['php']['label'] = '';
-  $handler->display->display_options['fields']['php']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['php']['use_php_setup'] = 1;
-  $handler->display->display_options['fields']['php']['php_setup'] = 'require_once DRUPAL_ROOT . \'/sites/all/modules/custom/newsfeed/newsfeed.module\';';
-  $handler->display->display_options['fields']['php']['php_value'] = 'require_once DRUPAL_ROOT . \'/sites/all/modules/custom/newsfeed/newsfeed.module\';';
-  $handler->display->display_options['fields']['php']['php_output'] = '<?php
-    $args = array($row->mid, $view->args[0], $row->status_1);
-    $form = drupal_get_form(\'newsfeed_message_status_form_\' . $row->mid, $args);
-    print drupal_render($form);
-    ?>';
-  $handler->display->display_options['fields']['php']['use_php_click_sortable'] = '0';
-  $handler->display->display_options['fields']['php']['php_click_sortable'] = '';
+  /* Relationship: Flags: message_read */
+  $handler->display->display_options['relationships']['flag_content_rel']['id'] = 'flag_content_rel';
+  $handler->display->display_options['relationships']['flag_content_rel']['table'] = 'message';
+  $handler->display->display_options['relationships']['flag_content_rel']['field'] = 'flag_content_rel';
+  $handler->display->display_options['relationships']['flag_content_rel']['required'] = 0;
+  $handler->display->display_options['relationships']['flag_content_rel']['flag'] = 'message_read';
+  /* Field: Flag status for class */
+  $handler->display->display_options['fields']['flagged_1']['id'] = 'flagged_1';
+  $handler->display->display_options['fields']['flagged_1']['table'] = 'flagging';
+  $handler->display->display_options['fields']['flagged_1']['field'] = 'flagged';
+  $handler->display->display_options['fields']['flagged_1']['relationship'] = 'flag_content_rel';
+  $handler->display->display_options['fields']['flagged_1']['ui_name'] = 'Flag status for class';
+  $handler->display->display_options['fields']['flagged_1']['label'] = '';
+  $handler->display->display_options['fields']['flagged_1']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['flagged_1']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['flagged_1']['type'] = 'custom';
+  $handler->display->display_options['fields']['flagged_1']['type_custom_true'] = 'read';
+  $handler->display->display_options['fields']['flagged_1']['type_custom_false'] = 'unread';
+  $handler->display->display_options['fields']['flagged_1']['not'] = 0;
+  /* Field: Flag status for grouping */
+  $handler->display->display_options['fields']['flagged']['id'] = 'flagged';
+  $handler->display->display_options['fields']['flagged']['table'] = 'flagging';
+  $handler->display->display_options['fields']['flagged']['field'] = 'flagged';
+  $handler->display->display_options['fields']['flagged']['relationship'] = 'flag_content_rel';
+  $handler->display->display_options['fields']['flagged']['ui_name'] = 'Flag status for grouping';
+  $handler->display->display_options['fields']['flagged']['label'] = '';
+  $handler->display->display_options['fields']['flagged']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['flagged']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['flagged']['type'] = 'custom';
+  $handler->display->display_options['fields']['flagged']['type_custom_true'] = '<div class="read"></div>';
+  $handler->display->display_options['fields']['flagged']['type_custom_false'] = '<div class="unread"></div>';
+  $handler->display->display_options['fields']['flagged']['not'] = 0;
+  /* Field: Flags: Flag link */
+  $handler->display->display_options['fields']['ops']['id'] = 'ops';
+  $handler->display->display_options['fields']['ops']['table'] = 'flagging';
+  $handler->display->display_options['fields']['ops']['field'] = 'ops';
+  $handler->display->display_options['fields']['ops']['relationship'] = 'flag_content_rel';
+  $handler->display->display_options['fields']['ops']['label'] = '';
+  $handler->display->display_options['fields']['ops']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['ops']['empty'] = '<span class="unflag-disabled"></span>';
   /* Field: Message: Timestamp */
   $handler->display->display_options['fields']['timestamp']['id'] = 'timestamp';
   $handler->display->display_options['fields']['timestamp']['table'] = 'message';
@@ -119,14 +111,15 @@ function newsfeed_views_default_views() {
   $handler->display->display_options['fields']['message_render']['table'] = 'message';
   $handler->display->display_options['fields']['message_render']['field'] = 'message_render';
   $handler->display->display_options['fields']['message_render']['label'] = '';
-  $handler->display->display_options['fields']['message_render']['element_class'] = 'status-[status_1]';
+  $handler->display->display_options['fields']['message_render']['element_class'] = 'status-[flagged_1]';
   $handler->display->display_options['fields']['message_render']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['message_render']['partials'] = 1;
   $handler->display->display_options['fields']['message_render']['partials_delta'] = '1';
-  /* Sort criterion: Message-User instance: Message status */
-  $handler->display->display_options['sorts']['status']['id'] = 'status';
-  $handler->display->display_options['sorts']['status']['table'] = 'message_user';
-  $handler->display->display_options['sorts']['status']['field'] = 'status';
+  /* Sort criterion: Flags: Flagged */
+  $handler->display->display_options['sorts']['flagged']['id'] = 'flagged';
+  $handler->display->display_options['sorts']['flagged']['table'] = 'flagging';
+  $handler->display->display_options['sorts']['flagged']['field'] = 'flagged';
+  $handler->display->display_options['sorts']['flagged']['relationship'] = 'flag_content_rel';
   /* Sort criterion: Message: Timestamp */
   $handler->display->display_options['sorts']['timestamp']['id'] = 'timestamp';
   $handler->display->display_options['sorts']['timestamp']['table'] = 'message';

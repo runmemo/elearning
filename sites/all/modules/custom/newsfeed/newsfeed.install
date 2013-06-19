@@ -47,23 +47,3 @@ function newsfeed_schema() {
 
   return $schema;
 }
-
-/**
- * Adds new field 'status' to the 'message_user' table.
- */
-function newsfeed_update_7000() {
-  $spec = array(
-    'description' => 'Status of the message: read/unread',
-    'type' => 'int',
-    'not null' => TRUE,
-    'default' => 0,
-  );
-  db_add_field('message_user', 'status', $spec);
-}
-
-/**
- * Removes field_message_blog_title from message.
- */
-function newsfeed_update_7001() {
-  field_delete_field('field_message_blog_title');
-}

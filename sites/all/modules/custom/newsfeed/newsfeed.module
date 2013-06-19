@@ -101,9 +101,10 @@ function newsfeed_get_unread_messages_count($uid) {
   if (!$uid) {
     return FALSE;
   }
-  $query = db_select('message_user', 'mu')
-    ->condition('uid', $uid)
-    ->condition('status', 0);
+  $query = db_select('message_user', 'mu');
+  $query->leftJoin('flagging', 'f', 'mu.mid = f.entity_id');
+  $query->condition('mu.uid', $uid);
+  $query->isNull('f.uid');
   $query->addExpression('COUNT(*)', 'count');
   $db_result = $query->execute();
   $result = $db_result->fetch();
@@ -118,11 +119,9 @@ function newsfeed_get_unread_messages_count($uid) {
  *   Message ID.
  * @param integer $uid
  *   User ID.
- * @param integer $status
- *   Message status.
  */
-function newsfeed_insert($mid, $uid, $status = 0) {
-  $record = array('mid' => $mid, 'uid' => $uid, 'status' => $status);
+function newsfeed_insert($mid, $uid) {
+  $record = array('mid' => $mid, 'uid' => $uid);
   drupal_write_record('message_user', $record);
 }
 
@@ -137,47 +136,6 @@ function newsfeed_remove($mid) {
   db_delete('message_user')
     ->condition('mid', $mid)
     ->execute();
-}
-
-/**
- * Updates message status for the given user.
- * 
- * @param array $mids
- *   Array with message IDs.
- * @param integer $uid
- *   User ID.
- * @param integer $status
- *   New message status.
- */
-function newsfeed_update_message_status_multiple($mids, $uid, $status) {
-  $query = db_update('message_user')
-    ->fields(array('status' => $status))
-    ->condition('mid', $mids, 'IN')
-    ->condition('uid', $uid)
-    ->execute();
-  return $query;
-}
-
-/**
- * Gets status of the given message.
- * 
- * @param integer $mid
- *   Message ID.
- * @param integer $uid
- *   User ID.
- * 
- * @return integer
- *   Message status.
- */
-function newsfeed_get_message_status($mid, $uid) {
-  $query = db_select('message_user', 'mu')
-    ->fields('mu', array('status'))
-    ->condition('mid', $mid)
-    ->condition('uid', $uid);
-  $db_result = $query->execute();
-  $result = $db_result->fetch();
-  
-  return isset($result->status) ? $result->status : NULL;
 }
 
 /**
@@ -259,98 +217,15 @@ function newsfeed_entity_delete($entity, $entity_type) {
 }
 
 /**
- * Implements hook_forms().
- */
-function newsfeed_forms($form_id, $args) {
-  $forms = array();
-  if (strpos($form_id, 'newsfeed_message_status_form_') === 0) {
-    $forms[$form_id] = array(
-      'callback' => 'newsfeed_message_status_form',
-      'callback arguments' => $args,
-    );
-  }
-  return $forms;
-}
-
-/**
- * Form for setting message status.
- */
-function newsfeed_message_status_form($form, &$form_state, $args) {
-  $form = array();
-  
-  $mid = $args[0];
-  $uid = $args[1];
-  $status = $args[2];
-  
-  $form['#prefix'] = '<div id="newsfeed-message-form-wrapper-' . $mid . '">';
-  $form['#suffix'] = '</div>';
-  $form['#attributes']['class'][] = 'newsfeed-message-form';
-
-  if (is_null($status)) {
-    $status = newsfeed_get_message_status($mid, $uid);
-  }
-  
-  $form_state['storage']['mid'] = !isset($form_state['storage']['mid']) ? $mid : $form_state['storage']['mid'];
-  $form_state['storage']['uid'] = !isset($form_state['storage']['uid']) ? $uid : $form_state['storage']['uid'];
-  $form_state['storage']['status'] = !isset($form_state['storage']['status']) ? $status : $form_state['storage']['status'];
-  
-  if ($form_state['storage']['status'] == 1) {
-    $form['read'] = array(
-      '#markup' => '<div class="message-status read"></div>',
-    );
-  }
-  elseif ($form_state['storage']['status'] == 0) {
-    $form['new_status'] = array(
-      '#type' => 'hidden',
-      '#value' => 1,
-    );
-    $form['unread'] = array(
-      '#type' => 'submit',
-      '#value' => '',
-      '#ajax' => array(
-        'callback' => 'newsfeed_message_status_form_js',
-        'wrapper' => 'newsfeed-message-form-wrapper',
-        'progress' => array('message' => ''),
-      ),
-      '#attributes' => array('class' => array('message-status', 'unread'), 'title' => t('Mark as read')),
-    );
-  }
-  
-  return $form;
-}
-
-/** 
- * AJAX callback function for newsfeed_message_status_form().
- */
-function newsfeed_message_status_form_js($form, &$form_state) {
-  $commands[] = ajax_command_replace('#newsfeed-message-form-wrapper-' . $form_state['storage']['mid'], render($form));
-  // Update count for notifications block.
-  $new_count = isset($_SESSION['unread_messages_count']) ? $_SESSION['unread_messages_count'] - 1 : newsfeed_get_unread_messages_count($form_state['storage']['uid']) - 1;
-  $_SESSION['unread_messages_count'] = $new_count >= 0 ? $new_count : 0;
-  $commands[] = ajax_command_replace('#js-newsfeed-unread-count', '<span id="js-newsfeed-unread-count" class="link-inner">' . $new_count . '</span>');
-  return array('#type' => 'ajax', '#commands' => $commands);
-}
-
-/**
- * Implements hook FORM_ID_submit for newsfeed_message_status_form().
- */
-function newsfeed_message_status_form_submit($form, &$form_state) {
-  $updated = newsfeed_update_message_status_multiple(array($form_state['storage']['mid']), $form_state['storage']['uid'], $form_state['values']['new_status']);
-  if ($updated) {
-    $form_state['storage']['status'] = $form_state['values']['new_status'];
-  } else {
-    watchdog('newsfeed', 'Message #@mid status update failed.', array('@mid' => $form_state['storage']['mid']), WATCHDOG_WARNING);
-  }
-  $form_state['rebuild'] = TRUE;
-}
-
-/**
  * Implements hook_init().
  */
 function newsfeed_init() {
   if (arg(2) == 'blog' && is_numeric(arg(1))) {
     global $user;
     newsfeed_update_unread_messages('field_course', $user->uid, arg(1));
+  }
+  elseif (arg(0) == 'notifications') {
+    drupal_add_js(drupal_get_path('module', 'newsfeed') . '/newsfeed.js');
   }
 }
 
@@ -378,10 +253,10 @@ function newsfeed_node_view($node, $view_mode, $langcode) {
 function newsfeed_update_unread_messages($field, $uid, $nid) {
   $unread_messages = newsfeed_get_related_unread_messages($field, $uid, $nid);
   if ($unread_messages) {
-    $updated = newsfeed_update_message_status_multiple($unread_messages, $uid, 1);
-    if ($updated) {
-      $_SESSION['unread_messages_count'] = isset($_SESSION['unread_messages_count']) ? $_SESSION['unread_messages_count'] - count($unread_messages) : newsfeed_get_unread_messages_count($uid);
+    foreach ($unread_messages as $mid) {
+      flag('flag', 'message_read', $mid);
     }
+    $_SESSION['unread_messages_count'] = isset($_SESSION['unread_messages_count']) ? $_SESSION['unread_messages_count'] - count($unread_messages) : newsfeed_get_unread_messages_count($uid);
   }
 }
 
@@ -417,7 +292,9 @@ function newsfeed_get_related_unread_messages($field, $uid, $nid) {
  * Adds join for 'message_user' table in order to get user related messages.
  */
 function newsfeed_query_newsfeed_related_message_alter(QueryAlterableInterface $query) {
-  $query->join('message_user', 'mu', $query->getMetaData('base_table') . '0.entity_id = mu.mid');
-  $query->condition('mu.uid', $query->getMetaData('message_uid'))
-  ->condition('mu.status', 0);
+  $base_table = $query->getMetaData('base_table') . '0';
+  $query->join('message_user', 'mu', $base_table . '.entity_id = mu.mid');
+  $query->leftJoin('flagging', 'f', $base_table . '.entity_id = f.entity_id');
+  $query->condition('mu.uid', $query->getMetaData('message_uid'));
+  $query->isNull('f.uid');
 }

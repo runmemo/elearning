@@ -2545,14 +2545,18 @@ div.quiz-report {
       .bg-img('progress_orange.gif');
     }
   }
-  .message-status {
+  .flag-message-read .flag,
+  .views-field-ops .unflag-disabled {
     .left();
     width: 20px;
     height: 20px;
     .bg-img('message-status.png');
     margin: 0px 15px 0px 0px;
+    color: transparent;
+    font-size: 0;
   }
-  .read {
+  .flag-message-read .unflag-action,
+  .views-field-ops .unflag-disabled {
     background-position: -22px;
   }
   .views-field-timestamp {
