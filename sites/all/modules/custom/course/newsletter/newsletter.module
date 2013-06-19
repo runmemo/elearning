@@ -111,16 +111,18 @@ function get_relevant_questions_count($path = NULL) {
   if(!$path) {
     return;
   }
+  $query = new EntityFieldQuery();
 
-  $result = db_select('field_data_field_question_path', 'fqp')
-          ->fields('fqp', array('entity_id'))
-          ->condition('fqp.field_question_path_value', $path) // Check path
-          ->condition('fqp.entity_type', 'node') // Check entity is node
-          ->condition('fqp.bundle', 'question') // Check node is of question type.
-          ->condition('fqp.deleted', 0) // A boolean indicating whether this data item has been deleted
-          ->execute();
+  $entities = $query->entityCondition('entity_type', 'node')
+    ->propertyCondition('type', 'question')
+    ->fieldCondition('field_question_path', 'value', $path)
+    ->execute();
 
-  return $result->rowCount();
+  if(!empty($entities['node'])) {
+    return count($entities['node']);
+  }
+
+  return 0;
 }
 
 /**
