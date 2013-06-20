@@ -132,6 +132,7 @@ function user_extra_form_alter(&$form, &$form_state, $form_id) {
     drupal_set_title(t('Request new passowrd'));
   }
   elseif ($form_id == 'user_profile_form') {
+    global $user;
     $form['field_first_name']['#weight'] = -12;
     $form['field_surname']['#weight'] = -11;
     $form['field_first_name']['#prefix'] = '<div class="user-form-name-wrapper">';
@@ -146,6 +147,11 @@ function user_extra_form_alter(&$form, &$form_state, $form_id) {
     $form['timezone']['#access'] = FALSE;
     $form['timezone']['#access'] = FALSE;
     $form['locale']['#access'] = FALSE;
+    // check if we are not on password recovery page.
+    if(empty($_SESSION['pass_reset_'.$user->uid])) {
+      $form['account']['current_pass']['#access'] = FALSE;
+      $form['account']['pass']['#access'] = FALSE;
+    }
     drupal_set_title(t('Editing profile'));
     drupal_add_js(array('user_forms' => array('class' => 'ctools-modal-profile-form')), 'setting');
   }
