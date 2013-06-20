@@ -8,6 +8,18 @@
 include_once 'quiz_extra.features.inc';
 
 /**
+ * Implements hook_init() to redirect user to first question of quiz.
+ */
+function quiz_extra_init() {
+  $node = menu_get_object('node', 1);
+  $arg2 = arg(2);
+
+  if($node && $node->type == 'quiz' && !(arg(2))) {
+    drupal_goto('node/' . $node->nid. '/take', array(), '302');   
+  }
+}
+
+/**
  * Implements hook_menu_alter().
  * @param type $items
  */
