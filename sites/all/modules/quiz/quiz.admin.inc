@@ -1065,7 +1065,7 @@ function _quiz_add_questions_to_form(&$form, &$questions, &$quiz, &$question_typ
         '#type' => 'textfield',
         '#size' => 2,
         '#maxlength' => 2,
-        '#disabled' => $question->auto_update_max_score,
+        '#disabled' => isset($question->auto_update_max_score) ? $question->auto_update_max_score : FALSE,,
         '#default_value' => isset($question->max_score) ? $question->max_score : 0,
       );
     }
