@@ -624,3 +624,15 @@ function course_user_update(&$edit, $account, $category) {
     }
   }
 }
+
+/**
+ *  Implements hook_form_FORM_ID_alter.
+ *  Hide book outline form, from non course item content type nodes.
+ */
+function course_form_book_outline_form_alter(&$form, &$form_state) {
+  $node = menu_get_object('node');
+
+  if (!in_array($node->type, course_item_node_types())) {
+    $form['#access'] = FALSE;
+  }
+}
