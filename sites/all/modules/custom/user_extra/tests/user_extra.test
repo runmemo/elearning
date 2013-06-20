@@ -1,0 +1,45 @@
+<?php
+
+/**
+ * @file
+ * 
+ * Test cases for the user_extra module.
+ * Dummy test checks module installed correctly.
+ */
+
+/**
+ * Base class for user_extra tests.
+ */
+class UserExtraBaseCase extends DrupalWebTestCase {
+
+  function setUp() {
+    parent::setUp('user_extra');
+  }
+
+}
+
+/**
+ * Tests creating message for single receiver.
+ */
+class UserExtraCase extends UserExtraBaseCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'UserExtra test',
+      'description' => 'Test to check user_extra module setup',
+      'group' => 'Course',
+    );
+  }
+
+  function setUp() {
+    parent::setUp();
+  }
+
+  function testCreateUser() {
+    // Create user.
+    $this->user = $this->drupalCreateUser();
+    $this->drupalLogin($this->user);
+  }
+
+}
+

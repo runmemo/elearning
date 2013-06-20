@@ -16,6 +16,7 @@ dependencies[] = text
 dependencies[] = user
 dependencies[] = user_registrationpassword
 dependencies[] = logintoboggan
+dependencies[] = absolute_messages
 
 features[context][] = user_profile
 features[ctools][] = context:context:3
@@ -50,3 +51,5 @@ features[variable][] = logintoboggan_redirect_on_register
 features[variable][] = logintoboggan_unified_login
 features[variable][] = user_mail_register_no_approval_required_body
 features[variable][] = user_mail_register_no_approval_required_subject
+
+files[] = tests/user_extra.test
