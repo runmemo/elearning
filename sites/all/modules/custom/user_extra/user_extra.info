@@ -14,7 +14,6 @@ dependencies[] = image
 dependencies[] = quicktabs
 dependencies[] = text
 dependencies[] = user
-dependencies[] = user_registrationpassword
 dependencies[] = logintoboggan
 dependencies[] = absolute_messages
 
