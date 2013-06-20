@@ -94,7 +94,7 @@ function newsletter_preprocess_views_view_fields(&$vars) {
          date('d/m/Y', $row->node_created) .
        '</div>' .
        '<div class="' . $css_classes .  '">' .
-         format_plural($count, '1 <br />Answer', '@count <br />Answers') . 
+         format_plural($count, '1 <br />Question', '@count <br />Questions') . 
        '</div>' .
      '</div>';
 
@@ -111,18 +111,13 @@ function get_relevant_questions_count($path = NULL) {
   if(!$path) {
     return;
   }
-  $query = new EntityFieldQuery();
 
-  $entities = $query->entityCondition('entity_type', 'node')
+  $query = new EntityFieldQuery();
+  return $query->entityCondition('entity_type', 'node')
     ->propertyCondition('type', 'question')
     ->fieldCondition('field_question_path', 'value', $path)
+    ->count()
     ->execute();
-
-  if(!empty($entities['node'])) {
-    return count($entities['node']);
-  }
-
-  return 0;
 }
 
 /**
