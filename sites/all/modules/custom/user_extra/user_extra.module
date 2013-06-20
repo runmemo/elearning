@@ -152,6 +152,9 @@ function user_extra_form_alter(&$form, &$form_state, $form_id) {
       $form['account']['current_pass']['#access'] = FALSE;
       $form['account']['pass']['#access'] = FALSE;
     }
+    else {
+      $form['#attributes']['class'][] = 'profile-reset-form';
+    }
     drupal_set_title(t('Editing profile'));
     drupal_add_js(array('user_forms' => array('class' => 'ctools-modal-profile-form')), 'setting');
   }
