@@ -40,7 +40,7 @@ function quiz_take_extra($node) {
     return $node->rendered_content;
   }
   $to_be_rendered = quiz_take_quiz($node);
-  if(!empty($_SESSION['quiz_' . $node->nid])) { // if we are not on result page do not render quiz stats.
+  if(!empty($_SESSION['quiz_' . $node->nid])) { // if we are on result page do not render quiz stats.
     // add customized stats.
     $to_be_rendered['stats'] = array(
       '#markup' => theme('quiz_stats', array('node' => $node)),
@@ -108,8 +108,11 @@ function quiz_extra_theme_registry_alter(&$theme_registry) {
     $theme_registry['quiz_take_summary']['preprocess functions'] = array('quiz_take_summary_preprocess');
 
     // unset default theme function, to load custom template file.
-    unset($theme_registry['quiz_take_summary']['function']); 
+    unset($theme_registry['quiz_take_summary']['function']);
     $theme_registry['quiz_take_summary']['template'] = drupal_get_path('module', 'quiz_extra').'/quiz-take-summary';
+
+    // Assign custom function to quiz_navigation_form theme.
+    $theme_registry['quiz_question_navigation_form']['function'] = 'quiz_extra_quiz_question_navigation_form';
 
   }
 }
@@ -138,3 +141,23 @@ function quiz_take_summary_preprocess(&$vars) {
   $vars['wrong_score'] = $score['possible_score'] - $score['numeric_score'];
 }
 
+
+/**
+ * Override theme of the question navigation form(Back, Next, Skip buttons...)
+ *
+ * @param $form
+ *  Form holding the navigation buttons
+ */
+function quiz_extra_quiz_question_navigation_form($variables) {
+  $form = $variables['form'];
+  if (!isset($form['#last'])) {
+    return drupal_render_children($form);
+  }
+  else {
+    $submit = drupal_render($form['submit']) . drupal_render($form['op']);
+    $to_return = '<div>' . drupal_render_children($form) . '</div>';
+  //  $to_return .= '<div><em>' . t('This is the last question. Press Finish to deliver your answers') . '</em></div>';
+    $to_return .= '<div>' . $submit . '</div>';
+    return $to_return;
+  }
+}
