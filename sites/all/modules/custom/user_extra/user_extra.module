@@ -146,8 +146,6 @@ function user_extra_form_alter(&$form, &$form_state, $form_id) {
     $form['timezone']['#access'] = FALSE;
     $form['timezone']['#access'] = FALSE;
     $form['locale']['#access'] = FALSE;
-    $form['account']['current_pass']['#access'] = FALSE;
-    $form['account']['pass']['#access'] = FALSE;
     drupal_set_title(t('Editing profile'));
     drupal_add_js(array('user_forms' => array('class' => 'ctools-modal-profile-form')), 'setting');
   }
