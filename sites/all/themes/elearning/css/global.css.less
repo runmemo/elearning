@@ -1928,7 +1928,7 @@ h2 {
 
 /****** Node type "Question" End ******/
 
-.block-course-course-item-links .content li{
+.block-course-course-item-links .content li {
   .menu-float();
   a {
     .link();
@@ -2218,6 +2218,9 @@ h2 {
 }
 
 .profile-edit-form {
+  .user-form-name-wrapper {
+    .show(inline-block);
+  }
   .field-name-field-first-name, .field-name-field-surname {
     width: 166px;
     .left();
@@ -2268,11 +2271,19 @@ h2 {
       margin-top: 5px;
     }
   }
-
   #edit-revalidate {
     clear: both;
   }
 }
+
+.profile-edit-form.profile-reset-form {
+  background: #fff;
+  width: 349px;
+  .show(inline-block);
+  .box-shadow();
+  padding: 10px;
+}
+
 
 /** Css for href edit links **/
 .edit-link {
