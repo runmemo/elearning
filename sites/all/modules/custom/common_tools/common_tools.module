@@ -303,3 +303,22 @@ function common_tools_form_alter(&$form, &$form_state, $form_id) {
     }
   }
 }
+
+
+
+/**
+ * This function will get to you next lesson course item otherwise will return 
+ * last course item.
+ */
+
+function next_lesson($book = NULL) {
+
+  do {
+    $next_item = book_next($book);
+    $next_item_node = menu_get_object('node', 1, $next_item['link_path']);
+    $book = $next_item_node->book;
+  } while($next_item_node->type <> 'lesson');
+
+  return $book;
+}
+

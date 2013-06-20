@@ -109,7 +109,7 @@ function quiz_take_summary_preprocess(&$vars) {
   drupal_set_title($quiz->title);
 
   // Link to next lesson in course.
-  $next = book_next($quiz->book);
+  $next = next_lesson($quiz->book);
   // link-button class should be used for links rendered as button.
   $vars['next_lesson'] = l(t('Next lesson'), $next['link_path'], array('attributes' => array('class' => array('link-button'))));
 
