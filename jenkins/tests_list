@@ -9,3 +9,5 @@ CourseRegistrationTestCase
 CoursePointsTestCase
 NewsfeedCreateSingleCase
 NewsfeedCreateMultipleCase
+UserExtraBaseCase
+UserExtraCase
