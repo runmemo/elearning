@@ -7,7 +7,7 @@ dependencies[] = answers
 dependencies[] = features
 dependencies[] = context
 dependencies[] = strongarm
-dependencies[] = vote_up_down
+dependencies[] = vud
 
 features[ckeditor_profile][] = Advanced
 features[ckeditor_profile][] = CKEditor Global Profile
