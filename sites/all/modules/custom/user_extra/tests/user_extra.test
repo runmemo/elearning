@@ -19,7 +19,7 @@ class UserExtraBaseCase extends DrupalWebTestCase {
 }
 
 /**
- * Tests creating message for single receiver.
+ * Tests checks install of user_extra module.
  */
 class UserExtraCase extends UserExtraBaseCase {
 
