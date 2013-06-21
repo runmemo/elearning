@@ -21,3 +21,5 @@ CertificateExtraBaseCase
 CertificateExtraCase
 LessonBaseCase
 LessonCase
+NewsLetterBaseCase
+NewsLetterCase

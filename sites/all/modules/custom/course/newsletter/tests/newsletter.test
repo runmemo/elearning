@@ -1,0 +1,57 @@
+<?php
+
+/**
+ * @file
+ * 
+ * Test cases for the newsletter module.
+ * Dummy test checks module installed correctly.
+ */
+
+/**
+ * Base class for newsletter tests.
+ */
+class NewsLetterBaseCase extends DrupalWebTestCase {
+
+  function setUp() {
+    parent::setUp('newsletter');
+  }
+
+  /**
+   * Creates newsletter node
+   * @return newsletter node
+   */
+  function create_newsletter() {
+     // create newsletter node
+    $newsletter_settings = array(
+      'type' => 'newsletter',
+      'uid' => 1, // admin for now
+    );
+    return $this->drupalCreateNode($newsletter_settings);
+  }
+
+}
+
+/**
+ * Tests checks install of answers_extra module.
+ */
+class NewsLetterCase extends NewsLetterBaseCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'NewsLetter test',
+      'description' => 'Test to check newsletter module setup',
+      'group' => 'Course',
+    );
+  }
+
+  function setUp() {
+    parent::setUp();
+  }
+
+  function testCreateNewsLetter() {
+    // Create newsletter.
+    $newsletter = $this->create_newsletter();
+    $this->assertTrue($newsletter, 'NewsLetter is created, successfully.');
+  }
+}
+
