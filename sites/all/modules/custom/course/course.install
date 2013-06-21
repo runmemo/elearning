@@ -1,16 +1,23 @@
 <?php
 
 require_once drupal_get_path('module', 'course') . '/course.user_role.inc';
+require_once drupal_get_path('module', 'course') . '/course.taxonomy.inc';
 
 function course_install() {
-
-    foreach (_course_user_default_roles() as $role) {
-        $role = (object) $role;
-        if ($existing = user_role_load_by_name($role->name)) {
-          $role->rid = $existing->rid;
-        }
-        user_role_save($role);  
-    }   
+  foreach (_course_user_default_roles() as $role) {
+    $role = (object) $role;
+    if ($existing = user_role_load_by_name($role->name)) {
+      $role->rid = $existing->rid;
+    }
+    user_role_save($role);
+  }
+  foreach (_course_taxonomy_default_vocabularies() as $vocabulary) {
+    $vocabulary = (object) $vocabulary;
+    $existing = taxonomy_vocabulary_machine_name_load($vocabulary->name);
+    if (!$existing) {
+      taxonomy_vocabulary_save($vocabulary);
+    }
+  }
 }
 
 // function course_update_7003() 

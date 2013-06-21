@@ -6,9 +6,9 @@
  */
 
 /**
- * Implements hook_taxonomy_default_vocabularies().
+ * Provides default taxonomy vocabularies for Course module.
  */
-function course_taxonomy_default_vocabularies() {
+function _course_taxonomy_default_vocabularies() {
   return array(
     'discipline' => array(
       'name' => 'Discipline',
