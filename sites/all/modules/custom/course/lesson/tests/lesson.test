@@ -51,7 +51,6 @@ class LessonCase extends LessonBaseCase {
   function testCreateLesson() {
     // Create lesson.
     $lesson = $this->create_lesson();
-    debug($lesson);
     $this->assertTrue($lesson, 'Lesson is created, successfully.');
   }
 }

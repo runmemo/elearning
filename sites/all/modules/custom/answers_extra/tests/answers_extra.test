@@ -26,7 +26,7 @@ class AnswersExtraCase extends AnswersExtraBaseCase {
   public static function getInfo() {
     return array(
       'name' => 'AnswersExtra test',
-      'description' => 'Test to check answers_content module setup',
+      'description' => 'Test to check answers_extra module setup',
       'group' => 'Course',
     );
   }
