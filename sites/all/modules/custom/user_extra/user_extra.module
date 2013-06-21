@@ -83,8 +83,13 @@ function user_extra_get_userpoints_form() {
  */
 function user_extra_form_alter(&$form, &$form_state, $form_id) {
   if ($form_id == 'user_login') {
+    global $user;
     $form['#attributes']['class'][] = 'login-form';
     $form['#attributes']['class'][] = 'login-system-form';
+    if (!$user->uid) {
+      drupal_set_title(t('Login'));
+      $form['#attributes']['class'][] = 'login-page-form';
+    }
     $form['name']['#prefix'] = '<div class="login-form-registration">' . l(t('Create new account'), 'user/register', array('attributes' => array('class' => array('login-form-additional-link')))) . '</div>';
     $form['name']['#attributes']['class'][] = 'login-form-name-edit';
     $form['name']['#description'] = $form['pass']['#description'] = t('');
