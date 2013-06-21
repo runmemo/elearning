@@ -1,0 +1,57 @@
+<?php
+
+/**
+ * @file
+ * 
+ * Test cases for the front_page module.
+ * Dummy test checks module installed correctly.
+ */
+
+/**
+ * Base class for front_page tests.
+ */
+class FrontPageBaseCase extends DrupalWebTestCase {
+
+  function setUp() {
+    parent::setUp('front_page');
+  }
+
+  /**
+   * Creates front_page_slide node
+   * @return front_page_slide node
+   */
+  function create_front_page_slide() {
+     // create front_page node
+    $front_page_slide_settings = array(
+      'type' => 'front_page_slide',
+      'uid' => 1, // admin for now
+    );
+    return $this->drupalCreateNode($front_page_slide_settings);
+  }
+
+}
+
+/**
+ * Tests checks install of answers_extra module.
+ */
+class FrontPageCase extends FrontPageBaseCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'FrontPage test',
+      'description' => 'Test to check front_page module setup',
+      'group' => 'Course',
+    );
+  }
+
+  function setUp() {
+    parent::setUp();
+  }
+
+  function testCreateFrontPage() {
+    // Create front_page.
+    $front_page = $this->create_front_page_slide();
+    $this->assertTrue($front_page, 'front_page_slide is created, successfully.');
+  }
+}
+

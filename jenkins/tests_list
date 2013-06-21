@@ -23,3 +23,5 @@ LessonBaseCase
 LessonCase
 NewsLetterBaseCase
 NewsLetterCase
+FrontPageBaseCase
+FrontPageCase

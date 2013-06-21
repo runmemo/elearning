@@ -21,3 +21,5 @@ features[delta][] = home_page
 features[image][] = course_home_picture
 features[image][] = front_page_slide
 features[image][] = provider_home_picture
+
+files[] = tests/front_page.test
