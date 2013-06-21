@@ -1,0 +1,44 @@
+<?php
+
+/**
+ * @file
+ * 
+ * Test cases for the answers_extra module.
+ * Dummy test checks module installed correctly.
+ */
+
+/**
+ * Base class for answers_extra tests.
+ */
+class AnswersExtraBaseCase extends DrupalWebTestCase {
+
+  function setUp() {
+    parent::setUp('answers_extra');
+  }
+
+}
+
+/**
+ * Tests checks install of answers_extra module.
+ */
+class AnswersExtraCase extends AnswersExtraBaseCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'AnswersExtra test',
+      'description' => 'Test to check answers_content module setup',
+      'group' => 'Course',
+    );
+  }
+
+  function setUp() {
+    parent::setUp();
+  }
+
+  function testCreateUser() {
+    // Create user.
+    $this->user = $this->drupalCreateUser();
+    $this->drupalLogin($this->user);
+  }
+}
+

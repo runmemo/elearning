@@ -15,3 +15,5 @@ QuizExtraBaseCase
 QuizExtraCase
 AbuseContentBaseCase
 AbuseContentCase
+AnswersExtraBaseCase
+AnswersExtraCase
