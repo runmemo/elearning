@@ -1,0 +1,39 @@
+<?php
+
+/**
+ * @file
+ * 
+ * Test cases for the quiz_extra module.
+ * Dummy test checks module installed correctly.
+ */
+
+/**
+ * Base class for quiz_extra tests.
+ */
+class QuizExtraBaseCase extends DrupalWebTestCase {
+
+  function setUp() {
+    parent::setUp('quiz_extra');
+  }
+
+}
+
+/**
+ * Tests checks install of quiz_extra module.
+ */
+class QuizExtraCase extends QuizExtraBaseCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'QuizExtra test',
+      'description' => 'Test to check quiz_extra module setup',
+      'group' => 'Course',
+    );
+  }
+
+  function setUp() {
+    parent::setUp();
+  }
+
+}
+
