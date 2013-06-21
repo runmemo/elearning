@@ -19,3 +19,5 @@ features[ctools][] = strongarm:strongarm:1
 features[flag][] = abuse_content
 features[user_permission][] = flag abuse_content
 features[user_permission][] = unflag abuse_content
+
+files[] = tests/abuse_content.test

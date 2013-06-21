@@ -1,0 +1,44 @@
+<?php
+
+/**
+ * @file
+ * 
+ * Test cases for the abuse_content module.
+ * Dummy test checks module installed correctly.
+ */
+
+/**
+ * Base class for abuse_content tests.
+ */
+class AbuseContentBaseCase extends DrupalWebTestCase {
+
+  function setUp() {
+    parent::setUp('abuse_content');
+  }
+
+}
+
+/**
+ * Tests checks install of abuse_content module.
+ */
+class AbuseContentCase extends AbuseContentBaseCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'AbuseContent test',
+      'description' => 'Test to check abuse_content module setup',
+      'group' => 'Course',
+    );
+  }
+
+  function setUp() {
+    parent::setUp();
+  }
+
+  function testCreateUser() {
+    // Create user.
+    $this->user = $this->drupalCreateUser();
+    $this->drupalLogin($this->user);
+  }
+}
+
