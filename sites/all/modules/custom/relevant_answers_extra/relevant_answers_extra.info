@@ -22,3 +22,5 @@ features[variable][] = node_preview_question
 features[variable][] = node_submitted_question
 
 features[views_view][] = course_questions
+
+files[] = tests/relevant_answers_extra.test

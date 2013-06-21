@@ -1,0 +1,44 @@
+<?php
+
+/**
+ * @file
+ * 
+ * Test cases for the relevant_answers_extra module.
+ * Dummy test checks module installed correctly.
+ */
+
+/**
+ * Base class for relevant_answers_extra tests.
+ */
+class RelevantAnswersExtraBaseCase extends DrupalWebTestCase {
+
+  function setUp() {
+    parent::setUp('relevant_answers_extra');
+  }
+
+}
+
+/**
+ * Tests checks install of relevant_answers_extra module.
+ */
+class RelevantAnswersExtraCase extends RelevantAnswersExtraBaseCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'RelevantAnswersExtra test',
+      'description' => 'Test to check relevant_answers_extra module setup',
+      'group' => 'Course',
+    );
+  }
+
+  function setUp() {
+    parent::setUp();
+  }
+
+  function testCreateUser() {
+    // Create user.
+    $this->user = $this->drupalCreateUser();
+    $this->drupalLogin($this->user);
+  }
+}
+

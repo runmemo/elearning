@@ -27,3 +27,5 @@ FrontPageBaseCase
 FrontPageCase
 InlineCommentExtraBaseCase
 InlineCommentExtraCase
+RelevantAnswersExtraBaseCase
+RelevantAnswersExtraCase
