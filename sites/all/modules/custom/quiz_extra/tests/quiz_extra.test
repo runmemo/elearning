@@ -35,5 +35,10 @@ class QuizExtraCase extends QuizExtraBaseCase {
     parent::setUp();
   }
 
+  function testCreateUser() {
+    // Create user.
+    $this->user = $this->drupalCreateUser();
+    $this->drupalLogin($this->user);
+  }
 }
 
