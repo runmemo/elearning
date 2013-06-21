@@ -17,3 +17,5 @@ AbuseContentBaseCase
 AbuseContentCase
 AnswersExtraBaseCase
 AnswersExtraCase
+CertificateExtraBaseCase
+CertificateExtraCase

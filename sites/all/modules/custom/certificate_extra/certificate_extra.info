@@ -9,3 +9,5 @@ features[field_base][] = field_signature
 features[field_instance][] = node-certificate-field_signature
 features[image][] = certificate_signature
 features[image][] = provider_logo_certificate
+
+files[] = tests/certificate_extra.test
