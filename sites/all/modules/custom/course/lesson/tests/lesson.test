@@ -1,0 +1,58 @@
+<?php
+
+/**
+ * @file
+ * 
+ * Test cases for the lesson module.
+ * Dummy test checks module installed correctly.
+ */
+
+/**
+ * Base class for lesson tests.
+ */
+class LessonBaseCase extends DrupalWebTestCase {
+
+  function setUp() {
+    parent::setUp('lesson');
+  }
+
+  /**
+   * Creates lesson node
+   * @return lesson node
+   */
+  function create_lesson() {
+     // create lesson node
+    $lesson_settings = array(
+      'type' => 'lesson',
+      'uid' => 1, // admin for now
+    );
+    return $this->drupalCreateNode($lesson_settings);
+  }
+
+}
+
+/**
+ * Tests checks install of answers_extra module.
+ */
+class LessonCase extends LessonBaseCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Lesson test',
+      'description' => 'Test to check lesson module setup',
+      'group' => 'Course',
+    );
+  }
+
+  function setUp() {
+    parent::setUp();
+  }
+
+  function testCreateLesson() {
+    // Create lesson.
+    $lesson = $this->create_lesson();
+    debug($lesson);
+    $this->assertTrue($lesson, 'Lesson is created, successfully.');
+  }
+}
+
