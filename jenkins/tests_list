@@ -11,3 +11,7 @@ NewsfeedCreateSingleCase
 NewsfeedCreateMultipleCase
 UserExtraBaseCase
 UserExtraCase
+QuizExtraBaseCase
+QuizExtraCase
+AbuseContentBaseCase
+AbuseContentCase
