@@ -25,3 +25,5 @@ NewsLetterBaseCase
 NewsLetterCase
 FrontPageBaseCase
 FrontPageCase
+InlineCommentExtraBaseCase
+InlineCommentExtraCase

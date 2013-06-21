@@ -1,0 +1,45 @@
+<?php
+
+/**
+ * @file
+ * 
+ * Test cases for the inline_comments_extra module.
+ * Dummy test checks module installed correctly.
+ */
+
+/**
+ * Base class for inline_comments_extra tests.
+ */
+class InlineCommentExtraBaseCase extends DrupalWebTestCase {
+
+  function setUp() {
+    parent::setUp('inline_comments_extra');
+  }
+
+}
+
+/**
+ * Tests checks install of inline_comments_extra module.
+ */
+class InlineCommentExtraCase extends InlineCommentExtraBaseCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'InlineCommentExtra test',
+      'description' => 'Test to check inline_comments_extra module setup',
+      'group' => 'Course',
+    );
+  }
+
+  function setUp() {
+    parent::setUp();
+  }
+
+  function testCreateUser() {
+    // Create user.
+    $this->user = $this->drupalCreateUser();
+    $this->drupalLogin($this->user);
+  }
+
+}
+

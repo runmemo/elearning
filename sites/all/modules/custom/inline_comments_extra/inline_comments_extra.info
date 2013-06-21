@@ -9,3 +9,5 @@ dependencies[] = views
 dependencies[] = inline_comments
 files[] = views/inline_comments_extra.views.inc
 files[] = views/inline_comments_extra_handler_field_inline_comments.inc
+
+files[] = tests/inline_comments_extra.test
