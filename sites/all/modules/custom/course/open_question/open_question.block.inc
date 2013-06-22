@@ -55,7 +55,7 @@ function open_question_block_view($delta = '') {
       }
       else {
         // User did not answer the question, so there are no feedbacks.
-        return;
+        return $block;
       }
     
       break;
