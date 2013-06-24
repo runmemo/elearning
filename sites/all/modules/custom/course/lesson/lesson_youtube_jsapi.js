@@ -87,7 +87,9 @@
 			video_complete_action.prevent = false;
 			video_complete_action.success = function (data) {
                           //Redirect user after succesfully 
-                          window.location = $('.page-next').attr('href');
+                          if ($('.page-next').length > 0) {
+                            window.location = $('.page-next').attr('href');
+                          }
                         },
 			Drupal.ajax['video_complete_action'] = new Drupal.ajax(null, $(document.body), video_complete_action);
 			Drupal.ajax['video_complete_action'].specifiedResponse();
