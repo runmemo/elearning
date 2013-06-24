@@ -1,17 +1,24 @@
 /* 
- * @file contents js for newsfeed module
+ * @file
+ * newsfeed.js contains js for newsfeed module.
  */
 
 (function($) {
-  Drupal.behaviors.newsfeed_notifications_count = {
-    attach: function(context, settings) {
-      $('.flag-message-read a.flag-action').click(function() {
-        var count = parseInt($('#js-newsfeed-unread-count').text(), 10);
-        if (count > 1) {
-          count = count - 1;
-        }
-        $('#js-newsfeed-unread-count').text(count);
-      });
-    }
-  };
+  // Due to 'flagGlobalAfterLinkUpdate' event is trggered multiple times,
+  // we have to use bind() method, unbind and rebind the event listener each time
+  // the flag update event is fired.
+  bindFlagUpdate();
+  function bindFlagUpdate() {
+    $(document).bind('flagGlobalAfterLinkUpdate', function(event, data) {
+      var count = parseInt($('#js-newsfeed-unread-count').text(), 10);
+      if (data.flagName === 'message_read' && data.flagStatus == 'flagged' && count > 0) {
+        count--;
+      }
+      $('#js-newsfeed-unread-count').text(count);
+      $(document).unbind();
+      bindFlagUpdate();
+      return false;
+    });
+  }
+
 })(jQuery);
