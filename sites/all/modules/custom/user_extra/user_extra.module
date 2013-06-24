@@ -86,7 +86,8 @@ function user_extra_form_alter(&$form, &$form_state, $form_id) {
     global $user;
     $form['#attributes']['class'][] = 'login-form';
     $form['#attributes']['class'][] = 'login-system-form';
-    if (!$user->uid) {
+    // If our form is not in modal mode, add class.
+    if (!isset($_POST['js'])) {
       drupal_set_title(t('Login'));
       $form['#attributes']['class'][] = 'login-page-form';
     }
