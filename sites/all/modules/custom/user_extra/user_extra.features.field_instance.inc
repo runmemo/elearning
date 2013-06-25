@@ -192,13 +192,45 @@ function user_extra_field_default_field_instances() {
       'weight' => 1,
     ),
   );
-
+  
+  // Exported field_instance: 'user-user-field_age_group'
+  $field_instances['user-user-field_age_group'] = array(
+    'bundle' => 'user',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 4,
+      ),
+    ),
+    'entity_type' => 'user',
+    'field_name' => 'field_age_group',
+    'label' => t('Age Group'),
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => 1,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_select',
+      'weight' => 8,
+    ),
+  );
+  
   // Translatables
   // Included for use with string extractors like potx.
   t('Date of birth');
   t('Name');
   t('Phone number');
   t('Surname');
+  t('Age Group');
 
   return $field_instances;
 }

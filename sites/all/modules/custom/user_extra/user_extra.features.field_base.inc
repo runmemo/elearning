@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * user_extra.features.field_base.inc
@@ -125,6 +126,37 @@ function user_extra_field_default_field_bases() {
     ),
     'translatable' => 0,
     'type' => 'text',
+  );
+
+  // Exported field_base: 'field_age_group'
+  $field_bases['field_age_group'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_age_group',
+    'foreign keys' => array(),
+    'indexes' => array(
+      'value' => array(
+        0 => 'value',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'list',
+    'settings' => array(
+      'allowed_values' => array(
+        '0-18' => 'under 18',
+        '18-24' => '18-24',
+        '25-34' => '25-34',
+        '35-44' => '35-44',
+        '45-54' => '45-54',
+        '55-64' => '55-64',
+        '65+' => '65 and over',
+      ),
+      'allowed_values_function' => '',
+    ),
+    'translatable' => 0,
+    'type' => 'list_text',
   );
 
   return $field_bases;
