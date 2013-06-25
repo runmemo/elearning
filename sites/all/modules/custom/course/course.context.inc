@@ -24,17 +24,17 @@ function course_context_default_contexts() {
   $context->name = 'course_item';
   $context->description = 'Node is part of the course';
   $context->tag = 'Node';
-  $context->conditions = array(
-    'course_access' => array( // this means that 
+  if (module_exists('registration')) {
+    $context->conditions['registration_access'] = array(
       'values' => array(
         'true' => 'true',
       ),
-    ),
-    'node' => array(
-      'values' => $node_values,
-      'options' => array(
-        'node_form' => '0',
-      ),
+    );
+  }
+  $context->conditions['node'] = array(
+    'values' => $node_values,
+    'options' => array(
+      'node_form' => '0',
     ),
   );
   $context->reactions = array(

@@ -17,11 +17,6 @@ function open_question_context_default_contexts() {
   $context->description = 'Open Question';
   $context->tag = 'Node';
   $context->conditions = array(
-    'course_access' => array(
-      'values' => array(
-        'true' => 'true',
-      ),
-    ),
     'node' => array(
       'values' => array(
         'open_question' => 'open_question',
@@ -31,6 +26,15 @@ function open_question_context_default_contexts() {
       ),
     ),
   );
+  
+  if (module_exists('registration')) {
+    $context->conditions['registration_access'] = array(
+      'values' => array(
+        'true' => 'true',
+      ),
+    );
+  }
+  
   $context->reactions = array(
     'block' => array(
       'blocks' => array(
