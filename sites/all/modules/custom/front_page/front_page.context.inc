@@ -39,7 +39,12 @@ function front_page_context_default_contexts() {
     ),
   );
   $context->condition_mode = 0;
+
+  // Translatables
+  // Included for use with string extractors like potx.
+  t('Context for front page of the website');
+  t('Page');
   $export['front_page_context'] = $context;
-  
+
   return $export;
 }

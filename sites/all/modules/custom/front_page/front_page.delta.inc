@@ -39,7 +39,7 @@ function front_page_delta_default_templates() {
       ),
     ),
   );
-  $export['delta_home_page'] = $delta;
-  
+  $export['home_page'] = $delta;
+
   return $export;
 }
