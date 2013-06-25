@@ -40,7 +40,7 @@
           <div class="teacher-avatar">
             <?php print $teacher['avatar']; ?>
           </div>
-          <?php print render($form_class_participate); ?>
+          <?php print render($content['form_class_participate']); ?>
         </div>
         <div class="node-course-paramenters">
           <?php if (isset($content['field_duration'])) print render($content['field_duration']); ?>

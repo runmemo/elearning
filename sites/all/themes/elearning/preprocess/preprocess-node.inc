@@ -21,7 +21,6 @@ function elearning_alpha_preprocess_node(&$variables) {
  * @param array $vars
  */
 function elearning_alpha_preprocess_node_course(&$vars) {
-  $vars['form_class_participate'] = drupal_get_form('course_registration_form');
   // load students view
   $view = views_get_view('course_students'); 
   $vars['students_view'] = $view->preview('block', array($vars['nid']));
