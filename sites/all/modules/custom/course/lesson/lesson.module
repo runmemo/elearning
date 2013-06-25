@@ -360,8 +360,8 @@ function lecturer_notes_submit($form, &$form_state) {
       $commands[] = ajax_command_replace('#message-placeholder', _get_completion_text($message));
       return array('#type' => 'ajax', '#commands' => $commands);
     }
-    $lesson_node->field_notes[$lesson_node->language][0]['value'] = $form_state['values']['notes']['value'];
-    $lesson_node->field_notes[$lesson_node->language][0]['format'] = $form_state['values']['notes']['format'];
+    $lesson_node->field_notes[LANGUAGE_NONE][0]['value'] = $form_state['values']['notes']['value'];
+    $lesson_node->field_notes[LANGUAGE_NONE][0]['format'] = $form_state['values']['notes']['format'];
     node_save($lesson_node);
     $form_state['step'] = 'view';
   }
