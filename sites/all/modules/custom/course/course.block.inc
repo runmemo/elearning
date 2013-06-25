@@ -71,14 +71,18 @@ function course_registration_form_block() {
 function course_header_block() {
   $block = array();
   $active_contexts = context_active_contexts();
-
+   
   if (isset($active_contexts['course_pages'])) { // on course 
     $node = node_load(arg(1));
+  }
+  else if (isset($active_contexts['annoucement_page'])) {
+    $annoucement_node = menu_get_object('node');
+    $node = $annoucement_node->field_course[LANGUAGE_NONE][0]['entity'];
   }
   else {
     $node = menu_get_object('node');
   }
- 
+
   if (!$node) {
     watchdog('block header', 'Block with header of the course was shown in the wrong place.', array(), WATCHDOG_WARNING);
     return $block;

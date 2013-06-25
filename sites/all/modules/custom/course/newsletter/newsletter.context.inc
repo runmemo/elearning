@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * newsletter.context.inc
@@ -30,22 +29,30 @@ function newsletter_context_default_contexts() {
   $context->reactions = array(
     'block' => array(
       'blocks' => array(
-        'views-237de9699f9cabc11c225b56215797a5' => array(
-          'module' => 'views',
-          'delta' => '237de9699f9cabc11c225b56215797a5',
-          'region' => 'sidebar_first',
-          'weight' => '-9',
+        'course-book_header' => array(
+          'module' => 'course',
+          'delta' => 'book_header',
+          'region' => 'preface_first',
+          'weight' => '-10',
+        ),
+        'relevant_answers_extra-relevant_questions_list' => array(
+          'module' => 'relevant_answers_extra',
+          'delta' => 'relevant_questions_list',
+          'region' => 'postscript_first',
+          'weight' => '-10',
         ),
       ),
+    ),
+    'delta' => array(
+      'delta_template' => 'newsletter_node',
     ),
   );
   $context->condition_mode = 0;
 
   // Translatables
   // Included for use with string extractors like potx.
-  t('Node');  
-
+  t('Node');
   $export['annoucement_page'] = $context;
-  
+
   return $export;
 }

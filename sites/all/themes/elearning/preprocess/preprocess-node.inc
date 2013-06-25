@@ -66,3 +66,24 @@ function elearning_alpha_preprocess_node_open_question(&$vars) {
   drupal_add_css(drupal_get_path('theme', 'elearning') . '/widgets/elearning_fivestar/elearning_fivestar_widget.css');
 }
 
+/**
+ * Preprocess for node-type "Newsletter" view.
+ * @param array $vars
+ */
+function elearning_alpha_preprocess_node_newsletter(&$vars) {
+  $account = user_load($vars['uid']);
+
+  $vars['user_picture'] = theme('user_picture', 
+    array(
+      'account' => $account, 
+      'size' => 'tiny', 
+      'show_points' => TRUE,
+      'access' => FALSE,
+    )
+  );
+
+  $name = field_view_field('user', $account, 'field_first_name', array('label' => 'hidden'));
+  $surname = field_view_field('user', $account, 'field_surname', array('label' => 'hidden'));
+  $vars['author'] = render($name).' '.render($surname);
+  $vars['created_formatted'] = date('d/m/Y', $vars['created']);
+}

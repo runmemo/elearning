@@ -14,7 +14,7 @@ function template_preprocess_course_header(&$vars) {
   $vars['follow_link'] = '';
 
   // course title
-  if (isset($active_contexts['course_pages'])) {
+  if (isset($active_contexts['course_pages']) || isset($active_contexts['annoucement_page'])) {
     $attributes = array(
       'class' => 'course-title-link',
       'title' => t('Back to class.')
@@ -60,7 +60,7 @@ function template_preprocess_course_header(&$vars) {
     $vars['lesson_link'] = '';
   }
 
-  if((($book_link['nid'] !== $book_link['bid']) && isset($node->book)) || (isset($active_contexts['course_pages']))) {
+  if((($book_link['nid'] !== $book_link['bid']) && isset($node->book)) || (isset($active_contexts['course_pages']) || isset($active_contexts['annoucement_page']) )) {
     $items = array(
       l(t('Blog'), 'node/'.$course_node->nid.'/blog', array('attributes' => array('class' => array('course-blog-link')))),
       l(t('Forum'), 'course/'.$course_node->nid.'/questions', array('attributes' => array('class' => array('course-forum-link')))),
