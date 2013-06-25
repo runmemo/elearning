@@ -240,6 +240,9 @@ function course_field_default_field_bases() {
     'type' => 'entityreference',
   );
 
+  $teacher_role = user_role_load_by_name('teacher');
+  $teacher_rid = $teacher_role ? $teacher_role->rid : 0;
+  
   // Exported field_base: 'field_teacher'
   $field_bases['field_teacher'] = array(
     'active' => 1,
@@ -265,10 +268,7 @@ function course_field_default_field_bases() {
     'module' => 'user_reference',
     'settings' => array(
       'referenceable_roles' => array(
-        2 => 0,
-        3 => 0,
-        4 => 4,
-        5 => 0,
+        $teacher_rid => $teacher_rid,
       ),
       'referenceable_status' => array(
         0 => 0,
