@@ -18,7 +18,7 @@ function registration_context_default_contexts() {
   $context->description = 'User tries to open course item without registration';
   $context->tag = 'access';
   $context->conditions = array(
-    'course_access' => array(
+    'registration_access' => array(
       'values' => array(
         'false' => 'false',
       ),

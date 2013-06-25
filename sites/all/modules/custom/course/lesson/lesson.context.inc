@@ -18,11 +18,6 @@ function lesson_context_default_contexts() {
   $context->description = 'Lesson Node';
   $context->tag = 'Node';
   $context->conditions = array(
-    'course_access' => array(
-      'values' => array(
-        'true' => 'true',
-      ),
-    ),
     'node' => array(
       'values' => array(
         'lesson' => 'lesson',
@@ -32,6 +27,15 @@ function lesson_context_default_contexts() {
       ),
     ),
   );
+  
+  if (module_exists('registration')) {
+    $context->conditions['registration_access'] = array(
+      'values' => array(
+        'true' => 'true',
+      ),
+    );
+  }
+  
   $context->reactions = array(
     'block' => array(
       'blocks' => array(

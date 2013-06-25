@@ -186,7 +186,7 @@ function course_node_view($node, $view_mode) {
 
   // add fields from referenced nodes to content
   if ($view_mode == 'full' && $node->type == 'course') {
-
+    
     $provider = field_get_items('node', $node, 'field_provider');
     if ($provider) {
       
@@ -215,8 +215,15 @@ function course_node_view($node, $view_mode) {
       $node->teacher['avatar'] = '';
       $node->teacher['teacher_name'] = '';
     }
+    if (module_exists('registration')) {
+      $node->content['form_class_participate'] = drupal_get_form('course_registration_form');
+    }
+    else {
+     // dvm(book_next($node->book));
+      $next = book_next($node->book);
+      $node->content['form_class_participate'] = l('Go to class', $next['href']);
+    }
   }
-
 
   if ($node->type !== 'lesson' && $view_mode === 'full') {
     if (isset($node->content['book_navigation'])) {
@@ -224,7 +231,7 @@ function course_node_view($node, $view_mode) {
     }
   }
 }
-
+  
 /**
  * Implementation of hook_views_pre_render().
  * @param type $view

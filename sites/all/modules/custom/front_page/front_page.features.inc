@@ -16,6 +16,10 @@ function front_page_ctools_plugin_api() {
   if ($module == "delta" && $api == "delta") {
     return array("version" => "3");
   }
+  list($module, $api) = func_get_args();
+  if ($module == "strongarm" && $api == "strongarm") {
+    return array("version" => "1");
+  }
 }
 
 /**
@@ -56,10 +60,10 @@ function front_page_image_default_styles() {
         'module' => 'image',
         'name' => 'image_scale_and_crop',
         'data' => array(
-          'width' => '408',
-          'height' => '173',
+          'width' => 408,
+          'height' => 173,
         ),
-        'weight' => '1',
+        'weight' => 1,
       ),
     ),
   );
@@ -78,10 +82,10 @@ function front_page_image_default_styles() {
         'module' => 'image',
         'name' => 'image_scale_and_crop',
         'data' => array(
-          'width' => '864',
-          'height' => '394',
+          'width' => 864,
+          'height' => 394,
         ),
-        'weight' => '1',
+        'weight' => 1,
       ),
     ),
   );
@@ -100,10 +104,10 @@ function front_page_image_default_styles() {
         'module' => 'image',
         'name' => 'image_scale_and_crop',
         'data' => array(
-          'width' => '33',
-          'height' => '33',
+          'width' => 33,
+          'height' => 33,
         ),
-        'weight' => '1',
+        'weight' => 1,
       ),
     ),
   );

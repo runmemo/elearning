@@ -8,4 +8,7 @@ dependencies[] = vud_field
 
 features[flag][] = best_answer
 features[features_api][] = api:1
-features[rules_config][] = rules_user_unselects_best_answer_extra
+features[rules_config][] = rules_flag_answers_best_answer
+features[rules_config][] = rules_unflag_answers_best_answer
+
+files[] = tests/best_answer_extra.test

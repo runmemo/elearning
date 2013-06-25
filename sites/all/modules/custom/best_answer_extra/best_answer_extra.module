@@ -24,10 +24,8 @@ function best_answer_extra_node_view($node, $view_mode, $langcode) {
  * answers are unflagged and the answers of other questions remain flagged (at least one answer flagged)
  */
 function best_answer_extra_flag_flag($flag, $entity_id, $account, $flagging) {
-
   if ($flag->name === 'best_answer') {
     $question = entity_metadata_wrapper('node', $entity_id)->field_answer_question->value();
-
     $query = new EntityFieldQuery();
     $entities = $query
       ->entityCondition('entity_type', 'node')
@@ -36,10 +34,11 @@ function best_answer_extra_flag_flag($flag, $entity_id, $account, $flagging) {
       ->fieldCondition('field_answer_question', 'nid', $question->nid, '=')
       ->addTag('best_answer_flagging')
       ->execute();
-  
-    foreach ($entities['node'] as $nid => $answer) {
-      $flag->flag('unflag', $nid);
-    } 
+    if (isset($entities['node']) && !empty($entities['node'])) {
+      foreach ($entities['node'] as $nid => $answer) {
+        flag('unflag', 'best_answer', $nid, $account);
+      }
+    }
   }
 }
 

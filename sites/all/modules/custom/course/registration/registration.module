@@ -235,19 +235,13 @@ function registration_context_plugins() {
 function registration_context_registry() {
   return array(
     'conditions' => array(
-      'course_access' => array(
-        'title' => t('Course Access'),
+      'registration_access' => array(
+        'title' => t('Registration Access'),
         'description' => t('Determins whether user has access to a course item.'),
         'plugin' => 'context_condition_registration_access',
       ),
     ),
   );
-}
-
-function goto_class_form_block() {
-  $block = array();
-  $block['subject'] = t('Go to class');
-  $block['content'][] = drupal_get_form('course_goto_class_form');
 }
 
 /**
@@ -386,8 +380,8 @@ function registration_node_view($node, $view_mode) {
         $context_access = 'false';
       }
     }
-    // set condition for course_access plugin
-    if ($plugin = context_get_plugin('condition', 'course_access')) {
+    // set condition for registration_access plugin
+    if ($plugin = context_get_plugin('condition', 'registration_access')) {
       $plugin->execute($context_access);
     }
   }

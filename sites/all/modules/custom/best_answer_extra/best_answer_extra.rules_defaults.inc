@@ -18,7 +18,7 @@ function best_answer_extra_default_rules_configuration() {
     "REQUIRES" : [ "userpoints_rules", "flag" ],
     "ON" : [ "flag_flagged_best_answer" ],
     "IF" : [
-      { "NOT data_is" : { "data" : [ "flagging-user" ], "value" : [ "flagged-node:author" ] } }
+      { "NOT data_is" : { "data" : [ "flagging-user:uid" ], "value" : [ "flagged-node:author:uid" ] } }
     ],
     "DO" : [
       { "userpoints_action_grant_points" : {
@@ -50,7 +50,7 @@ function best_answer_extra_default_rules_configuration() {
     "REQUIRES" : [ "userpoints_rules", "flag" ],
     "ON" : [ "flag_unflagged_best_answer" ],
     "IF" : [
-      { "NOT data_is" : { "data" : [ "flagging-user" ], "value" : [ "flagged-node:author" ] } }
+      { "NOT data_is" : { "data" : [ "flagging-user:uid" ], "value" : [ "flagged-node:author:uid" ] } }
     ],
     "DO" : [
       { "userpoints_action_grant_points" : {
