@@ -27,6 +27,6 @@
         <?php print $teacher_name . '&nbsp;' . $teacher_surname; ?>
       </div>
   </div>
-  <?php print $lesson_link; ?>
+  <?php print $return_link; ?>
   <?php print $course_links; ?>
 </div>

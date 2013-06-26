@@ -53,14 +53,19 @@ function template_preprocess_course_header(&$vars) {
     $vars['teacher_name'] = '';
     $vars['teacher_surname'] = '';
   }
+
   if ($vars['question_page'] == TRUE) {
-    $vars['lesson_link'] = l(t('Return to class'), $book_link['href'], array('attributes' => array('class' => array('node-question-return-link'))));
+    $vars['return_link'] = l(t('Return to class'), $book_link['href'], array('attributes' => array('class' => array('node-question-return-link'))));
+  }
+  else if (isset($active_contexts['annoucement_page'])) {
+    $vars['return_link'] = l(t('Return to annoucements'), 'node/'.$course_node->nid.'/blog', array('attributes' => array('class' => array('node-question-return-link'))));
   }
   else {
-    $vars['lesson_link'] = '';
+    $vars['return_link'] = '';
   }
 
-  if((($book_link['nid'] !== $book_link['bid']) && isset($node->book)) || (isset($active_contexts['course_pages']) || isset($active_contexts['annoucement_page']) )) {
+
+  if((($book_link['nid'] !== $book_link['bid']) && isset($node->book)) || isset($active_contexts['course_pages'])) {
     $items = array(
       l(t('Blog'), 'node/'.$course_node->nid.'/blog', array('attributes' => array('class' => array('course-blog-link')))),
       l(t('Forum'), 'course/'.$course_node->nid.'/questions', array('attributes' => array('class' => array('course-forum-link')))),
