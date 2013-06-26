@@ -1,0 +1,36 @@
+<?php
+/**
+ * @file
+ * Code for the Site configuration settings feature.
+ */
+
+include_once 'config.features.inc';
+
+/**
+ * Implements hook_block_info().
+ */
+function config_block_info() {
+  $block['rights_reserved'] = array(
+    'info' => t('Rights reserved block'),
+  );
+  return $block;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function config_block_view($delta = '') {
+  $content = array();
+  $block = array();
+  switch ($delta) {
+    case 'rights_reserved':
+      $content = array(
+        '#type' => 'markup',
+        '#markup' => '<div class="rights-reserved">&copy; ' . date('Y') . ' ' . t('CourseHub. All rights reserved.') . '</div>',
+      );
+      $block['subject'] = '';
+      $block['content'] = $content;
+      break;
+  }
+  return $block;
+}
