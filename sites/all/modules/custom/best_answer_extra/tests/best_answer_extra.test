@@ -12,8 +12,13 @@
 class BestAnswerExtraBaseCase extends DrupalWebTestCase {
 
   function setUp() {
+    // Enable necessary modules.
     parent::setUp('rules', 'userpoints', 'userpoints_rules', 'flag', 'answers', 'aup', 'best_answer_extra');
 
+    // Remove unnecessary field.
+    field_delete_field('field_answer_count');
+
+    // Create users.
     $user_permissions = array(
       'create answer content',
       'create question content',
@@ -23,9 +28,11 @@ class BestAnswerExtraBaseCase extends DrupalWebTestCase {
     $this->user_a = $this->drupalCreateUser($user_permissions);
     $this->user_b = $this->drupalCreateUser($user_permissions);
 
+    // Create questions.
     $this->question_a = $this->create_question($this->user_a->uid);
     $this->question_b = $this->create_question($this->user_b->uid);
 
+    // Create answers to questions.
     $this->answer_1 = $this->create_answer($this->user_a->uid, $this->question_a->nid);
     $this->answer_2 = $this->create_answer($this->user_b->uid, $this->question_a->nid);
     $this->answer_3 = $this->create_answer($this->user_b->uid, $this->question_b->nid);
@@ -35,6 +42,7 @@ class BestAnswerExtraBaseCase extends DrupalWebTestCase {
    * Creates question node.
    * 
    * @param integer $uid
+   *   Node author ID
    * 
    * @return question node
    */
@@ -50,7 +58,9 @@ class BestAnswerExtraBaseCase extends DrupalWebTestCase {
    * Creates answer using provided values.
    * 
    * @param integer $uid
+   *   Node author ID
    * @param integer $question_nid
+   *   Corresponding question ID
    * 
    * @return object answer node
    */
@@ -110,7 +120,7 @@ class BestAnswerExtraBaseCase extends DrupalWebTestCase {
       ->entityCondition('entity_id', $nid)
       ->entityCondition('uid', $uid);
     $result = $query->execute();
-    
+
     return !empty($result) ? TRUE : FALSE;
   }
 
@@ -134,6 +144,9 @@ class BestAnswerExtraCase extends BestAnswerExtraBaseCase {
     parent::setUp();
   }
 
+  /**
+   * Test case for setting best answer when answer author is question author.
+   */
   function testUserPointsAuthorSetsBest() {
     // Check that when user A checks his own answer on his question he gets 0 points.
     $points_before = $this->getPoints($this->user_a->uid, NULL, TRUE);
@@ -145,11 +158,13 @@ class BestAnswerExtraCase extends BestAnswerExtraBaseCase {
     flag('unflag', 'best_answer', $this->answer_1->nid, $this->user_a);
     $points_after = $this->getPoints($this->user_a->uid, NULL, TRUE);
     $this->assertEqual($points_before, $points_after, "Points haven't been deducted from question author for unselecting his own answer as best.");
-    // Check that when user A selects B's answer 1 on A's question B gets Points > 0.
-    $points_before = $this->getPoints($this->user_b->uid, NULL, TRUE);
+  }
+
+  /**
+   * Test case for access to flag link.
+   */
+  function testBestAnswerFlagAccess() {
     flag('flag', 'best_answer', $this->answer_2->nid, $this->user_a);
-    $points_after = $this->getPoints($this->user_b->uid, NULL, TRUE);
-    $this->assertEqual($points_before + 15, $points_after, "Answer author has received points after question author selected his answer as best.");
     $vars = array(
       'flag' => flag_get_flag('best_answer'),
       'entity_id' => $this->answer_2->nid,
@@ -170,6 +185,17 @@ class BestAnswerExtraCase extends BestAnswerExtraBaseCase {
     );
     best_answer_extra_preprocess_flag($vars);
     $this->assertFalse($vars['link_href'], "Best answer flag is not availabe for user, which is not question author.");
+  }
+
+  /**
+   * Test case for updating best answer.
+   */
+  function testUpdateBestAnswer() {
+    // Check that when user A selects B's answer 1 on A's question B gets Points > 0.
+    $points_before = $this->getPoints($this->user_b->uid, NULL, TRUE);
+    flag('flag', 'best_answer', $this->answer_2->nid, $this->user_a);
+    $points_after = $this->getPoints($this->user_b->uid, NULL, TRUE);
+    $this->assertEqual($points_before + 15, $points_after, "Answer author has received points after question author selected his answer as best.");
     // Check that when user selects answer 2, answer 1 gets unselected and accumilated change of poings for user B is 0.
     flag('flag', 'best_answer', $this->answer_1->nid, $this->user_a);
     $points_after = $this->getPoints($this->user_b->uid, NULL, TRUE);
