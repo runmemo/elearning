@@ -53,7 +53,7 @@ function answers_extra_block_info() {
 }
 
 /**
- * Implements of hook_block_view().
+ * Implements hook_block_view().
  */
 function answers_extra_block_view($delta = '') {
   $content = array();
