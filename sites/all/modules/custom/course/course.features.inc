@@ -146,6 +146,7 @@ function course_flag_default_flags() {
     'types' => array(
       0 => 'lesson',
       1 => 'open_question',
+      2 => 'quiz',
     ),
     'flag_short' => 'completed',
     'flag_long' => 'Couser item complete',
