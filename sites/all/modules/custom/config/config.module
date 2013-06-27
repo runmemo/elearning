@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Code for the Site configuration settings feature.
@@ -33,4 +34,22 @@ function config_block_view($delta = '') {
       break;
   }
   return $block;
+}
+
+/**
+ * Implements hook_menu_alter().
+ */
+function config_menu_alter(&$items) {
+  // Disable userpoints menu item.
+  $items['myuserpoints']['hidden'] = 1;
+}
+
+/**
+ * Implements hook_preprocess_link().
+ */
+function config_preprocess_link(&$variables) {
+  // Provide translatable text for custom user menu items.
+  if (($variables['text'] == 'Points' || $variables['text'] == 'Profile') && $variables['path'] == 'user') {
+    $variables['text'] = t($variables['text']);
+  }
 }

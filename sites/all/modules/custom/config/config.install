@@ -1,0 +1,46 @@
+<?php
+
+/**
+ * @file
+ * config.install contains installation tasks
+ */
+
+/**
+ * Implements hook_install().
+ */
+function config_install() {
+  // Find main item in the user menu.
+  $paren_link = db_select('menu_links', 'm')
+    ->fields('m', array('mlid'))
+    ->condition('m.link_title', 'User account')
+    ->execute()->fetch();
+  if (isset($paren_link->mlid)) {
+    $plid = $paren_link->mlid;
+  }
+  // Create two child links for user menu.
+  $profile_link = array(
+    'link_path' => 'user',
+    'router_path' => 'user',
+    'link_title' => 'Profile',
+    'menu_name' => 'user-menu',
+    'weight' => -50,
+    'plid' => isset($plid) ? $plid : 0,
+    'module' => 'config',
+  );
+  menu_link_save($profile_link);
+  $history_link = array(
+    'link_path' => 'user',
+    'router_path' => 'user',
+    'link_title' => 'Points',
+    'menu_name' => 'user-menu',
+    'weight' => -49,
+    'plid' => isset($plid) ? $plid : 0,
+    'module' => 'config',
+    'options' => array(
+      'query' => array(
+        'history' => 1,
+      ),
+    ),
+  );
+  menu_link_save($history_link);
+}

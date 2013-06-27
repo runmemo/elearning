@@ -100,31 +100,6 @@ function config_menu_default_menu_links() {
     'expanded' => 0,
     'weight' => -49,
   );
-  // Exported menu link: user-menu:menutoken/51cad8f39e266
-  $menu_links['user-menu:menutoken/51cad8f39e266'] = array(
-    'menu_name' => 'user-menu',
-    'link_path' => 'menutoken/51cad8f39e266',
-    'router_path' => 'menutoken/%',
-    'link_title' => 'Profile',
-    'options' => array(
-      'attributes' => array(
-        'title' => '',
-      ),
-      'menu_token_link_path' => '[current-user:url]',
-      'menu_token_data' => array(),
-      'menu_token_options' => array(
-        'clear' => 0,
-      ),
-      'alter' => TRUE,
-    ),
-    'module' => 'menu',
-    'hidden' => 0,
-    'external' => 0,
-    'has_children' => 0,
-    'expanded' => 0,
-    'weight' => -50,
-    'parent_path' => 'user',
-  );
   // Exported menu link: user-menu:user
   $menu_links['user-menu:user'] = array(
     'menu_name' => 'user-menu',
@@ -178,7 +153,6 @@ function config_menu_default_menu_links() {
   t('Log in');
   t('Log out');
   t('Login');
-  t('Profile');
   t('Team');
   t('User Agreement');
   t('User account');
