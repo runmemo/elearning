@@ -109,12 +109,17 @@ function inline_comments_extra_add_comments() {
     comment_save($comment);
   }
   $cids = comment_get_thread($node, variable_get('comment_default_mode_' . $node->type, 1), variable_get('comment_default_per_page_' . $node->type, 10));
-  $comments = comment_load_multiple($cids);
-  comment_prepare_thread($comments);
-  drupal_add_css(drupal_get_path('module', 'comment') . '/comment.css');
-  $build = comment_view_multiple($comments, $node);
-  $build['pager']['#theme'] = 'pager';
-  $output = drupal_render($build);
+  if (!empty($cids)) {
+    $comments = comment_load_multiple($cids);
+    comment_prepare_thread($comments);
+    drupal_add_css(drupal_get_path('module', 'comment') . '/comment.css');
+    $build = comment_view_multiple($comments, $node);
+    $build['pager']['#theme'] = 'pager';
+    $output = drupal_render($build);
+  }
+  else {
+    $output = '';
+  }
   if ($text == '') {
     $output .= '<div id="message-placeholder"><div class="text">' . t('Comment cannot be empty.') . '<span class="close" title="close">X</span></div></div>';
   }
