@@ -223,7 +223,7 @@ function course_views_default_views() {
   
   $view = new view();
   $view->name = 'courses';
-  $view->description = 'Shows a course matrix on the home page';
+  $view->description = 'Shows a courses page';
   $view->tag = 'default';
   $view->base_table = 'node';
   $view->human_name = 'Courses';
@@ -295,7 +295,7 @@ function course_views_default_views() {
     'image_style' => 'provider_home_picture',
     'image_link' => '',
   );
-  /* Field: User: Имя */
+  /* Field: User: Name */
   $handler->display->display_options['fields']['field_first_name']['id'] = 'field_first_name';
   $handler->display->display_options['fields']['field_first_name']['table'] = 'field_data_field_first_name';
   $handler->display->display_options['fields']['field_first_name']['field'] = 'field_first_name';
@@ -304,7 +304,7 @@ function course_views_default_views() {
   $handler->display->display_options['fields']['field_first_name']['exclude'] = TRUE;
   $handler->display->display_options['fields']['field_first_name']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_first_name']['type'] = 'text_plain';
-  /* Field: User: Фамилия */
+  /* Field: User: Surname */
   $handler->display->display_options['fields']['field_surname']['id'] = 'field_surname';
   $handler->display->display_options['fields']['field_surname']['table'] = 'field_data_field_surname';
   $handler->display->display_options['fields']['field_surname']['field'] = 'field_surname';
@@ -333,6 +333,10 @@ function course_views_default_views() {
   $handler->display->display_options['fields']['field_provider']['settings'] = array(
     'link' => 0,
   );
+  /* Field: Global: Course Rating */
+  $handler->display->display_options['fields']['course_rating']['id'] = 'course_rating';
+  $handler->display->display_options['fields']['course_rating']['table'] = 'views';
+  $handler->display->display_options['fields']['course_rating']['field'] = 'course_rating';
   /* Sort criterion: Content: Post date */
   $handler->display->display_options['sorts']['created']['id'] = 'created';
   $handler->display->display_options['sorts']['created']['table'] = 'node';
