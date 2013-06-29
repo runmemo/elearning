@@ -117,16 +117,22 @@ function quiz_extra_theme_registry_alter(&$theme_registry) {
   }
 }
 
+/**  
+ * Implements hook_quiz_finished.
+ */ 
+function quiz_extra_quiz_finished($quiz, $score, $session_data) {
+  global $user;
+
+  // After completing quiz mark it completed.
+  rules_invoke_event('quiz_complete', $user, $quiz);
+}
+
 function quiz_take_summary_preprocess(&$vars) {
 
   $quiz = $vars['quiz'];
   $questions = $vars['questions'];
   $score = $vars['score'];
   drupal_set_title($quiz->title);
-  global $user;
-
-  // After completing quiz mark it completed.
-  rules_invoke_event('quiz_complete', $user, $quiz);
 
   // Link to next lesson in course.
   $next = next_lesson($quiz->book);
