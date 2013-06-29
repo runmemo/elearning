@@ -2,7 +2,7 @@
 
 /**
  * @file
- * lesson.context.inc
+ * course.context.inc
  */
 
 /**
@@ -33,9 +33,9 @@ function course_context_default_contexts() {
   }
   $context->conditions['node'] = array(
     'values' => $node_values,
-    'options' => array(
-      'node_form' => '0',
-    ),
+      'options' => array(
+        'node_form' => '0',
+      ),
   );
   $context->reactions = array(
     'block' => array(
@@ -46,11 +46,17 @@ function course_context_default_contexts() {
           'region' => 'sidebar_first',
           'weight' => '-10',
         ),
+        'course-course_rating_form' => array(
+          'module' => 'course',
+          'delta' => 'course_rating_form',
+          'region' => 'sidebar_first',
+          'weight' => '-9',
+        ),
         'course_outline-course_certificate' => array(
           'module' => 'course_outline',
           'delta' => 'course_certificate',
           'region' => 'sidebar_first',
-          'weight' => '-9',
+          'weight' => '-8',
         ),
         'course-book_header' => array(
           'module' => 'course',
@@ -63,8 +69,8 @@ function course_context_default_contexts() {
           'delta' => 'course_item_links',
           'region' => 'content',
           'weight' => '-33',
-        ),
       ),
+    ),
     ),
   );
   $context->condition_mode = 1;
@@ -108,6 +114,7 @@ function course_context_default_contexts() {
   // Included for use with string extractors like potx.
   t('Page');
   t('Node');
+  t('Node is part of the course');
   t('When teacher is viewing course item');
 
   return $export;

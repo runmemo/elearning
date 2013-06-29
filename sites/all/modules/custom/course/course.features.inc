@@ -14,16 +14,15 @@ function course_ctools_plugin_api() {
     return array("version" => "1");
   }
   if ($module == "context" && $api == "context") {
-      return array("version" => "3");
+    return array("version" => "3");
   }
   if ($module == "delta" && $api == "delta") {
     return array("version" => "3");
   }
   if ($module == "strongarm" && $api == "strongarm") {
-      return array("version" => "1");
+    return array("version" => "1");
   }
   if ($module == "quicktabs" && $api == "quicktabs") {
-  
     return array("version" => "1");
   }
 }
@@ -67,10 +66,10 @@ function course_node_info() {
       'title_label' => t('Title'),
       'help' => '',
     ),
-    'front_page_slide' => array(
-      'name' => t('Front Page Slide'),
+    'course_feedback' => array(
+      'name' => t('Course Feedback'),
       'base' => 'node_content',
-      'description' => t('Content type for slider on the home page.'),
+      'description' => t('Course feedback content type.'),
       'has_title' => '1',
       'title_label' => t('Title'),
       'help' => '',
@@ -146,6 +145,7 @@ function course_flag_default_flags() {
     'types' => array(
       0 => 'lesson',
       1 => 'open_question',
+      2 => 'quiz',
     ),
     'flag_short' => 'completed',
     'flag_long' => 'Couser item complete',

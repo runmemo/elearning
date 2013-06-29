@@ -8,6 +8,8 @@ dependencies[] = context
 dependencies[] = multichoice
 dependencies[] = strongarm
 dependencies[] = credit
+dependencies[] = rules
+dependencies[] = flag
 
 features[context][] = quiz
 features[ctools][] = context:context:3
@@ -18,3 +20,5 @@ features[variable][] = node_submitted_quiz
 features[field_instance][] = node-quiz-field_course_credit
 
 files[] = tests/quiz_extra.test
+
+features[rules_config][] = rules_quiz_complete

@@ -66,8 +66,14 @@ h2 {
 #region-branding {
   .branding-data {
     .left();
-    #logo {
-      margin: 13px 0 0 10px;
+    .logo-img a {
+      height: 45px;
+      .show(table-cell);
+      vertical-align: middle;
+    }
+    img {
+      max-height: 40px;
+      max-width: 180px;
     }
   }
 }
@@ -263,7 +269,7 @@ h2 {
 
 .region-footer-first {
     display: block;
-    .block-block {
+    .block-rights-reserved {
         .right();
         .content {
             height: 36px;
@@ -281,8 +287,10 @@ h2 {
     .menu-float();
     a {
       .gris();
+      .link();
       .middle-cell();
-      height: 30px;
+      height: 36px;
+      padding: 0px 20px;
     }
   }
 }
@@ -2632,3 +2640,50 @@ div.quiz-report {
 }
 
 /** Notifications view styles end **/
+
+/** Annoucement page css start **/
+#node-newsletter-wrapper {
+  .node-newsletter-author-section {
+    text-align: center;
+    .node-newsletter-created {
+      .bold(18px);
+      .text-grey();
+      padding: 10px 0;
+    }
+    .node-newsletter-picture-points {
+      padding: 10px 43px 0;
+    }
+    .author-points {
+      left: 80px;
+      top: 80px;
+    }
+  }
+  .node-author {
+    .text-blue();
+    .font-bold();
+    background-color: #F8F8F8;
+    padding: 5px 10px;
+    float: left;
+    & > div {
+      float: left;
+      padding-right: 5px;
+    }
+  }
+  .node-newsletter-body {
+    margin-left: 20px;
+    h1.title {
+      margin-bottom: 10px;
+    }
+  }
+}
+/** Annoucement page css end **/
+
+/** Course rating form styles start **/
+
+.course-rating-form {
+  .fivestar-widget a {
+    color: transparent;
+  }
+}
+
+/** Course rating form styles end **/

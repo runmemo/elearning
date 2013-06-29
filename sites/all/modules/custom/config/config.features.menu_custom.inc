@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * course.features.menu_custom.inc
+ * config.features.menu_custom.inc
  */
 
 /**
  * Implements hook_menu_default_menu_custom().
  */
-function course_menu_default_menu_custom() {
+function config_menu_default_menu_custom() {
   $menus = array();
 
   // Exported menu: main-menu.

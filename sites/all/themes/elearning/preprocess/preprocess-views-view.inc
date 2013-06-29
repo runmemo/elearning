@@ -36,14 +36,14 @@ function elearning_alpha_preprocess_views_view__relevant_questions_list(&$vars) 
 }
 
 /**
- * Preprocess for user_questions_list view.
+ * Preprocess for user_answers_list view.
  */
 function elearning_alpha_preprocess_views_view__user_answers_list(&$vars) {
   $vars['classes_array'][] = 'view-user-answers-list';
 }
 
 /**
- * Preprocess for user_questions_list view.
+ * Preprocess for user_courses view.
  */
 function elearning_alpha_preprocess_views_view__user_courses(&$vars) {
   
@@ -65,4 +65,11 @@ function elearning_alpha_preprocess_views_view__user_courses(&$vars) {
   }
   // Wrap header for styling pursposes.
   $vars['header'] = '<p>' . $header . '</p>';
+}
+
+/**
+ * Preprocess for courses view.
+ */
+function elearning_alpha_preprocess_views_view__courses(&$vars) {
+  drupal_add_css(drupal_get_path('theme', 'elearning') . '/widgets/elearning_fivestar/elearning_fivestar_widget.css');
 }

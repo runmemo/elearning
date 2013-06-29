@@ -63,3 +63,65 @@ function inline_comments_extra_query_comment_filter_alter(QueryAlterableInterfac
     }
   }
 }
+
+/**
+ * Implements hook_menu_alter().
+ */
+function inline_comments_extra_menu_alter(&$items) {
+  $items['ajax/inline_comments/add_comments']['file'] = 'inline_comments_extra.module';
+  $items['ajax/inline_comments/add_comments']['page callback'] = 'inline_comments_extra_add_comments';
+  $items['ajax/inline_comments/add_comments']['module'] = 'inline_comments_extra';
+}
+
+/**
+ * Menu callback for saving new comment.
+ * 
+ * Code has been copied and overriden from inline_comments module. We need this,
+ * because there is no validation for comment body and by default it's possible
+ * to save empty comments.
+ */
+function inline_comments_extra_add_comments() {
+  $text = isset($_POST['comment_text']) ? check_markup($_POST['comment_text']) : '';
+  $uid = isset($_POST['uid']) ? check_plain($_POST['uid']) : '';
+  $nid = isset($_POST['nid']) ? check_plain($_POST['nid']) : '';
+  $node = $nid != '' ? node_load($nid) : '';
+  // Save comment only if there some text, provided by the user.
+  if ($text != '') {
+    $comment = (object) array(
+        'nid' => $nid,
+        'uid' => $uid,
+        'cid' => 0,
+        'pid' => 0,
+        'mail' => '',
+        'subject' => '',
+        'is_anonymous' => FALSE,
+        'status' => COMMENT_PUBLISHED,
+        'language' => LANGUAGE_NONE,
+        'comment_body' => array(
+          LANGUAGE_NONE => array(
+            0 => array(
+              'value' => $text,
+              'format' => 'filtered_html'
+            )
+          )
+        ),
+    );
+    comment_save($comment);
+  }
+  $cids = comment_get_thread($node, variable_get('comment_default_mode_' . $node->type, 1), variable_get('comment_default_per_page_' . $node->type, 10));
+  if (!empty($cids)) {
+    $comments = comment_load_multiple($cids);
+    comment_prepare_thread($comments);
+    drupal_add_css(drupal_get_path('module', 'comment') . '/comment.css');
+    $build = comment_view_multiple($comments, $node);
+    $build['pager']['#theme'] = 'pager';
+    $output = drupal_render($build);
+  }
+  else {
+    $output = '';
+  }
+  if ($text == '') {
+    $output .= '<div id="message-placeholder"><div class="text">' . t('Comment cannot be empty.') . '<span class="close" title="close">X</span></div></div>';
+  }
+  drupal_json_output(array('data' => $output));
+}

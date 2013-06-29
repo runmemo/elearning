@@ -14,6 +14,7 @@
         $(this).parents('.views-row').find('.comment-form').insertAfter(comments);
       });
       $('.comment-form').find('.form-submit').click(function() {
+        $('.comment-cancel').hide();
         $(this).parents('.views-row').find('.views-inline-comment-field').removeClass('hidden').find('.comment-link').click();
       });
       // hide comments form

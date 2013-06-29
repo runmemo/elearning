@@ -53,7 +53,7 @@ function answers_extra_block_info() {
 }
 
 /**
- * Implements of hook_block_view().
+ * Implements hook_block_view().
  */
 function answers_extra_block_view($delta = '') {
   $content = array();
@@ -412,7 +412,7 @@ function user_has_min_voting_points() {
  */
 function answers_extra_node_view($node, $view_mode, $langcode) {
   if ($node->type == 'question') {
-    drupal_add_js(drupal_get_path('module', 'answers_extra') . '/answers_extra.js');
+    drupal_add_js(drupal_get_path('module', 'answers_extra') . '/answers_extra.js', array('weight' => 10));
     $node->content['follow_flag'] = flag_create_link('follow_content', $node->nid );
   }
 }
