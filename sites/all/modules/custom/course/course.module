@@ -426,7 +426,7 @@ function course_is_item_node($node) {
  */
 function course_node_presave($node) {
   if (course_is_item_node($node)) {
-    cache_clear_all('course_get_items_' . $node->book['bid']); 
+    cache_clear_all('course_get_items_' . $node->book['bid'], 'cache'); 
   }
 }
 
