@@ -234,6 +234,7 @@ function course_views_default_views() {
   /* Display: Master */
   $handler = $view->new_display('default', 'Master', 'default');
   $handler->display->display_options['title'] = 'Courses';
+  $handler->display->display_options['use_ajax'] = TRUE;
   $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['access']['type'] = 'perm';
   $handler->display->display_options['cache']['type'] = 'none';
@@ -248,6 +249,12 @@ function course_views_default_views() {
     'field_discipline' => 'field_discipline',
     'field_teacher' => 'field_teacher',
   );
+  /* No results behavior: Global: Unfiltered text */
+  $handler->display->display_options['empty']['area_text_custom']['id'] = 'area_text_custom';
+  $handler->display->display_options['empty']['area_text_custom']['table'] = 'views';
+  $handler->display->display_options['empty']['area_text_custom']['field'] = 'area_text_custom';
+  $handler->display->display_options['empty']['area_text_custom']['empty'] = TRUE;
+  $handler->display->display_options['empty']['area_text_custom']['content'] = 'There is no result for the searched item,';
   /* Relationship: Content: Teacher (field_teacher) */
   $handler->display->display_options['relationships']['field_teacher_uid']['id'] = 'field_teacher_uid';
   $handler->display->display_options['relationships']['field_teacher_uid']['table'] = 'field_data_field_teacher';
@@ -258,6 +265,11 @@ function course_views_default_views() {
   $handler->display->display_options['relationships']['field_provider_target_id']['id'] = 'field_provider_target_id';
   $handler->display->display_options['relationships']['field_provider_target_id']['table'] = 'field_data_field_provider';
   $handler->display->display_options['relationships']['field_provider_target_id']['field'] = 'field_provider_target_id';
+  /* Relationship: Content: Discipline (field_discipline) */
+  $handler->display->display_options['relationships']['field_discipline_tid']['id'] = 'field_discipline_tid';
+  $handler->display->display_options['relationships']['field_discipline_tid']['table'] = 'field_data_field_discipline';
+  $handler->display->display_options['relationships']['field_discipline_tid']['field'] = 'field_discipline_tid';
+  $handler->display->display_options['relationships']['field_discipline_tid']['label'] = 'field_discipline';
   /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
@@ -295,7 +307,7 @@ function course_views_default_views() {
     'image_style' => 'provider_home_picture',
     'image_link' => '',
   );
-  /* Field: User: Name */
+  /* Field: User: First Name */
   $handler->display->display_options['fields']['field_first_name']['id'] = 'field_first_name';
   $handler->display->display_options['fields']['field_first_name']['table'] = 'field_data_field_first_name';
   $handler->display->display_options['fields']['field_first_name']['field'] = 'field_first_name';
@@ -337,6 +349,23 @@ function course_views_default_views() {
   $handler->display->display_options['fields']['course_rating']['id'] = 'course_rating';
   $handler->display->display_options['fields']['course_rating']['table'] = 'views';
   $handler->display->display_options['fields']['course_rating']['field'] = 'course_rating';
+  $handler->display->display_options['fields']['course_rating']['label'] = '';
+  $handler->display->display_options['fields']['course_rating']['element_label_colon'] = FALSE;
+  /* Field: Content: Content */
+  $handler->display->display_options['fields']['field_course_content']['id'] = 'field_course_content';
+  $handler->display->display_options['fields']['field_course_content']['table'] = 'field_data_field_course_content';
+  $handler->display->display_options['fields']['field_course_content']['field'] = 'field_course_content';
+  $handler->display->display_options['fields']['field_course_content']['label'] = '';
+  $handler->display->display_options['fields']['field_course_content']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_course_content']['element_label_colon'] = FALSE;
+  /* Field: Taxonomy term: Name */
+  $handler->display->display_options['fields']['name']['id'] = 'name';
+  $handler->display->display_options['fields']['name']['table'] = 'taxonomy_term_data';
+  $handler->display->display_options['fields']['name']['field'] = 'name';
+  $handler->display->display_options['fields']['name']['relationship'] = 'field_discipline_tid';
+  $handler->display->display_options['fields']['name']['label'] = '';
+  $handler->display->display_options['fields']['name']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['name']['element_label_colon'] = FALSE;
   /* Sort criterion: Content: Post date */
   $handler->display->display_options['sorts']['created']['id'] = 'created';
   $handler->display->display_options['sorts']['created']['table'] = 'node';
@@ -356,17 +385,17 @@ function course_views_default_views() {
   $handler->display->display_options['filters']['type']['value'] = array(
     'course' => 'course',
   );
-  /* Filter criterion: Content: Title */
-  $handler->display->display_options['filters']['title']['id'] = 'title';
-  $handler->display->display_options['filters']['title']['table'] = 'node';
-  $handler->display->display_options['filters']['title']['field'] = 'title';
-  $handler->display->display_options['filters']['title']['operator'] = 'word';
-  $handler->display->display_options['filters']['title']['exposed'] = TRUE;
-  $handler->display->display_options['filters']['title']['expose']['operator_id'] = 'title_op';
-  $handler->display->display_options['filters']['title']['expose']['label'] = 'Title';
-  $handler->display->display_options['filters']['title']['expose']['operator'] = 'title_op';
-  $handler->display->display_options['filters']['title']['expose']['identifier'] = 'title';
-  $handler->display->display_options['filters']['title']['expose']['remember_roles'] = array(
+  /* Filter criterion: Global: Combine fields filter */
+  $handler->display->display_options['filters']['combine']['id'] = 'combine';
+  $handler->display->display_options['filters']['combine']['table'] = 'views';
+  $handler->display->display_options['filters']['combine']['field'] = 'combine';
+  $handler->display->display_options['filters']['combine']['operator'] = 'word';
+  $handler->display->display_options['filters']['combine']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['combine']['expose']['operator_id'] = 'combine_op';
+  $handler->display->display_options['filters']['combine']['expose']['label'] = 'Search';
+  $handler->display->display_options['filters']['combine']['expose']['operator'] = 'combine_op';
+  $handler->display->display_options['filters']['combine']['expose']['identifier'] = 'combine';
+  $handler->display->display_options['filters']['combine']['expose']['remember_roles'] = array(
     2 => '2',
     1 => 0,
     3 => 0,
@@ -374,13 +403,18 @@ function course_views_default_views() {
     5 => 0,
     6 => 0,
   );
-  $handler->display->display_options['filters']['title']['group_info']['label'] = 'Title';
-  $handler->display->display_options['filters']['title']['group_info']['identifier'] = 'title';
-  $handler->display->display_options['filters']['title']['group_info']['remember'] = FALSE;
-  $handler->display->display_options['filters']['title']['group_info']['group_items'] = array(
+  $handler->display->display_options['filters']['combine']['group_info']['label'] = 'Combine fields filter';
+  $handler->display->display_options['filters']['combine']['group_info']['identifier'] = 'combine';
+  $handler->display->display_options['filters']['combine']['group_info']['remember'] = FALSE;
+  $handler->display->display_options['filters']['combine']['group_info']['group_items'] = array(
     1 => array(),
     2 => array(),
     3 => array(),
+  );
+  $handler->display->display_options['filters']['combine']['fields'] = array(
+    'title' => 'title',
+    'field_course_content' => 'field_course_content',
+    'name' => 'name',
   );
 
   /* Display: Page */

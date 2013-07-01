@@ -13,6 +13,7 @@ function config_install() {
   $paren_link = db_select('menu_links', 'm')
     ->fields('m', array('mlid'))
     ->condition('m.link_title', 'User account')
+    ->condition('m.link_path', 'user')
     ->execute()->fetch();
   if (isset($paren_link->mlid)) {
     $plid = $paren_link->mlid;
@@ -43,4 +44,10 @@ function config_install() {
     ),
   );
   menu_link_save($history_link);
+  // Increase module's weight in order to make it invoked last.
+  db_update('system')
+    ->fields(array('weight' => 1001))
+    ->condition('name', 'config')
+    ->condition('type', 'module')
+    ->execute();
 }

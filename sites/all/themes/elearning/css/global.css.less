@@ -167,7 +167,10 @@ h2 {
             .main-menu-link();
             .show(inline);
           }
-          &:hover, &:active { .link(); }
+          &:hover, &:active {
+            .link();
+            color: #ffffff;
+          }
         }
         .ajax-progress.ajax-progress-throbber {
           float: right;
@@ -2681,8 +2684,12 @@ div.quiz-report {
 /** Course rating form styles start **/
 
 .course-rating-form {
+  margin-left: 10px;
   .fivestar-widget a {
     color: transparent;
+  }
+  .form-submit {
+    margin-top: 8px;
   }
 }
 

@@ -110,3 +110,39 @@
 label {
   font-weight: bold;
 }
+
+/** Css for select menu **/
+
+.ui-selectmenu-menu,
+.ui-selectmenu-menu ul,
+.ui-selectmenu {
+  &,
+  &:link,
+  &:visited {
+    border-radius: 0;
+    .box-shadow();
+    border: 0;
+    background: #fff;
+    .bold(14px);
+    .link();
+    color: #505050;
+    width: 350px !important;
+    padding: 5px 0;
+  }
+}
+
+.ui-selectmenu-menu li a {
+  color: #505050;
+  font-weight: bold;
+}
+
+
+.ui-widget-content .ui-state-hover, 
+.ui-widget-header .ui-state-hover, 
+.ui-state-focus, 
+.ui-widget-content .ui-state-focus, 
+.ui-widget-header .ui-state-focus {
+  background: #ffeca8;
+  border: 0;
+}
+

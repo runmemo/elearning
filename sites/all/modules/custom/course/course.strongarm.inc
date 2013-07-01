@@ -25,6 +25,12 @@ function course_strongarm() {
   $strongarm->value = 'course/[node:nid]';
   $export['pathauto_node_course_pattern'] = $strongarm;
 
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'node_options_course';
+  $strongarm->value = array();
+  $export['node_options_course'] = $strongarm;
   
   return $export;
 }
