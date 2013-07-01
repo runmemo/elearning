@@ -42,9 +42,28 @@ function config_menu_default_menu_links() {
     'module' => 'menu',
     'hidden' => 0,
     'external' => 0,
-    'has_children' => 0,
+    'has_children' => 1,
     'expanded' => 0,
     'weight' => -49,
+  );
+  // Exported menu link: main-menu:node/add/course
+  $menu_links['main-menu:node/add/course'] = array(
+    'menu_name' => 'main-menu',
+    'link_path' => 'node/add/course',
+    'router_path' => 'node/add/course',
+    'link_title' => 'Add Course',
+    'options' => array(
+      'attributes' => array(
+        'title' => '',
+      ),
+    ),
+    'module' => 'menu',
+    'hidden' => 0,
+    'external' => 0,
+    'has_children' => 0,
+    'expanded' => 0,
+    'weight' => -50,
+    'parent_path' => 'courses',
   );
   // Exported menu link: main-menu:user/login
   $menu_links['main-menu:user/login'] = array(
@@ -149,6 +168,7 @@ function config_menu_default_menu_links() {
   // Translatables
   // Included for use with string extractors like potx.
   t('About');
+  t('Add Course');
   t('Courses');
   t('Log in');
   t('Log out');
