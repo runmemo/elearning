@@ -59,7 +59,10 @@ features[ctools][] = file_entity:file_default_displays:1
 features[ctools][] = strongarm:strongarm:1
 features[file_display][] = video__media_default__media_youtube_image
 features[file_display][] = video__media_default__media_youtube_video
+
 features[variable][] = node_submitted_lesson
+features[variable][] = node_options_course
+
 features[flag][] = course_item_complete
 features[rules_config][] = rules_lesson_video_complete
 features[rules_config][] = rules_open_question_viewed
@@ -74,3 +77,15 @@ features[views_view][] = courses
 features[context][] = course_pages
 features[context][] = course_item
 features[delta][] = course_pages
+
+features[user_permission][] = add content to books
+features[user_permission][] = add media from remote sources
+features[user_permission][] = administer book outlines
+features[user_permission][] = create course content
+features[user_permission][] = create files
+features[user_permission][] = create new books
+features[user_permission][] = edit own course content
+features[user_permission][] = edit own files
+features[user_permission][] = view files
+features[user_permission][] = view own files
+features[user_permission][] = view own private files
