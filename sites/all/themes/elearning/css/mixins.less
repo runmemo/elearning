@@ -176,7 +176,7 @@
 .menu-float() {
     float: left;
     list-style: none !important;
-    margin: 0px;
+    margin: 0;
 }
 
 .link() {
@@ -184,8 +184,8 @@
 }
 
 .reset-div() {
-    margin: 0px;
-    padding: 0px;
+    margin: 0;
+    padding: 0;
 }
 .middle-cell() {
     display: table-cell; 
@@ -229,7 +229,7 @@
   border: none;
   height: 17px;
   padding: 10px 24px 6px 20px;
-  margin: 4px 0px 0px 0px;
+  margin: 4px 0 0 0;
   &:after {
     position: absolute;
     .show(inline);
@@ -267,10 +267,10 @@
 .bold(@size: 14px) {
   font: bold @size Arial;
 }
-.box-shadow() {
-  -moz-box-shadow: 0px 0px 1px 0px #888;
-  -webkit-box-shadow: 0px 0px 1px 0px #888;
-  box-shadow: 0px 0px 1px 0px #888;
+.box-shadow(@x-axis: 0, @y-axis: 0, @blur: 1px, @spread: 0, @color: @grey) {
+  -moz-box-shadow: @x-axis @y-axis @blur @spread @color;
+  -webkit-box-shadow: @x-axis @y-axis @blur @spread @color;
+  box-shadow: @x-axis @y-axis @blur @spread @color;
 }
 
 .no-shadow() {
@@ -280,9 +280,7 @@
 } 
 
 .tooltip-shadow() {
-  moz-box-shadow: 2px 4px 23px 1px #888;
-  -webkit-box-shadow: 2px 4px 23px 1px #888;
-  box-shadow: 2px 4px 23px 1px #888;
+  .box-shadow(2px, 4px, 23px, 1px, @gray);
 }
 
 .tooltip() {
@@ -298,7 +296,7 @@
   padding-right: 8px;
   padding-left: 8px;
   margin-bottom: 8px;
-  background-color: #f8f8f8;
+  background-color: @light-gray;
   .box-shadow();
   .RoundedShape(1px);
   .bold(18px);
@@ -372,7 +370,7 @@
   padding: 6px;
   background-position: center center;
   .show(inline-block);
-  box-shadow: 0 0 1px 0 #888888;
+  .box-shadow(0, 0, 1px, 0, @gray);
 }
 
 .small-avatar {
@@ -408,3 +406,9 @@
 }
 
 
+@gray: #888; /* gray in css is #808080 */
+@dark-gray: #333;
+@light-gray: #f8f8f8;
+
+@bg-popup: #fdfdfd;
+@bg-error: #e64412;
