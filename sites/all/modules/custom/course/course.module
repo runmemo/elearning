@@ -422,6 +422,15 @@ function course_is_item_node($node) {
 }
 
 /**
+ * Implements hook_node_presave().
+ */
+function course_node_presave($node) {
+  if (course_is_item_node($node)) {
+    cache_clear_all('course_get_items_' . $node->book['bid'], 'cache'); 
+  }
+}
+
+/**
  * Gets content types that are supported as items of the course.
  * @return array
  */
@@ -435,7 +444,6 @@ function course_item_node_types() {
       'lesson' => 'lesson',
       'quiz' => 'quiz',
       'open_question' => 'open_question',
-      'closedquestion' => 'closedquestion',
     );
     $items = array();
 
