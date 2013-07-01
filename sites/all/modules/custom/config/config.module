@@ -53,3 +53,19 @@ function config_preprocess_link(&$variables) {
     $variables['text'] = t($variables['text']);
   }
 }
+
+/**
+ * Implements hook_menu_link_alter().
+ */
+function config_menu_link_alter(&$link) {
+  if ($link['link_path'] == 'user/logout' && $link['module'] == 'system' && empty($link['customized'])) {
+    $paren_link = db_select('menu_links', 'm')
+        ->fields('m', array('mlid'))
+        ->condition('m.link_title', 'User account')
+        ->condition('m.link_path', 'user')
+        ->execute()->fetch();
+    if (isset($paren_link->mlid)) {
+     $link['plid'] = $paren_link->mlid;
+    }
+  }
+}
