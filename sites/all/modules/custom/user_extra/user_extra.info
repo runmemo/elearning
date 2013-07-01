@@ -36,6 +36,7 @@ features[image][] = user_profile_picture
 features[user_permission][] = access user profiles
 features[user_permission][] = access content
 features[user_permission][] = access absolute messages
+features[taxonomy][] = age_group
 
 features[ctools][] = strongarm:strongarm:1
 features[user_role][] = not validated user
