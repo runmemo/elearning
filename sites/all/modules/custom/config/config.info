@@ -124,6 +124,7 @@ dependencies[] = voting_rules
 dependencies[] = votingapi
 dependencies[] = vud
 dependencies[] = vud_field
+dependencies[] = selectmenu
 features[context][] = header_footer
 features[ctools][] = context:context:3
 features[ctools][] = strongarm:strongarm:1
