@@ -135,29 +135,32 @@ function user_extra_field_default_field_bases() {
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_age_group',
-    'foreign keys' => array(),
+    'foreign keys' => array(
+      'tid' => array(
+        'columns' => array(
+          'tid' => 'tid',
+        ),
+        'table' => 'taxonomy_term_data',
+      ),
+    ),
     'indexes' => array(
-      'value' => array(
-        0 => 'value',
+      'tid' => array(
+        0 => 'tid',
       ),
     ),
     'locked' => 0,
-    'module' => 'list',
+    'module' => 'taxonomy',
     'settings' => array(
       'allowed_values' => array(
-        '0-18' => 'under 18',
-        '18-24' => '18-24',
-        '25-34' => '25-34',
-        '35-44' => '35-44',
-        '45-54' => '45-54',
-        '55-64' => '55-64',
-        '65+' => '65 and over',
+        0 => array(
+          'vocabulary' => 'age_group',
+          'parent' => 0,
+        ),
       ),
-      'allowed_values_function' => '',
     ),
     'translatable' => 0,
-    'type' => 'list_text',
+    'type' => 'taxonomy_term_reference',
   );
-
+  
   return $field_bases;
 }

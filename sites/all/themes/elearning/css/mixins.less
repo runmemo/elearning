@@ -125,7 +125,7 @@
   background-image: linear-gradient(to bottom,  #ffffff, #f3f5f7);
 }
 
-.cke-main-panel-light-grey() {
+.cke-main-panel-light-gray() {
   background-image: -webkit-linear-gradient(top,#ffffff,#ececed);
   background-image: -moz-linear-gradient(to bottom,  #ffffff, #ececed);
   background-image: -ms-linear-gradient(to bottom,  #ffffff, #ececed);
@@ -133,7 +133,7 @@
   background-image: linear-gradient(to bottom,  #ffffff, #ececed);
 }
 
-.cke-tools-panel-light-grey() {
+.cke-tools-panel-light-gray() {
   background-image: -webkit-linear-gradient(top,#fefefe,#f5f5f5);
   background-image: -moz-linear-gradient(to bottom,  #fefefe, #f5f5f5);
   background-image: -ms-linear-gradient(to bottom,  #fefefe, #f5f5f5);
@@ -149,19 +149,19 @@
   color: #435d7b;
 }
 
-.text-grey() {
+.text-gray() {
   color: #565656;
 }
 
-.text-dark-grey() {
+.text-dark-gray() {
   color: #333333;
 }
 
-.text-light-grey() {
+.text-light-gray() {
   color: #4c4c4c;
 }
 
-.text-blue-grey() {
+.text-blue-gray() {
   color: #3d3d3d;
 }
 
@@ -176,7 +176,7 @@
 .menu-float() {
     float: left;
     list-style: none !important;
-    margin: 0px;
+    margin: 0;
 }
 
 .link() {
@@ -184,8 +184,8 @@
 }
 
 .reset-div() {
-    margin: 0px;
-    padding: 0px;
+    margin: 0;
+    padding: 0;
 }
 .middle-cell() {
     display: table-cell; 
@@ -213,7 +213,7 @@
 
 @border-cke-blue: 1px solid #dbe2e9;
 
-@border-cke-light-grey: 1px solid #e1e1e2;
+@border-cke-light-gray: 1px solid #e1e1e2;
 
 .font-bold() {
   font-weight: bold;
@@ -229,7 +229,7 @@
   border: none;
   height: 17px;
   padding: 10px 24px 6px 20px;
-  margin: 4px 0px 0px 0px;
+  margin: 4px 0 0 0;
   &:after {
     position: absolute;
     .show(inline);
@@ -267,10 +267,10 @@
 .bold(@size: 14px) {
   font: bold @size Arial;
 }
-.box-shadow() {
-  -moz-box-shadow: 0px 0px 1px 0px #888;
-  -webkit-box-shadow: 0px 0px 1px 0px #888;
-  box-shadow: 0px 0px 1px 0px #888;
+.box-shadow(@x-axis: 0, @y-axis: 0, @blur: 1px, @spread: 0, @color: @gray) {
+  -moz-box-shadow: @x-axis @y-axis @blur @spread @color;
+  -webkit-box-shadow: @x-axis @y-axis @blur @spread @color;
+  box-shadow: @x-axis @y-axis @blur @spread @color;
 }
 
 .no-shadow() {
@@ -280,9 +280,7 @@
 } 
 
 .tooltip-shadow() {
-  moz-box-shadow: 2px 4px 23px 1px #888;
-  -webkit-box-shadow: 2px 4px 23px 1px #888;
-  box-shadow: 2px 4px 23px 1px #888;
+  .box-shadow(2px, 4px, 23px, 1px, @gray);
 }
 
 .tooltip() {
@@ -298,7 +296,7 @@
   padding-right: 8px;
   padding-left: 8px;
   margin-bottom: 8px;
-  background-color: #f8f8f8;
+  background-color: @light-gray;
   .box-shadow();
   .RoundedShape(1px);
   .bold(18px);
@@ -372,7 +370,7 @@
   padding: 6px;
   background-position: center center;
   .show(inline-block);
-  box-shadow: 0 0 1px 0 #888888;
+  .box-shadow(0, 0, 1px, 0, @gray);
 }
 
 .small-avatar {
@@ -408,3 +406,9 @@
 }
 
 
+@gray: #888; /* gray in css is #808080 */
+@dark-gray: #333;
+@light-gray: #f8f8f8;
+
+@bg-popup: #fdfdfd;
+@bg-error: #e64412;

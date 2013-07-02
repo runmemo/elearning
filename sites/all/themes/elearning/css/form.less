@@ -115,17 +115,16 @@ label {
 
 .ui-selectmenu-menu ul,
 .ui-selectmenu {
-  &,
-  &:link,
-  &:visited {
+  &, &:link, &:visited {
     border-radius: 0;
     .box-shadow();
     border: 0;
-    background: #fff;
+    background: none;
+    background-color: #fff;
     .bold(14px);
     .link();
     color: #505050;
-    width: 350px !important;
+    min-width: 150px;
     padding: 5px 0;
   }
 }
@@ -144,7 +143,8 @@ label {
 .ui-state-focus, 
 .ui-widget-content .ui-state-focus, 
 .ui-widget-header .ui-state-focus {
-  background: #ffeca8;
+  background: none;
+  background-color: #ffeca8; 
   border: 0;
 }
 

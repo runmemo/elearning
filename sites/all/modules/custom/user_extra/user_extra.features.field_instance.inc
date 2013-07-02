@@ -202,15 +202,15 @@ function user_extra_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'above',
-        'module' => 'list',
+        'module' => 'taxonomy',
         'settings' => array(),
-        'type' => 'list_default',
-        'weight' => 4,
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 5,
       ),
     ),
     'entity_type' => 'user',
     'field_name' => 'field_age_group',
-    'label' => t('Age Group'),
+    'label' => t('Age group'),
     'required' => 0,
     'settings' => array(
       'user_register_form' => 1,
@@ -223,7 +223,7 @@ function user_extra_field_default_field_instances() {
       'weight' => 8,
     ),
   );
-  
+
   // Translatables
   // Included for use with string extractors like potx.
   t('Date of birth');
