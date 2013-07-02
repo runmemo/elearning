@@ -45,6 +45,7 @@
         <?php if (isset($field_phone)) print render($user_profile['$field_phone']); ?>
       </div>
     </div>
+    <?php if (isset($user_teaches_courses)) print $user_teaches_courses; ?>
     <?php if (isset($user_courses_view)) print $user_courses_view; ?>
   </div>
 </div>
