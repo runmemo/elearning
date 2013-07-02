@@ -1,7 +1,7 @@
 
 #zone-branding #region-branding .branding-data img {
   max-height: 54px;
-  max-width: 291px;
+  max-width: none;
 }
 
 #zone-branding #region-branding .branding-data .logo-img {
@@ -9,11 +9,9 @@
   margin-left: -30px;
   top: 2px;
   z-index: 1;
-  height: 40px;
-  width: 291px;
-  -moz-box-shadow: 0px 1px 8px 2px #582020;
-  -webkit-box-shadow: 0px 1px 8px 2px #582020;
-  box-shadow: 0px 1px 8px 2px #582020;
+  -moz-box-shadow: 0px -6px 4px 2px rgba(33, 33, 33, 0.4);
+  -webkit-box-shadow: 0px -6px 4px 2px rgba(33, 33, 33, 0.4);
+  box-shadow: 0px -6px 4px 2px rgba(33, 33, 33, 0.4); 
 }
 
 .node-course .node-course-header .social-share,
