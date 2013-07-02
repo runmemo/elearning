@@ -436,7 +436,7 @@ function course_views_default_views() {
 
   /* Display: Master */
   $handler = $view->new_display('default', 'Master', 'default');
-  $handler->display->display_options['title'] = 'I Teach';
+  $handler->display->display_options['title'] = 'I teach';
   $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['access']['type'] = 'perm';
   $handler->display->display_options['cache']['type'] = 'none';
@@ -450,7 +450,7 @@ function course_views_default_views() {
   $handler->display->display_options['header']['area']['id'] = 'area';
   $handler->display->display_options['header']['area']['table'] = 'views';
   $handler->display->display_options['header']['area']['field'] = 'area';
-  $handler->display->display_options['header']['area']['content'] = 'I Teach';
+  $handler->display->display_options['header']['area']['content'] = 'I teach';
   $handler->display->display_options['header']['area']['format'] = 'plain_text';
   /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
@@ -487,7 +487,7 @@ function course_views_default_views() {
   $handler = $view->new_display('block', 'Block', 'block');
   $translatables['user_teaches_courses'] = array(
     t('Master'),
-    t('I Teach'),
+    t('I teach'),
     t('more'),
     t('Apply'),
     t('Reset'),
