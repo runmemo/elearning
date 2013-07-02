@@ -8,6 +8,7 @@
  * Implements hook_delta_default_templates().
  */
 function newsletter_delta_default_templates() {
+  global $theme_key; 
   $export = array();
 
   $delta = new stdClass();
@@ -16,11 +17,11 @@ function newsletter_delta_default_templates() {
   $delta->machine_name = 'newsletter_node';
   $delta->name = 'Newsletter node';
   $delta->description = '';
-  $delta->theme = 'elearning';
+  $delta->theme = $theme_key;
   $delta->mode = 'preserve';
   $delta->parent = '';
   $delta->settings = array(
-    'theme_elearning_settings' => array(
+    'theme_' . $theme_key . '_settings' => array(
       'toggle_logo' => 1,
       'toggle_name' => 0,
       'toggle_slogan' => 1,
