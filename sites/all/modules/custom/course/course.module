@@ -809,3 +809,19 @@ function course_get_course_rating($course_nid) {
   }
   return $sum / count($result['node']);
 }
+
+/**
+ *  Implements hook_form_FORM_ID_alter.
+ *  Lock teacher field on course add page for teacher.
+ */
+function course_form_course_node_form_alter(&$form, &$form_state) {
+  global $user;
+  
+  // if current user is teacher, lock teacher field.
+  if (in_array('teacher', array_values($user->roles))) {
+    $langcode = field_language('node', $form_state['node'], 'field_teacher');
+    $form['field_teacher'][$langcode]['#default_value'] = $user->uid;
+    $form['field_teacher']['#disabled'] = TRUE;
+  }
+  
+}
