@@ -11,6 +11,7 @@
   display: block;
 }
 
+.view-user-teaches-courses,
 .view-user-courses {
   clear: both;
   width: 90%;
