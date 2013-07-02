@@ -38,7 +38,7 @@ stylesheets[all][] = css/scomputeromnati.css
 
 settings[toggle_logo] = '1'
 settings[toggle_name] = '0'
-settings[toggle_slogan] = '1'
+settings[toggle_slogan] = '0'
 settings[toggle_node_user_picture] = '1'
 settings[toggle_comment_user_picture] = '1'
 settings[toggle_comment_user_verification] = '1'

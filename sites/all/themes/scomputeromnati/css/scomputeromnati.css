@@ -9,6 +9,14 @@
   margin-left: -30px;
   top: 2px;
   z-index: 1;
-  box-shadow: 0px 0px 5px 3px #888;
-  max-height: 40px;
+  height: 40px;
+  width: 291px;
+  -moz-box-shadow: 0px 1px 8px 2px #582020;
+  -webkit-box-shadow: 0px 1px 8px 2px #582020;
+  box-shadow: 0px 1px 8px 2px #582020;
+}
+
+.node-course .node-course-header .social-share,
+.modal-content .login-form .login-form-fb-submit {
+  display: none;
 }
