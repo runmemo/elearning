@@ -322,3 +322,14 @@ function next_lesson($book = NULL) {
   return $book;
 }
 
+function theming_get_current_theme() {
+  $current_theme = 'elearning';
+  foreach (list_themes() as $theme_name => $theme_object) {
+    if ($theme_object->status == 1 && isset($theme_object->base_theme)) {
+      if ($theme_object->base_theme === $current_theme) {
+        $current_theme = $theme_name;
+      }
+    }
+  }
+  return $current_theme;
+}

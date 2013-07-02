@@ -8,8 +8,8 @@
  * Implements hook_delta_default_templates().
  */
 function front_page_delta_default_templates() {
-  global $theme_key; 
-  
+  $current_theme = theming_get_current_theme();; 
+
   $export = array();
   
   $delta = new stdClass();
@@ -18,11 +18,11 @@ function front_page_delta_default_templates() {
   $delta->machine_name = 'home_page';
   $delta->name = 'Home page';
   $delta->description = 'Delta for home page';
-  $delta->theme = $theme_key;
+  $delta->theme = $current_theme;
   $delta->mode = 'preserve';
   $delta->parent = '';
   $delta->settings = array(
-    'theme_' . $theme_key . '_settings' => array(
+    'theme_' . $current_theme . '_settings' => array(
       'alpha_layouts_alpha_default_narrow_responsive' => 0,
       'alpha_layouts_alpha_default_wide_responsive' => 0,
       'alpha_css' => array(

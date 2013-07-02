@@ -35,7 +35,7 @@ function front_page_context_default_contexts() {
       ),
     ),
     'delta' => array(
-      'delta_template' => 'home_page_elearning',
+      'delta_template' => 'home_page',
     ),
   );
   $context->condition_mode = 0;
