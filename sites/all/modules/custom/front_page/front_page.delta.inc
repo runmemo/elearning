@@ -13,9 +13,9 @@ function front_page_delta_default_templates() {
   $delta = new stdClass();
   $delta->disabled = FALSE; /* Edit this to true to make a default delta disabled initially */
   $delta->api_version = 3;
-  $delta->machine_name = 'home_page';
-  $delta->name = 'Home page';
-  $delta->description = 'Delta for home page';
+  $delta->machine_name = 'home_page_elearning';
+  $delta->name = 'Home page (elearning)';
+  $delta->description = 'Delta for home page (elearning)';
   $delta->theme = 'elearning';
   $delta->mode = 'preserve';
   $delta->parent = '';
@@ -39,7 +39,41 @@ function front_page_delta_default_templates() {
       ),
     ),
   );
-  $export['home_page'] = $delta;
+  $export['home_page_elearning'] = $delta;
+  
+  foreach (list_themes() as $theme_name => $theme_object) {
+    if (isset($theme_object->base_theme)) {
+      if ($theme_object->base_theme == 'elearning') {
+        $delta = new stdClass();
+        $delta->disabled = FALSE;
+        $delta->api_version = 3;
+        $delta->machine_name = 'home_page_' . $theme_name;
+        $delta->name = 'Home page (' . $theme_name . ')';
+        $delta->description = 'Delta for home page (' . $theme_name . ')';
+        $delta->theme = $theme_name;
+        $delta->mode = 'preserve';
+        $delta->parent = '';
+        $delta->settings = array(
+          'theme_' . $theme_name . '_settings' => array(
+            'alpha_layouts_alpha_default_narrow_responsive' => 0,
+            'alpha_layouts_alpha_default_wide_responsive' => 0,
+            'alpha_css' => array(
+              'alpha-reset.css' => 'alpha-reset.css',
+              'alpha-mobile.css' => 'alpha-mobile.css',
+              'alpha-alpha.css' => 'alpha-alpha.css',
+              'omega-text.css' => 0,
+              'omega-branding.css' => 'omega-branding.css',
+              'omega-menu.css' => 'omega-menu.css',
+              'omega-forms.css' => 0,
+              'omega-visuals.css' => 'omega-visuals.css',
+              'global.css.less' => 'global.css.less',
+            ),
+          ),
+        );
+        $export[$delta->machine_name] = $delta;
+      }
+    }
+  }
 
   return $export;
 }

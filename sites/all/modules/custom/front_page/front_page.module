@@ -15,3 +15,13 @@ function front_page_views_api() {
     'api' => '3.0',
     'path' => drupal_get_path('module', 'front_page') . '/views',);
 }
+
+function front_page_context_load_alter(&$context) {
+  if (isset($context->reactions['delta']['delta_template'])) {
+    global $theme;
+    $current_delta = 'home_page_' . $theme;
+    if ($context->reactions['delta']['delta_template'] != $current_delta) {
+      $context->reactions['delta']['delta_template'] = $current_delta;
+    }
+  }
+}
