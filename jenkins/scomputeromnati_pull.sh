@@ -1,4 +1,3 @@
-cd /var/www/html/coursehub
-su coursehub
+cd /var/www/html/scomputeromnati
 git pull
 drush updatedb -y
