@@ -137,10 +137,10 @@ h2 {
   clear: both;
   width: auto;
   .left();
-  @media @narrow { 
+  @media @narrow {
     .right();
-    clear:none;
-  } 
+    clear: none;
+  }
   .content {
     select {
       .main-menu-border();
@@ -238,6 +238,9 @@ h2 {
   }
 }
 
+.logged-in.responsive-layout-narrow .block-superfish .content ul.menu > li.sf-no-children.first {
+  .show(none);
+}
 
 .block-main-menu {
   .right();
