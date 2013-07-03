@@ -308,7 +308,7 @@ function registration_form_user_register_form_alter(&$form, &$form_state) {
     // Store course id in storage.
     $form_state['storage']['course'] = $_GET['course'];
   }
-  $form['#submit'][] = registration_user_register_submit;
+  $form['#submit'][] = 'registration_user_register_submit';
 }
 
 function registration_user_register_submit($form, &$form_state) {
