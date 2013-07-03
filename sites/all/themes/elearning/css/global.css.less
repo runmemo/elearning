@@ -134,13 +134,9 @@ h2 {
 }
 
 .block-superfish {
-  clear: both;
   width: auto;
-  .left();
-  @media @narrow {
-    .right();
-    clear: none;
-  }
+  .right();
+  clear: none;
   .content {
     select {
       .main-menu-border();
@@ -2227,6 +2223,29 @@ h2 {
   }
   .popup-pass {
     top: 251px;
+  }
+}
+
+.page-user-register .section-content .register-form {
+  width: 409px;
+  position: relative;
+  .show(inline-block);
+  .box-shadow();
+  padding: 10px;
+  .popup-mail {
+    top: 119px;
+  }
+  .popup-pass {
+    top: 199px;
+  }
+  .popup-arrow-left {
+    left: 96%;
+  }
+  .popup-mail-arrow {
+    top: 120px;
+  }
+  .popup-pass-arrow {
+    top: 200px;
   }
 }
 

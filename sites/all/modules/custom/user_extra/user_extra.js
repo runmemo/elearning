@@ -22,16 +22,16 @@
         });
         $('.absolute-messages-error').insertBefore('.ctools-modal-content .form-actions');
       }
-      function toggle_popup(element) {
-        $('.form-item-' + element + ' .description').fadeToggle();
-        $('.popup-' + element + '-arrow').fadeToggle();
+      function toggle_popup(element, name) {
+        $(element).parents('.form-wrapper').find('.form-item-' + name + ' .description').fadeToggle();
+        $(element).parents('.form-wrapper').find('.popup-' + name + '-arrow').fadeToggle();
       }
       // popup behaviour for register form
       $('.popup-mail').hover(function() {
-        toggle_popup('mail');
+        toggle_popup($(this), 'mail');
       });
       $('.popup-pass').hover(function() {
-        toggle_popup('pass');
+        toggle_popup($(this), 'pass');
       });
     }
   };
