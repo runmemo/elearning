@@ -8,6 +8,7 @@ dependencies[] = book
 dependencies[] = user_reference
 dependencies[] = entityreference
 dependencies[] = features
+dependencies[] = media_internet
 
 files[] = course.inc
 files[] = views/course.views_default.inc
