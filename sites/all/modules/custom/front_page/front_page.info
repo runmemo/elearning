@@ -13,6 +13,7 @@ features[ctools][] = context:context:3
 features[ctools][] = delta:delta:3
 features[ctools][] = strongarm:strongarm:1
 features[ctools][] = views:views_default:3.0
+features[delta][] = home_page
 features[features_api][] = api:1
 features[field_instance][] = node-front_page_slide-body
 features[field_instance][] = node-front_page_slide-field_image
