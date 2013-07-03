@@ -18,7 +18,7 @@ function course_delta_default_templates() {
   $delta->machine_name = 'course_pages';
   $delta->name = 'Course Pages';
   $delta->description = 'Delta for questions and blogs';
-  $delta->theme = $current_theme; ;
+  $delta->theme = $current_theme;
   $delta->mode = 'preserve';
   $delta->parent = '';
   $delta->settings = array(
@@ -26,6 +26,7 @@ function course_delta_default_templates() {
       'alpha_region_sidebar_second_zone' => NULL,
       'alpha_region_sidebar_second_equal_height_element' => FALSE,
       'alpha_region_content_columns' => '12',
+      'alpha_region_content_suffix' => '4',
     ),
   );
   $export['course_pages'] = $delta;
