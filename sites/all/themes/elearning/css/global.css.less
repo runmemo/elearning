@@ -134,13 +134,9 @@ h2 {
 }
 
 .block-superfish {
-  clear: both;
   width: auto;
-  .left();
-  @media @narrow { 
-    .right();
-    clear:none;
-  } 
+  .right();
+  clear: none;
   .content {
     select {
       .main-menu-border();
@@ -238,6 +234,9 @@ h2 {
   }
 }
 
+.logged-in.responsive-layout-narrow .block-superfish .content ul.menu > li.sf-no-children.first {
+  .show(none);
+}
 
 .block-main-menu {
   .right();
@@ -2015,8 +2014,7 @@ h2 {
     .form-text {
       height: 41px;
       .bold(14px);
-      .box-shadow();
-      border: 0;
+      border: solid 1px #e6e6e6;
       padding-left: 11px;
       width: 100%;
       color: #505050;
@@ -2183,6 +2181,9 @@ h2 {
       top: 44%;
     }
   }
+  .field-name-field-age-group {
+    margin-bottom: 22px;
+  }
   .register-form-license-text {
     .bold(12px);
     color: #505050;
@@ -2224,6 +2225,29 @@ h2 {
   }
   .popup-pass {
     top: 251px;
+  }
+}
+
+.page-user-register .section-content .register-form {
+  width: 409px;
+  position: relative;
+  .show(inline-block);
+  border: solid 1px #e6e6e6;
+  padding: 10px;
+  .popup-mail {
+    top: 119px;
+  }
+  .popup-pass {
+    top: 199px;
+  }
+  .popup-arrow-left {
+    left: 96%;
+  }
+  .popup-mail-arrow {
+    top: 120px;
+  }
+  .popup-pass-arrow {
+    top: 200px;
   }
 }
 
@@ -2291,7 +2315,7 @@ h2 {
   background: #fff;
   width: 349px;
   .show(inline-block);
-  .box-shadow();
+  border: solid 1px #e6e6e6;
   padding: 10px;
 }
 
