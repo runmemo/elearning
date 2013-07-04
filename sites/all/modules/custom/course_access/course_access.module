@@ -22,33 +22,6 @@ function course_access_form_course_node_form_alter(&$form, &$form_state) {
   
 }
 
-/**
- *  Implements of hook_node_access()
- */
-function course_access_node_access($node, $op, $account) {
-  if(empty($node->type)) {
-    return;
-  }
-  // We only care about the node if it's a part of course book. 
-  $course_bundles = array_merge(course_item_node_types(), array('course'));
-  if(!in_array($node->type, $course_bundles)) {
-    return;
-  }
-
-  $book = $node->book;
-  $course_node = node_load($book['bid']);
-  $course = entity_metadata_wrapper('node', $course_node);
-  $state = $course->book->field_state->raw();
-  if($state == COURSE_PUBLISHED) {
-    return NODE_ACCESS_IGNORE;
-  }
-  if($state == COURSE_SUBMITTED && (course_is_teacher($course, $account) || in_array('administrator', array_values($account->roles)))) {
-    return NODE_ACCESS_ALLOW;
-  }
-  else {
-    return NODE_ACCESS_DENY;
-  }
-}
 
 /**
  *  Implements of hook_permission()
@@ -122,14 +95,6 @@ function course_access_node_access_records($node) {
       'realm' => 'course_view_any',
       'gid' => COURSE_VIEW_ALL,
       'grant_view' => 1,
-      'grant_update' => 0,
-      'grant_delete' => 0,
-      'priority' => 0,
-    );
-    $grants[] = array(
-      'realm' => 'all',
-      'gid' => 0,
-      'grant_view' => 0,
       'grant_update' => 0,
       'grant_delete' => 0,
       'priority' => 0,
