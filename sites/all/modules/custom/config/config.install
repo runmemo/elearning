@@ -50,4 +50,8 @@ function config_install() {
     ->condition('name', 'config')
     ->condition('type', 'module')
     ->execute();
+  // Enable admin theme.
+  theme_enable(array('seven'));
+  variable_set('admin_theme', 'seven');
+  variable_set('node_admin_theme', 1);
 }

@@ -1,0 +1,381 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the coursehub installation profile.
+ */
+
+/**
+ * Implements hook_install_tasks().
+ */
+function coursehub_install_tasks() {
+  $tasks = array();
+  
+  // Clear messages, because we don't need them during installation.
+  drupal_get_messages();
+  
+  $tasks['coursehub_enable_theme_form'] = array(
+    'display_name' => st('Choosing theme'),
+    'type' => 'form',
+    'display' => TRUE,
+  );
+
+  $tasks['coursehub_install_custom_modules'] = array(
+    'display_name' => st('Installing coursehub functionality'),
+    'type' => 'batch',
+    'display' => TRUE,
+  );
+
+  return $tasks;
+}
+
+/**
+ * Form for choosing theme to enable.
+ * 
+ * @return array
+ *   Standard form API definition.
+ */
+function coursehub_enable_theme_form() {
+  $form = array();
+  $options = array('elearning' => st('Base courshub theme'));
+  foreach (list_themes() as $theme_name => $theme_object) {
+    if (isset($theme_object->base_theme)) {
+      if ($theme_object->base_theme === 'elearning') {
+        $options[$theme_name] = st('Subtheme') . ' - ' . $theme_name . '.';
+      }
+    }
+  }
+  $form['theme_name'] = array(
+    '#type' => 'radios',
+    '#title' => st('Theme'),
+    '#default_value' => 'elearning',
+    '#options' => $options,
+    '#description' => st('Please, choose theme to enable.'),
+    '#access' => TRUE,
+  );
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => st('Save and continue'),
+  );
+  
+  return $form;
+}
+
+/**
+ * Implements hook_FORM_ID_submit for coursehub_enable_theme_form().
+ */
+function coursehub_enable_theme_form_submit(&$form, &$form_state) {
+  theme_enable(array($form_state['values']['theme_name']));
+  variable_set('theme_default', $form_state['values']['theme_name']);
+}
+
+/**
+ * Enables custom modules.
+ * 
+ * @return array
+ *   Batch API definition suitable for batch_set().
+ */
+function coursehub_install_custom_modules() {
+  $modules = array(
+    'aup',
+    'course',
+    'common_tools',
+    'config',
+    'abuse_content',
+    'answers_extra',
+    'best_answer_extra',
+    'certificate_extra',
+    'course_outline',
+    'credit',
+    'lesson',
+    'course_points',
+    'front_page',
+    'inline_comments_extra',
+    'newsfeed',
+    'newsletter',
+    'open_question',
+    'quiz_extra',
+    'registration',
+    'relevant_answers_extra',
+    'user_extra',
+  );
+
+  // Resolve the dependencies now, so that module_enable() doesn't need
+  // to do it later for each individual module (which kills performance).
+  $files = system_rebuild_module_data();
+  $modules_sorted = array();
+  foreach ($modules as $module) {
+    if ($files[$module]->requires) {
+      // Create a list of dependencies that haven't been installed yet.
+      $dependencies = array_keys($files[$module]->requires);
+      $dependencies = array_filter($dependencies, '_coursehub_filter_dependencies');
+      // Add them to the module list.
+      $modules = array_merge($modules, $dependencies);
+    }
+  }
+  $modules = array_unique($modules);
+  foreach ($modules as $module) {
+    $modules_sorted[$module] = $files[$module]->sort;
+  }
+  arsort($modules_sorted);
+
+  $operations = array();
+
+  // Enable necessary modules.
+  foreach ($modules_sorted as $module => $weight) {
+    $operations[] = array('_coursehub_enable_module', array($module, $files[$module]->info['name']));
+  }
+  $operations[] = array('_coursehub_flush_cache', array(st('Flushed caches.')));
+
+  $batch = array(
+    'title' => st('Installing coursehub functionality'),
+    'operations' => $operations,
+    'file' => drupal_get_path('profile', 'coursehub') . '/coursehub.inc',
+  );
+
+  return $batch;
+}
+
+/**
+ * array_filter() callback used to filter out already installed dependencies.
+ */
+function _coursehub_filter_dependencies($dependency) {
+  return !module_exists($dependency);
+}
+
+/**
+ * Implements hook_install().
+ *
+ * Perform actions to set up the site for this profile.
+ *
+ * @see system_install()
+ */
+function standard_install() {
+  // Add text formats.
+  $filtered_html_format = array(
+    'format' => 'filtered_html',
+    'name' => 'Filtered HTML',
+    'weight' => 0,
+    'filters' => array(
+      // URL filter.
+      'filter_url' => array(
+        'weight' => 0,
+        'status' => 1,
+      ),
+      // HTML filter.
+      'filter_html' => array(
+        'weight' => 1,
+        'status' => 1,
+      ),
+      // Line break filter.
+      'filter_autop' => array(
+        'weight' => 2,
+        'status' => 1,
+      ),
+      // HTML corrector filter.
+      'filter_htmlcorrector' => array(
+        'weight' => 10,
+        'status' => 1,
+      ),
+    ),
+  );
+  $filtered_html_format = (object) $filtered_html_format;
+  filter_format_save($filtered_html_format);
+
+  $full_html_format = array(
+    'format' => 'full_html',
+    'name' => 'Full HTML',
+    'weight' => 1,
+    'filters' => array(
+      // URL filter.
+      'filter_url' => array(
+        'weight' => 0,
+        'status' => 1,
+      ),
+      // Line break filter.
+      'filter_autop' => array(
+        'weight' => 1,
+        'status' => 1,
+      ),
+      // HTML corrector filter.
+      'filter_htmlcorrector' => array(
+        'weight' => 10,
+        'status' => 1,
+      ),
+    ),
+  );
+  $full_html_format = (object) $full_html_format;
+  filter_format_save($full_html_format);
+
+
+  // Enable some standard blocks.
+  $default_theme = variable_get('theme_default', 'elearning');
+  $admin_theme = 'seven';
+  $blocks = array(
+    array(
+      'module' => 'system',
+      'delta' => 'main',
+      'theme' => $default_theme,
+      'status' => 1,
+      'weight' => -25,
+      'region' => 'content',
+      'pages' => '',
+      'cache' => -1,
+    ),
+    array(
+      'module' => 'search',
+      'delta' => 'form',
+      'theme' => $default_theme,
+      'status' => 0,
+      'weight' => -1,
+      'region' => 'sidebar_first',
+      'pages' => '',
+      'cache' => -1,
+    ),
+    array(
+      'module' => 'node',
+      'delta' => 'recent',
+      'theme' => $admin_theme,
+      'status' => 1,
+      'weight' => 10,
+      'region' => 'dashboard_main',
+      'pages' => '',
+      'cache' => -1,
+    ),
+    array(
+      'module' => 'user',
+      'delta' => 'login',
+      'theme' => $default_theme,
+      'status' => 0,
+      'weight' => 0,
+      'region' => 'sidebar_first',
+      'pages' => '',
+      'cache' => -1,
+    ),
+    array(
+      'module' => 'system',
+      'delta' => 'navigation',
+      'theme' => $default_theme,
+      'status' => 0,
+      'weight' => 0,
+      'region' => 'sidebar_first',
+      'pages' => '',
+      'cache' => -1,
+    ),
+    array(
+      'module' => 'system',
+      'delta' => 'powered-by',
+      'theme' => $default_theme,
+      'status' => 0,
+      'weight' => 10,
+      'region' => 'footer',
+      'pages' => '',
+      'cache' => -1,
+    ),
+    array(
+      'module' => 'system',
+      'delta' => 'help',
+      'theme' => $default_theme,
+      'status' => 0,
+      'weight' => 0,
+      'region' => 'help',
+      'pages' => '',
+      'cache' => -1,
+    ),
+    array(
+      'module' => 'system',
+      'delta' => 'main',
+      'theme' => $admin_theme,
+      'status' => 1,
+      'weight' => 0,
+      'region' => 'content',
+      'pages' => '',
+      'cache' => -1,
+    ),
+    array(
+      'module' => 'system',
+      'delta' => 'help',
+      'theme' => $admin_theme,
+      'status' => 1,
+      'weight' => 0,
+      'region' => 'help',
+      'pages' => '',
+      'cache' => -1,
+    ),
+    array(
+      'module' => 'user',
+      'delta' => 'login',
+      'theme' => $admin_theme,
+      'status' => 1,
+      'weight' => 10,
+      'region' => 'content',
+      'pages' => '',
+      'cache' => -1,
+    ),
+    array(
+      'module' => 'user',
+      'delta' => 'new',
+      'theme' => $admin_theme,
+      'status' => 1,
+      'weight' => 0,
+      'region' => 'dashboard_sidebar',
+      'pages' => '',
+      'cache' => -1,
+    ),
+    array(
+      'module' => 'search',
+      'delta' => 'form',
+      'theme' => $admin_theme,
+      'status' => 1,
+      'weight' => -10,
+      'region' => 'dashboard_sidebar',
+      'pages' => '',
+      'cache' => -1,
+    ),
+  );
+  $query = db_insert('block')->fields(array('module', 'delta', 'theme', 'status', 'weight', 'region', 'pages', 'cache'));
+  foreach ($blocks as $block) {
+    $query->values($block);
+  }
+  $query->execute();
+
+  // Enable user picture support and set the default to a square thumbnail option.
+  variable_set('user_pictures', '1');
+  variable_set('user_picture_dimensions', '1024x1024');
+  variable_set('user_picture_file_size', '800');
+  variable_set('user_picture_style', 'thumbnail');
+
+  // Allow visitor account creation with administrative approval.
+  variable_set('user_register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL);
+
+  // Enable default permissions for system roles.
+  $filtered_html_permission = filter_permission_name($filtered_html_format);
+  user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access content', 'access comments', $filtered_html_permission));
+  user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array('access content', 'access comments', 'post comments', 'skip comment approval', $filtered_html_permission));
+
+  // Create a default role for site administrators, with all available permissions assigned.
+  $admin_role = new stdClass();
+  $admin_role->name = 'administrator';
+  $admin_role->weight = 2;
+  user_role_save($admin_role);
+  user_role_grant_permissions($admin_role->rid, array_keys(module_invoke_all('permission')));
+  // Set this as the administrator role.
+  variable_set('user_admin_role', $admin_role->rid);
+
+  // Assign user 1 the "administrator" role.
+  db_insert('users_roles')
+    ->fields(array('uid' => 1, 'rid' => $admin_role->rid))
+    ->execute();
+
+  // Create a Home link in the main menu.
+  $item = array(
+    'link_title' => st('Home'),
+    'link_path' => '<front>',
+    'menu_name' => 'main-menu',
+  );
+  menu_link_save($item);
+
+  // Update the menu router information.
+  menu_rebuild();
+
+}

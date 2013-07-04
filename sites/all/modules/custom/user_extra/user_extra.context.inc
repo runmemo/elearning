@@ -33,7 +33,7 @@ function user_extra_context_default_contexts() {
           'module' => 'quicktabs',
           'delta' => 'user_profile_tab',
           'region' => 'content',
-          'weight' => '-10',
+          'weight' => '10',
         ),
       ),
     ),

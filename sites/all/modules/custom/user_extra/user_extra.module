@@ -149,10 +149,12 @@ function user_extra_form_alter(&$form, &$form_state, $form_id) {
     if ($key !== FALSE) {
       unset($form['#validate'][$key]);
     }
-    $form['picture']['#access'] = FALSE;
-    $form['timezone']['#access'] = FALSE;
-    $form['timezone']['#access'] = FALSE;
-    $form['locale']['#access'] = FALSE;
+    if ($user->uid > 1) {
+      $form['picture']['#access'] = FALSE;
+      $form['timezone']['#access'] = FALSE;
+      $form['timezone']['#access'] = FALSE;
+      $form['locale']['#access'] = FALSE;
+    }
     // check if we are not on password recovery page.
     if(empty($_SESSION['pass_reset_'.$user->uid])) {
       $form['account']['current_pass']['#access'] = FALSE;
