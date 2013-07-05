@@ -150,7 +150,7 @@ function _coursehub_filter_dependencies($dependency) {
  *
  * @see system_install()
  */
-function standard_install() {
+function coursehub_install() {
   // Add text formats.
   $filtered_html_format = array(
     'format' => 'filtered_html',
@@ -339,15 +339,6 @@ function standard_install() {
   }
   $query->execute();
 
-  // Enable user picture support and set the default to a square thumbnail option.
-  variable_set('user_pictures', '1');
-  variable_set('user_picture_dimensions', '1024x1024');
-  variable_set('user_picture_file_size', '800');
-  variable_set('user_picture_style', 'thumbnail');
-
-  // Allow visitor account creation with administrative approval.
-  variable_set('user_register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL);
-
   // Enable default permissions for system roles.
   $filtered_html_permission = filter_permission_name($filtered_html_format);
   user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access content', 'access comments', $filtered_html_permission));
@@ -378,4 +369,12 @@ function standard_install() {
   // Update the menu router information.
   menu_rebuild();
 
+  // Enable the admin theme.
+  db_update('system')
+    ->fields(array('status' => 1))
+    ->condition('type', 'theme')
+    ->condition('name', 'seven')
+    ->execute();
+  variable_set('admin_theme', 'seven');
+  variable_set('node_admin_theme', '1');
 }
