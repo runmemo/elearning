@@ -62,26 +62,24 @@ function course_access_node_grants($account, $op) {
  *  Implements of hook_node_access_records()
  */
 function course_access_node_access_records($node) {
-  
-  if($node->type == 'course') {
-    // If $node is course then entity_metadata_wrapper gives old value, we need
-    // current value for field_stage.
-    $stage = $node->field_stage[LANGUAGE_NONE][0]['value'];
-  }
-  else {
-    // We only care about the node if it's a part of course book. 
-    if (!isset($node->book)) {
+  // We only care about the node if it's a part of a book. 
+  if (!isset($node->book) || !isset($node->book['bid'])) {
+    if ($node->type === 'course') {
+      $stages = field_get_items('node', $node, 'field_stage');
+      if (!$stages) {
+        return;
+      } 
+      $stage = $stages[0]['value'];
+    }
+    else {
       return;
     }
-    $book = $node->book;
-    if (!isset($book['bid'])) {
-      return;  
-    }
-
-    $course = entity_metadata_wrapper('node', $book['bid']);
-    $stage = $course->book->field_stage->raw();
   }
-
+  else {
+    // Get the stage of the course in publishing
+    $course_item = entity_metadata_wrapper('node', $node);
+    $stage = $course_item->book->field_stage->value();
+  }
   $grants = array();
   if($stage == COURSE_PUBLISHED) {
     // If course published, allow all.

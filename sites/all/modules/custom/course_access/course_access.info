@@ -1,5 +1,5 @@
 name = Course Access
-description = Course Access rules
+description = Defines course publishing process.
 core = 7.x
 package = Course
 version = 7.x-1.0
