@@ -87,9 +87,10 @@ class CourseAccessTestCase extends CourseAccessTest {
     $this->user2 = $this->drupalCreateUser(array_merge(array('view own unpublished course'), $permissions));
     $this->user3 = $this->drupalCreateUser($permissions);
     
-    $this->course1 = $this->createCourseAccessNode($this->user1->uid, 1);   
-    $this->course2 = $this->createCourseAccessNode($this->user2->uid, 1);   
-    $this->course3 = $this->createCourseAccessNode($this->user3->uid, 1);
+    module_load_include('module', 'course_access');
+    $this->course1 = $this->createCourseAccessNode($this->user1->uid, COURSE_SUBMITTED);   
+    $this->course2 = $this->createCourseAccessNode($this->user2->uid, COURSE_SUBMITTED);   
+    $this->course3 = $this->createCourseAccessNode($this->user3->uid, COURSE_SUBMITTED);
   }
 
   function testCourseAccess() {
