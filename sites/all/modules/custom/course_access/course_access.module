@@ -103,18 +103,17 @@ function course_access_node_access_records($node) {
       'grant_delete' => 0,
       'priority' => 0,
     );
+    // For the course_view_own realm, the grant ID (gid) is
+    // equivalent to the node author's user ID (UID).
+    $grants[] = array(
+      'realm' => 'course_view_own',
+      'gid' => $node->uid,
+      'grant_view' => 1,
+      'grant_update' => 1,
+      'grant_delete' => 0,
+      'priority' => 0,
+    );
   }
-
-  // For the course_author realm, the grant ID (gid) is
-  // equivalent to the node author's user ID (UID).
-  $grants[] = array(
-    'realm' => 'course_view_own',
-    'gid' => $node->uid,
-    'grant_view' => 1,
-    'grant_update' => 1,
-    'grant_delete' => 0,
-    'priority' => 0,
-  );
 
   return $grants; 
 }
