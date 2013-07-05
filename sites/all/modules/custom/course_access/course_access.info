@@ -8,3 +8,6 @@ dependencies[] = book
 dependencies[] = course
 
 files[] = tests/course_access.test
+
+features[field_base][] = field_stage
+features[field_instance][] = node-course-field_stage
