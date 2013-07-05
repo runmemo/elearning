@@ -1,0 +1,153 @@
+<?php
+
+/**
+ * @file
+ * Tests for Course workflow module.
+ */
+
+
+  /**
+   * Test course access based on stage field.
+   */
+
+class CourseWorkflowTest extends CourseTestCase {
+
+  /**
+   * Enable modules and create user with specific permissions.
+   */
+  public function setUp() {
+    parent::setUp('course_workflow');
+    node_access_rebuild();
+  }
+  
+  function populateCourseWorkflowNode($course = NULL) {
+    // Creating a course with the following structure:
+    $outline = array(
+      'unit1' => array(// 0 
+        'lesson1' => 'page', // 1
+      ),
+    );
+    return $this->populateCourse($course, $outline);
+  }  
+
+}
+
+/**
+ *  Tests navigation related features of the course
+ */
+class CourseWorkflowTestCase extends CourseWorkflowTest {
+  public static function getInfo() {
+    return array(
+      'name' => 'Course workflow test',
+      'description' => 'Checks behavior of Course Access.',
+      'group' => 'Course',
+    );
+  }
+
+  function setUp() {
+    parent::setUp();
+
+    $permissions = array(
+      'create new books',
+      'create book content',
+      'edit own book content',
+      'add content to books'
+    );
+
+    // Create 3 users with permissions to create course as books.
+    // User 1 has additional permission : "view any unpublished course".
+    $this->user1 = $this->drupalCreateUser(array_merge(array('view any unpublished course'), $permissions));
+    // User 2 has additional permission : "view own unpublished course".
+    $this->user2 = $this->drupalCreateUser(array_merge(array('view own unpublished course'), $permissions));
+    // User 3 dont have any additional permission.
+    $this->user3 = $this->drupalCreateUser($permissions);
+    
+    module_load_include('module', 'course_workflow');
+    $this->course1 = $this->createCourseNode($this->user1->uid);   
+    $this->course2 = $this->createCourseNode($this->user2->uid);   
+    $this->course3 = $this->createCourseNode($this->user3->uid);
+  }
+
+  function testCourseAccess() {
+    // Test that user1 can view own course.
+    $user1 = $this->drupalLogin($this->user1);
+    $this->drupalGet('node/' . $this->course1->nid);
+    $this->assertResponse(200);
+    // Test that user1 can view the other user's course.
+    $this->drupalGet('node/' . $this->course2->nid);
+    $this->assertResponse(200);
+    $this->drupalGet('node/' . $this->course3->nid);
+    $this->assertResponse(200);
+    
+    $user2 = $this->drupalLogin($this->user2);
+    // Test that user2 cannot view the other user's course.
+    $this->drupalGet('node/' . $this->course1->nid);
+    $this->assertResponse(403);
+    // Test that user2 can view his own course.
+    $this->drupalGet('node/' . $this->course2->nid);
+    $this->assertResponse(200);
+    $this->drupalGet('node/' . $this->course3->nid);
+    $this->assertResponse(403);
+
+    $user3 = $this->drupalLogin($this->user3);
+     // Test that user3 cannot view any course.
+    $this->drupalGet('node/' . $this->course1->nid);
+    $this->assertResponse(403);
+    $this->drupalGet('node/' . $this->course2->nid);
+    $this->assertResponse(403);
+     // Test that user3 cannot view own course.
+    $this->drupalGet('node/' . $this->course3->nid);
+    $this->assertResponse(403);
+
+    // Populate course to test access to course items.
+    $course_items1 = $this->populateCourseWorkflowNode($this->course1); 
+    $course_items2 = $this->populateCourseWorkflowNode($this->course2);
+    $course_items3 = $this->populateCourseWorkflowNode($this->course3);
+    
+    foreach($course_items1 as $course_item) {
+      $user1 = $this->drupalLogin($this->user1);
+      $this->drupalGet('node/' . $course_item->nid);
+      $this->assertResponse(200);
+
+      $user2 = $this->drupalLogin($this->user2);
+      $this->drupalGet('node/' . $course_item->nid);
+      $this->assertResponse(403);
+
+      $user3 = $this->drupalLogin($this->user3);
+      $this->drupalGet('node/' . $course_item->nid);
+      $this->assertResponse(403);
+    }
+
+    foreach($course_items2 as $course_item) {
+      $user1 = $this->drupalLogin($this->user1);
+      $this->drupalGet('node/' . $course_item->nid);
+      $this->assertResponse(200);
+
+      $user2 = $this->drupalLogin($this->user2);
+      $this->drupalGet('node/' . $course_item->nid);
+      $this->assertResponse(403); 
+
+      $user3 = $this->drupalLogin($this->user3);
+      $this->drupalGet('node/' . $course_item->nid);
+      $this->assertResponse(403);
+    }
+
+    foreach($course_items3 as $course_item) {
+      // Test that user3 cannot view any course items.
+      $user1 = $this->drupalLogin($this->user1);
+      $this->drupalGet('node/' . $course_item->nid);
+      $this->assertResponse(200);
+
+      $user2 = $this->drupalLogin($this->user2);
+      $this->drupalGet('node/' . $course_item->nid);
+      $this->assertResponse(403);
+
+      // Test that user3 cannot view own course items.
+      $user3 = $this->drupalLogin($this->user3);
+      $this->drupalGet('node/' . $course_item->nid);
+      $this->assertResponse(403);
+    }
+
+  }
+
+}

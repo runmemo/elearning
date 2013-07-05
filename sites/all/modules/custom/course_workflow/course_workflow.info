@@ -1,0 +1,13 @@
+name = Course Workflow
+description = Defines course publishing process.
+core = 7.x
+package = Course
+version = 7.x-1.0
+
+dependencies[] = book
+dependencies[] = course
+
+files[] = course_workflow.test
+
+features[field_base][] = field_stage
+features[field_instance][] = node-course-field_stage
