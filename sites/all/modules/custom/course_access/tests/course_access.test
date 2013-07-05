@@ -13,7 +13,7 @@
    * 2- User 1 has additional permission : "view any unpublished course"
    * 3- User 2 has additional permission : "view own unpublished course"
    * 4- User 3 dont have any additional permission.
-   * 5- Each user creates one course in submitted state.
+   * 5- Each user creates one course in submitted stage.
    * 6- Test that user1 can view the other user's course.
    * 7- Test that user2 cannot view the other user's course.
    * 8- Test that user2 can view his own course.
@@ -22,7 +22,7 @@
    *     lessons
    */
 
-class CourseAccessTest extends DrupalWebTestCase {
+class CourseAccessTest extends CourseTestCase {
 
   /**
    * Enable modules and create user with specific permissions.
@@ -31,23 +31,11 @@ class CourseAccessTest extends DrupalWebTestCase {
     parent::setUp('course_access');
     node_access_rebuild();
   }
-
-  /**
-   * Attaches node to the parent node in the book
-   * @param object $node 
-   * @param object $parent parent node in the book
-   */
-  function book_append_child($node, $parent, $weight = 0) {
-    $node->book['bid'] = $parent->book['bid'];
-    $node->book['plid'] = $parent->book['mlid'];
-    $node->book['weight'] = $weight;
-    node_save($node);
-  }
   
   /**
    * creates course node
    */
-  function createCourseNode($uid, $state) {
+  function createCourseAccessNode($uid, $stage) {
     $settings = array(
       'type' => 'course',
       'uid' => $uid,
@@ -56,44 +44,20 @@ class CourseAccessTest extends DrupalWebTestCase {
     $course =  $this->drupalCreateNode($settings);
     $course->book['bid'] = $course->nid;
     $course->field_teacher[LANGUAGE_NONE][0]['uid'] = $uid;
-    $course->field_state[LANGUAGE_NONE][0]['value'] = $state;
+    $course->field_stage[LANGUAGE_NONE][0]['value'] = $stage;
     node_save($course);
     return $course;
   }
-  
-  /**
-   * Appends items to the course
-   * @param array $node_types
-   * @return array of nodes
-   */
-  function populateCourse($course, $node_types) {
-    $nodes = array();
-    $unit_settings = array(
-      'type' => 'unit',
-       'uid' => $this->course_author->uid,
+
+  function populateCourseAccessNode($course = NULL) {
+    // Creating a course with the following structure:
+    $outline = array(
+      'unit1' => array(// 0 
+        'lesson1' => 'page', // 1
+      ),
     );
-
-    $i = 0;
-    foreach ($node_types as $unit_key => $unit) {
-      $u = $i;
-      $nodes[$i] = $this->drupalCreateNode($unit_settings);
-      $this->book_append_child($nodes[$i], $course, $u);
-       // unit key in the array
-      $i++;
-
-      foreach ($unit as $key => $item) {
-        $item_settings = array(
-          'type' => $item,
-          'uid' => $this->course_author->uid,
-        );
-        $nodes[$i] = $this->drupalCreateNode($item_settings);
-        $this->book_append_child($nodes[$i], $nodes[$u], $i);
-        $i++;
-      }
-    }
-    $this->drupalLogout();
-    return $nodes;
-  }
+    return $this->populateCourse($course, $outline);
+  }  
 
 }
 
@@ -123,9 +87,9 @@ class CourseAccessTestCase extends CourseAccessTest {
     $this->user2 = $this->drupalCreateUser(array_merge(array('view own unpublished course'), $permissions));
     $this->user3 = $this->drupalCreateUser($permissions);
     
-    $this->course1 = $this->createCourseNode($this->user1->uid, 1);   
-    $this->course2 = $this->createCourseNode($this->user2->uid, 1);   
-    $this->course3 = $this->createCourseNode($this->user3->uid, 1);
+    $this->course1 = $this->createCourseAccessNode($this->user1->uid, 1);   
+    $this->course2 = $this->createCourseAccessNode($this->user2->uid, 1);   
+    $this->course3 = $this->createCourseAccessNode($this->user3->uid, 1);
   }
 
   function testCourseAccess() {
@@ -152,5 +116,54 @@ class CourseAccessTestCase extends CourseAccessTest {
     $this->assertResponse(403);
     $this->drupalGet('node/' . $this->course3->nid);
     $this->assertResponse(403);
+
+    // populate course.
+    $course_items1 = $this->populateCourseAccessNode($this->course1); 
+    $course_items2 = $this->populateCourseAccessNode($this->course2);
+    $course_items3 = $this->populateCourseAccessNode($this->course3);
+
+    foreach($course_items1 as $course_item) {
+      $user1 = $this->drupalLogin($this->user1);
+      $this->drupalGet('node/' . $course_item->nid);
+      $this->assertResponse(200);
+
+      $user2 = $this->drupalLogin($this->user2);
+      $this->drupalGet('node/' . $course_item->nid);
+      $this->assertResponse(403);
+
+      $user3 = $this->drupalLogin($this->user3);
+      $this->drupalGet('node/' . $course_item->nid);
+      $this->assertResponse(403);
+    }
+
+    foreach($course_items2 as $course_item) {
+      $user1 = $this->drupalLogin($this->user1);
+      $this->drupalGet('node/' . $course_item->nid);
+      $this->assertResponse(200);
+
+      $user2 = $this->drupalLogin($this->user2);
+      $this->drupalGet('node/' . $course_item->nid);
+      $this->assertResponse(403); 
+
+      $user3 = $this->drupalLogin($this->user3);
+      $this->drupalGet('node/' . $course_item->nid);
+      $this->assertResponse(403);
+    }
+
+    foreach($course_items3 as $course_item) {
+      $user1 = $this->drupalLogin($this->user1);
+      $this->drupalGet('node/' . $course_item->nid);
+      $this->assertResponse(200);
+
+      $user2 = $this->drupalLogin($this->user2);
+      $this->drupalGet('node/' . $course_item->nid);
+      $this->assertResponse(403);
+
+      $user3 = $this->drupalLogin($this->user3);
+      $this->drupalGet('node/' . $course_item->nid);
+      $this->assertResponse(403);
+    }
+
   }
+
 }
