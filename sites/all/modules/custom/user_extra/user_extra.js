@@ -50,7 +50,7 @@
         });
         return result;
       }
-      var names = ['page', 'sort', 'order'];
+      var names = ['page', 'sort', 'order', 'history'];
       if (urlparam(names)) {
         window.location = $('a[href="#qt-user_profile_tab-ui-tabs3"]', context).attr('href');
       }

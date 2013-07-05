@@ -1,8 +1,21 @@
 <?php
 
 /**
- * Removes field_name from user profile.
+ * @file
+ * User Extra module (un)installation functions.
  */
-function user_extra_update_7000() {
-  field_delete_field('field_name');
+
+require_once drupal_get_path('module', 'user_extra') . '/user_extra.taxonomy.inc';
+
+/**
+ * Implements hook_install().
+ */
+function user_extra_install() {
+  foreach (_user_extra_taxonomy_default_vocabularies() as $vocabulary) {
+    $vocabulary = (object) $vocabulary;
+    $existing = taxonomy_vocabulary_machine_name_load($vocabulary->name);
+    if (!$existing) {
+      taxonomy_vocabulary_save($vocabulary);
+    }
+  }
 }

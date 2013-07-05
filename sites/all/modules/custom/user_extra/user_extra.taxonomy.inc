@@ -8,7 +8,7 @@
 /**
  * Provides default taxonomy vocabularies.
  */
-function user_extra_taxonomy_default_vocabularies() {
+function _user_extra_taxonomy_default_vocabularies() {
   return array(
     'age_group' => array(
       'name' => 'Age groups',

@@ -254,7 +254,7 @@ function course_views_default_views() {
   $handler->display->display_options['empty']['area_text_custom']['table'] = 'views';
   $handler->display->display_options['empty']['area_text_custom']['field'] = 'area_text_custom';
   $handler->display->display_options['empty']['area_text_custom']['empty'] = TRUE;
-  $handler->display->display_options['empty']['area_text_custom']['content'] = 'There is no result for the searched item,';
+  $handler->display->display_options['empty']['area_text_custom']['content'] = 'There is no result for the searched item.';
   /* Relationship: Content: Teacher (field_teacher) */
   $handler->display->display_options['relationships']['field_teacher_uid']['id'] = 'field_teacher_uid';
   $handler->display->display_options['relationships']['field_teacher_uid']['table'] = 'field_data_field_teacher';

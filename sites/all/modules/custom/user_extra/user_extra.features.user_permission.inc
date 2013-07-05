@@ -38,6 +38,7 @@ function user_extra_user_default_permissions() {
     'roles' => array(
       'anonymous user' => 'anonymous user',
       'authenticated user' => 'authenticated user',
+      'not validated user' => 'not validated user',
     ),
     'module' => 'absolute_messages',
   );
