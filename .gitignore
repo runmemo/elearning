@@ -37,6 +37,9 @@ xmlrpc.php
 /includes
 /misc
 /modules
+/profiles/standard
+/profiles/minimal
+/profiles/testing
 /scripts
 /themes
 /sites/all/modules/coder/
