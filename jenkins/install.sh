@@ -1,9 +1,6 @@
 #!/bin/bash
 # Script for installing e-learning web-site
 
-BTICK='`'
-EXPECTED_ARGS=5
-
 # Parameters
 # $1 - folder, in witch site's folder should be located
 # $2 - folder, in witch site should be located
@@ -11,6 +8,13 @@ EXPECTED_ARGS=5
 # $4 - DB user
 # $5 - DB user password
 
+BTICK='`'
+EXPECTED_ARGS=5
+PARENT_FOLDER=$1;
+SUBFOLDER=$2;
+DB_NAME=$3;
+DB_USER=$4;
+DB_PASS=$5;
 
 #check parameters
 if [ $# -ne $EXPECTED_ARGS ]
@@ -27,15 +31,15 @@ exit
 fi
 
 MYSQL=`which mysql`
-Q1="CREATE DATABASE IF NOT EXISTS ${BTICK}$3${BTICK};"
-Q2="GRANT ALL ON ${BTICK}$3${BTICK}.* TO '$4'@'localhost' IDENTIFIED BY '$5';"
+Q1="CREATE DATABASE IF NOT EXISTS ${BTICK}DB_NAME${BTICK};"
+Q2="GRANT ALL ON ${BTICK}DB_NAME${BTICK}.* TO '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';"
 Q3="FLUSH PRIVILEGES;"
 SQL="${Q1}${Q2}${Q3}"
 $MYSQL -uroot -p -e "$SQL"
 echo "Database and user have been created"
 
 #create folder
-mkdir -p $1/$2
+mkdir -p $PARENT_FOLDER/$SUBFOLDER
 echo "Folder has been created or already exist"
 
 #check if drush is installed
@@ -49,20 +53,12 @@ echo "drush is already installed"
 drush --version
 fi
 echo "downloading drupal..."
-drush dl drupal --destination=/$1 --drupal-project-rename=$2
-#clone repo to /repo folder and then just move files to main folder
-git clone https://github.com/runmemo/elearning.git $1/$2/repo
-cp -R $1/$2/repo/profiles/coursehub $1/$2/profiles
-cp -R $1/$2/repo/sites $1/$2
-cp -R $1/$2/repo/patches $1/$2
-cp -R $1/$2/repo/jenkins $1/$2
-cp -R $1/$2/repo/README.md $1/$2
-cp -R $1/$2/repo/.gitignore $1/$2
-mv $1/$2/repo/.git $1/$2
-rm -R $1/$2/repo
-cd $1/$2
-# git thinks, that files are deleted, so need to reset
+drush dl drupal --destination=/$PARENT_FOLDER --drupal-project-rename=$SUBFOLDER
+git clone https://github.com/runmemo/elearning.git $PARENT_FOLDER/$SUBFOLDER/repo
+cp -r $PARENT_FOLDER/$SUBFOLDER/repo/* $PARENT_FOLDER/$SUBFOLDER
+mv $PARENT_FOLDER/$SUBFOLDER/repo/.git $PARENT_FOLDER/$SUBFOLDER
+rm -R $PARENT_FOLDER/$SUBFOLDER/repo
+cd $PARENT_FOLDER/$SUBFOLDER
 git reset --hard HEAD
-cd $1/$2
-drush si coursehub --account-name=admin --account-pass=admin --db-url=mysql://$4:$5@localhost/$3
+drush si coursehub --account-name=admin --account-pass=admin --db-url=mysql://$DB_USER:$DB_PASS@localhost/$DB_NAME
 exit

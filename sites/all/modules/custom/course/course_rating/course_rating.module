@@ -1,0 +1,210 @@
+<?php
+/**
+ * @file
+ * Code for the Course Rating feature.
+ */
+
+include_once 'course_rating.features.inc';
+
+/**
+ *  Implements hook_menu() for course module.
+ */
+function course_rating_menu() {
+  $items = array();
+  $items['rate-course/%node/%user'] = array(
+    'title' => 'Rate Course',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('course_rating_course_rating_form', 1, 2),
+    'access callback' => TRUE,
+    'type' => MENU_NORMAL_ITEM,
+    'modal' => TRUE,
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function course_rating_block_info() {
+  $blocks['course_rating_form'] = array(
+    'info' => t('Course Rating Form'),
+  );
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function course_rating_block_view($delta = '') {
+  if ($delta == 'course_rating_form') {
+    return course_rating_form_block();
+  }
+}
+
+/**
+ * Block with course rating form link.
+ */
+function course_rating_form_block() {
+  $node = menu_get_object('node');
+  if (!node_access('view', $node)) {
+    return FALSE;
+  }
+  global $user;
+  if (!registration_view_access($node, $user)) {
+    return FALSE;
+  }
+  $course_nid = isset($node->book['bid']) ? $node->book['bid'] : 0;
+  $block = array();
+  $block['subject'] = '';
+  $block['content'][] = array(
+    '#type' => 'markup',
+    '#markup' => l(t('Rate course'), 'rate-course/' . $course_nid . '/' . $user->uid, array('attributes' => array('class' => array('course-rate-link', 'ctools-modal-common-modal-style')))),
+  );
+  
+  return $block;
+}
+
+/**
+ * Form for setting course rating.
+ * 
+ * @param object $course
+ *   Course object
+ * @param object $user
+ *   User object
+ * 
+ */
+function course_rating_course_rating_form($form, &$form_state, $course, $user) {
+  $form = array();
+  $form['#attributes']['class'][] = 'course-rating-form';
+  if (!course_registration_id($user->uid, $course->nid)) {
+    $form['msg'] = array(
+      '#markup' => t('Please, register to the !course.', array('!course' => l(t('course'), 'course/' . $course->nid))),
+    );
+    return $form;
+  }
+  if (!isset($form_state['feedback_nid'])) {
+    $form_state['feedback_nid'] = course_is_reviewed($course->nid, $user->uid);
+  }
+  if ($form_state['feedback_nid']) {
+    $form_state['mode'] = 'update';
+    $feedback_wrapper = entity_metadata_wrapper('node', $form_state['feedback_nid']);
+    $rating = $feedback_wrapper->field_rating->raw();
+    $body = $feedback_wrapper->body->value();
+    $review = $body['value'];
+  }
+  else {
+    $form_state['mode'] = 'insert';
+  }
+  
+  $form['rating'] = array(
+    '#type' => 'fivestar',
+    '#stars' => 10,
+    '#title' => '',
+    '#required' => TRUE,
+    '#default_value' => isset($rating) ? $rating : NULL,
+  );
+  $form['review'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Review'),
+    '#required' => FALSE,
+    '#default_value' => isset($review) ? $review : '',
+  );
+  $form['rating_submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Submit'),
+  );
+  
+  return $form;
+}
+
+/**
+ * Implements hook FORM_ID_submit for course_course_rating_form().
+ */
+function course_rating_course_rating_form_submit($form, &$form_state) {
+  if ($form_state['mode'] == 'update') {
+    $node = node_load($form_state['feedback_nid']);
+    if ($node) {
+      $lang = $node->language;
+      $node->body[$lang][0]['value'] = $form_state['values']['review'];
+      $node->field_rating[$lang][0]['rating'] = $form_state['values']['rating'];
+      node_save($node);
+    }
+  }
+  else {
+    $course_nid = $form_state['build_info']['args'][0]->nid;
+    $uid = $form_state['build_info']['args'][1]->uid;
+    $node = new stdClass();
+    $node->type = 'course_feedback';
+    node_object_prepare($node);
+    $node->title = 'Course feedback nid#' . $course_nid . '# uid#' . $uid;
+    $node->language = LANGUAGE_NONE;
+    $node->body[$node->language][0]['value'] = $form_state['values']['review'];
+    $node->field_course[$node->language][0]['target_id'] = $course_nid;
+    $node->field_rating[$node->language][0]['rating'] = $form_state['values']['rating'];
+    node_save($node);
+  }
+}
+
+/**
+ * Determines wither course was reviewed by the user.
+ * 
+ * @param integer $nid
+ *   Node ID of the course
+ * @param integer $uid
+ *   User ID of the user
+ * 
+ * @return integer
+ *   ID of the feedback node if exists, otherwise FALSE
+ */
+function course_is_reviewed($nid, $uid = NULL) {
+  if (is_null($uid)) {
+    global $user;
+    $uid = $user->uid;
+  }
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node')
+      ->entityCondition('bundle', 'course_feedback')
+      ->propertyCondition('status', 1)
+      ->propertyCondition('uid', $uid)
+      ->fieldCondition('field_course', 'target_id', $nid)
+      ->range(0, 1);
+
+  $result = $query->execute();
+
+  foreach ($result as $entity_type => $entities) {
+    foreach ($entities as $entity_id => $entity) {
+      return $entity_id;
+    }
+  }
+  return FALSE; 
+}
+
+/**
+ * Calculates average rating for the course.
+ * 
+ * @param integer $course_nid
+ *   Node ID of the course
+ * 
+ * @return float
+ *   Average course rating
+ */
+function course_rating_get_rating($course_nid) {
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node')
+    ->entityCondition('bundle', 'course_feedback')
+    ->propertyCondition('status', 1)
+    ->fieldCondition('field_course', 'target_id', $course_nid);
+  $result = $query->execute();
+  if (empty($result)) {
+    return 0;
+  }
+  $sum = 0;
+  foreach ($result['node'] as $nid => $node) {
+    $wrapper = entity_metadata_wrapper('node', $nid);
+    $sum = $sum + $wrapper->field_rating->value();
+  }
+  if ($sum == 0) {
+    return 0;
+  }
+  return $sum / count($result['node'])/10;
+}

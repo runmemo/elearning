@@ -2708,6 +2708,93 @@ div.quiz-report {
 }
 /** Annoucement page css end **/
 
+/** Courses page styles start **/
+
+.view-courses {
+  .view-filters {
+    height: 58px;
+    background-color: #f8f8f8;
+    border: solid 1px #e4e1e1;
+    .views-widget-filter-combine {
+      padding: .5em 5px 0 0;
+      .form-item {
+        input {
+          height: 44px;
+          border: solid 1px #d8d8d8;
+          margin-left: 5px;
+        }
+      }
+    }
+    .views-submit-button {
+      float: right;
+      padding: .5em 5px 0 0;
+      .form-submit {
+        margin: 0;
+        height: 44px;
+      }
+    }
+  }
+  padding-top: 42px;
+  margin: 0 auto;
+  @media @mobile {
+    width: 100%;
+  }
+  @media @narrow {
+    width: 410px;
+  }
+  @media @normal {
+    width: 864px;
+  }
+  @media @wide {
+    width: 864px;
+  }
+  .view-content {
+    .show(inline-block);
+  }
+  .views-row-odd {
+    .left();
+    @media @narrow {
+      margin-right: 0;
+    }
+    @media @normal {
+      margin-right: 48px;
+    }
+    @media @wide {
+      margin-right: 48px;
+    }
+  }
+  .views-row-even {
+    .right();
+  }
+  .views-row {
+    @media @mobile {
+      float: none;
+      .show(inline-block);
+    }
+  }
+  .home-courses-provider {
+    .left();
+  }
+  .views-field-course-rating {
+    .right();
+    .show(table);
+    margin-right: 5px;
+    .views-label {
+      color: #444343;
+    }
+    .field-content {
+      color: #2b2d2f;
+      font-size: 16px;
+    }
+    .views-label, .field-content {
+      .show(table-row);
+      text-align: center;
+    }
+  }
+}
+
+/** Courses page styles end **/
+
 /** Course rating form styles start **/
 
 .course-rating-form {

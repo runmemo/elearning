@@ -28,7 +28,13 @@ class CourseWorkflowTest extends CourseTestCase {
       ),
     );
     return $this->populateCourse($course, $outline);
-  }  
+  }
+
+  function changeCourseStage($course = NULL, $stage = COURSE_SUBMITTED) {
+    $course->field_stage[LANGUAGE_NONE][0]['value'] = $stage;
+    node_save($course);
+    return $course;
+  }
 
 }
 
@@ -133,7 +139,7 @@ class CourseWorkflowTestCase extends CourseWorkflowTest {
     }
 
     foreach($course_items3 as $course_item) {
-      // Test that user3 cannot view any course items.
+      // Test that user1 can view any course items.
       $user1 = $this->drupalLogin($this->user1);
       $this->drupalGet('node/' . $course_item->nid);
       $this->assertResponse(200);
@@ -148,6 +154,19 @@ class CourseWorkflowTestCase extends CourseWorkflowTest {
       $this->assertResponse(403);
     }
 
+    // Change Course state to Published and see, 
+    // if Anonymous user can see course and its child nodes.
+    $this->changeCourseStage($this->course1, COURSE_PUBLISHED);
+    node_access_rebuild();
+    $this->drupalLogout();
+
+    $this->drupalGet('node/' . $this->course1->nid);
+    $this->assertResponse(200);    
+
+    foreach($course_items1 as $course_item) {
+      $this->drupalGet('node/' . $course_item->nid);
+      $this->assertResponse(200);
+    }
   }
 
 }
