@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * course_access.features.user_permission.inc
+ * course_workflow.features.user_permission.inc
  */
 
 /**
  * Implements hook_user_default_permissions().
  */
-function course_access_user_default_permissions() {
+function course_workflow_user_default_permissions() {
   $permissions = array();
 
   // Exported permission: view any unpublished course.
