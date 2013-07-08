@@ -29,10 +29,10 @@ function course_rating_views_api() {
  */
 function course_rating_node_info() {
   $items = array(
-    'course_feedback' => array(
-      'name' => t('Course Feedback'),
+    'course_rating' => array(
+      'name' => t('Course Rating'),
       'base' => 'node_content',
-      'description' => t('Course feedback content type.'),
+      'description' => t('Course rating content type.'),
       'has_title' => '1',
       'title_label' => t('Title'),
       'help' => '',

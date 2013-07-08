@@ -10,9 +10,9 @@
 function course_rating_field_default_field_instances() {
   $field_instances = array();
 
-  // Exported field_instance: 'node-course_feedback-field_course'
-  $field_instances['node-course_feedback-field_course'] = array(
-    'bundle' => 'course_feedback',
+  // Exported field_instance: 'node-course_rating-field_course'
+  $field_instances['node-course_rating-field_course'] = array(
+    'bundle' => 'course_rating',
     'default_value' => NULL,
     'deleted' => 0,
     'description' => '',
@@ -56,9 +56,9 @@ function course_rating_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-course_feedback-field_rating'
-  $field_instances['node-course_feedback-field_rating'] = array(
-    'bundle' => 'course_feedback',
+  // Exported field_instance: 'node-course_rating-field_rating'
+  $field_instances['node-course_rating-field_rating'] = array(
+    'bundle' => 'course_rating',
     'default_value' => NULL,
     'deleted' => 0,
     'description' => '',
@@ -67,7 +67,7 @@ function course_rating_field_default_field_instances() {
         'label' => 'above',
         'module' => 'open_question',
         'settings' => array(),
-        'type' => 'oqa_feedback_formatter',
+        'type' => 'course_rating_formatter',
         'weight' => 2,
       ),
       'full' => array(

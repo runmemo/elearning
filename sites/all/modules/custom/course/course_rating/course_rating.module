@@ -82,14 +82,14 @@ function course_rating_course_rating_form($form, &$form_state, $course, $user) {
     );
     return $form;
   }
-  if (!isset($form_state['feedback_nid'])) {
-    $form_state['feedback_nid'] = course_is_reviewed($course->nid, $user->uid);
+  if (!isset($form_state['rating_nid'])) {
+    $form_state['rating_nid'] = course_is_reviewed($course->nid, $user->uid);
   }
-  if ($form_state['feedback_nid']) {
+  if ($form_state['rating_nid']) {
     $form_state['mode'] = 'update';
-    $feedback_wrapper = entity_metadata_wrapper('node', $form_state['feedback_nid']);
-    $rating = $feedback_wrapper->field_rating->raw();
-    $body = $feedback_wrapper->body->value();
+    $rating_wrapper = entity_metadata_wrapper('node', $form_state['rating_nid']);
+    $rating = $rating_wrapper->field_rating->raw();
+    $body = $rating_wrapper->body->value();
     $review = $body['value'];
   }
   else {
@@ -122,7 +122,7 @@ function course_rating_course_rating_form($form, &$form_state, $course, $user) {
  */
 function course_rating_course_rating_form_submit($form, &$form_state) {
   if ($form_state['mode'] == 'update') {
-    $node = node_load($form_state['feedback_nid']);
+    $node = node_load($form_state['rating_nid']);
     if ($node) {
       $lang = $node->language;
       $node->body[$lang][0]['value'] = $form_state['values']['review'];
@@ -134,9 +134,9 @@ function course_rating_course_rating_form_submit($form, &$form_state) {
     $course_nid = $form_state['build_info']['args'][0]->nid;
     $uid = $form_state['build_info']['args'][1]->uid;
     $node = new stdClass();
-    $node->type = 'course_feedback';
+    $node->type = 'course_rating';
     node_object_prepare($node);
-    $node->title = 'Course feedback nid#' . $course_nid . '# uid#' . $uid;
+    $node->title = 'Course rating nid#' . $course_nid . '# uid#' . $uid;
     $node->language = LANGUAGE_NONE;
     $node->body[$node->language][0]['value'] = $form_state['values']['review'];
     $node->field_course[$node->language][0]['target_id'] = $course_nid;
@@ -154,7 +154,7 @@ function course_rating_course_rating_form_submit($form, &$form_state) {
  *   User ID of the user
  * 
  * @return integer
- *   ID of the feedback node if exists, otherwise FALSE
+ *   ID of the rating node if exists, otherwise FALSE
  */
 function course_is_reviewed($nid, $uid = NULL) {
   if (is_null($uid)) {
@@ -163,7 +163,7 @@ function course_is_reviewed($nid, $uid = NULL) {
   }
   $query = new EntityFieldQuery();
   $query->entityCondition('entity_type', 'node')
-      ->entityCondition('bundle', 'course_feedback')
+      ->entityCondition('bundle', 'course_rating')
       ->propertyCondition('status', 1)
       ->propertyCondition('uid', $uid)
       ->fieldCondition('field_course', 'target_id', $nid)
@@ -191,7 +191,7 @@ function course_is_reviewed($nid, $uid = NULL) {
 function course_rating_get_rating($course_nid) {
   $query = new EntityFieldQuery();
   $query->entityCondition('entity_type', 'node')
-    ->entityCondition('bundle', 'course_feedback')
+    ->entityCondition('bundle', 'course_rating')
     ->propertyCondition('status', 1)
     ->fieldCondition('field_course', 'target_id', $course_nid);
   $result = $query->execute();
@@ -199,6 +199,7 @@ function course_rating_get_rating($course_nid) {
     return 0;
   }
   $sum = 0;
+ 
   foreach ($result['node'] as $nid => $node) {
     $wrapper = entity_metadata_wrapper('node', $nid);
     $sum = $sum + $wrapper->field_rating->value();
