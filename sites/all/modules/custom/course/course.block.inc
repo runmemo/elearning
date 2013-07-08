@@ -8,9 +8,6 @@
  * Implements hook_block_info().
  */
 function course_block_info() {
-  $blocks['registration_form'] = array(
-    'info' => t('Course registration form'),
-  );
   // Block for displaying book header
   $blocks['book_header'] = array(
     'info' => t('Course Header'),

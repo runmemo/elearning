@@ -245,11 +245,31 @@ function registration_context_registry() {
 }
 
 /**
+ * Implements hook_block_info()
+ */
+function registration_block_info() {
+  $blocks['registration_form'] = array(
+    'info' => t('Course registration form'),
+  );
+  return $blocks;
+}
+
+function registration_block_view($delta) {
+  $block = array();
+  switch ($delta) {
+    case 'registration_form':
+      $block['subject'] = '';
+      $block['content'] = drupal_get_form('course_registration_form');
+      break;
+  }
+  return $block;
+}
+
+/**
  * Registration form
  * @return array form for registration of user
  */
 function course_registration_form($form, &$form_state) {
-
   // check whether user is already registered. 
   global $user;
   $uid = $user->uid;
@@ -265,7 +285,6 @@ function course_registration_form($form, &$form_state) {
   }
 
   $form = array();
-
   // cache nid in the form as it will not be available in the callback overwise
   $form['nid'] = array(
     '#type' => 'hidden',
@@ -290,13 +309,13 @@ function course_registration_form($form, &$form_state) {
     );
     return $form; // no need to show the button for registered user
   }
-
+  
   // @todo : get the node id or url of the first lesson    
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Enroll')
   );
-
+ 
   return $form;
 }
 

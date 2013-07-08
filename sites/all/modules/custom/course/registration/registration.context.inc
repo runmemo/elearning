@@ -27,8 +27,8 @@ function registration_context_default_contexts() {
   $context->reactions = array(
     'block' => array(
       'blocks' => array(
-        'course-registration_form' => array(
-          'module' => 'course',
+        'registration-registration_form' => array(
+          'module' => 'registration',
           'delta' => 'registration_form',
           'region' => 'content',
           'weight' => '-10',
