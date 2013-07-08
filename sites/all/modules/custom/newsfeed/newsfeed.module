@@ -112,6 +112,23 @@ function newsfeed_get_unread_messages_count($uid) {
   return isset($result->count) ? $result->count : 0;
 }
 
+  /**
+   * Checks for instance of newsfeed notification for a user.
+   * 
+   * @param integer $mid
+   * @param integer $uid
+   * @return boolean
+   */
+  function newsfeed_exists($mid, $uid) {
+    $query = db_select('message_user', 'mu')->fields('mu', array('mid'))
+      ->condition('uid', $uid)
+      ->condition('mid', $mid);
+    $db_result = $query->execute();
+    $result = $db_result->fetch();
+
+    return isset($result->mid);
+  }
+
 /**
  * Inserts new record in the table for message-user instances.
  * 
@@ -292,9 +309,20 @@ function newsfeed_get_related_unread_messages($field, $uid, $nid) {
  * Adds join for 'message_user' table in order to get user related messages.
  */
 function newsfeed_query_newsfeed_related_message_alter(QueryAlterableInterface $query) {
-  $base_table = $query->getMetaData('base_table') . '0';
-  $query->join('message_user', 'mu', $base_table . '.entity_id = mu.mid');
-  $query->leftJoin('flagging', 'f', $base_table . '.entity_id = f.entity_id');
+  $base_alias = newsfeed_get_base_table_alias($query);
+  $query->join('message_user', 'mu', $base_alias . '.entity_id = mu.mid');
+  $query->leftJoin('flagging', 'f', $base_alias . '.entity_id = f.entity_id');
   $query->condition('mu.uid', $query->getMetaData('message_uid'));
   $query->isNull('f.uid');
+}
+
+function newsfeed_get_base_table_alias($query) {
+  $base_table = $query->getMetaData('base_table');
+  $tables = $query->getTables(); 
+  foreach ($tables as $alias => $table) {
+    if ($base_table === $table['table']) {
+      return $alias;
+    }
+  }
+  return FALSE;
 }

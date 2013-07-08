@@ -46,23 +46,6 @@ class NewsfeedBaseCase extends DrupalWebTestCase {
   }
 
   /**
-   * Checks for instance between user and message.
-   * 
-   * @param integer $mid
-   * @param integer $uid
-   * @return boolean
-   */
-  function checkMessageUserInstance($mid, $uid) {
-    $query = db_select('message_user', 'mu')->fields('mu', array('mid'))
-      ->condition('uid', $uid)
-      ->condition('mid', $mid);
-    $db_result = $query->execute();
-    $result = $db_result->fetch();
-
-    return isset($result->mid);
-  }
-
-  /**
    * Gets status of the given message.
    * 
    * @param integer $mid
@@ -89,7 +72,7 @@ class NewsfeedCreateSingleCase extends NewsfeedBaseCase {
     return array(
       'name' => 'Newsfeed Create Single Message Test',
       'description' => 'Test for creating message for one receiver.',
-      'group' => 'Course',
+      'group' => 'Newsfeed',
     );
   }
 
@@ -117,8 +100,8 @@ class NewsfeedCreateSingleCase extends NewsfeedBaseCase {
     // Check for message text.
     $this->assertEqual($message->getType()->message_text[LANGUAGE_NONE][0]['value'], 'Example text.', 'Message type text has been saved.');
     // Check for instance between users and message.
-    $this->assertTrue($this->checkMessageUserInstance($result->mid, $this->receiver->uid), 'There is instance between receiver and message.');
-    $this->assertFalse($this->checkMessageUserInstance($result->mid, $this->actor->uid), 'There is no instance between autor and message.');
+    $this->assertTrue(newsfeed_exists($result->mid, $this->receiver->uid), 'There is instance between receiver and message.');
+    $this->assertFalse(newsfeed_exists($result->mid, $this->actor->uid), 'There is no instance between autor and message.');
     // Check for message status.
     $this->assertEqual($this->getMessageUserStatus($result->mid, $this->receiver->uid), 0, 'Created message has status 0 for receiver');
     // Check for the count of receiver's messages.
@@ -142,7 +125,7 @@ class NewsfeedCreateMultipleCase extends NewsfeedBaseCase {
     return array(
       'name' => 'Newsfeed Create Multiple Messages Test',
       'description' => 'Test for creating message for multiple receivers.',
-      'group' => 'Course',
+      'group' => 'Newsfeed',
     );
   }
 
@@ -208,9 +191,9 @@ class NewsfeedCreateMultipleCase extends NewsfeedBaseCase {
     // Check for message text.
     $this->assertEqual($message->getType()->message_text[LANGUAGE_NONE][0]['value'], 'Example text.', 'Message type text has been saved.');
     // Check for instance between users and message.
-    $this->assertFalse($this->checkMessageUserInstance($result->mid, $this->subscriber_1->uid), 'There is no instance between subscriber and message, because subscriber is message author.');
-    $this->assertTrue($this->checkMessageUserInstance($result->mid, $this->subscriber_2->uid), 'There is instance between subscriber and message, because subscriber is subscribed to the node.');
-    $this->assertFalse($this->checkMessageUserInstance($result->mid, $this->subscriber_3->uid), 'There is no instance between subscriber and message, because subscriber is not subscribed to the node.');
+    $this->assertFalse(newsfeed_exists($result->mid, $this->subscriber_1->uid), 'There is no instance between subscriber and message, because subscriber is message author.');
+    $this->assertTrue(newsfeed_exists($result->mid, $this->subscriber_2->uid), 'There is instance between subscriber and message, because subscriber is subscribed to the node.');
+    $this->assertFalse(newsfeed_exists($result->mid, $this->subscriber_3->uid), 'There is no instance between subscriber and message, because subscriber is not subscribed to the node.');
     // Check for the count of receiver's messages.
     $messages_count = newsfeed_get_unread_messages_count($this->subscriber_1->uid);
     $this->assertEqual($messages_count, 0, 'Message autor has 0 unread messages.');
