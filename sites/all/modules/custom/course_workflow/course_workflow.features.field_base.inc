@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * course_access.features.field_base.inc
+ * course_workflow.features.field_base.inc
  */
 
 /**
  * Implements hook_field_default_field_bases().
  */
-function course_access_field_default_field_bases() {
+function course_workflow_field_default_field_bases() {
   $field_bases = array();
   
   // Exported field_base: 'field_stage'

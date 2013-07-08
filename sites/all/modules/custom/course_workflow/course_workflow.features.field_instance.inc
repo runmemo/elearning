@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * course_access.features.field_instance.inc
+ * course_workflow.features.field_instance.inc
  */
 
 /**
  * Implements hook_field_default_field_instances().
  */
-function course_access_field_default_field_instances() {
+function course_workflow_field_default_field_instances() {
   $field_instances = array();
 
   // Exported field_instance: 'node-course-field_stage'
