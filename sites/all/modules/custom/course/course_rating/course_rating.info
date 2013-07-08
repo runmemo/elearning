@@ -1,0 +1,30 @@
+name = Course Rating
+description = Course rating feature
+core = 7.x
+package = Custom
+dependencies[] = course
+dependencies[] = newsletter
+dependencies[] = open_question
+
+files[] = views/course_rating.views.inc
+files[] = views/handlers/course_rating_handler_field_course_rating.inc
+
+features[ctools][] = strongarm:strongarm:1
+features[features_api][] = api:2
+features[field_instance][] = node-course_feedback-field_course
+features[field_instance][] = node-course_feedback-field_rating
+features[node][] = course_feedback
+features[variable][] = comment_anonymous_course_feedback
+features[variable][] = comment_course_feedback
+features[variable][] = comment_default_mode_course_feedback
+features[variable][] = comment_default_per_page_course_feedback
+features[variable][] = comment_form_location_course_feedback
+features[variable][] = comment_preview_course_feedback
+features[variable][] = comment_subject_field_course_feedback
+features[variable][] = field_bundle_settings_node__course_feedback
+features[variable][] = language_content_type_course_feedback
+features[variable][] = menu_options_course_feedback
+features[variable][] = menu_parent_course_feedback
+features[variable][] = node_options_course_feedback
+features[variable][] = node_preview_course_feedback
+features[variable][] = node_submitted_course_feedback

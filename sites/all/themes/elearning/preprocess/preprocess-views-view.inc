@@ -71,5 +71,12 @@ function elearning_alpha_preprocess_views_view__user_courses(&$vars) {
  * Preprocess for courses view.
  */
 function elearning_alpha_preprocess_views_view__courses(&$vars) {
-  drupal_add_css(drupal_get_path('theme', 'elearning') . '/widgets/elearning_fivestar/elearning_fivestar_widget.css');
+  $vars['classes_array'][] = 'view-courses-list';
+}
+
+/**
+ * Preprocess for courses view.
+ */
+function elearning_alpha_preprocess_views_view__home_page_courses(&$vars) {
+  $vars['classes_array'][] = 'view-courses-list';
 }

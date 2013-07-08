@@ -234,16 +234,18 @@ function course_views_default_views() {
   /* Display: Master */
   $handler = $view->new_display('default', 'Master', 'default');
   $handler->display->display_options['title'] = 'Courses';
-  $handler->display->display_options['use_ajax'] = TRUE;
   $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['access']['type'] = 'perm';
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
   $handler->display->display_options['exposed_form']['type'] = 'basic';
-  $handler->display->display_options['pager']['type'] = 'none';
+  $handler->display->display_options['exposed_form']['options']['submit_button'] = 'Search';
+  $handler->display->display_options['pager']['type'] = 'infinite_scroll';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '10';
   $handler->display->display_options['pager']['options']['offset'] = '0';
-  $handler->display->display_options['style_plugin'] = 'views_column_class';
-  $handler->display->display_options['style_options']['columns'] = '2';
+  $handler->display->display_options['pager']['options']['id'] = '0';
+  $handler->display->display_options['pager']['options']['quantity'] = '9';
+  $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['row_plugin'] = 'fields';
   $handler->display->display_options['row_options']['inline'] = array(
     'field_discipline' => 'field_discipline',
@@ -307,6 +309,12 @@ function course_views_default_views() {
     'image_style' => 'provider_home_picture',
     'image_link' => '',
   );
+  /* Field: Global: Course Rating */
+  $handler->display->display_options['fields']['course_rating']['id'] = 'course_rating';
+  $handler->display->display_options['fields']['course_rating']['table'] = 'views';
+  $handler->display->display_options['fields']['course_rating']['field'] = 'course_rating';
+  $handler->display->display_options['fields']['course_rating']['label'] = 'rating';
+  $handler->display->display_options['fields']['course_rating']['element_label_colon'] = FALSE;
   /* Field: User: First Name */
   $handler->display->display_options['fields']['field_first_name']['id'] = 'field_first_name';
   $handler->display->display_options['fields']['field_first_name']['table'] = 'field_data_field_first_name';
@@ -345,12 +353,6 @@ function course_views_default_views() {
   $handler->display->display_options['fields']['field_provider']['settings'] = array(
     'link' => 0,
   );
-  /* Field: Global: Course Rating */
-  $handler->display->display_options['fields']['course_rating']['id'] = 'course_rating';
-  $handler->display->display_options['fields']['course_rating']['table'] = 'views';
-  $handler->display->display_options['fields']['course_rating']['field'] = 'course_rating';
-  $handler->display->display_options['fields']['course_rating']['label'] = '';
-  $handler->display->display_options['fields']['course_rating']['element_label_colon'] = FALSE;
   /* Field: Content: Content */
   $handler->display->display_options['fields']['field_course_content']['id'] = 'field_course_content';
   $handler->display->display_options['fields']['field_course_content']['table'] = 'field_data_field_course_content';
@@ -392,7 +394,6 @@ function course_views_default_views() {
   $handler->display->display_options['filters']['combine']['operator'] = 'word';
   $handler->display->display_options['filters']['combine']['exposed'] = TRUE;
   $handler->display->display_options['filters']['combine']['expose']['operator_id'] = 'combine_op';
-  $handler->display->display_options['filters']['combine']['expose']['label'] = 'Search';
   $handler->display->display_options['filters']['combine']['expose']['operator'] = 'combine_op';
   $handler->display->display_options['filters']['combine']['expose']['identifier'] = 'combine';
   $handler->display->display_options['filters']['combine']['expose']['remember_roles'] = array(

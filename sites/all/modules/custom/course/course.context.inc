@@ -46,15 +46,15 @@ function course_context_default_contexts() {
           'region' => 'sidebar_first',
           'weight' => '-10',
         ),
-        'course-course_rating_form' => array(
-          'module' => 'course',
-          'delta' => 'course_rating_form',
-          'region' => 'sidebar_first',
-          'weight' => '-9',
-        ),
         'course_outline-course_certificate' => array(
           'module' => 'course_outline',
           'delta' => 'course_certificate',
+          'region' => 'sidebar_first',
+          'weight' => '-9',
+        ),
+        'course_rating-course_rating_form' => array(
+          'module' => 'course_rating',
+          'delta' => 'course_rating_form',
           'region' => 'sidebar_first',
           'weight' => '-8',
         ),

@@ -8,11 +8,7 @@
 function elearning_alpha_preprocess_node(&$variables) {
   // global preprocessing of node
   unset($variables['content']['links']['statistics']['#links']['statistics_counter']['title']);
-  $active_contexts = context_active_contexts();
-   
-  if (isset($active_contexts['course_item'])) {
-    drupal_add_css(drupal_get_path('theme', 'elearning') . '/widgets/elearning_fivestar/elearning_fivestar_widget.css');
-  }
+  
   // call node specific preprocessors
   $function = __FUNCTION__ . '_' . $variables['node']->type;
   if (function_exists($function)) {

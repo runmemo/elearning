@@ -19,9 +19,6 @@ function course_block_info() {
   $blocks['course_item_links'] = array(
     'info' => t('Course Links'),
   );
-  $blocks['course_rating_form'] = array(
-    'info' => t('Course Rating Form'),
-  );
   return $blocks;
 }
 
@@ -35,8 +32,6 @@ function course_block_view($delta = '') {
       return course_item_links();
     case 'book_header':
       return course_header_block();
-    case 'course_rating_form' :
-      return course_rating_form_block();
   }
 }
 
@@ -115,28 +110,5 @@ function course_header_block() {
     $block['subject'] = '';
     $block['content'] = theme('course_header', array('book_link' => $book, 'question_page' => $question_page, 'open_question_page' => $open_question_page));
   }
-  return $block;
-}
-
-/**
- * Block with course rating form link.
- */
-function course_rating_form_block() {
-  $node = menu_get_object('node');
-  if (!node_access('view', $node)) {
-    return FALSE;
-  }
-  global $user;
-  if (!registration_view_access($node, $user)) {
-    return FALSE;
-  }
-  $course_nid = isset($node->book['bid']) ? $node->book['bid'] : 0;
-  $block = array();
-  $block['subject'] = '';
-  $block['content'][] = array(
-    '#type' => 'markup',
-    '#markup' => l(t('Rate course'), 'rate-course/' . $course_nid . '/' . $user->uid, array('attributes' => array('class' => array('course-rate-link', 'ctools-modal-common-modal-style')))),
-  );
-  
   return $block;
 }
