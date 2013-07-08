@@ -62,6 +62,10 @@ function course_workflow_node_grants($account, $op) {
  *  Implements of hook_node_access_records()
  */
 function course_workflow_node_access_records($node) {
+
+  // Default Stage.
+  $stage = COURSE_SUBMITTED;
+
   // We only care about the node if it's a part of a book. 
   if (!isset($node->book) || !isset($node->book['bid'])) {
     if ($node->type === 'course') {
@@ -78,7 +82,9 @@ function course_workflow_node_access_records($node) {
   else {
     // Get the stage of the course in publishing
     $course_item = entity_metadata_wrapper('node', $node);
-    $stage = $course_item->book->field_stage->value();
+    if(isset($course_item->book->field_stage)) {
+      $stage = $course_item->book->field_stage->value();
+    }
   }
   $grants = array();
   if($stage == COURSE_PUBLISHED) {
