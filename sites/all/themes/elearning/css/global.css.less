@@ -2711,45 +2711,62 @@ div.quiz-report {
 /** Courses page styles start **/
 
 .view-courses {
+  padding-top: 42px;
+  margin: 0 auto;
+  @media @mobile, @narrow {
+    width: 95%;
+  }
+  @media @normal, @wide {
+    width: 864px;
+  }
   .view-filters {
     height: 58px;
-    background-color: #f8f8f8;
     border: solid 1px #e4e1e1;
+    .form-item-gradient(#f8f8f8, #f8f8f8, #f4f3f3);
     .views-widget-filter-combine {
-      padding: .5em 5px 0 0;
-      .form-item {
-        input {
-          height: 44px;
-          border: solid 1px #d8d8d8;
-          margin-left: 5px;
-        }
+      padding: 7px 0 0 7px;
+      width: 87.5%;
+      input {
+        height: 44px;
+        border: solid 1px #d8d8d8;
+        .bold(16px);
+        color: #d2491d;
+        padding-left: 10px;
       }
     }
     .views-submit-button {
       float: right;
-      padding: .5em 5px 0 0;
+      padding: 7px 7px 0 0;
+      width: 10%;
+      min-width: 65px;
+      @media @mobile {
+        position: absolute;
+        right: 15px;
+      }      
       .form-submit {
         margin: 0;
         height: 44px;
+        width: 100%;
+        padding: 0;
       }
     }
   }
-  padding-top: 42px;
-  margin: 0 auto;
-  @media @mobile {
-    width: 100%;
-  }
-  @media @narrow {
-    width: 410px;
-  }
-  @media @normal {
-    width: 864px;
-  }
-  @media @wide {
-    width: 864px;
+  .attachment-before {
+    .border-bottom-dotted();
+    .bold(14px);
+    padding: 25px 0px 8px 0px;
+    margin-bottom: 30px;
   }
   .view-content {
-    .show(inline-block);
+    @media @narrow {
+      .show(block);
+      width: 410px;
+      margin: 0 auto;
+    }
+    @media @mobile, @normal, @wide {
+      .show(inline-block);
+      width: 100%;
+    }
   }
   .views-row-odd {
     .left();
@@ -2793,14 +2810,67 @@ div.quiz-report {
   }
 }
 
+::-webkit-input-placeholder {
+  color: #c3c3c3;
+}
+:-moz-placeholder {
+  color: #c3c3c3;
+}
+::-moz-placeholder {
+  color: #c3c3c3;
+}
+:-ms-input-placeholder {
+  color: #c3c3c3;
+}
+
+
 /** Courses page styles end **/
 
 /** Course rating form styles start **/
 
+.block-course-rating-form {
+  .form-item-gradient(#f8f8f8, #f8f8f8, #f4f3f3);
+  border: solid 1px #e4e1e1;
+  border-radius: 2px;
+  padding: 16px 0 12px 0;
+  margin-top: 27px;
+  .block-inner {
+    .bg-img('rate-link-sign.png');
+    background-position: 6% 15%;
+    padding-left: 16%;
+  }
+  .content {
+    .bg-img('rate_arrow_right.png');
+    background-position: 92% 48%;
+  }
+  .course-rate-link:link, course-rate-link:visited {
+    color: #444444;
+    .link();
+    .bold(14px);
+  }
+}
+
+.course-item-context .ctools-common-modal-content .modal-scroll,
+.course-item-context .ctools-common-modal-content .modal-content {
+  background-color: #f8f8f8;
+}
+
 .course-rating-form {
   margin-left: 10px;
-  .fivestar-widget a {
-    color: transparent;
+  padding-top: 20px;
+  .form-item-rating {
+    label {
+      .bold(14px);
+      text-align: center;
+      color: #505050;
+      padding-bottom: 20px;
+    }
+    span.form-required, .ui-selectmenu {
+      .show(none);
+    }
+  }
+  .form-item-review {
+    padding-top: 20px;
   }
   .form-submit {
     margin-top: 8px;
