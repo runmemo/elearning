@@ -39,6 +39,13 @@ function course_workflow_permission() {
   );
 }
 
+function course_workflow_change_stage($node, $stage) {
+  $node_wrapper = entity_metadata_wrapper('node', $node);
+  $node_wrapper->field_stage->set($stage);
+  $node_wrapper->save();
+  // @todo Barinder: integrate this into the module.
+  node_access_rebuild();
+}
 
 /**
  *  Implements of hook_node_grants()
