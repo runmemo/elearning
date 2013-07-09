@@ -3,18 +3,18 @@
 
 # Parameters
 # $1 - folder, in witch site's folder should be located
-# $2 - folder, in witch site should be located
-# $3 - DB name
-# $4 - DB user
-# $5 - DB user password
+# $2 - folder, in witch site should be located, DB name, DB user
+
+
+# @todo Ilya: Generate DB user password in the script
 
 BTICK='`'
-EXPECTED_ARGS=5
+EXPECTED_ARGS=2
 PARENT_FOLDER=$1;
 SUBFOLDER=$2;
-DB_NAME=$3;
-DB_USER=$4;
-DB_PASS=$5;
+DB_NAME=$2;
+DB_USER=$2;
+
 
 #check parameters
 if [ $# -ne $EXPECTED_ARGS ]
@@ -54,7 +54,10 @@ drush --version
 fi
 echo "downloading drupal..."
 drush dl drupal --destination=/$PARENT_FOLDER --drupal-project-rename=$SUBFOLDER
+# @todo Ilya: script should run without prompts and user entry. 
+#             add instructions regarding the key file to the header of the script.
 git clone https://github.com/runmemo/elearning.git $PARENT_FOLDER/$SUBFOLDER/repo
+# @todo Ilya: use git commands instead of copying and moving.
 cp -r $PARENT_FOLDER/$SUBFOLDER/repo/* $PARENT_FOLDER/$SUBFOLDER
 mv $PARENT_FOLDER/$SUBFOLDER/repo/.git $PARENT_FOLDER/$SUBFOLDER
 rm -R $PARENT_FOLDER/$SUBFOLDER/repo
