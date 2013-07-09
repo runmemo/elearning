@@ -73,26 +73,21 @@ function course_workflow_node_access_records($node) {
   // Default Stage.
   $stage = COURSE_SUBMITTED;
 
+  if ($node->type !== 'course') {
+    return;
+  }  
+  
   // We only care about the node if it's a part of a book. 
-  if (!isset($node->book) || !isset($node->book['bid'])) {
-    if ($node->type === 'course') {
-      $stages = field_get_items('node', $node, 'field_stage');
-      if (!$stages) {
-        return;
-      } 
-      $stage = $stages[0]['value'];
-    }
-    else {
-      return;
-    }
+  if (!isset($node->book) || !isset($node->book['bid'])) {  
+    return;
   }
-  else {
-    // Get the stage of the course in publishing
-    $course_item = entity_metadata_wrapper('node', $node);
-    if(isset($course_item->book->field_stage)) {
-      $stage = $course_item->book->field_stage->value();
-    }
+
+  // Get the stage of the course in publishing
+  $course_item = entity_metadata_wrapper('node', $node);
+  if(isset($course_item->book->field_stage)) {
+    $stage = $course_item->book->field_stage->value();
   }
+  
   $grants = array();
   if($stage == COURSE_PUBLISHED) {
     // If course published, allow all.
