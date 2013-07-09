@@ -12,6 +12,11 @@ dependencies[] = vud
 features[ckeditor_profile][] = Advanced
 features[ckeditor_profile][] = CKEditor Global Profile
 features[ckeditor_frofile][] = Full
+features[message_type][] = question_answer_notification
+features[field_base][] = field_message_question
+features[field_base][] = field_message_answer
+features[field_instance][] = message-question_answer_notification-field_message_answer
+features[field_instance][] = message-question_answer_notification-field_message_question
 features[field_instance][] = node-answer-field_rating_widget
 features[field_instance][] = node-question-field_rating_widget
 features[features_api][] = api:1
@@ -30,5 +35,6 @@ features_exclude[dependencies][ckeditor] = ckeditor
 
 features[ctools][] = strongarm:strongarm:1
 features[variable][] = pathauto_node_question_pattern 
+features[variable][] = field_bundle_settings_message__question_answer_notification
 
 files[] = tests/answers_extra.test
