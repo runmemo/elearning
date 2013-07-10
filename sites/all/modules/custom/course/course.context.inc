@@ -69,8 +69,11 @@ function course_context_default_contexts() {
           'delta' => 'course_item_links',
           'region' => 'content',
           'weight' => '-33',
+        ),
       ),
     ),
+    'theme_html' => array(
+      'class' => 'course-item-context',
     ),
   );
   $context->condition_mode = 1;

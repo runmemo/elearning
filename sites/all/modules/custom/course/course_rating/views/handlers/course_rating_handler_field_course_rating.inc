@@ -21,8 +21,7 @@ class course_rating_handler_field_course_rating extends views_handler_field {
     if (isset($values->nid)) {
       $rating = course_rating_get_rating($values->nid);
     }
-
-    return number_format($rating, 1, '.', ',');
+    return $rating;
   }
 
 }

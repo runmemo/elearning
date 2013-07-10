@@ -1571,7 +1571,8 @@ h2 {
   margin-top: 25px;
   label, 
   .ajax-progress-throbber, 
-  .oq-review-form-rating-submit {
+  .oq-review-form-rating-submit,
+  .ui-selectmenu {
     .show(none);
   }
   .fivestar-user-stars, 
@@ -2843,22 +2844,32 @@ div.quiz-report {
     .bg-img('rate_arrow_right.png');
     background-position: 92% 48%;
   }
-  .course-rate-link:link, course-rate-link:visited {
+  .course-rate-link {
     color: #444444;
     .link();
     .bold(14px);
   }
+  .ajax-progress {
+    .show(none);
+  }
 }
 
-.course-item-context .ctools-common-modal-content .modal-scroll,
-.course-item-context .ctools-common-modal-content .modal-content {
-  background-color: #f8f8f8;
+.course-item-context .ctools-common-modal-content {
+  /* use !important in order to override common modal css */
+  width: 402px !important;
+  .modal-scroll,
+  .modal-content {
+    background-color: #f8f8f8;
+  }
+  .modal-content {
+    width: auto !important;
+    padding: 16px;
+  }
 }
 
 .course-rating-form {
-  margin-left: 10px;
-  padding-top: 20px;
   .form-item-rating {
+    margin: 0;
     label {
       .bold(14px);
       text-align: center;
@@ -2868,12 +2879,48 @@ div.quiz-report {
     span.form-required, .ui-selectmenu {
       .show(none);
     }
+    .star {
+      .left();
+      .show(table);
+      width: 36px;
+      height: 34px;
+      margin-right: 1px;
+      .bg-img('rating-select-item.png');
+      a {
+        .link();
+        .bold(14px);
+        .show(block);
+        line-height: 34px;
+        text-align: center;
+        color: #b0b0b0;
+        background: transparent;
+      }
+    }
+    .star.hover, .star.on.hover {
+      background-position: 0 -68px;
+    }
+    .star.on {
+      background-position: 0 -34px;
+    }
+    .star.hover a, .star.on a {
+      color: #fff;
+    }
   }
   .form-item-review {
     padding-top: 20px;
+    margin: 0;
+    textarea {
+      .bold(14px);
+    }
+  }
+  .form-section-separator {
+    .border-bottom-dotted();
+    .show(inline-block);
+    width: 100%;
+    padding-top: 20px;
   }
   .form-submit {
-    margin-top: 8px;
+    margin-top: 11px;
   }
 }
 

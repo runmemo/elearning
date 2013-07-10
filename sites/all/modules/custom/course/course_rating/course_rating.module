@@ -12,7 +12,7 @@ include_once 'course_rating.features.inc';
 function course_rating_menu() {
   $items = array();
   $items['rate-course/%node/%user'] = array(
-    'title' => 'Rate Course',
+    'title' => 'Rate this course',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('course_rating_course_rating_form', 1, 2),
     'access callback' => TRUE,
@@ -58,7 +58,7 @@ function course_rating_form_block() {
   $block['subject'] = '';
   $block['content'][] = array(
     '#type' => 'markup',
-    '#markup' => l(t('Rate course'), 'rate-course/' . $course_nid . '/' . $user->uid, array('attributes' => array('class' => array('course-rate-link', 'ctools-modal-common-modal-style')))),
+    '#markup' => l(t('Rate this course'), 'rate-course/' . $course_nid . '/' . $user->uid, array('attributes' => array('class' => array('course-rate-link', 'ctools-modal-common-modal-style')))),
   );
   
   return $block;
@@ -95,26 +95,50 @@ function course_rating_course_rating_form($form, &$form_state, $course, $user) {
   else {
     $form_state['mode'] = 'insert';
   }
-  
+
   $form['rating'] = array(
     '#type' => 'fivestar',
     '#stars' => 10,
-    '#title' => '',
+    '#title' => t('Rate the usefulness of the course on a scale:'),
     '#required' => TRUE,
     '#default_value' => isset($rating) ? $rating : NULL,
+    '#pre_render' => array('course_rating_pre_render_fivestar'),
   );
   $form['review'] = array(
     '#type' => 'textarea',
-    '#title' => t('Review'),
+    '#title' => '',
     '#required' => FALSE,
     '#default_value' => isset($review) ? $review : '',
+    '#attributes' => array(
+      'placeholder' => t('Enter your comment'),
+    ),
+    '#suffix' => '<div class="form-section-separator"></div>',
   );
   $form['rating_submit'] = array(
     '#type' => 'submit',
     '#value' => t('Submit'),
   );
-  
+
   return $form;
+}
+
+/**
+ * Pre-render callback for rating form element. Replaces default options' text
+ * with ordered numbers.
+ * 
+ * @param array $element
+ *   Form element array
+ * @return array
+ *   Customized form element array
+ */
+function course_rating_pre_render_fivestar($element) {
+  $i = 0;
+  foreach ($element['vote']['#options'] as $key => &$option) {
+    $option = $i;
+    $i++;
+  }
+  
+  return $element;
 }
 
 /**
@@ -189,23 +213,13 @@ function course_is_reviewed($nid, $uid = NULL) {
  *   Average course rating
  */
 function course_rating_get_rating($course_nid) {
-  $query = new EntityFieldQuery();
-  $query->entityCondition('entity_type', 'node')
-    ->entityCondition('bundle', 'course_rating')
-    ->propertyCondition('status', 1)
-    ->fieldCondition('field_course', 'target_id', $course_nid);
-  $result = $query->execute();
-  if (empty($result)) {
-    return 0;
-  }
-  $sum = 0;
- 
-  foreach ($result['node'] as $nid => $node) {
-    $wrapper = entity_metadata_wrapper('node', $nid);
-    $sum = $sum + $wrapper->field_rating->value();
-  }
-  if ($sum == 0) {
-    return 0;
-  }
-  return $sum / count($result['node'])/10;
+  $query = db_select('field_data_field_rating', 'fr');
+  $query->join('field_data_field_course', 'fc', 'fr.entity_id = fc.entity_id');
+  $query->fields('fr', array('field_rating_rating'));
+  $query->condition('fc.field_course_target_id', $course_nid);
+  $query->condition('fr.bundle', 'course_rating');
+  $query->addExpression('AVG(fr.field_rating_rating)', 'avg_rating');
+  $db_result = $query->execute();
+  $result = $db_result->fetch();
+  return $result->avg_rating ? number_format($result->avg_rating / 10, 1, '.', ' ') : '0.0';
 }
