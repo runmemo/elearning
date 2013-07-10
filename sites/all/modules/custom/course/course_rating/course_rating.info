@@ -11,6 +11,7 @@ files[] = views/handlers/course_rating_handler_field_course_rating.inc
 
 features[ctools][] = strongarm:strongarm:1
 features[features_api][] = api:2
+features[field_instance][] = node-course_rating-body
 features[field_instance][] = node-course_rating-field_course
 features[field_instance][] = node-course_rating-field_rating
 features[node][] = course_rating

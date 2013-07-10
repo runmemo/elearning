@@ -46,7 +46,6 @@ features[field_instance][] = node-course-field_provider
 features[field_instance][] = node-course-field_teacher
 features[field_instance][] = node-course-field_video
 features[field_instance][] = node-course-title_field
-features[field_instance][] = node-course_feedback-body
 features[field_instance][] = node-provider-body
 features[field_instance][] = node-provider-field_logo
 features[image][] = course_students
