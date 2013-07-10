@@ -69,25 +69,28 @@ function course_workflow_node_grants($account, $op) {
  *  Implements of hook_node_access_records()
  */
 function course_workflow_node_access_records($node) {
-
   // Default Stage.
   $stage = COURSE_SUBMITTED;
 
-  if ($node->type !== 'course') {
-    return;
-  }  
-  
-  // We only care about the node if it's a part of a book. 
-  if (!isset($node->book) || !isset($node->book['bid'])) {  
+  // We only take care node is part of book.
+  if (!isset($node->book) || !isset($node->book['bid'])) {
     return;
   }
+  
+  // Reset cache for course book, to load latest values.
+  entity_get_controller('node')->resetCache(array($node->book['bid']));
 
-  // Get the stage of the course in publishing
-  $course_item = entity_metadata_wrapper('node', $node);
-  if(isset($course_item->book->field_stage)) {
+  if ($node->type === 'course') {
+    $course = entity_metadata_wrapper('node', $node);
+    $stage = $course->field_stage->value();
+  }
+  else {
+    // Get the stage of course for all childs, this will be called from,
+    // course_workflow_node_update.
+    $course_item = entity_metadata_wrapper('node', $node);
     $stage = $course_item->book->field_stage->value();
   }
-  
+
   $grants = array();
   if($stage == COURSE_PUBLISHED) {
     // If course published, allow all.
@@ -122,4 +125,18 @@ function course_workflow_node_access_records($node) {
   }
 
   return $grants; 
+}
+
+/**
+ *  Implements of hook_node_update()
+ */
+function course_workflow_node_update($node) {
+  if ($node->type !== 'course') {
+    return;
+  } 
+  $items = course_get_items($node);
+  foreach ($items as $nid => $type) {
+    $node = node_load($nid);
+    node_access_acquire_grants($node);
+  }
 }
