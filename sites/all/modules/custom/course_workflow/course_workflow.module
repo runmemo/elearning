@@ -72,8 +72,14 @@ function course_workflow_node_access_records($node) {
   // Default Stage.
   $stage = COURSE_SUBMITTED;
 
+  // Only go ahead if book is of course type.
+  $course_item = entity_metadata_wrapper('node', $node);
+  if ($course_item->book->type->value() !== 'course') {
+    return;
+  }
+
   // We only take care node is part of book and node really has $node->book['bid'].
-  if (!isset($node->book) || !isset($node->book['bid']) || !$node->book['bid']) {
+  if (empty($node->book['bid'])) {
     return;
   }
 
@@ -81,7 +87,6 @@ function course_workflow_node_access_records($node) {
   entity_get_controller('node')->resetCache(array($node->book['bid']));
 
   // Get the stage of course
-  $course_item = entity_metadata_wrapper('node', $node);
   $stage = $course_item->book->field_stage->value();
 
   $grants = array();
