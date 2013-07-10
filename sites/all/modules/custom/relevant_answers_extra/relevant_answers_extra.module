@@ -104,11 +104,18 @@ function quick_question_form($form, &$form_state) {
   if (!user_access('create question content')) {
     return;
   }
-  
+
+  // On annoucement page we need intially opened quick_question form.
+  $active_contexts = context_active_contexts();
+  $collapsed = TRUE;
+  if(isset($active_contexts['annoucement_page'])) {
+    $collapsed = FALSE;
+  }
+
   $form['fields'] = array(
     '#type' => 'fieldset',
     '#collapsible' => TRUE,
-    '#collapsed' => TRUE,
+    '#collapsed' => $collapsed,
     '#prefix' => '<div id="quick-question-wrapper">',
     '#suffix' => '</div>',
     '#title' => t('Ask Question')
