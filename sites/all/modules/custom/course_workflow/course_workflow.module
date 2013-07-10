@@ -80,16 +80,9 @@ function course_workflow_node_access_records($node) {
   // Reset cache for course book, to load latest values.
   entity_get_controller('node')->resetCache(array($node->book['bid']));
 
-  if ($node->type === 'course') {
-    $course = entity_metadata_wrapper('node', $node);
-    $stage = $course->field_stage->value();
-  }
-  else {
-    // Get the stage of course for all childs, this will be called from,
-    // course_workflow_node_update.
-    $course_item = entity_metadata_wrapper('node', $node);
-    $stage = $course_item->book->field_stage->value();
-  }
+  // Get the stage of course.
+  $course_item = entity_metadata_wrapper('node', $node);
+  $stage = $course_item->book->field_stage->value();
 
   $grants = array();
   if($stage == COURSE_PUBLISHED) {
