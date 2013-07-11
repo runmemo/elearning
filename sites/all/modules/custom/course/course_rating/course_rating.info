@@ -6,14 +6,11 @@ dependencies[] = course
 dependencies[] = newsletter
 dependencies[] = open_question
 
-files[] = views/course_rating.views.inc
-files[] = views/handlers/course_rating_handler_field_course_rating.inc
-
 features[ctools][] = strongarm:strongarm:1
 features[features_api][] = api:2
 features[field_instance][] = node-course_rating-body
 features[field_instance][] = node-course_rating-field_course
-features[field_instance][] = node-course_rating-field_rating
+features[field_instance][] = node-course-field_rating
 features[node][] = course_rating
 features[variable][] = comment_anonymous_course_rating
 features[variable][] = comment_course_rating

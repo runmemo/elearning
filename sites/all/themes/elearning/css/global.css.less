@@ -2793,7 +2793,7 @@ div.quiz-report {
   .home-courses-provider {
     .left();
   }
-  .views-field-course-rating {
+  .views-field-field-rating {
     .right();
     .show(table);
     margin-right: 5px;
@@ -2867,16 +2867,21 @@ div.quiz-report {
   }
 }
 
+.field-type-fivestar {
+  .field-label {
+    .bold(14px);
+    text-align: center;
+    color: #505050;
+    padding-bottom: 20px;
+  }
+}
+
 .course-rating-form {
-  .form-item-rating {
+  .form-item {
     margin: 0;
-    label {
-      .bold(14px);
-      text-align: center;
-      color: #505050;
-      padding-bottom: 20px;
-    }
-    span.form-required, .ui-selectmenu {
+  }
+  .form-type-fivestar {
+    span.form-required, .ui-selectmenu, .description {
       .show(none);
     }
     .star {
@@ -2919,8 +2924,9 @@ div.quiz-report {
     width: 100%;
     padding-top: 20px;
   }
-  .form-submit {
+  .fivestar-submit.form-submit {
     margin-top: 11px;
+    .show(block);
   }
 }
 

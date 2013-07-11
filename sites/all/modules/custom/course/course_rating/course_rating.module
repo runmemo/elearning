@@ -13,13 +13,36 @@ function course_rating_menu() {
   $items = array();
   $items['rate-course/%node/%user'] = array(
     'title' => 'Rate this course',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('course_rating_course_rating_form', 1, 2),
+    'page callback' => 'course_rating_page',
+    'page arguments' => array(1, 2),
     'access callback' => TRUE,
     'type' => MENU_NORMAL_ITEM,
     'modal' => TRUE,
+    'file' => 'course_rating.pages.inc',
   );
   return $items;
+}
+
+/**
+ * Implements hook_field_formatter_info().
+ */
+function course_rating_field_formatter_info() {
+  return array(
+    'course_rating_fivestar_formatter' => array(
+      'label' => t('Course rating formatter'),
+      'field types' => array('fivestar'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_field_formatter_view().
+ */
+function course_rating_field_formatter_view($entity_type, $entity, $field, $instance, $lang_code, $items, $display) {
+  $elements[0] = array(
+    '#markup' => $items[0]['average'] > 0 ? number_format($items[0]['average'] / 10, 1, '.', ' ') : '0.0',
+  );
+  return $elements;
 }
 
 /**
@@ -65,44 +88,32 @@ function course_rating_form_block() {
 }
 
 /**
- * Form for setting course rating.
- * 
- * @param object $course
- *   Course object
- * @param object $user
- *   User object
- * 
+ * Implements hook_form_FORM_ID_alter.
  */
-function course_rating_course_rating_form($form, &$form_state, $course, $user) {
-  $form = array();
-  $form['#attributes']['class'][] = 'course-rating-form';
-  if (!course_registration_id($user->uid, $course->nid)) {
-    $form['msg'] = array(
-      '#markup' => t('Please, register to the !course.', array('!course' => l(t('course'), 'course/' . $course->nid))),
-    );
-    return $form;
-  }
-  if (!isset($form_state['rating_nid'])) {
-    $form_state['rating_nid'] = course_is_reviewed($course->nid, $user->uid);
-  }
-  if ($form_state['rating_nid']) {
+function course_rating_form_fivestar_custom_widget_alter(&$form, &$form_state, $form_id) {
+  $course_nid = $form_state['build_info']['args'][1]['content_id'];
+  $form_state['course_nid'] = $course_nid;
+  if (isset($_SESSION['courses_rating']['course_' . $course_nid]['rating_nid'])) {
     $form_state['mode'] = 'update';
-    $rating_wrapper = entity_metadata_wrapper('node', $form_state['rating_nid']);
-    $rating = $rating_wrapper->field_rating->raw();
+    $rating_wrapper = entity_metadata_wrapper('node', $_SESSION['courses_rating']['course_' . $course_nid]['rating_nid']);
     $body = $rating_wrapper->body->value();
     $review = $body['value'];
   }
   else {
     $form_state['mode'] = 'insert';
   }
-
-  $form['rating'] = array(
-    '#type' => 'fivestar',
-    '#stars' => 10,
-    '#title' => t('Rate the usefulness of the course on a scale:'),
-    '#required' => TRUE,
-    '#default_value' => isset($rating) ? $rating : NULL,
-    '#pre_render' => array('course_rating_pre_render_fivestar'),
+  $form['#submit'][] = 'course_rating_fivestar_custom_widget_form_submit';
+  $form['#prefix'] = '<div id="course-rating-form-wrapper">';
+  $form['#suffix'] = '</div>';
+  $form['#attributes']['class'][] = 'course-rating-form';
+  $form['vote']['#auto_submit'] = FALSE;
+  $form['vote']['#settings']['autosubmit'] = FALSE;
+  $form['fivestar_submit']['#weight'] = 11;
+  $form['fivestar_submit']['#ajax'] = array(
+    'callback' => 'course_rating_fivestar_form_js',
+    'wrapper' => 'course-rating-form-wrapper',
+    'method' => 'replace',
+    'effect' => 'fade',
   );
   $form['review'] = array(
     '#type' => 'textarea',
@@ -113,12 +124,15 @@ function course_rating_course_rating_form($form, &$form_state, $course, $user) {
       'placeholder' => t('Enter your comment'),
     ),
     '#suffix' => '<div class="form-section-separator"></div>',
+    '#weight' => 10,
   );
-  $form['rating_submit'] = array(
-    '#type' => 'submit',
-    '#value' => t('Submit'),
-  );
+}
 
+/**
+ * AJAX callback for course rating modal form.
+ */
+function course_rating_fivestar_form_js($form, &$form_state) {
+  $form['#pre_render'] = array('course_rating_pre_render_fivestar');
   return $form;
 }
 
@@ -128,35 +142,43 @@ function course_rating_course_rating_form($form, &$form_state, $course, $user) {
  * 
  * @param array $element
  *   Form element array
+ * 
  * @return array
  *   Customized form element array
  */
 function course_rating_pre_render_fivestar($element) {
   $i = 0;
-  foreach ($element['vote']['#options'] as $key => &$option) {
+  if (isset($element['#field_name'])) {
+    $options = &$element[0]['vote']['vote']['#options'];
+  }
+  else {
+    $options = &$element['vote']['vote']['#options'];
+  }
+  foreach ($options as $key => &$option) {
     $option = $i;
     $i++;
   }
-  
+
   return $element;
 }
 
 /**
- * Implements hook FORM_ID_submit for course_course_rating_form().
+ * Additional submit for fivestar_custom_widget(). Handles course_rating node
+ * inserting/updating.
  */
-function course_rating_course_rating_form_submit($form, &$form_state) {
+function course_rating_fivestar_custom_widget_form_submit($form, &$form_state) {
   if ($form_state['mode'] == 'update') {
-    $node = node_load($form_state['rating_nid']);
+    $node = node_load($_SESSION['courses_rating']['course_' . $form_state['course_nid']]['rating_nid']);
     if ($node) {
       $lang = $node->language;
       $node->body[$lang][0]['value'] = $form_state['values']['review'];
-      $node->field_rating[$lang][0]['rating'] = $form_state['values']['rating'];
       node_save($node);
     }
   }
   else {
-    $course_nid = $form_state['build_info']['args'][0]->nid;
-    $uid = $form_state['build_info']['args'][1]->uid;
+    global $user;
+    $course_nid = $form_state['course_nid'];
+    $uid = $user->uid;
     $node = new stdClass();
     $node->type = 'course_rating';
     node_object_prepare($node);
@@ -164,9 +186,10 @@ function course_rating_course_rating_form_submit($form, &$form_state) {
     $node->language = LANGUAGE_NONE;
     $node->body[$node->language][0]['value'] = $form_state['values']['review'];
     $node->field_course[$node->language][0]['target_id'] = $course_nid;
-    $node->field_rating[$node->language][0]['rating'] = $form_state['values']['rating'];
     node_save($node);
+    $_SESSION['courses_rating']['course_' . $form_state['course_nid']]['rating_nid'] = $node->nid;
   }
+  $form_state['rebuild'] = TRUE;
 }
 
 /**
@@ -201,25 +224,4 @@ function course_is_reviewed($nid, $uid = NULL) {
     }
   }
   return FALSE; 
-}
-
-/**
- * Calculates average rating for the course.
- * 
- * @param integer $course_nid
- *   Node ID of the course
- * 
- * @return float
- *   Average course rating
- */
-function course_rating_get_rating($course_nid) {
-  $query = db_select('field_data_field_rating', 'fr');
-  $query->join('field_data_field_course', 'fc', 'fr.entity_id = fc.entity_id');
-  $query->fields('fr', array('field_rating_rating'));
-  $query->condition('fc.field_course_target_id', $course_nid);
-  $query->condition('fr.bundle', 'course_rating');
-  $query->addExpression('AVG(fr.field_rating_rating)', 'avg_rating');
-  $db_result = $query->execute();
-  $result = $db_result->fetch();
-  return $result->avg_rating ? number_format($result->avg_rating / 10, 1, '.', ' ') : '0.0';
 }
