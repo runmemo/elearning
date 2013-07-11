@@ -260,7 +260,6 @@ function relevant_answers_extra_views_default_views() {
   $handler = $view->new_display('default', 'Master', 'default');
   $handler->display->display_options['title'] = 'Course Questions';
   $handler->display->display_options['css_class'] = 'view-questions-list';
-  $handler->display->display_options['use_ajax'] = FALSE;
   $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['access']['type'] = 'php';
   $handler->display->display_options['access']['php_access'] = '$nid = arg(1);
@@ -268,7 +267,6 @@ return  course_registration_id($account->uid, $nid);';
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
   $handler->display->display_options['exposed_form']['type'] = 'basic';
-  $handler->display->display_options['exposed_form']['options']['autosubmit'] = FALSE;
   $handler->display->display_options['exposed_form']['options']['submit_button'] = 'Search';
   $handler->display->display_options['pager']['type'] = 'full';
   $handler->display->display_options['pager']['options']['items_per_page'] = '10';
@@ -365,7 +363,7 @@ return  course_registration_id($account->uid, $nid);';
   $handler->display->display_options['arguments']['field_question_path_value']['limit'] = '0';
   /* Filter criterion: Content: Published */
   $handler->display->display_options['filters']['status']['id'] = 'status';
-  $handler->display->display_options['filters']['status']['table'] = 'node';
+  $handler->display->display_options['filters']['status']['table'] = 'node'; 
   $handler->display->display_options['filters']['status']['field'] = 'status';
   $handler->display->display_options['filters']['status']['value'] = 1;
   $handler->display->display_options['filters']['status']['group'] = 1;
@@ -377,23 +375,28 @@ return  course_registration_id($account->uid, $nid);';
   $handler->display->display_options['filters']['type']['value'] = array(
     'question' => 'question',
   );
-  /* Filter criterion: Content: Title */
-  $handler->display->display_options['filters']['title']['id'] = 'title';
-  $handler->display->display_options['filters']['title']['table'] = 'node';
-  $handler->display->display_options['filters']['title']['field'] = 'title';
-  $handler->display->display_options['filters']['title']['operator'] = 'word';
-  $handler->display->display_options['filters']['title']['exposed'] = TRUE;
-  $handler->display->display_options['filters']['title']['expose']['operator_id'] = 'title_op';
-  $handler->display->display_options['filters']['title']['expose']['label'] = '';
-  $handler->display->display_options['filters']['title']['expose']['operator'] = 'title_op';
-  $handler->display->display_options['filters']['title']['expose']['identifier'] = 'title';
-  $handler->display->display_options['filters']['title']['expose']['remember_roles'] = array(
+  $handler->display->display_options['filters']['type']['group'] = 1;
+  /* Filter criterion: Global: Combine fields filter */
+  $handler->display->display_options['filters']['combine']['id'] = 'combine';
+  $handler->display->display_options['filters']['combine']['table'] = 'views';
+  $handler->display->display_options['filters']['combine']['field'] = 'combine';
+  $handler->display->display_options['filters']['combine']['operator'] = 'word';
+  $handler->display->display_options['filters']['combine']['group'] = 1;
+  $handler->display->display_options['filters']['combine']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['combine']['expose']['operator_id'] = 'combine_op';
+  $handler->display->display_options['filters']['combine']['expose']['operator'] = 'combine_op';
+  $handler->display->display_options['filters']['combine']['expose']['identifier'] = 'combine';
+  $handler->display->display_options['filters']['combine']['expose']['remember_roles'] = array(
     2 => '2',
     1 => 0,
     3 => 0,
     4 => 0,
     5 => 0,
     6 => 0,
+  );
+  $handler->display->display_options['filters']['combine']['fields'] = array(
+    'title' => 'title',
+    'body' => 'body',
   );
 
   /* Display: Page */
