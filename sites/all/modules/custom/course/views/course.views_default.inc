@@ -309,12 +309,22 @@ function course_views_default_views() {
     'image_style' => 'provider_home_picture',
     'image_link' => '',
   );
-  /* Field: Global: Course Rating */
-  $handler->display->display_options['fields']['course_rating']['id'] = 'course_rating';
-  $handler->display->display_options['fields']['course_rating']['table'] = 'views';
-  $handler->display->display_options['fields']['course_rating']['field'] = 'course_rating';
-  $handler->display->display_options['fields']['course_rating']['label'] = 'rating';
-  $handler->display->display_options['fields']['course_rating']['element_label_colon'] = FALSE;
+  /* Field: Field: Rating */
+  $handler->display->display_options['fields']['field_rating']['id'] = 'field_rating';
+  $handler->display->display_options['fields']['field_rating']['table'] = 'field_data_field_rating';
+  $handler->display->display_options['fields']['field_rating']['field'] = 'field_rating';
+  $handler->display->display_options['fields']['field_rating']['label'] = 'rating';
+  $handler->display->display_options['fields']['field_rating']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_rating']['click_sort_column'] = 'rating';
+  $handler->display->display_options['fields']['field_rating']['type'] = 'course_rating_fivestar_formatter';
+  $handler->display->display_options['fields']['field_rating']['settings'] = array(
+    'widget' => array(
+      'fivestar_widget' => 'default',
+    ),
+    'expose' => 1,
+    'style' => 'average',
+    'text' => 'average',
+  );
   /* Field: User: First Name */
   $handler->display->display_options['fields']['field_first_name']['id'] = 'field_first_name';
   $handler->display->display_options['fields']['field_first_name']['table'] = 'field_data_field_first_name';

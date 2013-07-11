@@ -108,9 +108,9 @@ function course_rating_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-course_rating-field_rating'
-  $field_instances['node-course_rating-field_rating'] = array(
-    'bundle' => 'course_rating',
+  // Exported field_instance: 'node-course-field_rating'
+  $field_instances['node-course-field_rating'] = array(
+    'bundle' => 'course',
     'default_value' => NULL,
     'deleted' => 0,
     'description' => '',
@@ -118,54 +118,49 @@ function course_rating_field_default_field_instances() {
       'default' => array(
         'label' => 'above',
         'module' => 'fivestar',
-        'type' => 'fivestar_formatter_default',
         'settings' => array(
-          'text' => 'average',
-          'expose' => TRUE,
-          'style' => 'average',
-          'text' => 'average',
-          'widget' => array(),
-        ),
-        'weight' => 2,
-      ),
-      'full' => array(
-        'label' => 'above',
-        'module' => 'fivestar',
-        'settings' => array(
-          'expose' => TRUE,
-          'style' => 'average',
-          'text' => 'average',
+          'expose' => 1,
+          'style' => 'user',
+          'text' => 'none',
           'widget' => array(
-            'fivestar_widget' => NULL,
+            'fivestar_widget' => 'default',
           ),
         ),
         'type' => 'fivestar_formatter_default',
-        'weight' => 2,
+        'weight' => 12,
+      ),
+      'full' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
       ),
     ),
     'entity_type' => 'node',
     'field_name' => 'field_rating',
-    'label' => 'Rating',
+    'label' => 'Rate the usefulness of the course on a scale',
     'required' => 0,
     'settings' => array(
       'allow_clear' => 0,
-      'stars' => 5,
+      'stars' => 10,
       'target' => 'none',
       'user_register_form' => FALSE,
     ),
     'widget' => array(
       'active' => 1,
       'module' => 'fivestar',
-      'settings' => array(
-        'widget' => array(
-          'fivestar_widget' => 'default',
-        ),
-      ),
-      'type' => 'stars',
-      'weight' => 2,
+      'settings' => array(),
+      'type' => 'exposed',
+      'weight' => 32,
     ),
   );
-
+  
   // Translatables
   // Included for use with string extractors like potx.
   t('Course');
