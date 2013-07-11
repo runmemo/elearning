@@ -215,11 +215,21 @@ function quick_question_submit_callback($form, &$form_state) {
 }
 
 /**
- * Implements hook_views_pre_rende
+ * Implements hook_views_pre_render
  */
 function relevant_answers_extra_views_pre_render(&$view) {
   if ($view->name == 'course_questions') {
+    $text = (isset($_GET['title']) && !empty($_GET['title'])) ? t('Questions found') : t('All questions');
+    $count = isset($view->total_rows) ? $view->total_rows : count($view->result);
+    $view->attachment_before = '<div class="count">'. $text . ': ' . $count. '</div>';
+  }
+}
 
+/**
+ * Implements hook_views_pre_view
+ */
+function relevant_answers_extra_views_pre_view(&$view, &$display_id, &$args) {
+  if ($view->name == 'course_questions' && $display_id == 'page') {
     //Add links to the relevant questions views
     if (user_access('create question content')) {
       $links = array();
@@ -242,12 +252,8 @@ function relevant_answers_extra_views_pre_render(&$view) {
         'field' => 'area',
         'content' => theme('links', array('links' => $links, 'attributes' => array('class' => array('inline')))),
       );
-      $view->set_item('default', 'header', 'area', $options);
+      $view->display_handler->set_option('header', array('text' => $options));
     }
-
-    $text = (isset($_GET['title']) && !empty($_GET['title'])) ? t('Questions found') : t('All questions');
-    $count = isset($view->total_rows) ? $view->total_rows : count($view->result);
-    $view->attachment_before .= '<div class="count">'. $text . ': ' . $count. '</div>';
   }
 }
 
