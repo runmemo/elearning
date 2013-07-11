@@ -100,7 +100,7 @@ function _get_relevant_questions_list($path = NULL) {
 /**
  * Form for submission of a relevant question on a page.
  */
-function quick_question_form($form, &$form_state) {
+function quick_question_form($form, &$form_state, $options = array()) {
   if (!user_access('create question content')) {
     return;
   }
@@ -123,9 +123,19 @@ function quick_question_form($form, &$form_state) {
     '#title' => $fs_title
   );
 
-  if(empty($form_state['storage']['original_path'])) { 
-    $form_state['storage']['original_path'] = implode('/', arg());
+  if (empty($form_state['storage']['original_path'])) { 
+    if (isset($options['path'])) {
+      $form_state['storage']['original_path'] = $options['path'];
+    }
+    else {
+      $form_state['storage']['original_path'] = implode('/', arg());
+    }
   }
+
+  if (empty($form_state['storage']['page']) && isset($options['page'])) { 
+    $form_state['storage']['page'] = $options['page'];
+  }
+
   
   $form['fields']['question'] = array(
     '#type' => 'textfield',
@@ -203,26 +213,22 @@ function quick_question_submit_callback($form, &$form_state) {
     $form_state['rebuild'] = TRUE;
     return $form;
   }
-
   // values were saved, we can clean the form
   unset($form['fields']['question']['#value']);
   unset($form['fields']['description']['#value']);
-  $original_path = $form_state['storage']['original_path'];
   $commands[] = ajax_command_replace('#message-placeholder', _get_quick_question_completion_text());
-  $commands[] = ajax_command_replace('.view-questions-list', _get_relevant_questions_list($original_path));
+
+  if ($form_state['storage']['page'] == 'forum') {
+    $commands[] = ajax_command_replace('.view-content', _get_relevant_questions_list($form_state['storage']['original_path']));
+    //@todo barinder: Get rid off this
+    $commands[] = ajax_command_replace('.view-empty', _get_relevant_questions_list($form_state['storage']['original_path']));
+  }
+  else {
+    $commands[] = ajax_command_replace('.view-questions-list', _get_relevant_questions_list($form_state['storage']['original_path']));
+  }
+
   $commands[] = ajax_command_replace('#quick-question-wrapper', render($form));
   return array('#type' => 'ajax', '#commands' => $commands);
-}
-
-/**
- * Implements hook_views_pre_render
- */
-function relevant_answers_extra_views_pre_render(&$view) {
-  if ($view->name == 'course_questions') {
-    $text = (isset($_GET['title']) && !empty($_GET['title'])) ? t('Questions found') : t('All questions');
-    $count = isset($view->total_rows) ? $view->total_rows : count($view->result);
-    $view->attachment_before = '<div class="count">'. $text . ': ' . $count. '</div>';
-  }
 }
 
 /**
@@ -246,11 +252,20 @@ function relevant_answers_extra_views_pre_view(&$view, &$display_id, &$args) {
           'class' => array('add-question')
         )
       );
+      //@todo Barinder: use empty option in quick_question form.
+      $view_empty = is_null($view->total_rows) ? TRUE : FALSE;
+      $form_options = array(
+        'page' => 'forum',
+        'path' => $original_path,
+        'empty' => $view_empty
+      );
       $options = array(
         'id' => 'area',
         'table' => 'views',
         'field' => 'area',
-        'content' => theme('links', array('links' => $links, 'attributes' => array('class' => array('inline')))),
+        'format' => 'php_code',
+        'empty' => TRUE,
+        'content' => render(drupal_get_form('quick_question_form', $form_options)),
       );
       $view->display_handler->set_option('header', array('text' => $options));
     }
