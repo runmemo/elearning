@@ -93,14 +93,25 @@ function course_rating_form_block() {
 function course_rating_form_fivestar_custom_widget_alter(&$form, &$form_state, $form_id) {
   $course_nid = $form_state['build_info']['args'][1]['content_id'];
   $form_state['course_nid'] = $course_nid;
-  if (isset($_SESSION['courses_rating']['course_' . $course_nid]['rating_nid'])) {
-    $form_state['mode'] = 'update';
-    $rating_wrapper = entity_metadata_wrapper('node', $_SESSION['courses_rating']['course_' . $course_nid]['rating_nid']);
+  global $user;
+  
+  if (isset($form_state['storage']['rating_nid'])) {
+    $rating_nid = $form_state['storage']['rating_nid'];
+  }
+  else {
+     $rating_nid = course_is_reviewed($course_nid, $user->uid);
+     $form_state['storage']['rating_nid'] = $rating_nid;
+  }
+   
+  if ($rating_nid) {
+    $form_state['storage']['rating_nid'] = $rating_nid;
+    $form_state['storage']['mode'] = 'update';
+    $rating_wrapper = entity_metadata_wrapper('node', $rating_nid);
     $body = $rating_wrapper->body->value();
     $review = $body['value'];
   }
   else {
-    $form_state['mode'] = 'insert';
+    $form_state['storage']['mode'] = 'insert';
   }
   $form['#submit'][] = 'course_rating_fivestar_custom_widget_form_submit';
   $form['#prefix'] = '<div id="course-rating-form-wrapper">';
@@ -132,8 +143,13 @@ function course_rating_form_fivestar_custom_widget_alter(&$form, &$form_state, $
  * AJAX callback for course rating modal form.
  */
 function course_rating_fivestar_form_js($form, &$form_state) {
-  $form['#pre_render'] = array('course_rating_pre_render_fivestar');
-  return $form;
+  ctools_include('ajax');
+  ctools_add_js('ajax-responder');
+  ctools_include('modal');
+  $commands[] = ctools_modal_command_dismiss();
+  print ajax_render($commands);
+  exit;    
+
 }
 
 /**
@@ -167,8 +183,8 @@ function course_rating_pre_render_fivestar($element) {
  * inserting/updating.
  */
 function course_rating_fivestar_custom_widget_form_submit($form, &$form_state) {
-  if ($form_state['mode'] == 'update') {
-    $node = node_load($_SESSION['courses_rating']['course_' . $form_state['course_nid']]['rating_nid']);
+  if ($form_state['storage']['mode'] == 'update') {
+    $node = node_load($form_state['storage']['rating_nid']);
     if ($node) {
       $lang = $node->language;
       $node->body[$lang][0]['value'] = $form_state['values']['review'];
@@ -187,9 +203,8 @@ function course_rating_fivestar_custom_widget_form_submit($form, &$form_state) {
     $node->body[$node->language][0]['value'] = $form_state['values']['review'];
     $node->field_course[$node->language][0]['target_id'] = $course_nid;
     node_save($node);
-    $_SESSION['courses_rating']['course_' . $form_state['course_nid']]['rating_nid'] = $node->nid;
+    $form_state['storage']['rating_nid'] = $node->nid;
   }
-  $form_state['rebuild'] = TRUE;
 }
 
 /**
