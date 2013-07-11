@@ -237,6 +237,20 @@ function relevant_answers_extra_views_pre_render(&$view) {
         )
       );
     }
-    $view->attachment_before = theme('links', array('links' => $links, 'attributes' => array('class' => array('inline'))));
+
+    $view->attachment_before .= theme('links', array('links' => $links, 'attributes' => array('class' => array('inline'))));
+
+    $text = (isset($_GET['title']) && !empty($_GET['title'])) ? t('Questions found') : t('All questions');
+    $count = isset($view->total_rows) ? $view->total_rows : count($view->result);
+    $view->attachment_before .= '<div class="count">'. $text . ': ' . $count. '</div>';
+  }
+}
+
+/**
+ *  Implements hook_form_alter.
+ */
+function relevant_answers_extra_form_alter(&$form, &$form_state, $form_id) {
+  if ($form_id == 'views_exposed_form') {
+    $form['title']['#attributes']['placeholder'] = t('Enter begining of the question, you are searching for.');
   }
 }

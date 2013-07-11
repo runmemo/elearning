@@ -2466,25 +2466,51 @@ div.quiz-report {
 
 .view-course-questions {
   .view-filters{
-    float: left;
+    height: 58px;
+    border: solid 1px #e4e1e1;
+    .form-item-gradient(#f8f8f8, #f8f8f8, #f4f3f3);
     .views-exposed-form {
-      .views-widget,
-      label {
-        float: left;
-        padding-right: 10px;
+      .views-widget-filter-title {
+        padding: 7px 0 0 7px;
+        width: 87.5%;
+        input {
+          height: 44px;
+          border: solid 1px #d8d8d8;
+          .bold(16px);
+          color: #d2491d;
+          padding-left: 10px;
+        }
       }
       .views-submit-button {
-        padding: 0;
+        float: right;
+        padding: 7px 7px 0 0;
+        width: 10%;
+        min-width: 65px;
+        @media @mobile {
+          position: absolute;
+          right: 15px;
+        }      
+        .form-submit {
+          margin: 0;
+          height: 44px;
+          width: 100%;
+          padding: 0;
+        }
       }
     }
   }
   .attachment-before {
-    float: right;
+    .count {
+      .border-bottom-dotted();
+      .bold(14px);
+      padding: 25px 0px 8px 0px;
+      margin-bottom: 30px;
+    }
     .add-question {
       .link();
       .text-orange();
       .bold(14px);
-      float: left;
+      float: right;
       margin-top: 10px;
       .bg-img('ask-question.png');
       .link-image-left(20px);
