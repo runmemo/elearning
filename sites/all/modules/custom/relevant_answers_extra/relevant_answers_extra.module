@@ -220,13 +220,11 @@ function quick_question_submit_callback($form, &$form_state) {
 function relevant_answers_extra_views_pre_render(&$view) {
   if ($view->name == 'course_questions') {
 
-    $links = array();
-
-    $original_path = implode('/', $view->args);
-    $compressed_path = relevant_answers_compress_string($original_path);
-    
     //Add links to the relevant questions views
     if (user_access('create question content')) {
+      $links = array();
+      $original_path = implode('/', $view->args);
+      $compressed_path = relevant_answers_compress_string($original_path);
       $links[] = array(
         'title' => t('Ask Question'), 
         'href' => 'node/add/question',
@@ -238,9 +236,14 @@ function relevant_answers_extra_views_pre_render(&$view) {
           'class' => array('add-question')
         )
       );
+      $options = array(
+        'id' => 'area',
+        'table' => 'views',
+        'field' => 'area',
+        'content' => theme('links', array('links' => $links, 'attributes' => array('class' => array('inline')))),
+      );
+      $view->set_item('default', 'header', 'area', $options);
     }
-
-    $view->attachment_before .= theme('links', array('links' => $links, 'attributes' => array('class' => array('inline'))));
 
     $text = (isset($_GET['title']) && !empty($_GET['title'])) ? t('Questions found') : t('All questions');
     $count = isset($view->total_rows) ? $view->total_rows : count($view->result);
@@ -252,7 +255,7 @@ function relevant_answers_extra_views_pre_render(&$view) {
  *  Implements hook_form_alter.
  */
 function relevant_answers_extra_form_alter(&$form, &$form_state, $form_id) {
-  if ($form_id == 'views_exposed_form') {
-    $form['title']['#attributes']['placeholder'] = t('Enter begining of the question, you are searching for.');
+  if ($form_id == 'views_exposed_form' && $form['#id'] == 'views-exposed-form-course-questions-page') {
+    $form['combine']['#attributes']['placeholder'] = t('Enter begining of the question, you are searching for.');
   }
 }
