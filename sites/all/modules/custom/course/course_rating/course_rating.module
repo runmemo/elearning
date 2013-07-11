@@ -4,8 +4,6 @@
  * Code for the Course Rating feature.
  */
 
-include_once 'course_rating.features.inc';
-
 /**
  *  Implements hook_menu() for course module.
  */
@@ -21,6 +19,68 @@ function course_rating_menu() {
     'file' => 'course_rating.pages.inc',
   );
   return $items;
+}
+
+/**
+ * Implement hook_entity_info().
+ *
+ * We define two entities here - the actual entity that will hold our domain
+ * specific information and an entity that holds information about the different
+ * types of entities. See here: http://drupal.org/node/977380 for a discussion on this
+ * choice.
+ */
+function course_rating_entity_info() {
+  $return['course_rating'] = array(
+    'label' => t('Course rating'),
+    // The entity class and controller class extend the classes provided by the
+    // Entity API
+    'entity class' => 'CourseRating',
+    'controller class' => 'CourseRatingController',
+    'base table' => 'course_rating',
+    'fieldable' => TRUE,
+    'entity keys' => array(
+      'id' => 'rating_id',
+    ),
+    // Bundles are defined by the rating types below
+    'bundles' => array(
+      'Rating' => array(
+        'label' => 'Course rating ',
+        'admin' => array(
+          'path' => 'admin/structure/course_rating/manage',
+          'access arguments' => array('administer postits'),
+        ),
+      ),
+    ),
+    'label callback' => 'entity_class_label',
+    'uri callback' => 'entity_class_uri',
+    'creation callback' => 'course_rating_create',
+    //'access callback' => 'course_rating_access',
+    'module' => 'course_rating',
+    // The information below is used by the RegistrationUIController (which extends the EntityDefaultUIController)
+   // 'admin ui' => array(
+   //   'path' => 'admin/content/course_ratings',
+  //    'file' => 'registration.admin.inc',
+  //    'controller class' => 'CourseRatingUIController',
+  //    'menu wildcard' => '%course_rating',
+  //  ),
+  );
+  return $return;
+}
+
+/**
+ * Create a rating object.
+ */
+function course_rating_create($values = array()) {
+  return entity_get_controller('course_rating')->create($values);
+}
+
+function course_rating_load($rating_id, $reset = FALSE) {
+  $ratings = course_rating_load_multiple(array($rating_id), array(), $reset);
+  return reset($ratings);
+}
+
+function course_rating_load_multiple($rating_ids = array(), $conditions = array(), $reset = FALSE) {
+  return entity_load('course_rating', $rating_ids, $conditions, $reset);
 }
 
 /**
@@ -99,16 +159,15 @@ function course_rating_form_fivestar_custom_widget_alter(&$form, &$form_state, $
     $rating_nid = $form_state['storage']['rating_nid'];
   }
   else {
-     $rating_nid = course_is_reviewed($course_nid, $user->uid);
+     $rating_nid = course_rating_reviewed($course_nid, $user->uid);
      $form_state['storage']['rating_nid'] = $rating_nid;
   }
-   
+ 
   if ($rating_nid) {
     $form_state['storage']['rating_nid'] = $rating_nid;
     $form_state['storage']['mode'] = 'update';
-    $rating_wrapper = entity_metadata_wrapper('node', $rating_nid);
-    $body = $rating_wrapper->body->value();
-    $review = $body['value'];
+    $rating = course_rating_load($rating_nid);
+    $review = $rating->review;
   }
   else {
     $form_state['storage']['mode'] = 'insert';
@@ -179,31 +238,35 @@ function course_rating_pre_render_fivestar($element) {
 }
 
 /**
- * Additional submit for fivestar_custom_widget(). Handles course_rating node
+ * Additional submit for fivestar_custom_widget(). Handles course_rating entity
  * inserting/updating.
  */
 function course_rating_fivestar_custom_widget_form_submit($form, &$form_state) {
   if ($form_state['storage']['mode'] == 'update') {
-    $node = node_load($form_state['storage']['rating_nid']);
-    if ($node) {
-      $lang = $node->language;
-      $node->body[$lang][0]['value'] = $form_state['values']['review'];
-      node_save($node);
+    $rating = course_rating_load($form_state['storage']['rating_nid']);
+    if ($rating) {
+      $rating->review = $form_state['values']['review'];
+      $rating->save();
+    }
+    else {
+      // @todo Ilya: what happens here?
     }
   }
   else {
     global $user;
     $course_nid = $form_state['course_nid'];
     $uid = $user->uid;
-    $node = new stdClass();
-    $node->type = 'course_rating';
-    node_object_prepare($node);
-    $node->title = 'Course rating nid#' . $course_nid . '# uid#' . $uid;
-    $node->language = LANGUAGE_NONE;
-    $node->body[$node->language][0]['value'] = $form_state['values']['review'];
-    $node->field_course[$node->language][0]['target_id'] = $course_nid;
-    node_save($node);
-    $form_state['storage']['rating_nid'] = $node->nid;
+    
+    $values = array (
+      'nid' => $course_nid,
+      'uid' => $uid,
+      'review' => $form_state['values']['review'],
+      'created' => time(),
+    );
+   
+    $rating = course_rating_create($values);
+    $rating->save();
+    $form_state['storage']['rating_nid'] = $rating->rating_id;
   }
 }
 
@@ -218,17 +281,11 @@ function course_rating_fivestar_custom_widget_form_submit($form, &$form_state) {
  * @return integer
  *   ID of the rating node if exists, otherwise FALSE
  */
-function course_is_reviewed($nid, $uid = NULL) {
-  if (is_null($uid)) {
-    global $user;
-    $uid = $user->uid;
-  }
+function course_rating_reviewed($nid, $uid) {
   $query = new EntityFieldQuery();
-  $query->entityCondition('entity_type', 'node')
-      ->entityCondition('bundle', 'course_rating')
-      ->propertyCondition('status', 1)
+  $query->entityCondition('entity_type', 'course_rating')
       ->propertyCondition('uid', $uid)
-      ->fieldCondition('field_course', 'target_id', $nid)
+      ->propertyCondition('nid', $nid)
       ->range(0, 1);
 
   $result = $query->execute();
@@ -240,3 +297,76 @@ function course_is_reviewed($nid, $uid = NULL) {
   }
   return FALSE; 
 }
+
+/**
+ * The class used for Course Rating entities
+ */
+class CourseRating extends Entity {
+
+  public function __construct($values = array()) {
+    parent::__construct($values, 'course_rating');
+  }
+
+  protected function defaultLabel() {
+    return $this->name;
+  }
+
+  protected function defaultUri() {
+    return array('path' => 'course_rating/' . $this->registration_id);
+  }
+
+}
+
+
+/**
+ * The Controller for Course Rating entities
+ */
+class CourseRatingController extends EntityAPIController {
+
+  public function __construct($entityType) {
+    parent::__construct($entityType);
+  }
+
+  /**
+   * Create a rating - we first set up the values that are specific
+   * to our rating schema but then also go through the EntityAPIController
+   * function.
+   * 
+   * @param $type
+   *   The machine-readable type of the rating.
+   *
+   * @return
+   *   A rating object with all default fields initialized.
+   */
+  public function create(array $values = array()) {
+    // Add values that are specific to our Course Rating
+    $values += array(
+      'rating_id' => '',
+      'is_new' => TRUE,
+      'title' => '',
+      'created' => '',
+      'changed' => '',
+      'data' => '',
+      // registration specific fields:
+      'nid' => $values['nid'],
+      'uid' => $values['uid'],
+    );
+
+    $rating = parent::create($values);
+    return $rating;
+  }
+
+  /**
+   * Overriding the buldContent function to add entity specific fields
+   */
+  public function buildContent($entity, $view_mode = 'full', $langcode = NULL, $content = array()) {
+    $content = parent::buildContent($entity, $view_mode, $langcode, $content);
+    $content['rating_sample_data'] = array(
+      '#markup' => theme('rating_sample_data', array('rating_sample_data' => check_plain($entity->data['sample_data']), 'rating' => $entity)),
+    );
+
+    return $content;
+  }
+
+}
+

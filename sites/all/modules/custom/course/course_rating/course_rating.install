@@ -1,0 +1,63 @@
+<?php
+
+
+/**
+ * Implements hook_schema().
+ */
+function course_rating_schema() {
+ 
+  $schema = array();
+  $schema['course_rating'] = array(
+    'description' => 'The base table for course rating entities.',
+    'fields' => array(
+      'rating_id' => array(
+        'description' => 'Primary Key: Identifier for a rating.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'nid' => array(
+        'description' => 'Id of the entity to which rating is related.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+       'uid' => array(
+        'description' => 'Id of the user who left rating.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'created' => array(
+        'description' => 'The Unix timestamp when rating was created.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'review' => array(
+        'description' => 'Comment attached to the rating',
+        'type' => 'text',
+        'size' => 'normal',
+        'not null' => FALSE,
+      )
+     ),
+    'primary key' => array('rating_id'),
+    'indexes' => array(
+      'indx_course_rating' => array('nid', 'uid'),
+    ),
+    'foreign keys' => array(
+      'node_id' => array(
+          'table' => 'node',
+          'columns' => array('nid' => 'nid'),
+      ),  
+      'registered_user' => array(
+          'table' => 'users',
+          'columns' => array('uid' => 'uid'),
+      ),  
+    ),
+     
+  );
+
+
+  return $schema;
+}
