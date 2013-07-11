@@ -108,8 +108,10 @@ function quick_question_form($form, &$form_state) {
   // On annoucement page we need intially opened quick_question form.
   $active_contexts = context_active_contexts();
   $collapsed = TRUE;
+  $fs_title = t('Ask Question');
   if(isset($active_contexts['annoucement_page'])) {
     $collapsed = FALSE;
+    $fs_title = '';
   }
 
   $form['fields'] = array(
@@ -118,7 +120,7 @@ function quick_question_form($form, &$form_state) {
     '#collapsed' => $collapsed,
     '#prefix' => '<div id="quick-question-wrapper">',
     '#suffix' => '</div>',
-    '#title' => t('Ask Question')
+    '#title' => $fs_title
   );
 
   if(empty($form_state['storage']['original_path'])) { 
