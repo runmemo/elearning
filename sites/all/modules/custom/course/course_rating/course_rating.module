@@ -4,7 +4,14 @@
  * Code for the Course Rating feature.
  */
 
-include_once 'course_rating.features.inc';
+/**
+ * Implements hook_views_api().
+ */
+function course_rating_views_api() {
+  return array(
+    'api' => '3.0',
+    'path' => drupal_get_path('module', 'course_rating') . '/views',);
+}
 
 /**
  *  Implements hook_menu() for course module.
@@ -24,6 +31,68 @@ function course_rating_menu() {
 }
 
 /**
+ * Implements hook_entity_info().
+ *
+ * We define two entities here - the actual entity that will hold our domain
+ * specific information and an entity that holds information about the different
+ * types of entities. See here: http://drupal.org/node/977380 for a discussion on this
+ * choice.
+ */
+function course_rating_entity_info() {
+  $return['course_rating'] = array(
+    'label' => t('Course rating'),
+    // The entity class and controller class extend the classes provided by the
+    // Entity API
+    'entity class' => 'CourseRating',
+    'controller class' => 'CourseRatingController',
+    'base table' => 'course_rating',
+    'fieldable' => TRUE,
+    'entity keys' => array(
+      'id' => 'rating_id',
+    ),
+    // Bundles are defined by the rating types below
+    'bundles' => array(
+      'Rating' => array(
+        'label' => 'Course rating ',
+        'admin' => array(
+          'path' => 'admin/structure/course_rating/manage',
+          'access arguments' => array('administer postits'),
+        ),
+      ),
+    ),
+    'label callback' => 'entity_class_label',
+    'uri callback' => 'entity_class_uri',
+    'creation callback' => 'course_rating_create',
+    //'access callback' => 'course_rating_access',
+    'module' => 'course_rating',
+    // The information below is used by the RegistrationUIController (which extends the EntityDefaultUIController)
+   // 'admin ui' => array(
+   //   'path' => 'admin/content/course_ratings',
+  //    'file' => 'registration.admin.inc',
+  //    'controller class' => 'CourseRatingUIController',
+  //    'menu wildcard' => '%course_rating',
+  //  ),
+  );
+  return $return;
+}
+
+/**
+ * Create a rating object.
+ */
+function course_rating_create($values = array()) {
+  return entity_get_controller('course_rating')->create($values);
+}
+
+function course_rating_load($rating_id, $reset = FALSE) {
+  $ratings = course_rating_load_multiple(array($rating_id), array(), $reset);
+  return reset($ratings);
+}
+
+function course_rating_load_multiple($rating_ids = array(), $conditions = array(), $reset = FALSE) {
+  return entity_load('course_rating', $rating_ids, $conditions, $reset);
+}
+
+/**
  * Implements hook_field_formatter_info().
  */
 function course_rating_field_formatter_info() {
@@ -39,10 +108,13 @@ function course_rating_field_formatter_info() {
  * Implements hook_field_formatter_view().
  */
 function course_rating_field_formatter_view($entity_type, $entity, $field, $instance, $lang_code, $items, $display) {
-  $elements[0] = array(
-    '#markup' => $items[0]['average'] > 0 ? number_format($items[0]['average'] / 10, 1, '.', ' ') : '0.0',
-  );
-  return $elements;
+  $element = array();
+  if ($display['type'] == 'course_rating_fivestar_formatter') {
+    $element[0] = array(
+      '#markup' => $items[0]['average'] > 0 ? number_format($items[0]['average'] / 10, 1, '.', ' ') : '0.0',
+    );
+  }
+  return $element;
 }
 
 /**
@@ -91,65 +163,72 @@ function course_rating_form_block() {
  * Implements hook_form_FORM_ID_alter.
  */
 function course_rating_form_fivestar_custom_widget_alter(&$form, &$form_state, $form_id) {
-  $course_nid = $form_state['build_info']['args'][1]['content_id'];
-  $form_state['course_nid'] = $course_nid;
-  global $user;
-  
-  if (isset($form_state['storage']['rating_nid'])) {
-    $rating_nid = $form_state['storage']['rating_nid'];
+if (isset($form_state['build_info']['args'][1]['entity']->type) && $form_state['build_info']['args'][1]['entity']->type == 'course') {
+    $course_nid = $form_state['build_info']['args'][1]['content_id'];
+    $form_state['course_nid'] = $course_nid;
+    global $user;
+
+    if (isset($form_state['storage']['rating_nid'])) {
+      $rating_nid = $form_state['storage']['rating_nid'];
+    }
+    else {
+      $rating_nid = course_rating_reviewed($course_nid, $user->uid);
+      $form_state['storage']['rating_nid'] = $rating_nid;
+    }
+
+    if ($rating_nid) {
+      $rating = course_rating_load($rating_nid);
+      if ($rating) {
+        $form_state['storage']['rating_nid'] = $rating_nid;
+        $form_state['storage']['mode'] = 'update';
+        $review = $rating->review;
+      } else {
+        $form_state['storage']['rating_nid'] = FALSE;
+        $form_state['storage']['mode'] = 'insert';
+        watchdog('course_rating', 'Course rating object seems to not exist during update. Course ID - %course_nid, Object ID - %rating_nid, User ID - %uid', array('%course_nid' => $form_state['course_nid'], '%rating_nid' => $form_state['storage']['rating_nid'], '%uid' => $user->uid), WATCHDOG_WARNING);
+      }
+    }
+    else {
+      $form_state['storage']['mode'] = 'insert';
+    }
+    $form['#submit'][] = 'course_rating_fivestar_custom_widget_form_submit';
+    $form['#prefix'] = '<div id="course-rating-form-wrapper">';
+    $form['#suffix'] = '</div>';
+    $form['#attributes']['class'][] = 'course-rating-form';
+    $form['vote']['#auto_submit'] = FALSE;
+    $form['vote']['#settings']['autosubmit'] = FALSE;
+    $form['fivestar_submit']['#weight'] = 11;
+    $form['fivestar_submit']['#ajax'] = array(
+      'callback' => 'course_rating_fivestar_form_js',
+      'wrapper' => 'course-rating-form-wrapper',
+      'method' => 'replace',
+      'effect' => 'fade',
+    );
+    $form['review'] = array(
+      '#type' => 'textarea',
+      '#title' => '',
+      '#required' => FALSE,
+      '#default_value' => isset($review) ? $review : '',
+      '#attributes' => array(
+        'placeholder' => t('Enter your comment'),
+      ),
+      '#suffix' => '<div class="form-section-separator"></div>',
+      '#weight' => 10,
+    );
   }
-  else {
-     $rating_nid = course_is_reviewed($course_nid, $user->uid);
-     $form_state['storage']['rating_nid'] = $rating_nid;
-  }
-   
-  if ($rating_nid) {
-    $form_state['storage']['rating_nid'] = $rating_nid;
-    $form_state['storage']['mode'] = 'update';
-    $rating_wrapper = entity_metadata_wrapper('node', $rating_nid);
-    $body = $rating_wrapper->body->value();
-    $review = $body['value'];
-  }
-  else {
-    $form_state['storage']['mode'] = 'insert';
-  }
-  $form['#submit'][] = 'course_rating_fivestar_custom_widget_form_submit';
-  $form['#prefix'] = '<div id="course-rating-form-wrapper">';
-  $form['#suffix'] = '</div>';
-  $form['#attributes']['class'][] = 'course-rating-form';
-  $form['vote']['#auto_submit'] = FALSE;
-  $form['vote']['#settings']['autosubmit'] = FALSE;
-  $form['fivestar_submit']['#weight'] = 11;
-  $form['fivestar_submit']['#ajax'] = array(
-    'callback' => 'course_rating_fivestar_form_js',
-    'wrapper' => 'course-rating-form-wrapper',
-    'method' => 'replace',
-    'effect' => 'fade',
-  );
-  $form['review'] = array(
-    '#type' => 'textarea',
-    '#title' => '',
-    '#required' => FALSE,
-    '#default_value' => isset($review) ? $review : '',
-    '#attributes' => array(
-      'placeholder' => t('Enter your comment'),
-    ),
-    '#suffix' => '<div class="form-section-separator"></div>',
-    '#weight' => 10,
-  );
 }
 
 /**
  * AJAX callback for course rating modal form.
  */
 function course_rating_fivestar_form_js($form, &$form_state) {
-  ctools_include('ajax');
-  ctools_add_js('ajax-responder');
-  ctools_include('modal');
-  $commands[] = ctools_modal_command_dismiss();
-  print ajax_render($commands);
-  exit;    
-
+  // Remove modal and display message.
+  // Using ctools_modal_command_dismiss() results into displaying message on
+  // next page loading, which is confusing for user.
+  $commands[] = ajax_command_remove('#modalBackdrop');
+  $commands[] = ajax_command_remove('#modalContent');
+  $commands[] = ajax_command_prepend('#page',  theme_absolute_messages(array('display' => NULL)));
+  return array('#type' => 'ajax', '#commands' => $commands);
 }
 
 /**
@@ -179,31 +258,35 @@ function course_rating_pre_render_fivestar($element) {
 }
 
 /**
- * Additional submit for fivestar_custom_widget(). Handles course_rating node
+ * Additional submit for fivestar_custom_widget(). Handles course_rating entity
  * inserting/updating.
  */
 function course_rating_fivestar_custom_widget_form_submit($form, &$form_state) {
+  global $user;
   if ($form_state['storage']['mode'] == 'update') {
-    $node = node_load($form_state['storage']['rating_nid']);
-    if ($node) {
-      $lang = $node->language;
-      $node->body[$lang][0]['value'] = $form_state['values']['review'];
-      node_save($node);
+    $rating = course_rating_load($form_state['storage']['rating_nid']);
+    if ($rating) {
+      $rating->review = $form_state['values']['review'];
+      $rating->save();
+    }
+    else {
+      watchdog('course_rating', 'Course rating object seems to not exist during update. Course ID - %course_nid, Object ID - %rating_nid, User ID - %uid', array('%course_nid' => $form_state['course_nid'], '%rating_nid' => $form_state['storage']['rating_nid'], '%uid' => $user->uid), WATCHDOG_WARNING);
     }
   }
   else {
-    global $user;
     $course_nid = $form_state['course_nid'];
     $uid = $user->uid;
-    $node = new stdClass();
-    $node->type = 'course_rating';
-    node_object_prepare($node);
-    $node->title = 'Course rating nid#' . $course_nid . '# uid#' . $uid;
-    $node->language = LANGUAGE_NONE;
-    $node->body[$node->language][0]['value'] = $form_state['values']['review'];
-    $node->field_course[$node->language][0]['target_id'] = $course_nid;
-    node_save($node);
-    $form_state['storage']['rating_nid'] = $node->nid;
+    
+    $values = array (
+      'nid' => $course_nid,
+      'uid' => $uid,
+      'review' => $form_state['values']['review'],
+      'created' => time(),
+    );
+   
+    $rating = course_rating_create($values);
+    $rating->save();
+    $form_state['storage']['rating_nid'] = $rating->rating_id;
   }
 }
 
@@ -218,17 +301,11 @@ function course_rating_fivestar_custom_widget_form_submit($form, &$form_state) {
  * @return integer
  *   ID of the rating node if exists, otherwise FALSE
  */
-function course_is_reviewed($nid, $uid = NULL) {
-  if (is_null($uid)) {
-    global $user;
-    $uid = $user->uid;
-  }
+function course_rating_reviewed($nid, $uid) {
   $query = new EntityFieldQuery();
-  $query->entityCondition('entity_type', 'node')
-      ->entityCondition('bundle', 'course_rating')
-      ->propertyCondition('status', 1)
+  $query->entityCondition('entity_type', 'course_rating')
       ->propertyCondition('uid', $uid)
-      ->fieldCondition('field_course', 'target_id', $nid)
+      ->propertyCondition('nid', $nid)
       ->range(0, 1);
 
   $result = $query->execute();
@@ -239,4 +316,107 @@ function course_is_reviewed($nid, $uid = NULL) {
     }
   }
   return FALSE; 
+}
+
+/**
+ * The class used for Course Rating entities
+ */
+class CourseRating extends Entity {
+
+  public function __construct($values = array()) {
+    parent::__construct($values, 'course_rating');
+  }
+
+  protected function defaultLabel() {
+    return $this->name;
+  }
+
+  protected function defaultUri() {
+    return array('path' => 'course_rating/' . $this->registration_id);
+  }
+
+}
+
+
+/**
+ * The Controller for Course Rating entities
+ */
+class CourseRatingController extends EntityAPIController {
+
+  public function __construct($entityType) {
+    parent::__construct($entityType);
+  }
+
+  /**
+   * Create a rating - we first set up the values that are specific
+   * to our rating schema but then also go through the EntityAPIController
+   * function.
+   * 
+   * @param $type
+   *   The machine-readable type of the rating.
+   *
+   * @return
+   *   A rating object with all default fields initialized.
+   */
+  public function create(array $values = array()) {
+    // Add values that are specific to our Course Rating
+    $values += array(
+      'rating_id' => '',
+      'is_new' => TRUE,
+      'title' => '',
+      'created' => '',
+      'changed' => '',
+      'data' => '',
+      // registration specific fields:
+      'nid' => $values['nid'],
+      'uid' => $values['uid'],
+    );
+
+    $rating = parent::create($values);
+    return $rating;
+  }
+
+  /**
+   * Overriding the buldContent function to add entity specific fields
+   */
+  public function buildContent($entity, $view_mode = 'full', $langcode = NULL, $content = array()) {
+    $content = parent::buildContent($entity, $view_mode, $langcode, $content);
+    $content['rating_sample_data'] = array(
+      '#markup' => theme('rating_sample_data', array('rating_sample_data' => check_plain($entity->data['sample_data']), 'rating' => $entity)),
+    );
+
+    return $content;
+  }
+
+}
+
+/**
+ * Implements hook_views_default_views_alter().
+ * 
+ * Adds rating field to the view with courses.
+ */
+function course_rating_views_default_views_alter(&$views) {
+  if (isset($views['courses'])) {
+    // Add the rating field to the view.
+    if (!isset($views['courses']->display['default']->handler->display->display_options['fields']['field_course_rating'])) {
+      $fields = &$views['courses']->display['default']->handler->display->display_options['fields'];
+      $field_course_rating = array();
+      $field_course_rating['id'] = 'field_course_rating';
+      $field_course_rating['table'] = 'field_data_field_course_rating';
+      $field_course_rating['field'] = 'field_course_rating';
+      $field_course_rating['label'] = 'rating';
+      $field_course_rating['element_label_colon'] = FALSE;
+      $field_course_rating['click_sort_column'] = 'rating';
+      $field_course_rating['type'] = 'course_rating_fivestar_formatter';
+      $field_course_rating['settings'] = array(
+        'widget' => array(
+          'fivestar_widget' => 'default',
+        ),
+        'expose' => 1,
+        'style' => 'average',
+        'text' => 'average',
+      );
+      $fields = array_slice($fields, 0, 3, TRUE) + array('field_course_rating' => $field_course_rating) +  array_slice($fields, 3, count($fields) - 1, TRUE);
+    }
+  }
 }

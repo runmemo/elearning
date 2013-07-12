@@ -40,6 +40,13 @@ function user_extra_quicktabs_default_quicktabs() {
       'weight' => '-98',
       'type' => 'block',
     ),
+    3 => array(
+      'bid' => 'views_delta_courses_reviews-block',
+      'hide_title' => 1,
+      'title' => t('Reviews'),
+      'weight' => '-97',
+      'type' => 'block',
+    ),
   );
   $quicktabs->renderer = 'ui_tabs';
   $quicktabs->style = 'nostyle';
