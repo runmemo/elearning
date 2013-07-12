@@ -425,6 +425,20 @@ function course_node_presave($node) {
 }
 
 /**
+ * Implements hook_form_FORM_ID_alter().
+ * clear the course_get_items cache when node hierechy changed from,
+ * admin/content/book/%book_id.
+ */
+function course_form_book_admin_edit_alter(&$form, &$form_state) {
+  $form['#submit'][] = 'course_book_admin_submit';
+}
+
+function course_book_admin_submit($form, &$form_state) {
+  $course_id = $form_state['build_info']['args'][0]->nid;
+  cache_clear_all('course_get_items_' . $course_id, 'cache'); 
+}
+
+/**
  * Gets content types that are supported as items of the course.
  * @return array
  */

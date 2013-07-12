@@ -28,7 +28,31 @@ function elearning_preprocess_html(&$vars, $hook) {
 function elearning_preprocess_book_navigation(&$vars) {
   $node = menu_get_object('node');
   $vars['prev_title'] = t('Previous');
-  $vars['next_title'] = t('Next');    
+  $vars['next_title'] = t('Next');
+
+  $course_items = course_get_items($node);
+  $current_item = $vars['book_link']['nid'];
+  $course_first_item = array_shift(array_keys($course_items));
+
+  // if we are on first course_item then do not show the prev_url.
+  if ($course_first_item == $current_item) {
+    $vars['prev_url'] = '';
+  }
+
+  // Make sure prev_url is in course_item (to avoid links to unit content_type).
+  $prev_item = book_prev($node->book);
+  $prev_nid = explode('/', $prev_item['link_path']);
+
+  foreach($course_items as $key => $type) {
+    if ($key == $current_item) {
+      break;
+    }
+    $prev_course_item = $key;  
+  }
+  if ((!empty($prev_course_item)) && ($prev_course_item != $prev_nid[1])) {
+    $vars['prev_url'] = url('node/'.$prev_course_item);
+  }
+
   if (isset($node->outline_index)) {
     $vars['node_title'] = '<span class="outline-lesson-prefix">' . t('Lesson @i.', array('@i' => $node->outline_index)) . '</span>' . $node->title;  
   }
