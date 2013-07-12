@@ -5,7 +5,11 @@ package = Custom
 dependencies[] = course
 dependencies[] = fivestar
 
+; Views
+files[] = views/course_handler_field_course_rating_entity.inc
+
 features[features_api][] = api:2
 features[field_base][] = field_course_rating
 features[field_instance][] = node-course-field_course_rating
+features[views_view][] = courses_reviews
 features[user_permission][] = rate content

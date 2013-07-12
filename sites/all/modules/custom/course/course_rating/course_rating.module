@@ -5,6 +5,15 @@
  */
 
 /**
+ * Implements hook_views_api().
+ */
+function course_rating_views_api() {
+  return array(
+    'api' => '3.0',
+    'path' => drupal_get_path('module', 'course_rating') . '/views',);
+}
+
+/**
  *  Implements hook_menu() for course module.
  */
 function course_rating_menu() {
