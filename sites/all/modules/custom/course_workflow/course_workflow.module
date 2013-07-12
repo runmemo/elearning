@@ -7,6 +7,7 @@ define('COURSE_ARCHIVED', 3);
 
 // Course access grant ids.
 define('COURSE_VIEW_ALL', 1);
+define('COURSE_VIEW_TEACHER', 2);
 
 /**
  *  Implements hook_form_FORM_ID_alter.
@@ -62,6 +63,10 @@ function course_workflow_node_grants($account, $op) {
     $grants['course_view_own'] = array($account->uid);
   }
 
+  if (in_array('teacher', array_values($account->roles))) {
+    $grants['course_view_teacher'] = array($account->uid);
+  }
+
   return $grants;
 }
 
@@ -105,18 +110,28 @@ function course_workflow_node_access_records($node) {
       'grant_delete' => 0,
       'priority' => 0,
     );
-    // For the course_view_own realm, the grant ID (gid) is
-    // equivalent to the node author's user ID (UID).
-    $grants[] = array(
-      'realm' => 'course_view_own',
-      'gid' => $node->uid,
-      'grant_view' => 1,
-      'grant_update' => 1,
-      'grant_delete' => 0,
-      'priority' => 0,
-    );
   }
 
+  // For the course_view_own realm, the grant ID (gid) is
+  // equivalent to the node author's user ID (UID).
+  $grants[] = array(
+    'realm' => 'course_view_own',
+    'gid' => $node->uid,
+    'grant_view' => 1,
+    'grant_update' => 1,
+    'grant_delete' => 0,
+    'priority' => 0,
+  );
+
+  // Allow course teachers to edit course.
+  $grants[] = array(
+    'realm' => 'course_view_teacher',
+    'gid' => $course_item->book->field_teacher->raw(),
+    'grant_view' => 1,
+    'grant_update' => 1,
+    'grant_delete' => 0,
+    'priority' => 0,
+  );
   return $grants; 
 }
 
