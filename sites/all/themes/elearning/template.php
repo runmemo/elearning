@@ -49,7 +49,8 @@ function elearning_preprocess_book_navigation(&$vars) {
     }
     $prev_course_item = $key;  
   }
-  if ((!empty($prev_course_item)) && ($prev_course_item != $prev_nid[1])) {
+
+  if ((!empty($prev_course_item)) && !empty($prev_nid[1]) && ($prev_course_item != $prev_nid[1])) {
     $vars['prev_url'] = url('node/'.$prev_course_item);
   }
 
