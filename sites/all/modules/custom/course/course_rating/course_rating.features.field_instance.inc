@@ -9,11 +9,9 @@
  */
 function course_rating_field_default_field_instances() {
   $field_instances = array();
-
-  // @todo Ilya create field base for field_rating in this module.
   
-  // Exported field_instance: 'node-course-field_rating'
-  $field_instances['node-course-field_rating'] = array(
+  // Exported field_instance: 'node-course-field_course_rating'
+  $field_instances['node-course-field_course_rating'] = array(
     'bundle' => 'course',
     'default_value' => NULL,
     'deleted' => 0,
@@ -47,7 +45,7 @@ function course_rating_field_default_field_instances() {
       ),
     ),
     'entity_type' => 'node',
-    'field_name' => 'field_rating',
+    'field_name' => 'field_course_rating',
     'label' => 'Rate the usefulness of the course on a scale',
     'required' => 0,
     'settings' => array(
@@ -62,13 +60,12 @@ function course_rating_field_default_field_instances() {
       'settings' => array(),
       'type' => 'exposed',
       'weight' => 32,
-    ),
+        ),
   );
   
   // Translatables
   // Included for use with string extractors like potx.
-  t('Course');
-  t('Rating');
+  t('Rate the usefulness of the course on a scale');
 
   return $field_instances;
 }

@@ -6,5 +6,6 @@ dependencies[] = course
 dependencies[] = fivestar
 
 features[features_api][] = api:2
-features[field_instance][] = node-course-field_rating
+features[field_base][] = field_course_rating
+features[field_instance][] = node-course-field_course_rating
 features[user_permission][] = rate content
