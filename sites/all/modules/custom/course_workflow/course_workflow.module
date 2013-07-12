@@ -106,10 +106,9 @@ function course_workflow_node_access_records($node) {
       'grant_delete' => 0,
       'priority' => 0,
     );
-  
-
-  // For the course_view_own realm, the grant ID (gid) is
-  // equivalent to the node author's user ID (UID).
+  }
+    // For the course_view_own realm, the grant ID (gid) is
+    // equivalent to the node author's user ID (UID).
   $grants[] = array(
     'realm' => 'course_view_own',
     'gid' => $node->uid,
@@ -133,7 +132,6 @@ function course_workflow_node_access_records($node) {
     );
   }
 
-}
   return $grants; 
 }
 
