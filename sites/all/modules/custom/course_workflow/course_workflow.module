@@ -104,7 +104,6 @@ function course_workflow_node_access_records($node) {
       'priority' => 0,
     );
   }
-
   // For the course_view_own realm, the grant ID (gid) is
   // equivalent to the node author's user ID (UID).
   $grants[] = array(
@@ -115,7 +114,6 @@ function course_workflow_node_access_records($node) {
     'grant_delete' => 0,
     'priority' => 0,
   );
-
   // Allow course teachers to access course.
   $teachers = field_get_items('node', $course, 'field_teacher');
   foreach ($teachers as $delta => $teacher) {
