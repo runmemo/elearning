@@ -7,7 +7,6 @@ define('COURSE_ARCHIVED', 3);
 
 // Course access grant ids.
 define('COURSE_VIEW_ALL', 1);
-define('COURSE_VIEW_TEACHER', 2);
 
 /**
  *  Implements hook_form_FORM_ID_alter.
@@ -44,8 +43,6 @@ function course_workflow_change_stage($node, $stage) {
   $node_wrapper = entity_metadata_wrapper('node', $node);
   $node_wrapper->field_stage->set($stage);
   $node_wrapper->save();
-  // @todo Barinder: integrate this into the module.
-  node_access_rebuild();
 }
 
 /**
@@ -62,11 +59,6 @@ function course_workflow_node_grants($account, $op) {
   if (user_access('view own unpublished course', $account)) {
     $grants['course_view_own'] = array($account->uid);
   }
-
-  if (in_array('teacher', array_values($account->roles))) {
-    $grants['course_view_teacher'] = array($account->uid);
-  }
-
   return $grants;
 }
 
@@ -87,8 +79,9 @@ function course_workflow_node_access_records($node) {
 
   // Get the stage of course
   $course_item = entity_metadata_wrapper('node', $node);
+  $course = $course_item->book->value();
   $stage = $course_item->book->field_stage->value();
-
+  
   $grants = array();
   if($stage == COURSE_PUBLISHED) {
     // If course published, allow all.
@@ -116,22 +109,28 @@ function course_workflow_node_access_records($node) {
   // equivalent to the node author's user ID (UID).
   $grants[] = array(
     'realm' => 'course_view_own',
-    'gid' => $node->uid,
+    'gid' => $course->uid,
     'grant_view' => 1,
     'grant_update' => 1,
     'grant_delete' => 0,
     'priority' => 0,
   );
 
-  // Allow course teachers to edit course.
-  $grants[] = array(
-    'realm' => 'course_view_teacher',
-    'gid' => $course_item->book->field_teacher->raw(),
-    'grant_view' => 1,
-    'grant_update' => 1,
-    'grant_delete' => 0,
-    'priority' => 0,
-  );
+  // Allow course teachers to access course.
+  $teachers = field_get_items('node', $course, 'field_teacher');
+  foreach ($teachers as $delta => $teacher) {
+    if ($course->uid !== $teacher['uid']) {
+      $grants[] = array(
+        'realm' => 'course_view_own',
+        'gid' => $teacher['uid'],
+        'grant_view' => 1,
+        'grant_update' => 1,
+        'grant_delete' => 0,
+        'priority' => 0,
+      );
+    }
+  }
+
   return $grants; 
 }
 

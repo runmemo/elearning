@@ -359,7 +359,7 @@ function _course_get_tree_items($tree, $load_type = FALSE) {
  *   Array of nids of nodes that are part of the course.
  */
 function course_get_items($course_item) {
-  if(!isset($course_item->book)) {
+  if(empty($course_item->book['bid'])) {
     return array();
   }
   // Check if values exist in cache (cache item per book). 
@@ -420,8 +420,12 @@ function course_is_item_node($node) {
  */
 function course_node_presave($node) {
   if (course_is_item_node($node)) {
-    cache_clear_all('course_get_items_' . $node->book['bid'], 'cache'); 
+    course_items_clear_cache($node->book['bid']);
   }
+}
+
+function course_items_clear_cache($nid) {
+  cache_clear_all('course_get_items_' . $nid, 'cache'); 
 }
 
 /**

@@ -78,6 +78,7 @@ class CourseTestCase extends DrupalWebTestCase {
       }
     }
     $this->drupalLogout();
+    course_items_clear_cache($course->nid);
     return $nodes;
   }
 
