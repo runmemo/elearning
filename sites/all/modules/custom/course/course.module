@@ -357,6 +357,9 @@ function _course_get_tree_items($tree, $load_type = FALSE) {
  * @param object $course_item
  *   Node that is part of the course book.
  * 
+ * @param bool $include_units
+ *  Defines whether unit nodes will be included to items of the course.
+ * 
  * @return array 
  *   Array of nids of nodes that are part of the course.
  */
@@ -373,6 +376,16 @@ function course_get_items($course_item, $include_units = FALSE) {
   return $res;
 }
 
+/**
+ * Gets course outline as an array tree structure.
+ * 
+ * @param object $course_item
+ *   Node that is part of the course book.
+ * 
+ * @return array
+ *   Unit node ids are on the first level of the array with course items
+ *   as children of the units with node types.
+ */
 function course_get_outline($course_item) {
   if(empty($course_item->book['bid'])) {
     return array();
