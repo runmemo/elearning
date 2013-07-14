@@ -12,5 +12,5 @@ files[] = course_workflow.test
 features[field_base][] = field_stage
 features[field_instance][] = node-course-field_stage
 
-features[user_permission][] = view any unpublished course
-features[user_permission][] = view own unpublished course
+features[user_permission][] = access any unpublished course
+features[user_permission][] = access own unpublished course
