@@ -5,7 +5,7 @@ class CourseTestCase extends DrupalWebTestCase {
   protected $course;
   protected $course_author;
   protected $nodes; // items of the course
-  
+
   function setUp() {
     $modules = array_merge(array('course'), func_get_args());
     parent::setUp($modules);
@@ -15,11 +15,10 @@ class CourseTestCase extends DrupalWebTestCase {
       'create book content',
       'edit own book content',
       'add content to books'));
-   
-    $this->course = $this->createCourseNode($this->course_author->uid);   
-    
+
+    $this->course = $this->createCourseNode($this->course_author->uid);
   }
-  
+
   /**
    * Attaches node to the parent node in the book
    * @param object $node 
@@ -31,7 +30,7 @@ class CourseTestCase extends DrupalWebTestCase {
     $node->book['weight'] = $weight;
     node_save($node);
   }
-  
+
   /**
    * creates course node
    */
@@ -40,13 +39,13 @@ class CourseTestCase extends DrupalWebTestCase {
       'type' => 'course',
       'uid' => $uid,
     );
-    $course =  $this->drupalCreateNode($settings);
+    $course = $this->drupalCreateNode($settings);
     $course->book['bid'] = $course->nid;
     $course->field_teacher[LANGUAGE_NONE][0]['uid'] = $uid;
     node_save($course);
     return $course;
   }
-  
+
   /**
    * Appends items to the course
    * @param array $node_types
@@ -56,7 +55,7 @@ class CourseTestCase extends DrupalWebTestCase {
     $nodes = array();
     $unit_settings = array(
       'type' => 'unit',
-       'uid' => $this->course_author->uid,
+      'uid' => $this->course_author->uid,
     );
 
     $i = 0;
@@ -64,7 +63,7 @@ class CourseTestCase extends DrupalWebTestCase {
       $u = $i;
       $nodes[$i] = $this->drupalCreateNode($unit_settings);
       $this->book_append_child($nodes[$i], $course, $u);
-       // unit key in the array
+      // unit key in the array
       $i++;
 
       foreach ($unit as $key => $item) {
@@ -103,8 +102,8 @@ class CourseNavigationTestCase extends CourseTestCase {
     parent::setUp();
     $this->student = $this->drupalCreateUser(array('access content'));
     $this->nodes = $this->populateTestCourse($this->course);
-    
   }
+
   /**
    * Creates course structure for provided course.
    * 
@@ -177,12 +176,14 @@ class CourseNavigationTestCase extends CourseTestCase {
     $last_nid = course_last_visited_node($course2->nid, $this->student->uid);
     $this->assertEqual($last_nid, $nodes2[1]->nid);
   }
+
 }
 
 /**
  * Contains unit tests for course functionality.
  */
 class CourseUnitTestCase extends DrupalUnitTestCase {
+
   public static function getInfo() {
     return array(
       'name' => 'Course Unit Test Case',
@@ -190,81 +191,89 @@ class CourseUnitTestCase extends DrupalUnitTestCase {
       'group' => 'Course',
     );
   }
-  
+
   // @todo remove function once this issue is resolved: 
   //   https://drupal.org/node/1823504
   function setUp() {
     parent::setUp();
     global $language;
-    
+
     // Set to English to prevent exceptions from utf8_truncate() from t()
     // during install if the current language is not 'en'.
     // The following array/object conversion is copied from language_default().
     $language = (object) array('language' => 'en', 'name' => 'English', 'native' => 'English', 'direction' => 0, 'enabled' => 1, 'plurals' => 0, 'formula' => '', 'domain' => '', 'prefix' => '', 'weight' => 0, 'javascript' => '');
   }
-  
+
   /**
    * @see _course_get_tree_items($tree) 
    */
   function testGetItemsFunction() {
-    
+
     // test empty outline
     $outline = array();
     $tree = $this->make_book_tree($outline);
     $items = _course_get_tree_items($tree);
     $this->assertTrue(empty($items), 'Items list is empty for empty outline.');
-    
-    
+
+
     // test outline with empty units
     $outline = array(
-      'unit1' => array (),
-      'unit2' => array (),
+      'unit1' => array(),
+      'unit2' => array(),
     );
     $tree = $this->make_book_tree($outline);
     $items = _course_get_tree_items($tree);
-    $this->assertTrue(empty($items), 'Items list is empty for outline with empty units.');
-    
+    $this->assertEqual(array_keys($items), array(2, 3), 'Items list is empty for outline with empty units.');
+
     // test outline with one item
-     $outline = array(
-      'unit1' => array ('lesson1' => 'lesson'),
-      'unit2' => array (),
+    $outline = array(
+      'unit1' => array('lesson1' => 'lesson'),
+      'unit2' => array(),
     );
     $tree = $this->make_book_tree($outline);
     $items = _course_get_tree_items($tree);
-    $this->assertEqual(count($items), 1, '1 item found for outline with a lesson.');
-   
+    $this->assertEqual(array_keys($items), array(2, 4), '2 units found for outline with lesson.');
+    $this->assertEqual($items[2][3], 3, 'Lesson item is added as child of unit.');
+
     // teset outline with more items
     $outline = array(
-      'unit1' => array ('lesson1' => 'lesson'),
-      'unit2' => array ('lesson1' => 'lesson', 'quiz1' => 'quiz'),
-      'unit3' => array ('lesson1' => 'lesson', 'quiz1' => 'quiz', 'other1' => 'other'),
+      'unit1' => array('lesson1' => 'lesson'),
+      'unit2' => array('lesson1' => 'lesson', 'quiz1' => 'quiz'),
+      'unit3' => array('lesson1' => 'lesson', 'quiz1' => 'quiz', 'other1' => 'other'),
     );
     $tree = $this->make_book_tree($outline);
     $items = _course_get_tree_items($tree);
-    $expect = array ( 
-      3,
-      5, 6,
-      8, 9, 10,
+    $expect = array(
+      2 => array(
+        3 => '3',
+      ),
+      4 => array(
+        5 => '5',
+        6 => '6',
+      ),
+      7 => array(
+        8 => '8',
+        9 => '9',
+        10 => '10',
+      ),
     );
-    debug($items);
-    $this->assertEqual(array_keys($items), $expect, 'Items are correct for provided outline.');
-    
+    $this->assertEqual($items, $expect, 'Items are correct for provided outline.');
   }
-  
-  /** 
+
+  /**
    * creates book like tree structure for provided outline array
    */
   function make_book_tree($outline) {
     $i = 1;
     $tree = array(
-      'Tree Top' => $this->tree_new_leaf($i), 
+      'Tree Top' => $this->tree_new_leaf($i),
     );
-    
-    foreach($outline as $unit_key => $unit) {
+
+    foreach ($outline as $unit_key => $unit) {
       $i++;
       $this->tree_append_leaf($tree['Tree Top'], $unit_key, $i);
       $unit_leaf = &$tree['Tree Top']['below'][$unit_key];
-      
+
       foreach ($unit as $item) {
         $i++;
         $this->tree_append_leaf($unit_leaf, $item, $i);
@@ -273,7 +282,7 @@ class CourseUnitTestCase extends DrupalUnitTestCase {
 
     return $tree;
   }
-  
+
   /**
    * Appends a leaf to another leaf
    * @param array $to_leaf 
@@ -283,18 +292,19 @@ class CourseUnitTestCase extends DrupalUnitTestCase {
   function tree_append_leaf(&$to_leaf, $leaf, $nid) {
     $to_leaf['below'][$leaf] = $this->tree_new_leaf($nid);
   }
+
   /**
    * Returns array with new menu link
    */
   function tree_new_leaf($nid) {
-    return array (
-        'link' => array(
-          'link_path' => 'node/' . $nid,
-        ),
-        'below' => array(),
-      );
+    return array(
+      'link' => array(
+        'link_path' => 'node/' . $nid,
+      ),
+      'below' => array(),
+    );
   }
-  
+
   /**
    * Tests course_get_grade_ranges function with empty array.
    */
@@ -303,19 +313,19 @@ class CourseUnitTestCase extends DrupalUnitTestCase {
     $results = course_get_grade_ranges($grades);
     $this->assertFalse($results, 'Empty grades array results in FALSE.');
   }
-  
+
   /**
    * Tests course_get_grade_ranges function with non empty array of grades.
    */
   function test_get_grade_ranges_non_empty() {
-    $grades = array (
+    $grades = array(
       50 => 'Pass',
       60 => 'Merit',
       70 => 'Distinction',
     );
-    
+
     $results = course_get_grade_ranges($grades);
-   
+
     foreach ($results as $range => $name) {
       $ranges[] = $range;
       $names[] = $name;
@@ -331,17 +341,14 @@ class CourseUnitTestCase extends DrupalUnitTestCase {
     $this->assertEqual($names[2], 'Merit');
     $this->assertEqual($names[3], 'Distinction');
     $this->assertEqual(count($names), 4, 'Only 4 ranges exist.');
-    
   }
-  
+
   /**
    * Tests for exported feature functions and data returned by them.
    */
-  function testFeaturesHookImplementations() {  
+  function testFeaturesHookImplementations() {
     module_load_include('inc', 'course', 'course.features.user_permission');
     $this->assertTrue(function_exists('course_user_default_permissions'), 'Course user permissions exported.');
-    
-    
   }
-  
+
 }

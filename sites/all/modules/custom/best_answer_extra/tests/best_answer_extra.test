@@ -136,7 +136,7 @@ class BestAnswerExtraCase extends BestAnswerExtraBaseCase {
     return array(
       'name' => 'Best Answer Extra Test Case',
       'description' => 'Tests that Best Answer Extra module functions work correctly.',
-      'group' => 'Course',
+      'group' => 'Answers',
     );
   }
 

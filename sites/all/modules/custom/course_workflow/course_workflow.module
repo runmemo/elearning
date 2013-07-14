@@ -139,7 +139,7 @@ function course_workflow_node_update($node) {
   if ($node->type !== 'course') {
     return;
   } 
-  $items = course_get_items($node);
+  $items = course_get_items($node, TRUE);
   foreach ($items as $nid => $type) {
     $node = node_load($nid);
     node_access_acquire_grants($node);

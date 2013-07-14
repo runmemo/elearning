@@ -17,6 +17,7 @@ class CourseWorkflowTest extends CourseTestCase {
    */
   public function setUp() {
     parent::setUp('course_workflow');
+    node_access_rebuild();
   }
   
   function populateCourseWorkflowNode($course) {
@@ -157,7 +158,7 @@ class CourseWorkflowTestCase extends CourseWorkflowTest {
 
     // Change Course state to Published and see, 
     // if Anonymous user can see course and its child nodes.
-   // course_workflow_change_stage($this->course1, COURSE_PUBLISHED);
+    course_workflow_change_stage($this->course1, COURSE_PUBLISHED);
     $this->drupalLogin($this->user3);
 
     $this->drupalGet('node/' . $this->course1->nid);
@@ -169,15 +170,15 @@ class CourseWorkflowTestCase extends CourseWorkflowTest {
     }
     
     // Check that user has access if he is a teacher of the course.
-  //  course_workflow_change_stage($this->course1, COURSE_SUBMITTED);
+    course_workflow_change_stage($this->course1, COURSE_SUBMITTED);
     $this->course1->field_teacher[LANGUAGE_NONE][0]['uid'] = $this->user2->uid;
     node_save($this->course1);
+   
     $this->drupalLogin($this->user2);
     $this->drupalGet('node/' . $this->course1->nid);
     $this->assertResponse(200);
-    
+   
     foreach($course_items1 as $course_item) {
-      $this->drupalLogin($this->user2);
       $this->drupalGet('node/' . $course_item->nid);
       $this->assertResponse(200);
     }
