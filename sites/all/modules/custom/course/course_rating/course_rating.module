@@ -420,3 +420,21 @@ function course_rating_views_default_views_alter(&$views) {
     }
   }
 }
+
+/**
+ * Implements hook_votingapi_views_formatters().
+ */
+function course_rating_votingapi_views_formatters($details = array()) {
+  if ($details->field == 'value') {
+    return array(
+      'course_rating_views_widget_float' => t('Course Rating as float number'),
+    );
+  }
+}
+
+/**
+ * Callback function for course rating views widget.
+ */
+function course_rating_views_widget_float($value, $field, $columns) {
+  return $value / 10 . ' / 10';
+}
