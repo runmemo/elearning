@@ -450,6 +450,8 @@ function course_outline_block_view_form_submit($form, &$form_state) {
         }
       }
     }
+    // rebuild course outline cache.
+    course_items_clear_cache($form_state['build_info']['args'][0]->nid);
     $form_state['step'] = 'view';
   }
   $form_state['rebuild'] = TRUE;
