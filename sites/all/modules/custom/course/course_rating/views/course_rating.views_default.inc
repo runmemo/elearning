@@ -24,7 +24,11 @@ function course_rating_views_default_views() {
   $handler = $view->new_display('default', 'Master', 'default');
   $handler->display->display_options['title'] = 'Courses reviews';
   $handler->display->display_options['use_more_always'] = FALSE;
-  $handler->display->display_options['access']['type'] = 'none';
+  $handler->display->display_options['access']['type'] = 'role';
+  $handler->display->display_options['access']['role'] = array(
+    3 => '3',
+    4 => '4',
+  );
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
   $handler->display->display_options['query']['options']['distinct'] = TRUE;
@@ -33,6 +37,12 @@ function course_rating_views_default_views() {
   $handler->display->display_options['pager']['type'] = 'none';
   $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['row_plugin'] = 'fields';
+  /* No results behavior: Global: Unfiltered text */
+  $handler->display->display_options['empty']['area_text_custom']['id'] = 'area_text_custom';
+  $handler->display->display_options['empty']['area_text_custom']['table'] = 'views';
+  $handler->display->display_options['empty']['area_text_custom']['field'] = 'area_text_custom';
+  $handler->display->display_options['empty']['area_text_custom']['empty'] = TRUE;
+  $handler->display->display_options['empty']['area_text_custom']['content'] = 'No reviews has been found for your courses.';
   /* Relationship: Content: Votes */
   $handler->display->display_options['relationships']['votingapi_vote']['id'] = 'votingapi_vote';
   $handler->display->display_options['relationships']['votingapi_vote']['table'] = 'node';
@@ -43,6 +53,11 @@ function course_rating_views_default_views() {
     'tag' => 'vote',
   );
   $handler->display->display_options['relationships']['votingapi_vote']['current_user'] = 0;
+  /* Relationship: Votes: User */
+  $handler->display->display_options['relationships']['uid']['id'] = 'uid';
+  $handler->display->display_options['relationships']['uid']['table'] = 'votingapi_vote';
+  $handler->display->display_options['relationships']['uid']['field'] = 'uid';
+  $handler->display->display_options['relationships']['uid']['relationship'] = 'votingapi_vote';
   /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
@@ -50,11 +65,12 @@ function course_rating_views_default_views() {
   $handler->display->display_options['fields']['title']['label'] = 'Course';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Field: Votes: User */
-  $handler->display->display_options['fields']['uid']['id'] = 'uid';
-  $handler->display->display_options['fields']['uid']['table'] = 'votingapi_vote';
-  $handler->display->display_options['fields']['uid']['field'] = 'uid';
-  $handler->display->display_options['fields']['uid']['relationship'] = 'votingapi_vote';
+  /* Field: User: Name */
+  $handler->display->display_options['fields']['name']['id'] = 'name';
+  $handler->display->display_options['fields']['name']['table'] = 'users';
+  $handler->display->display_options['fields']['name']['field'] = 'name';
+  $handler->display->display_options['fields']['name']['relationship'] = 'uid';
+  $handler->display->display_options['fields']['name']['label'] = 'User';
   /* Field: Votes: Value */
   $handler->display->display_options['fields']['value']['id'] = 'value';
   $handler->display->display_options['fields']['value']['table'] = 'votingapi_vote';
@@ -62,6 +78,7 @@ function course_rating_views_default_views() {
   $handler->display->display_options['fields']['value']['relationship'] = 'votingapi_vote';
   $handler->display->display_options['fields']['value']['label'] = 'Rating';
   $handler->display->display_options['fields']['value']['precision'] = '1';
+  $handler->display->display_options['fields']['value']['appearance'] = 'course_rating_views_widget_float';
   /* Field: Global: Course Rating Entity */
   $handler->display->display_options['fields']['course_rating_entity']['id'] = 'course_rating_entity';
   $handler->display->display_options['fields']['course_rating_entity']['table'] = 'views';
@@ -81,6 +98,7 @@ function course_rating_views_default_views() {
   $handler->display->display_options['arguments']['field_teacher_uid']['summary']['number_of_records'] = '0';
   $handler->display->display_options['arguments']['field_teacher_uid']['summary']['format'] = 'default_summary';
   $handler->display->display_options['arguments']['field_teacher_uid']['summary_options']['items_per_page'] = '25';
+  $handler->display->display_options['arguments']['field_teacher_uid']['specify_validation'] = TRUE;
   $handler->display->display_options['arguments']['field_teacher_uid']['validate']['type'] = 'user';
   $handler->display->display_options['arguments']['field_teacher_uid']['validate_options']['restrict_roles'] = TRUE;
   $handler->display->display_options['arguments']['field_teacher_uid']['validate_options']['roles'] = array(

@@ -6,9 +6,9 @@
  */
 
 /**
- * Filter to handle users, who voted for the course.
+ * Field, displaying review of the Course Rating entity.
  *
- * @ingroup views_filter_handlers
+ * @ingroup views_field_handlers
  */
 class course_handler_field_course_rating_entity extends views_handler_field {
 
@@ -17,9 +17,9 @@ class course_handler_field_course_rating_entity extends views_handler_field {
   }
 
   function render($values) {
-    $review = 0;
-    if (isset($values->nid) && isset($values->votingapi_vote_node_percent_vote_uid)) {
-      $rating_id = course_rating_reviewed($values->nid, $values->votingapi_vote_node_percent_vote_uid);
+    $review = '';
+    if (isset($values->nid) && isset($values->users_votingapi_vote_uid)) {
+      $rating_id = course_rating_reviewed($values->nid, $values->users_votingapi_vote_uid);
       if ($rating_id) {
         $course_rating = course_rating_load($rating_id);
         $review = $course_rating->review;

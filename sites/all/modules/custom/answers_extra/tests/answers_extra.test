@@ -25,9 +25,9 @@ class AnswersExtraCase extends AnswersExtraBaseCase {
 
   public static function getInfo() {
     return array(
-      'name' => 'AnswersExtra test',
+      'name' => 'Answers Extra Test',
       'description' => 'Test to check answers_extra module setup',
-      'group' => 'Course',
+      'group' => 'Answers',
     );
   }
 
@@ -35,10 +35,8 @@ class AnswersExtraCase extends AnswersExtraBaseCase {
     parent::setUp();
   }
 
-  function testCreateUser() {
-    // Create user.
-    $this->user = $this->drupalCreateUser();
-    $this->drupalLogin($this->user);
+  function testSetupSuccess() {
+    $this->assertTrue(TRUE, 'Setup of Answers Extra module complete.');
   }
 }
 
