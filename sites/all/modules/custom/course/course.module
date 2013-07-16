@@ -459,6 +459,22 @@ function course_items_clear_cache($nid) {
 }
 
 /**
+ * Implements hook_node_insert().
+ * Set course book.
+ */
+function course_node_insert($node) {
+  if ($node->type == 'course' && empty($node->book['bid'])) {
+    /**
+      * Code borrowed from book.module book_node_insert().
+    **/
+    $node->book['bid'] = $node->nid;
+    $node->book['nid'] = $node->nid;
+    $node->book['menu_name'] = book_menu_name($node->book['bid']);
+    _book_update_outline($node);
+  }
+}
+
+/**
  * Implements hook_form_FORM_ID_alter().
  * clear the course_get_items cache when node hierechy changed from,
  * admin/content/book/%book_id.
@@ -720,7 +736,6 @@ function course_form_course_node_form_alter(&$form, &$form_state) {
     $form['field_teacher'][$langcode]['#default_value'] = $user->uid;
     $form['field_teacher']['#disabled'] = TRUE;
   }
-  
 }
 
 /**
