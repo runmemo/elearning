@@ -255,7 +255,9 @@ function course_outline_links($course) {
   ctools_modal_add_js();
 
   foreach($item_types as $type) {
-    $items[] = ctools_modal_text_button('Create '.$type, 'course-add/nojs/'.$type.'/'.$course->nid, t('Add Item'), 'ctools-modal-common-modal-style link-button');
+    if (node_access('create', $type)) {
+      $items[] = ctools_modal_text_button('Create '.$type, 'course-add/nojs/'.$type.'/'.$course->nid, t('Add Item'), 'ctools-modal-common-modal-style link-button');
+    }
   }
   return theme('item_list', array('items' => $items, 'attributes' => array('class' => 'item-add-links')));
 }
