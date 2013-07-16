@@ -11,6 +11,8 @@
 function common_tools_init() {
   //Add common ctools modal style
   common_modal_style();
+
+  drupal_add_js(drupal_get_path('module', 'common_tools') . '/common_tools.js');
 }
 
 /**
