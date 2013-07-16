@@ -236,9 +236,123 @@ function course_outline_block_view_form($form, &$form_state, $course) {
           'progress' => array('type' => 'throbber'),
         ),
       );
+
+      $form['add_content'] = array(
+        '#markup' => course_outline_links($course),
+      );
+
       return $form;
   }
 }
+
+function course_outline_links($course) {
+//  $item_types = course_item_node_types();
+  $item_types = array('unit');
+  $items = array();
+  ctools_include('ajax');
+  ctools_include('modal');
+  // Add CTools' javascript to the page.
+  ctools_modal_add_js();
+
+  foreach($item_types as $type) {
+    $items[] = ctools_modal_text_button('Add '.$type, 'course-add/nojs/'.$type.'/'.$course->nid, t('Add Item'), 'ctools-modal-common-modal-style link-button');
+  }
+  return theme('item_list', array('items' => $items, 'attributes' => array('class' => 'item-add-links')));
+}
+
+/**
+ *  Implements hook_menu() for course_outline module.
+ */
+function course_outline_menu() {
+  $item_types = array('unit');
+  foreach($item_types as $type) {  
+    $items['course-add/%ctools_js/%/%node'] = array(
+      'title' => 'Add '.$type,
+      'page arguments' => array(1, 2, 3),
+      'page callback' => 'course_add_item',
+      'access callback' => 'node_access',
+      'access arguments' => array('create', $type),
+      'type' => MENU_CALLBACK,
+    );
+  }
+
+  return $items;
+}
+
+function course_add_item($js = NULL, $type = NULL, $course = NULL) {
+
+  if ($type == NULL || $course == NULL) {
+    return 'Error :: No course node or type.';
+  }
+
+  // call type specific add function
+  $function = __FUNCTION__ . '_' . $type;
+  if (!function_exists($function)) {
+    return;
+  }
+
+  if (!$js) {
+    return drupal_get_form($function, $course);
+  }
+  else {
+    // Required includes for ctools to work:
+    ctools_include('modal');
+    ctools_include('ajax');
+  }
+
+  $form_state = array(
+    'title' => t('Add Item'),
+    'ajax' => TRUE,
+    'course' => $course
+  );
+
+  $output = ctools_modal_form_wrapper($function, $form_state);
+
+  if (!empty($form_state['executed'])) {
+    $output[] = ctools_ajax_command_reload();
+  }
+
+  print ajax_render($output);
+  exit;
+}
+
+function course_add_item_unit($form, &$form_state, $course = NULL) {
+  
+  if (!$course) {
+    $course = $form_state['course'];
+  }
+
+  $form['title'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Unit Title'),
+    '#required' => TRUE
+  );
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save'),
+  );
+
+  return $form;
+}
+
+function course_add_item_unit_submit($form, &$form_state) {
+  if (empty($form_state['ajax'])) {
+    $course = $form_state['build_info']['args'][0];
+  }
+  else {
+    $course = $form_state['course'];
+  }
+
+  $node = new stdClass();
+  $node->type = 'unit';
+  node_object_prepare($node);
+  $node->title = $form_state['values']['title'];
+  $node->language = $course->language;
+  $node->book['bid'] = $course->nid;
+  $node->book['weight'] = 1000;
+  node_save($node);
+}
+
 
 /**
  * Ajax callback for course_outline_block_view_form().
