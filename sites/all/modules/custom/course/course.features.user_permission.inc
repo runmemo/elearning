@@ -153,5 +153,14 @@ function course_user_default_permissions() {
     'module' => 'file_entity',
   );
 
+  // Exported permission: create unit content.
+  $permissions['create unit content'] = array(
+    'name' => 'create unit content',
+    'roles' => array(
+      'teacher' => 'teacher',
+    ),
+    'module' => 'node',
+  );
+
   return $permissions;
 }
