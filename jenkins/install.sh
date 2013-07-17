@@ -68,7 +68,7 @@ drush --version
 fi
 echo "downloading drupal..."
 drush dl drupal --destination=/$PARENT_FOLDER --drupal-project-rename=$SUBFOLDER -y
-git clone git@github.com:runmemo/elearning.git $PARENT_FOLDER/$SUBFOLDER/repo
+git clone --no-checkout git@github.com:runmemo/elearning.git $PARENT_FOLDER/$SUBFOLDER/repo
 mv $PARENT_FOLDER/$SUBFOLDER/repo/.git $PARENT_FOLDER/$SUBFOLDER
 rm -R $PARENT_FOLDER/$SUBFOLDER/repo
 cd $PARENT_FOLDER/$SUBFOLDER
