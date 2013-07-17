@@ -45,7 +45,16 @@ function course_item_links() {
   $block = array();
   $block['subject'] = '';
   $tabs = menu_local_tasks(0);
-  $block['content'] = $tabs['tabs']['output'];
+  $block['content'] = render($tabs['tabs']['output']);
+
+  // Attach course item add links.
+  if (!empty($node->book['bid'])) {
+    // Get the course
+    $course_item = entity_metadata_wrapper('node', $node);
+    $course = $course_item->book->value();
+    $block['content'] .= course_outline_links($course, FALSE);
+  }
+
   return $block;
 }
 

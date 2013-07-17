@@ -245,7 +245,7 @@ function course_outline_block_view_form($form, &$form_state, $course) {
   }
 }
 
-function course_outline_links($course) {
+function course_outline_links($course, $button = TRUE) {
 //  $item_types = course_item_node_types();
   $item_types = array('unit', 'lesson');
   $items = array();
@@ -253,12 +253,17 @@ function course_outline_links($course) {
   ctools_include('modal');
   // Add CTools' javascript to the page.
   ctools_modal_add_js();
+  $classes = 'ctools-modal-common-modal-style';
+  if ($button) {
+    $classes .= ' link-button';
+  }
 
   foreach($item_types as $type) {
     if (node_access('create', $type)) {
-      $items[] = ctools_modal_text_button('Create '.$type, 'course-add/nojs/'.$type.'/'.$course->nid, t('Add Item'), 'ctools-modal-common-modal-style link-button');
+      $items[] = ctools_modal_text_button('Create '.$type, 'course-add/nojs/'.$type.'/'.$course->nid, t('Add Item'), $classes);
     }
   }
+
   return theme('item_list', array('items' => $items, 'attributes' => array('class' => 'item-add-links')));
 }
 
