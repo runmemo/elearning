@@ -9,14 +9,16 @@
  * 	$cancel_button - button that closes the modal window
  */
 ?>
-<div class="course-title">
- <?php print $disclaimer; ?>
-</div>
-<div class="course-actions">
-  <div class="course-exit-action">
-    <?php print $leave_button; ?>
+<div class="course-leave-wrapper">
+  <div class="course-title">
+   <?php print $disclaimer; ?>
   </div>
-  <div class="course-cancel-action">
-    <?php print $cancel_button; ?>
+  <div class="course-actions">
+    <div class="course-exit-action">
+      <?php print $leave_button; ?>
+    </div>
+    <div class="course-cancel-action">
+      <?php print $cancel_button; ?>
+    </div>
   </div>
 </div>

@@ -2978,25 +2978,27 @@ div.quiz-report {
 
 
 /** Course leave css **/
-.course-actions {
-  float: right;
-  width: 100%;
-  margin-top: 10px;
-  .course-exit-action {
+.course-leave-wrapper {
+  .course-actions {
     float: right;
-    a {
-      .button-submit();
+    width: 100%;
+    margin-top: 10px;
+    .course-exit-action {
+      float: right;
+      a {
+        .button-submit();
+      }
+    }
+    .course-cancel-action {
+      .link-cancel() ;
     }
   }
-  .course-cancel-action {
-    .link-cancel() ;
-  }
-}
 
-.course-title {
-  border-bottom: 1px dotted #CCCCCC;
-  color: #555555;
-  font-weight: bold;
-  padding: 10px;
+  .course-title {
+    border-bottom: 1px dotted #CCCCCC;
+    color: #555555;
+    font-weight: bold;
+    padding: 10px;
+  }
 }
 /** Course leave css **/
