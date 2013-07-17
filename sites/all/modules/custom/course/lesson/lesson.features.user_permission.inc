@@ -44,5 +44,14 @@ function lesson_user_default_permissions() {
     'module' => 'node',
   );
 
+  // Exported permission: create lesson content.
+  $permissions['create lesson content'] = array(
+    'name' => 'create lesson content',
+    'roles' => array(
+      'teacher' => 'teacher',
+    ),
+    'module' => 'node',
+  );
+
   return $permissions;
 }
