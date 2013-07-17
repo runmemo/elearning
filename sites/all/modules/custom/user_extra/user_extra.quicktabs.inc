@@ -15,7 +15,7 @@ function user_extra_quicktabs_default_quicktabs() {
   $quicktabs->api_version = 1;
   $quicktabs->machine_name = 'user_profile_tab';
   $quicktabs->ajax = 0;
-  $quicktabs->hide_empty_tabs = FALSE;
+  $quicktabs->hide_empty_tabs = TRUE;
   $quicktabs->default_tab = 0;
   $quicktabs->title = 'User Profile Tab';
   $quicktabs->tabs = array(
@@ -59,6 +59,7 @@ function user_extra_quicktabs_default_quicktabs() {
   t('History');
   t('Answers');
   t('Questions');
+  t('Reviews');
   t('User Profile Tab');
 
   $export['user_profile_tab'] = $quicktabs;
