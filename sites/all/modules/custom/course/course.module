@@ -550,8 +550,7 @@ function course_leave_modal($js = NULL, $user = NULL, $course = NULL) {
     return 'Error :: No course node or user uid.';
   }
   if (!$js) {
-    //@todo bulat : Do we need to support non-js calls also ?
-    return;
+    return theme('course_leave_modal', array('uid' => $user->uid, 'course' => $course));
   }
   else {
     // Required includes for ctools to work:
@@ -559,7 +558,7 @@ function course_leave_modal($js = NULL, $user = NULL, $course = NULL) {
     ctools_include('ajax');
   }
 
-  return ctools_modal_render(t('Confirmation'), theme('course_leave_modal', array('uid' => $user->uid, 'course' => $course)));
+  return ctools_modal_render(t('Confirmation'), theme('course_leave_modal', array('uid' => $user->uid, 'course' => $course, 'js' => $js)));
 }
 
 /**

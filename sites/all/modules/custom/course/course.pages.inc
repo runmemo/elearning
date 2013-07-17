@@ -90,6 +90,13 @@ function template_preprocess_course_leave_modal(&$vars) {
       t('Are you sure you wants to leave this course : @course_title?', 
       array('@course_title' => $vars['course']->title));
   // buttons
-  $vars['leave_button'] = ctools_ajax_text_button(t('Yes, leave'), "course-exit-action/nojs/exit/{$vars['uid']}/{$vars['course']->nid}", t('Yes'));
-  $vars['cancel_button'] = ctools_ajax_text_button(t('Cancel'), "course-exit-action/nojs/cancel/{$vars['uid']}/{$vars['course']->nid}", t('Cancel'));
+
+  if (!empty($vars['js'])) {
+    $vars['leave_button'] = ctools_ajax_text_button(t('Yes, leave'), "course-exit-action/nojs/exit/{$vars['uid']}/{$vars['course']->nid}", t('Yes'));
+    $vars['cancel_button'] = ctools_ajax_text_button(t('Cancel'), "course-exit-action/nojs/cancel/{$vars['uid']}/{$vars['course']->nid}", t('Cancel'));
+  }
+  else {
+    $vars['leave_button'] = l(t('Yes, leave'), "course-exit-action/nojs/exit/{$vars['uid']}/{$vars['course']->nid}");
+    $vars['cancel_button'] = l(t('Cancel'), "course-exit-action/nojs/cancel/{$vars['uid']}/{$vars['course']->nid}");
+  }
 }
