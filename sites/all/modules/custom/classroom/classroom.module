@@ -1,0 +1,155 @@
+<?php
+
+/**
+ * @file
+ * Code for the Classroom feature.
+ */
+include_once 'classroom.features.inc';
+
+/**
+ * Implements hook_entity_presave();
+ */
+function classroom_entity_presave($entity, $type) {
+  if ($type == 'registration') {
+    if (isset($entity->nid)) {
+      $group = classroom_get_user_course_group($entity->uid, $entity->nid);
+      if ($entity->is_new || ($entity->cancelled == 0 && $entity->original->cancelled > 0)) {
+        if (!$group) {
+          $group_id = classroom_get_relevant_group($entity->nid);
+          if (!$group_id) {
+            $group_id = classroom_create_group($entity->nid);
+            if (!$group_id) {
+              watchdog('classroom', "Couldn't assign user # %uid to any course # %nid group.", array('%uid' => $entity->uid, '%nid' => $entity->nid), WATCHDOG_WARNING);
+            }
+          }
+          if ($group_id) {
+            og_group('node', $group_id);
+          }
+        }
+      }
+      elseif ($entity->cancelled > 0 && $entity->original->cancelled == 0) {
+        if ($group) {
+          og_ungroup('node', $group, 'user', $entity->uid);
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function classroom_form_og_ui_admin_settings_alter(&$form, &$form_state, $form_id) {
+  $form['og_group_size'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Group Size'),
+    '#default_value' => variable_get('og_group_size', 5),
+    '#size' => 60,
+    '#maxlength' => 60,
+    '#required' => TRUE,
+  );
+}
+
+/**
+ * Returns course group, to which user is assigned or FALSE.
+ * 
+ * @param integer $uid
+ *   User ID
+ * @param integer $course_nid
+ *   Course node ID
+ *   
+ * @return integer
+ *   Course group node ID
+ */
+function classroom_get_user_course_group($uid, $course_nid) {
+  $user_wrapper = entity_metadata_wrapper('user', $uid);
+  $groups = $user_wrapper->og_group_ref->value();
+  if (empty($groups)) {
+    return FALSE;
+  }
+  else {
+    foreach ($user_wrapper->og_group_ref->getIterator() as $group_wrapper) {
+      if ($group_wrapper->field_course->raw() == $course_nid) {
+        $result[] = $group_wrapper->nid->value();
+      }
+    }
+  }
+  if (count($result) > 1) {
+    watchdog('classroom', "User # %uid participates in more than one group for the course # %nid.", array('%uid' => $uid, '%nid' => $course_nid), WATCHDOG_WARNING);
+  }
+  
+  return $result[0];
+}
+
+/**
+ * Returns first not full group for the course or FALSE if there is no groups
+ * for the course.
+ * 
+ * @param integer $course_nid
+ *   Course node ID
+ * 
+ * @return
+ *   Relevant group ID or FALSE if none was found
+ */
+function classroom_get_relevant_group($course_nid) {
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node')
+    ->entityCondition('bundle', 'course_group')
+    ->propertyCondition('status', 1)
+    ->fieldCondition('field_course', 'target_id', $course_nid);
+  $result = $query->execute();
+  if (empty($result)) {
+    return FALSE;
+  }
+  foreach ($result['node'] as $nid => $node) {
+    $size = classroom_get_group_members_count($nid);
+    if (!$size || ($size < variable_get('og_group_size', 5))) {
+      return $nid;
+    }
+  }
+  return FALSE;
+}
+
+/**
+ * Calculates number of students in group.
+ * 
+ * @param integer $group_nid
+ *   Group node ID
+ */
+function classroom_get_group_members_count($group_nid) {
+  $query = new EntityFieldQuery();
+  return $query->entityCondition('entity_type', 'user')
+      ->propertyCondition('status', 1)
+      ->fieldCondition('og_group_ref', 'target_id', $group_nid)
+      ->count()
+      ->execute();
+}
+
+/**
+ * Creates new course group.
+ * 
+ * @param integer $course_nid
+ *   Course node ID
+ * 
+ * @return
+ *   Node ID of the group or FALSE
+ */
+function classroom_create_group($course_nid) {
+  $group = new stdClass();
+  $group->type = 'course_group';
+  $group->title = 'Group for course # ' . $course_nid;
+  $group->language = LANGUAGE_NONE;
+  $group->options = array();
+  $group->promote = 0;
+  node_object_prepare($group);
+  $group->uid = 1;
+  $group->group_group[LANGUAGE_NONE][0]['value'] = 1;
+  $group->field_course[LANGUAGE_NONE][0]['target_id'] = $course_nid;
+  node_save($group);
+
+  return isset($group->nid) ? $group->nid : FALSE;
+}
+
+function classroom_init() {
+  classroom_get_user_course_group(2, 37);
+}
