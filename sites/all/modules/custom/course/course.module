@@ -735,6 +735,9 @@ function course_form_course_node_form_alter(&$form, &$form_state) {
     $form['field_teacher'][$langcode]['#default_value'] = $user->uid;
     $form['field_teacher']['#disabled'] = TRUE;
   }
+
+  // Hide default book form.
+  unset($form['book']);
 }
 
 /**
