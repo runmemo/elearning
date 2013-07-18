@@ -16,7 +16,7 @@ function course_workflow_user_default_permissions() {
     'roles' => array(
       'administrator' => 'administrator',
     ),
-    'module' => 'course_access',
+    'module' => 'course_workflow',
   );
 
   // Exported permission: access own unpublished course.
@@ -26,7 +26,7 @@ function course_workflow_user_default_permissions() {
       'administrator' => 'administrator',
       'teacher' => 'teacher',
     ),
-    'module' => 'course_access',
+    'module' => 'course_workflow',
   );
 
   return $permissions;
