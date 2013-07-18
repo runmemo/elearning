@@ -358,6 +358,9 @@ function course_add_item_unit_submit($form, &$form_state) {
   $node->book['bid'] = $course->nid;
   $node->book['weight'] = 1000;
   node_save($node);
+
+  // clear outline cache.
+  course_items_clear_cache($course->nid);
 }
 
 function course_add_item_lesson($form, &$form_state, $course = NULL) {
@@ -397,12 +400,20 @@ function course_add_item_lesson_submit($form, &$form_state) {
   $node->type = 'lesson';
   node_object_prepare($node);
 
+  // get mlid of first unit
+  $course_items = course_get_items($course, TRUE);
+  $first_unit = array_search('unit', $course_items);
+  $menu_item = menu_get_item('node/'.$first_unit); 
+
   $node->title = $form_state['values']['title'];
   $node->field_video = $form_state['values']['field_video'];
   $node->language = $course->language;
   $node->book['bid'] = $course->nid;
-  $node->book['weight'] = 1000;
+  $node->book['plid'] = $menu_item['page_arguments'][0]->book['mlid'];
   node_save($node);
+
+  // clear outline cache.
+  course_items_clear_cache($course->nid);
 }
 
 /**
