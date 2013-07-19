@@ -12,27 +12,76 @@ include_once 'classroom.features.inc';
 function classroom_entity_presave($entity, $type) {
   if ($type == 'registration') {
     if (isset($entity->nid)) {
-      $group = classroom_get_user_course_group($entity->uid, $entity->nid);
       if ($entity->is_new || ($entity->cancelled == 0 && $entity->original->cancelled > 0)) {
-        if (!$group) {
-          $group_id = classroom_get_relevant_group($entity->nid);
-          if (!$group_id) {
-            $group_id = classroom_create_group($entity->nid);
-            if (!$group_id) {
-              watchdog('classroom', "Couldn't assign user # %uid to any course # %nid group.", array('%uid' => $entity->uid, '%nid' => $entity->nid), WATCHDOG_WARNING);
-            }
-          }
-          if ($group_id) {
-            og_group('node', $group_id);
-          }
-        }
+        classroom_add_user($entity->nid, $entity->uid);
       }
       elseif ($entity->cancelled > 0 && $entity->original->cancelled == 0) {
-        if ($group) {
-          og_ungroup('node', $group, 'user', $entity->uid);
-        }
+        classroom_remove_user($entity->nid, $entity->uid);
       }
     }
+  }
+}
+
+/**
+ * 
+ * @param integer $course_nid
+ *   Course node ID
+ * @return
+ *   Group ID or FALSE
+ */
+function classroom_get_group($course_nid) {
+  $group_id = classroom_get_available_group($course_nid);
+  if (!$group_id) {
+    $group_id = classroom_create_group($course_nid);
+    if (!$group_id) {
+      watchdog('classroom', "Couldn't assign user to any course (# %nid) group.", array('%nid' => $course_nid), WATCHDOG_WARNING);
+    }
+  }
+  return $group_id;
+}
+
+
+/**
+ * Adds user to the course group.
+ * 
+ * @param integer $course_nid
+ *   Course node ID
+ * @param integer $uid
+ *   User ID
+ */
+function classroom_add_user($course_nid, $uid) {
+  $group = classroom_get_user_course_group($uid, $course_nid);
+  if (!$group) {
+    $group_id = classroom_get_group($course_nid);
+    if ($group_id) {
+      $values = array(
+        'entity_type' => 'user',
+        'entity' => $uid,
+        'field_name' => 'field_user_group'
+      );
+      og_group('node', $group_id, $values);
+    }
+  }
+  else {
+    watchdog('classroom', 'There was an attempt to add user # %uid to course (# %nid) group, although user belongs to already existing group # %group_nid.', array('%uid' => $uid, '%nid' => $course_nid, '%group_nid' => $group), WATCHDOG_WARNING);
+  }
+}
+
+/**
+ * Removes user from the course group.
+ * 
+ * @param integer $course_nid
+ *   Course node ID
+ * @param integer $uid
+ *   User ID
+ */
+function classroom_remove_user($course_nid, $uid) {
+  $group = classroom_get_user_course_group($uid, $course_nid);
+  if ($group) {
+    og_ungroup('node', $group, 'user', $uid);
+  }
+  else {
+    watchdog('classroom', "Couldn't remove user # %uid from course (# %nid) group, because it doesn't exist.", array('%uid' => $uid, '%nid' => $course_nid), WATCHDOG_WARNING);
   }
 }
 
@@ -63,22 +112,30 @@ function classroom_form_og_ui_admin_settings_alter(&$form, &$form_state, $form_i
  */
 function classroom_get_user_course_group($uid, $course_nid) {
   $user_wrapper = entity_metadata_wrapper('user', $uid);
-  $groups = $user_wrapper->og_group_ref->value();
+  $groups = $user_wrapper->field_user_group->raw();
   if (empty($groups)) {
     return FALSE;
   }
   else {
-    foreach ($user_wrapper->og_group_ref->getIterator() as $group_wrapper) {
-      if ($group_wrapper->field_course->raw() == $course_nid) {
-        $result[] = $group_wrapper->nid->value();
-      }
+    $query = new EntityFieldQuery();
+    $query->entityCondition('entity_type', 'node')
+      ->entityCondition('bundle', 'course_group')
+      ->propertyCondition('status', 1)
+      ->propertyCondition ('nid', $groups, 'IN')
+      ->fieldCondition('field_course', 'target_id', $course_nid);
+    $result = $query->execute();
+    if (empty($result)) {
+      return FALSE;
     }
   }
+  
   if (count($result) > 1) {
     watchdog('classroom', "User # %uid participates in more than one group for the course # %nid.", array('%uid' => $uid, '%nid' => $course_nid), WATCHDOG_WARNING);
   }
   
-  return $result[0];
+  foreach ($result['node'] as $nid => $node) {
+    return $nid;
+  }
 }
 
 /**
@@ -89,9 +146,9 @@ function classroom_get_user_course_group($uid, $course_nid) {
  *   Course node ID
  * 
  * @return
- *   Relevant group ID or FALSE if none was found
+ *   Available group ID or FALSE if none was found
  */
-function classroom_get_relevant_group($course_nid) {
+function classroom_get_available_group($course_nid) {
   $query = new EntityFieldQuery();
   $query->entityCondition('entity_type', 'node')
     ->entityCondition('bundle', 'course_group')
@@ -101,9 +158,10 @@ function classroom_get_relevant_group($course_nid) {
   if (empty($result)) {
     return FALSE;
   }
+  $default_size = variable_get('og_group_size', 5);
   foreach ($result['node'] as $nid => $node) {
     $size = classroom_get_group_members_count($nid);
-    if (!$size || ($size < variable_get('og_group_size', 5))) {
+    if (!$size || ($size < $default_size)) {
       return $nid;
     }
   }
@@ -120,7 +178,7 @@ function classroom_get_group_members_count($group_nid) {
   $query = new EntityFieldQuery();
   return $query->entityCondition('entity_type', 'user')
       ->propertyCondition('status', 1)
-      ->fieldCondition('og_group_ref', 'target_id', $group_nid)
+      ->fieldCondition('field_user_group', 'target_id', $group_nid)
       ->count()
       ->execute();
 }
@@ -142,7 +200,6 @@ function classroom_create_group($course_nid) {
   $group->options = array();
   $group->promote = 0;
   node_object_prepare($group);
-  $group->uid = 1;
   $group->group_group[LANGUAGE_NONE][0]['value'] = 1;
   $group->field_course[LANGUAGE_NONE][0]['target_id'] = $course_nid;
   node_save($group);
@@ -150,6 +207,33 @@ function classroom_create_group($course_nid) {
   return isset($group->nid) ? $group->nid : FALSE;
 }
 
-function classroom_init() {
-  classroom_get_user_course_group(2, 37);
+/**
+ * Implements hook_views_default_views_alter().
+ * 
+ * Adds og relationship and contextual filter to the 'open_questions_review_list' view.
+ */
+function classroom_views_default_views_alter(&$views) {
+  if (isset($views['open_questions_review_list'])) {
+    if (!isset($views['open_questions_review_list']->display['default']->handler->display->display_options['relationships']['og_membership_rel'])) {
+      $relationships = &$views['open_questions_review_list']->display['default']->handler->display->display_options['relationships'];
+      $relationships['og_membership_rel']['id'] = 'og_membership_rel';
+      $relationships['og_membership_rel']['table'] = 'users';
+      $relationships['og_membership_rel']['field'] = 'og_membership_rel';
+      $relationships['og_membership_rel']['relationship'] = 'uid';
+    }
+    if (!isset($views['open_questions_review_list']->display['default']->handler->display->display_options['arguments']['gid'])) {
+      $args = &$views['open_questions_review_list']->display['default']->handler->display->display_options['arguments'];
+      $args['gid']['id'] = 'gid';
+      $args['gid']['table'] = 'og_membership';
+      $args['gid']['field'] = 'gid';
+      $args['gid']['relationship'] = 'og_membership_rel';
+      $args['gid']['default_action'] = 'default';
+      $args['gid']['default_argument_type'] = 'og_user_groups';
+      $args['gid']['default_argument_options']['glue'] = ',';
+      $args['gid']['summary']['number_of_records'] = '0';
+      $args['gid']['summary']['format'] = 'default_summary';
+      $args['gid']['summary_options']['items_per_page'] = '25';
+      $args['gid']['break_phrase'] = TRUE;
+    }
+  }
 }

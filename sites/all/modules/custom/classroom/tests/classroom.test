@@ -1,0 +1,60 @@
+<?php
+
+/**
+ * @file
+ * 
+ * classroom.test contains test case for Classroom module
+ */
+
+/**
+ * Test case for Classroom module that checks that
+ */
+class ClassroomCase extends DrupalWebTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Classroom Test Case',
+      'description' => 'Tests that Classroom module functions work correctly.',
+      'group' => 'Course',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('registration', 'newsletter', 'og', 'classroom');
+    
+    // Create course
+    $settings = array(
+      'type' => 'course'
+    );
+    $this->course = $this->drupalCreateNode($settings);
+    $this->course->book['bid'] = $this->course->nid;
+    node_save($this->course);
+    // Create users
+    $this->user_a = $this->drupalCreateUser(array());
+    $this->user_b = $this->drupalCreateUser(array());
+    
+  }
+
+  /**
+   * Test case for registration process. Checks, that group is created and user
+   * is added to this group and removed, when registration is cancelled.
+   */
+  function testRegistrationWorkflow() {
+    // Login as student
+    $this->drupalLogin($this->user_a);
+    $uid = $this->loggedInUser->uid;
+    $course_nid = $this->course->nid;
+    // Create registration
+    registration_register($uid, $course_nid);
+    $course_group = classroom_get_group($course_nid);
+    $this->assertTrue(is_numeric($course_group), 'Course group has been created after first user registration.');
+    $user_group = classroom_get_user_course_group($uid, $course_nid);
+    $this->assertEqual($course_group, $user_group, 'After registration user has been added to the course group.');
+    // Cancel registration
+    registration_cancel($uid, $course_nid);
+    $user_group = classroom_get_user_course_group($uid, $course_nid);
+    $this->assertFalse($user_group, 'After registration cancellation user has been removed from the group.');
+  }
+  
+  
+}

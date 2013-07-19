@@ -64,7 +64,7 @@ function open_question_block_view($delta = '') {
       $block['subject'] = '';
      
       if ($answered) {
-        $block['content'] = open_question_review_list_view();
+        $block['content'] = open_question_review_list_view($question->nid);
       }
       else {
         $block['content']['message'] = array(

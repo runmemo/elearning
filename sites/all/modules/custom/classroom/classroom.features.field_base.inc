@@ -36,13 +36,13 @@ function classroom_field_default_field_bases() {
     'type' => 'list_boolean',
   );
 
-  // Exported field_base: 'og_group_ref'
-  $field_bases['og_group_ref'] = array(
+  // Exported field_base: 'field_user_group'
+  $field_bases['field_user_group'] = array(
     'active' => 1,
     'cardinality' => -1,
     'deleted' => 0,
     'entity_types' => array(),
-    'field_name' => 'og_group_ref',
+    'field_name' => 'field_user_group',
     'foreign keys' => array(
       'node' => array(
         'columns' => array(

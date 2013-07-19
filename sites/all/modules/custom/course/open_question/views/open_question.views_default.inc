@@ -418,9 +418,9 @@ function open_question_views_default_views() {
   $handler->display->display_options['fields']['php']['php_setup'] = '\'require_once DRUPAL_ROOT . /sites/all/modules/  custom/course/open_question/open_question.module;\';';
   $handler->display->display_options['fields']['php']['php_value'] = '\'require_once DRUPAL_ROOT . /sites/all/modules/custom/ course/open_question/open_question.module;\';';
   $handler->display->display_options['fields']['php']['php_output'] = '<?php
-  $form = drupal_get_form("oq_review_".$row->nid, $row->nid);
-  print drupal_render($form);
-  ?>';
+    $form = drupal_get_form("oq_review_".$row->nid, $row->nid);
+    print drupal_render($form);
+    ?>';
   $handler->display->display_options['fields']['php']['use_php_click_sortable'] = '0';
   $handler->display->display_options['fields']['php']['php_click_sortable'] = '';
   /* Field: Global: Custom text */
@@ -429,18 +429,18 @@ function open_question_views_default_views() {
   $handler->display->display_options['fields']['nothing']['field'] = 'nothing';
   $handler->display->display_options['fields']['nothing']['label'] = '';
   $handler->display->display_options['fields']['nothing']['alter']['text'] = '<a name="answer-[nid]" /> </a><div class="views-other-answer-picture">
-    <div class="views-field-picture">[picture]</div>
-    <div class="author-points">[points]</div>
-  </div>
-
-  <div class="views-other-answer-body">
-    <div class="views-field-body">[body]</div>
-    <div class="node-supplementary-wrapper"> 
-      <div class="views-field-created">[created]</div>
-      <div class="views-field-name">[name]</div>
+      <div class="views-field-picture">[picture]</div>
+      <div class="author-points">[points]</div>
     </div>
-   <div class="views-field-feedback-form">[php]</div>
-  </div>';
+
+    <div class="views-other-answer-body">
+      <div class="views-field-body">[body]</div>
+      <div class="node-supplementary-wrapper"> 
+        <div class="views-field-created">[created]</div>
+        <div class="views-field-name">[name]</div>
+      </div>
+     <div class="views-field-feedback-form">[php]</div>
+    </div>';
   $handler->display->display_options['fields']['nothing']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['nothing']['element_default_classes'] = FALSE;
   /* Sort criterion: Global: Random */
@@ -483,8 +483,8 @@ function open_question_views_default_views() {
 
   /* Display: Block */
   $handler = $view->new_display('block', 'Block', 'block');
-  
-  $export['oq_review'] = $view;
+
+  $export['open_questions_review_list'] = $view;
   
   return $export;
 }

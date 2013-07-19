@@ -151,8 +151,8 @@ function classroom_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'user-user-og_group_ref'
-  $field_instances['user-user-og_group_ref'] = array(
+  // Exported field_instance: 'user-user-field_user_group'
+  $field_instances['user-user-field_user_group'] = array(
     'bundle' => 'user',
     'default_value' => NULL,
     'deleted' => 0,
@@ -173,7 +173,7 @@ function classroom_field_default_field_instances() {
       ),
     ),
     'entity_type' => 'user',
-    'field_name' => 'og_group_ref',
+    'field_name' => 'field_user_group',
     'label' => 'Groups audience',
     'required' => FALSE,
     'settings' => array(

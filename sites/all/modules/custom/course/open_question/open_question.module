@@ -63,21 +63,23 @@ function open_question_permission() {
  *   Block's content array
  */
 function open_question_review_list_view($oq_nid = 0) {
+  global $user;
   $block_content = array();
   // Show answers of other students for review.
   $review_list_view = views_get_view('open_questions_review_list');
 
-  if($oq_nid) {
-    // Ajax calls requires to send the correct oq_nid for rendering view.
-    global $user;
-    // Set arguments for ajax calls.
-    $review_list_view->set_arguments(array($user->uid, $oq_nid));
-    $review_list_view->execute();
+  if ($oq_nid == 0 || !module_exists('classroom')) {
+    $markup = $review_list_view->preview();
+  } else {
+    $book = _node_get_book(node_load($oq_nid));
+    $course_nid = isset($book['bid']) ? $book['bid'] : 0;
+    $group_id = classroom_get_user_course_group($user->uid, $course_nid);
+    $markup = $review_list_view->preview('block', array($user->uid, $oq_nid, $group_id));
   }
-  
+
   $block_content['review_list'] = array(
     '#type' => 'markup',
-    '#markup' => $review_list_view->preview(),
+    '#markup' => $markup,
   );
   return $block_content;
 }
