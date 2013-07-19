@@ -20,7 +20,7 @@ class ClassroomCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('registration', 'newsletter', 'og', 'classroom');
+    parent::setUp('registration', 'newsletter', 'classroom');
     
     // Create course
     $settings = array(
@@ -35,6 +35,9 @@ class ClassroomCase extends DrupalWebTestCase {
     
   }
 
+  function testGroupsFieldExists() {
+     $this->assertTrue(field_info_instance('user', 'field_user_group', 'user'), 'Field was added to the user entity.');
+  }
   /**
    * Test case for registration process. Checks, that group is created and user
    * is added to this group and removed, when registration is cancelled.
@@ -46,15 +49,23 @@ class ClassroomCase extends DrupalWebTestCase {
     $course_nid = $this->course->nid;
     // Create registration
     registration_register($uid, $course_nid);
-    $course_group = classroom_get_group($course_nid);
-    $this->assertTrue(is_numeric($course_group), 'Course group has been created after first user registration.');
-    $user_group = classroom_get_user_course_group($uid, $course_nid);
-    $this->assertEqual($course_group, $user_group, 'After registration user has been added to the course group.');
+    $classroom = classroom_get_group($course_nid);
+    $this->assertTrue(is_numeric($classroom), 'Course group has been created after first user registration.');
+   
+    $res = db_select('og_membership', 'm')->fields('m')->execute();
+    debug($res->fetchAll());
+    
+    $user_group = classroom_get_user_classroom($uid, $course_nid);
+    $this->assertEqual($classroom, $user_group, 'After registration user has been added to the course group.');
     // Cancel registration
     registration_cancel($uid, $course_nid);
-    $user_group = classroom_get_user_course_group($uid, $course_nid);
+    $user_group = classroom_get_user_classroom($uid, $course_nid);
     $this->assertFalse($user_group, 'After registration cancellation user has been removed from the group.');
   }
   
-  
+  function testClassroomOverflow() {
+    // @todo Ilya: check that new classroom is created once current class gets to it's max size.
+    // e.g. if 9 users registered to a course with max group size of 2 we should have 5 groups.
+  }
+
 }

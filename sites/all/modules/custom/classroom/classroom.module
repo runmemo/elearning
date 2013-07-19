@@ -50,7 +50,7 @@ function classroom_get_group($course_nid) {
  *   User ID
  */
 function classroom_add_user($course_nid, $uid) {
-  $group = classroom_get_user_course_group($uid, $course_nid);
+  $group = classroom_get_user_classroom($uid, $course_nid);
   if (!$group) {
     $group_id = classroom_get_group($course_nid);
     if ($group_id) {
@@ -76,7 +76,7 @@ function classroom_add_user($course_nid, $uid) {
  *   User ID
  */
 function classroom_remove_user($course_nid, $uid) {
-  $group = classroom_get_user_course_group($uid, $course_nid);
+  $group = classroom_get_user_classroom($uid, $course_nid);
   if ($group) {
     og_ungroup('node', $group, 'user', $uid);
   }
@@ -110,16 +110,17 @@ function classroom_form_og_ui_admin_settings_alter(&$form, &$form_state, $form_i
  * @return integer
  *   Course group node ID
  */
-function classroom_get_user_course_group($uid, $course_nid) {
-  $user_wrapper = entity_metadata_wrapper('user', $uid);
-  $groups = $user_wrapper->field_user_group->raw();
+function classroom_get_user_classroom($uid, $course_nid) {
+  $user = user_load($uid);
+  $groups = og_get_groups_by_user($user, 'node');
+  
   if (empty($groups)) {
     return FALSE;
   }
   else {
     $query = new EntityFieldQuery();
     $query->entityCondition('entity_type', 'node')
-      ->entityCondition('bundle', 'course_group')
+      ->entityCondition('bundle', 'classroom') // @todo Ilya I guess this should be called classroom.
       ->propertyCondition('status', 1)
       ->propertyCondition ('nid', $groups, 'IN')
       ->fieldCondition('field_course', 'target_id', $course_nid);
@@ -151,9 +152,12 @@ function classroom_get_user_course_group($uid, $course_nid) {
 function classroom_get_available_group($course_nid) {
   $query = new EntityFieldQuery();
   $query->entityCondition('entity_type', 'node')
-    ->entityCondition('bundle', 'course_group')
+    ->entityCondition('bundle', 'classroom')
     ->propertyCondition('status', 1)
     ->fieldCondition('field_course', 'target_id', $course_nid);
+  // @todo Ilya: add order decs by id field, so we start from the last group.
+  // Also only get 1 group. current code does not scale. again imagine there are
+  // 10k of classroom groups, what will happen?
   $result = $query->execute();
   if (empty($result)) {
     return FALSE;
@@ -194,7 +198,7 @@ function classroom_get_group_members_count($group_nid) {
  */
 function classroom_create_group($course_nid) {
   $group = new stdClass();
-  $group->type = 'course_group';
+  $group->type = 'classroom';
   $group->title = 'Group for course # ' . $course_nid;
   $group->language = LANGUAGE_NONE;
   $group->options = array();

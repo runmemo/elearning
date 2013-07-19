@@ -10,53 +10,9 @@
 function classroom_field_default_field_instances() {
   $field_instances = array();
 
-  // Exported field_instance: 'node-course_group-body'
-  $field_instances['node-course_group-body'] = array(
-    'bundle' => 'course_group',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'hidden',
-        'module' => 'text',
-        'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 1,
-      ),
-      'teaser' => array(
-        'label' => 'hidden',
-        'module' => 'text',
-        'settings' => array(
-          'trim_length' => 600,
-        ),
-        'type' => 'text_summary_or_trimmed',
-        'weight' => 1,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'body',
-    'label' => 'Body',
-    'required' => FALSE,
-    'settings' => array(
-      'display_summary' => TRUE,
-      'text_processing' => 1,
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'module' => 'text',
-      'settings' => array(
-        'rows' => 20,
-        'summary_rows' => 5,
-      ),
-      'type' => 'text_textarea_with_summary',
-      'weight' => 31,
-    ),
-  );
-
-  // Exported field_instance: 'node-course_group-field_course'
-  $field_instances['node-course_group-field_course'] = array(
-    'bundle' => 'course_group',
+  // Exported field_instance: 'node-classroom-field_course'
+  $field_instances['node-classroom-field_course'] = array(
+    'bundle' => 'classroom',
     'default_value' => NULL,
     'deleted' => 0,
     'description' => '',
@@ -93,9 +49,9 @@ function classroom_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-course_group-group_group'
-  $field_instances['node-course_group-group_group'] = array(
-    'bundle' => 'course_group',
+  // Exported field_instance: 'node-classroom-group_group'
+  $field_instances['node-classroom-group_group'] = array(
+    'bundle' => 'classroom',
     'default_value' => array(
       0 => array(
         'value' => 1,

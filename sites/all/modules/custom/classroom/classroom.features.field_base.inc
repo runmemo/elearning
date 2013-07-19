@@ -35,7 +35,7 @@ function classroom_field_default_field_bases() {
     'translatable' => 0,
     'type' => 'list_boolean',
   );
-
+  // @todo Ilya: rename to field_classrooms
   // Exported field_base: 'field_user_group'
   $field_bases['field_user_group'] = array(
     'active' => 1,
@@ -74,7 +74,7 @@ function classroom_field_default_field_bases() {
           'type' => 'none',
         ),
         'target_bundles' => array(
-          'course_group' => 'course_group',
+          'classroom' => 'classroom',
         ),
       ),
       'handler_submit' => 'Change handler',

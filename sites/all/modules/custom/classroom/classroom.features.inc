@@ -19,8 +19,8 @@ function classroom_ctools_plugin_api() {
  */
 function classroom_node_info() {
   $items = array(
-    'course_group' => array(
-      'name' => t('Course Group'),
+    'classroom' => array(
+      'name' => t('Course Classroom'),
       'base' => 'node_content',
       'description' => '',
       'has_title' => '1',
