@@ -57,14 +57,13 @@ function classroom_add_user($course_nid, $uid) {
       $values = array(
         'entity_type' => 'user',
         'entity' => $uid,
-        'field_name' => 'field_user_group'
+        'field_name' => 'field_classrooms'
       );
       og_group('node', $group_id, $values);
+      return TRUE;
     }
   }
-  else {
-    watchdog('classroom', 'There was an attempt to add user # %uid to course (# %nid) group, although user belongs to already existing group # %group_nid.', array('%uid' => $uid, '%nid' => $course_nid, '%group_nid' => $group), WATCHDOG_WARNING);
-  }
+  return FALSE;
 }
 
 /**
@@ -79,10 +78,9 @@ function classroom_remove_user($course_nid, $uid) {
   $group = classroom_get_user_classroom($uid, $course_nid);
   if ($group) {
     og_ungroup('node', $group, 'user', $uid);
+    return TRUE;
   }
-  else {
-    watchdog('classroom', "Couldn't remove user # %uid from course (# %nid) group, because it doesn't exist.", array('%uid' => $uid, '%nid' => $course_nid), WATCHDOG_WARNING);
-  }
+  return FALSE;
 }
 
 /**
@@ -117,26 +115,20 @@ function classroom_get_user_classroom($uid, $course_nid) {
   if (empty($groups)) {
     return FALSE;
   }
-  else {
-    $query = new EntityFieldQuery();
-    $query->entityCondition('entity_type', 'node')
-      ->entityCondition('bundle', 'classroom') // @todo Ilya I guess this should be called classroom.
-      ->propertyCondition('status', 1)
-      ->propertyCondition ('nid', $groups, 'IN')
-      ->fieldCondition('field_course', 'target_id', $course_nid);
-    $result = $query->execute();
-    if (empty($result)) {
-      return FALSE;
-    }
-  }
-  
-  if (count($result) > 1) {
-    watchdog('classroom', "User # %uid participates in more than one group for the course # %nid.", array('%uid' => $uid, '%nid' => $course_nid), WATCHDOG_WARNING);
-  }
+
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node')
+    ->entityCondition('bundle', 'classroom') // @todo Ilya I guess this should be called classroom.
+    ->propertyCondition('status', 1)
+    ->propertyCondition ('nid', $groups, 'IN')
+    ->fieldCondition('field_course', 'target_id', $course_nid);
+  $result = $query->execute();
   
   foreach ($result['node'] as $nid => $node) {
     return $nid;
   }
+ 
+  return FALSE;
 }
 
 /**
@@ -182,7 +174,7 @@ function classroom_get_group_members_count($group_nid) {
   $query = new EntityFieldQuery();
   return $query->entityCondition('entity_type', 'user')
       ->propertyCondition('status', 1)
-      ->fieldCondition('field_user_group', 'target_id', $group_nid)
+      ->fieldCondition('field_classrooms', 'target_id', $group_nid)
       ->count()
       ->execute();
 }

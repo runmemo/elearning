@@ -129,8 +129,8 @@ function classroom_field_default_field_instances() {
       ),
     ),
     'entity_type' => 'user',
-    'field_name' => 'field_user_group',
-    'label' => 'Groups audience',
+    'field_name' => 'field_classrooms',
+    'label' => 'Classrooms',
     'required' => FALSE,
     'settings' => array(
       'behaviors' => array(

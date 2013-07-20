@@ -20,7 +20,7 @@ class ClassroomCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('registration', 'newsletter', 'classroom');
+    parent::setUp('newsletter', 'classroom');
     
     // Create course
     $settings = array(
@@ -36,31 +36,49 @@ class ClassroomCase extends DrupalWebTestCase {
   }
 
   function testGroupsFieldExists() {
-     $this->assertTrue(field_info_instance('user', 'field_user_group', 'user'), 'Field was added to the user entity.');
+     $this->assertTrue(field_info_instance('user', 'field_classrooms', 'user'), 'Field was added to the user entity.');
   }
   /**
    * Test case for registration process. Checks, that group is created and user
    * is added to this group and removed, when registration is cancelled.
    */
-  function testRegistrationWorkflow() {
-    // Login as student
-    $this->drupalLogin($this->user_a);
-    $uid = $this->loggedInUser->uid;
+  function testClassroomAddUser() {
+    $uid = $this->user_a->uid;
     $course_nid = $this->course->nid;
-    // Create registration
-    registration_register($uid, $course_nid);
-    $classroom = classroom_get_group($course_nid);
-    $this->assertTrue(is_numeric($classroom), 'Course group has been created after first user registration.');
+  
+    $classroom = classroom_get_user_classroom($course_nid, $uid);
+    $this->assertFalse($classroom, 'User is not assigned to any classrooms.');
+   
+    // Add user to classroom
+    $result = classroom_add_user($course_nid, $uid);
+    $this->assertTrue($result);
    
     $res = db_select('og_membership', 'm')->fields('m')->execute();
-    debug($res->fetchAll());
+    debug($res->fetchAll(), 'Shows to records. Why?'); // @todo Ilya - why there are two records here.
     
     $user_group = classroom_get_user_classroom($uid, $course_nid);
-    $this->assertEqual($classroom, $user_group, 'After registration user has been added to the course group.');
-    // Cancel registration
-    registration_cancel($uid, $course_nid);
+    $this->assertTrue($user_group, 'After registration user has been added to the course group.');
+    
+    // Add user to classroom
+    $result = classroom_add_user($course_nid, $uid);
+    $this->assertFalse($result);
+    // @todo Ilya: assert that there is still a single membership or watchdog record.
+  }
+  
+  function testClassroomRemoveUser() {
+    $uid = $this->user_a->uid;
+    $course_nid = $this->course->nid;
+     // Add user to classroom
+    classroom_add_user($course_nid, $uid);
+    // Remove user from classroom
+    $result = classroom_remove_user($course_nid, $uid);
+    $this->assertTrue($result);
     $user_group = classroom_get_user_classroom($uid, $course_nid);
     $this->assertFalse($user_group, 'After registration cancellation user has been removed from the group.');
+  
+    $result = classroom_remove_user($course_nid, $uid);
+    $this->assertFalse($result);
+    
   }
   
   function testClassroomOverflow() {

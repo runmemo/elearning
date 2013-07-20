@@ -36,13 +36,13 @@ function classroom_field_default_field_bases() {
     'type' => 'list_boolean',
   );
   // @todo Ilya: rename to field_classrooms
-  // Exported field_base: 'field_user_group'
-  $field_bases['field_user_group'] = array(
+  // Exported field_base: 'field_classrooms'
+  $field_bases['field_classrooms'] = array(
     'active' => 1,
     'cardinality' => -1,
     'deleted' => 0,
     'entity_types' => array(),
-    'field_name' => 'field_user_group',
+    'field_name' => 'field_classrooms',
     'foreign keys' => array(
       'node' => array(
         'columns' => array(
