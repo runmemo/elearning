@@ -10,6 +10,49 @@
 function classroom_field_default_field_bases() {
   $field_bases = array();
 
+  // Exported field_base: 'field_classroom_course'
+  $field_bases['field_classroom_course'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_classroom_course',
+    'foreign keys' => array(
+      'node' => array(
+        'columns' => array(
+          'target_id' => 'nid',
+        ),
+        'table' => 'node',
+      ),
+    ),
+    'indexes' => array(
+      'target_id' => array(
+        0 => 'target_id',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'entityreference',
+    'settings' => array(
+      'handler' => 'base',
+      'handler_settings' => array(
+        'behaviors' => array(
+          'views-select-list' => array(
+            'status' => 0,
+          ),
+        ),
+        'sort' => array(
+          'type' => 'none',
+        ),
+        'target_bundles' => array(
+          'course' => 'course',
+        ),
+      ),
+      'target_type' => 'node',
+    ),
+    'translatable' => 0,
+    'type' => 'entityreference',
+  );
+
   // Exported field_base: 'group_group'
   $field_bases['group_group'] = array(
     'active' => 1,
@@ -34,54 +77,6 @@ function classroom_field_default_field_bases() {
     ),
     'translatable' => 0,
     'type' => 'list_boolean',
-  );
-  // @todo Ilya: rename to field_classrooms
-  // Exported field_base: 'field_classrooms'
-  $field_bases['field_classrooms'] = array(
-    'active' => 1,
-    'cardinality' => -1,
-    'deleted' => 0,
-    'entity_types' => array(),
-    'field_name' => 'field_classrooms',
-    'foreign keys' => array(
-      'node' => array(
-        'columns' => array(
-          'target_id' => 'nid',
-        ),
-        'table' => 'node',
-      ),
-    ),
-    'indexes' => array(
-      'target_id' => array(
-        0 => 'target_id',
-      ),
-    ),
-    'locked' => 0,
-    'module' => 'entityreference',
-    'settings' => array(
-      'handler' => 'og',
-      'handler_settings' => array(
-        'behaviors' => array(
-          'og_behavior' => array(
-            'status' => TRUE,
-          ),
-          'views-select-list' => array(
-            'status' => 0,
-          ),
-        ),
-        'membership_type' => 'og_membership_type_default',
-        'sort' => array(
-          'type' => 'none',
-        ),
-        'target_bundles' => array(
-          'classroom' => 'classroom',
-        ),
-      ),
-      'handler_submit' => 'Change handler',
-      'target_type' => 'node',
-    ),
-    'translatable' => 0,
-    'type' => 'entityreference',
   );
 
   return $field_bases;

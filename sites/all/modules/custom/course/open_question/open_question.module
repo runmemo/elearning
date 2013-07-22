@@ -67,13 +67,16 @@ function open_question_review_list_view($oq_nid = 0) {
   $block_content = array();
   // Show answers of other students for review.
   $review_list_view = views_get_view('open_questions_review_list');
-
+  
+  // If 'classroom' module is disabled, preview view with default parameters.
   if ($oq_nid == 0 || !module_exists('classroom')) {
     $markup = $review_list_view->preview();
-  } else {
+  }
+  else {
+    // Collect parameters for the view.
     $book = _node_get_book(node_load($oq_nid));
     $course_nid = isset($book['bid']) ? $book['bid'] : 0;
-    $group_id = classroom_get_user_course_group($user->uid, $course_nid);
+    $group_id = classroom_get_user_classroom($user->uid, $course_nid);
     $markup = $review_list_view->preview('block', array($user->uid, $oq_nid, $group_id));
   }
 

@@ -10,12 +10,10 @@ dependencies[] = registration
 
 features[ctools][] = strongarm:strongarm:1
 features[features_api][] = api:2
+features[field_base][] = field_classroom_course
 features[field_base][] = group_group
-features[field_base][] = field_classrooms
-features[field_instance][] = node-classroom-body
-features[field_instance][] = node-classroom-field_course
+features[field_instance][] = node-classroom-field_classroom_course
 features[field_instance][] = node-classroom-group_group
-features[field_instance][] = user-user-field_classrooms
 features[node][] = classroom
 features[variable][] = comment_anonymous_classroom
 features[variable][] = comment_classroom

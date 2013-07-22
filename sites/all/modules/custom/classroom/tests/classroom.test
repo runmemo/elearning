@@ -7,7 +7,7 @@
  */
 
 /**
- * Test case for Classroom module that checks that
+ * Test case for Classroom module that checks module functions.
  */
 class ClassroomCase extends DrupalWebTestCase {
 
@@ -20,8 +20,8 @@ class ClassroomCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('newsletter', 'classroom');
-    
+    parent::setUp('classroom');
+
     // Create course
     $settings = array(
       'type' => 'course'
@@ -32,58 +32,109 @@ class ClassroomCase extends DrupalWebTestCase {
     // Create users
     $this->user_a = $this->drupalCreateUser(array());
     $this->user_b = $this->drupalCreateUser(array());
-    
+    $this->user_c = $this->drupalCreateUser(array());
+  }
+
+  /**
+   * Calculates number of classrooms for the given course.
+   * 
+   * @param integer $course_nid
+   */
+  function get_course_groups_count($course_nid) {
+    $query = new EntityFieldQuery();
+    $query->entityCondition('entity_type', 'node')
+      ->entityCondition('bundle', 'classroom')
+      ->propertyCondition('status', 1)
+      ->fieldCondition('field_classroom_course', 'target_id', $course_nid)
+      ->count();
+    $result = $query->execute();
+    if (empty($result)) {
+      return FALSE;
+    }
+    return $result;
   }
 
   function testGroupsFieldExists() {
-     $this->assertTrue(field_info_instance('user', 'field_classrooms', 'user'), 'Field was added to the user entity.');
+    $this->assertTrue(field_info_instance('user', 'og_user_node', 'user'), 'Field was added to the user entity.');
   }
+
   /**
    * Test case for registration process. Checks, that group is created and user
-   * is added to this group and removed, when registration is cancelled.
+   * is added to this group.
    */
   function testClassroomAddUser() {
     $uid = $this->user_a->uid;
     $course_nid = $this->course->nid;
-  
+
     $classroom = classroom_get_user_classroom($course_nid, $uid);
     $this->assertFalse($classroom, 'User is not assigned to any classrooms.');
-   
+
     // Add user to classroom
     $result = classroom_add_user($course_nid, $uid);
     $this->assertTrue($result);
-   
-    $res = db_select('og_membership', 'm')->fields('m')->execute();
-    debug($res->fetchAll(), 'Shows to records. Why?'); // @todo Ilya - why there are two records here.
-    
+
     $user_group = classroom_get_user_classroom($uid, $course_nid);
     $this->assertTrue($user_group, 'After registration user has been added to the course group.');
-    
+
     // Add user to classroom
     $result = classroom_add_user($course_nid, $uid);
     $this->assertFalse($result);
-    // @todo Ilya: assert that there is still a single membership or watchdog record.
+
+    $query = db_select('og_membership', 'm');
+    $query->fields('m');
+    $query->addExpression('COUNT(*)', 'count');
+    $query->execute();
+    $db_result = $query->execute();
+    $result = $db_result->fetch();
+    $this->assertEqual($result->count, 1, 'There is only one membership.');
   }
-  
+
+  /**
+   * Checks, that user is removed, when registration is cancelled.
+   */
   function testClassroomRemoveUser() {
     $uid = $this->user_a->uid;
     $course_nid = $this->course->nid;
-     // Add user to classroom
+    // Add user to classroom
     classroom_add_user($course_nid, $uid);
     // Remove user from classroom
     $result = classroom_remove_user($course_nid, $uid);
     $this->assertTrue($result);
     $user_group = classroom_get_user_classroom($uid, $course_nid);
     $this->assertFalse($user_group, 'After registration cancellation user has been removed from the group.');
-  
+
     $result = classroom_remove_user($course_nid, $uid);
     $this->assertFalse($result);
-    
   }
-  
+
+  /**
+   * Checks, that new classroom is created once current class gets to it's max size.
+   */
   function testClassroomOverflow() {
-    // @todo Ilya: check that new classroom is created once current class gets to it's max size.
-    // e.g. if 9 users registered to a course with max group size of 2 we should have 5 groups.
+    variable_set('og_group_size', 2);
+    
+    $user_a = $this->user_a->uid;
+    $user_b = $this->user_b->uid;
+    $user_c = $this->user_c->uid;
+    
+    $course_nid = $this->course->nid;
+    // Add users to classrooms.
+    classroom_add_user($course_nid, $user_a);
+    classroom_add_user($course_nid, $user_b);
+    classroom_add_user($course_nid, $user_c);
+    
+    // Get users' classrooms.
+    $group_a = classroom_get_user_classroom($user_a, $course_nid);
+    $group_b = classroom_get_user_classroom($user_b, $course_nid);
+    $group_c = classroom_get_user_classroom($user_c, $course_nid);
+    
+    $comparison = $group_a == $group_c;
+    
+    $this->assertEqual($group_a, $group_b, "User 'a' and User 'b' are in the same classroom.");
+    $this->assertFalse($comparison, "User 'c' and User 'a' are in different classrooms.");
+    
+    $this->assertEqual($this->get_course_groups_count($course_nid), 2, 'Number of classrooms for the course equals 2.');
+    
   }
 
 }
