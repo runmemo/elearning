@@ -76,17 +76,20 @@ class ClassroomCase extends DrupalWebTestCase {
     $user_group = classroom_get_user_classroom($uid, $course_nid);
     $this->assertTrue($user_group, 'After registration user has been added to the course group.');
 
-    // Add user to classroom
+    // Add same user to classroom
     $result = classroom_add_user($course_nid, $uid);
     $this->assertFalse($result);
-
+  
     $query = db_select('og_membership', 'm');
     $query->fields('m');
     $query->addExpression('COUNT(*)', 'count');
-    $query->execute();
-    $db_result = $query->execute();
-    $result = $db_result->fetch();
-    $this->assertEqual($result->count, 1, 'There is only one membership.');
+    $result = $query->execute();
+    $rows = $result->fetch();
+    $this->assertEqual($rows->count, 1, 'There is only one membership.');
+    
+    // Add another user to classroom
+    $result = classroom_add_user($course_nid, $this->user_b->uid);
+    $this->assertTrue($result);
   }
 
   /**
@@ -111,7 +114,7 @@ class ClassroomCase extends DrupalWebTestCase {
    * Checks, that new classroom is created once current class gets to it's max size.
    */
   function testClassroomOverflow() {
-    variable_set('og_group_size', 2);
+    variable_set('classroom_size', 2);
     
     $user_a = $this->user_a->uid;
     $user_b = $this->user_b->uid;

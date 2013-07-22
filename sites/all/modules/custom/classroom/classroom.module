@@ -87,10 +87,10 @@ function classroom_remove_user($course_nid, $uid) {
  * Implements hook_form_FORM_ID_alter().
  */
 function classroom_form_og_ui_admin_settings_alter(&$form, &$form_state, $form_id) {
-  $form['og_group_size'] = array(
+  $form['classroom_size'] = array(
     '#type' => 'textfield',
     '#title' => t('Group Size'),
-    '#default_value' => variable_get('og_group_size', 5),
+    '#default_value' => variable_get('classroom_size', 5),
     '#size' => 60,
     '#maxlength' => 60,
     '#required' => TRUE,
@@ -136,7 +136,7 @@ function classroom_get_user_classroom($uid, $course_nid) {
 }
 
 /**
- * Returns first not full group for the course or FALSE if there is no groups
+ * Returns last not full group for the course or FALSE if there are no groups
  * for the course.
  * 
  * @param integer $course_nid
@@ -157,7 +157,7 @@ function classroom_get_available_group($course_nid) {
   if (empty($result)) {
     return FALSE;
   }
-  $default_size = variable_get('og_group_size', 5);
+  $default_size = variable_get('classroom_size', 5);
   foreach ($result['node'] as $nid => $node) {
     $size = classroom_get_group_members_count($nid);
     if (!$size || ($size < $default_size)) {
@@ -192,20 +192,20 @@ function classroom_get_group_members_count($group_nid) {
  *   Node ID of the group or FALSE
  */
 function classroom_create_group($course_nid) {
-  $group = new stdClass();
-  $group->type = 'classroom';
-  $group->title = 'Group for course # ' . $course_nid;
-  $group->language = LANGUAGE_NONE;
-  $group->options = array();
-  $group->promote = 0;
-  $group->created = REQUEST_TIME;
-  $group->status = 1;
-  $group->uid = 0;
-  $group->group_group[LANGUAGE_NONE][0]['value'] = 1;
-  $group->field_classroom_course[LANGUAGE_NONE][0]['target_id'] = $course_nid;
-  node_save($group);
+  $node = new stdClass();
+  $node->type = 'classroom';
+  $node->title = 'Classroom for course #' . $course_nid;
+  $node->language = LANGUAGE_NONE;
+  $node->options = array();
+  $node->promote = 0;
+  $node->created = REQUEST_TIME;
+  $node->status = 1;
+  $node->uid = 0;
+  $node->group_group[LANGUAGE_NONE][0]['value'] = 1;
+  $node->field_classroom_course[LANGUAGE_NONE][0]['target_id'] = $course_nid;
+  node_save($node);
 
-  return isset($group->nid) ? $group->nid : FALSE;
+  return isset($node->nid) ? $node->nid : FALSE;
 }
 
 /**
