@@ -89,7 +89,7 @@ function classroom_remove_user($course_nid, $uid) {
 function classroom_form_og_ui_admin_settings_alter(&$form, &$form_state, $form_id) {
   $form['classroom_size'] = array(
     '#type' => 'textfield',
-    '#title' => t('Group Size'),
+    '#title' => t('Classroom size'),
     '#default_value' => variable_get('classroom_size', 5),
     '#size' => 60,
     '#maxlength' => 60,
