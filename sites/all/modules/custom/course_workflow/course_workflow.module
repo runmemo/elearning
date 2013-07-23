@@ -9,13 +9,14 @@ define('COURSE_ARCHIVED', 3);
 define('COURSE_ACCESS_ALL', 1);
 
 /**
- *  Implements hook_form_FORM_ID_alter.
+ *  Implements hook_form_FORM_ID_alter().
+ * 
  *  Lock stage field on course add page for teacher.
  */
 function course_workflow_form_course_node_form_alter(&$form, &$form_stage) {
   global $user;
   
-  // if current user is teacher, lock stage field.
+  // If current user is teacher, lock stage field.
   if (in_array('teacher', array_values($user->roles))) {
     $form['field_stage']['#disabled'] = TRUE;
   }
@@ -24,7 +25,7 @@ function course_workflow_form_course_node_form_alter(&$form, &$form_stage) {
 
 
 /**
- *  Implements of hook_permission()
+ *  Implements hook_permission().
  */
 function course_workflow_permission() {
   return array(
@@ -46,7 +47,7 @@ function course_workflow_change_stage($node, $stage) {
 }
 
 /**
- *  Implements of hook_node_grants()
+ *  Implements hook_node_grants().
  */
 function course_workflow_node_grants($account, $op) {  
   $grants = array();
@@ -63,7 +64,7 @@ function course_workflow_node_grants($account, $op) {
 }
 
 /**
- *  Implements of hook_node_access_records()
+ *  Implements hook_node_access_records().
  */
 function course_workflow_node_access_records($node) {
 
@@ -127,7 +128,7 @@ function course_workflow_node_access_records($node) {
 }
 
 /**
- *  Implements of hook_node_update()
+ *  Implements hook_node_update().
  */
 function course_workflow_node_update($node) {
   if ($node->type !== 'course') {

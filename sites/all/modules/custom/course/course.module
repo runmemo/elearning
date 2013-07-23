@@ -562,7 +562,7 @@ function course_leave_modal($js = NULL, $user = NULL, $course = NULL) {
 }
 
 /**
- *  Implements of hook_node_access()
+ *  Implements hook_node_access().
  */
 function course_node_access($node, $op, $account) {
   // @todo allow teachers to create new course, lessson, etc.

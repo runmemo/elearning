@@ -5,8 +5,24 @@
  * answers_extra.module
  */
 
-define('QA_EDIT_POINTS', 500);
-define('QA_RATE_POINTS', 100);
+/**
+ * Implements hook_menu().
+ */
+function answers_extra_menu() {
+  $items = array();
+
+  $items['admin/people/points-permissions'] = array(
+    'title' => 'Points Permissions',
+    'description' => 'Determine access to features by editing correlattion between permissions and userpoints.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('answers_extra_permissions_form'),
+    'access arguments' => array('administer permissions'),
+    'file' => 'answers_extra.admin.inc',
+    'type' => MENU_LOCAL_TASK,
+  );
+
+  return $items;
+}
 
 /**
  * Implements hook_init() to redirect from answer nodes to questions.
@@ -60,7 +76,7 @@ function answers_extra_block_view($delta = '') {
   $block = array();
   switch($delta) {
     case 'question_answers':
-      //Placeholder for message. 
+      // Placeholder for message. 
       $content['message_placeholder'] = array(
         '#type' => 'markup',
         '#markup' => '<div id="message-placeholder"></div>',
@@ -384,7 +400,7 @@ function answers_extra_node_access($node, $op, $account) {
     // Check whether current user has minimum points required to edit questions
     // and answers of other students.
     $points = userpoints_get_current_points($account->uid);
-    if($points >= QA_EDIT_POINTS) {
+    if($points >= variable_get('answers_extra_edit_points', 500)) {
       return NODE_ACCESS_ALLOW;
     }
 
@@ -393,14 +409,14 @@ function answers_extra_node_access($node, $op, $account) {
 }
 
 /**
-  * Helper function which determines current user has minimum 
-  * required points for commenting nodes.
-  */
+ * Helper function which determines current user has minimum 
+ * required points for commenting nodes.
+ */
 function user_has_min_voting_points() {
   global $user;
   $user_points = userpoints_get_current_points($user->uid);
 
-  if($user_points >= QA_RATE_POINTS) {
+  if($user_points >= variable_get('answers_extra_rate_points', 100)) {
     return TRUE;
   }
 
@@ -408,7 +424,7 @@ function user_has_min_voting_points() {
 }
 
 /**
- * Implementation of hook_node_view().
+ * Implements hook_node_view().
  */
 function answers_extra_node_view($node, $view_mode, $langcode) {
   if ($node->type == 'question') {
@@ -428,6 +444,7 @@ function answers_extra_node_insert($node) {
 
 /**
  * Notifies all question subscribers if new answer is posted.
+ * 
  * @param object $answer
  *   Node object of the new answer.
  */
@@ -455,8 +472,8 @@ function answers_extra_new_answer_notify($answer) {
 function answers_extra_vud_widget_template_variables_alter(&$variables) {
 
   global $user;
-  // check, whether the node belongs to the current user
-  // and define access to the links and message for tooltips
+  // Check, whether the node belongs to the current user
+  // and define access to the links and message for tooltips.
   $node = isset($variables['entity_id']) ? node_load($variables['entity_id']) : FALSE;
   $variables['vote_acess'] = (!$node || ($node && $node->uid == $user->uid)) ? FALSE : TRUE;
   if ($variables['vote_acess']) {
@@ -468,10 +485,11 @@ function answers_extra_vud_widget_template_variables_alter(&$variables) {
     $variables['title_text_down'] = t('You cannot vote down your own !content_type', array('!content_type' => $node ? $node->type : t('content')));
   }
 
-  // check, whether the current user has minimum required points and its not the node author.
+  // Check, whether the current user has minimum required points and he is not the node author.
   if (!user_has_min_voting_points() && ($node->uid <> $user->uid)) {
+    $points = variable_get('answers_extra_rate_points', 100);
     $variables['vote_acess'] = FALSE;
-    $variables['title_text_up'] = t('You need to have !points points to be able to vote up this !content_type', array('!points' => QA_RATE_POINTS, '!content_type' => $node ? $node->type : t('content')));
-    $variables['title_text_down'] = t('You need to have !points points to be able to vote down this !content_type', array('!points' => QA_RATE_POINTS, '!content_type' => $node ? $node->type : t('content')));    
+    $variables['title_text_up'] = t('You need to have !points points to be able to vote up this !content_type', array('!points' => $points, '!content_type' => $node ? $node->type : t('content')));
+    $variables['title_text_down'] = t('You need to have !points points to be able to vote down this !content_type', array('!points' => $points, '!content_type' => $node ? $node->type : t('content')));    
   }
 }
