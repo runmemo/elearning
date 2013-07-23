@@ -437,7 +437,7 @@ function course_add_item_lesson_validate($form, &$form_state) {
     }
 
     if (!$media->fid) {
-      form_set_error('embed_code', t('The file %file could not be saved. An unknown error has occurred.', array('%file' => $video_url)));
+      form_set_error('video_url', t('The file %file could not be saved. An unknown error has occurred.', array('%file' => $video_url)));
       return;
     }
   }
