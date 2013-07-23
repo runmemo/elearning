@@ -369,33 +369,103 @@ function course_add_item_lesson($form, &$form_state, $course = NULL) {
     $course = $form_state['course'];
   }
 
-  $form['title'] = array(
+  $form['fields'] = array(
+    '#type' => 'fieldset',
+    '#prefix' => '<div id="quick-lesson-wrapper">',
+    '#suffix' => '</div>',
+  );
+
+  $form['fields']['title'] = array(
     '#type' => 'textfield',
     '#title' => t('Lesson Title'),
     '#required' => TRUE
   );
 
-  $node = new stdClass();
-  $node->type = 'lesson';
-  node_object_prepare($node);
+  $form['fields']['video_thumb'] = array(
+    '#markup' => '<div id="video-thumb"></div>',
+  );
 
-  field_attach_form('node', $node, $form, $form_state, $course->language, array('field_name' => 'field_video'));
+  $form['fields']['video_url'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Youtube URL'),
+    '#required' => TRUE,
+    '#ajax' => array(
+      'callback' => 'course_add_item_lesson_submit_js',
+      'wrapper' => 'quick-lesson-wrapper',
+    ),
+  );
 
-  $form['submit'] = array(
+  $form['fields']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save'),
   );
-
   return $form;
 }
 
+
+function course_add_item_lesson_validate($form, &$form_state) {
+
+  $video_url = $form_state['values']['video_url'];
+  // Check link is of youtube.
+  if ((!strstr($video_url, 'youtube.com/watch?v=')) && (!strstr($video_url, 'youtu.be/'))) {
+    form_set_error('video_url', t('Please provide a valid YouTube URL.'));
+    $form_state['rebuild'] = TRUE;
+    return $form;
+  }
+
+  $youtube_handler = new MediaInternetYouTubeHandler($video_url);
+  $media = $youtube_handler->getFileObject($video_url);
+
+  $url = 'http://www.youtube.com/oembed?url=http%3A//youtube.com/watch%3Fv%3D'. $media->filename;
+  $response = drupal_http_request($url, array('method' => 'HEAD'));
+  if ($response->code == 401) {
+    form_set_error('video_url', t('Embedding has been disabled for this video.'));
+    $form_state['rebuild'] = TRUE;
+    return $form;
+  }
+  elseif ($response->code != 200) {
+    form_set_error('video_url', t('The YouTube video ID is invalid or the video was deleted.'));
+    $form_state['rebuild'] = TRUE;
+    return $form;
+  }
+
+  $form_state['storage']['media'] = $media;
+
+}
+
+
+function course_add_item_lesson_submit_js($form, &$form_state) {
+  // if there are errors, return the form to display the error messages
+  if (form_get_errors()) {
+    $form_state['rebuild'] = TRUE;
+    return $form;
+  }
+
+  if (!empty($form_state['storage']['media'])) {
+    $media = $form_state['storage']['media'];
+    $youtube_stream = new MediaYouTubeStreamWrapper($media->uri);
+    $youtube_stream->setUri($media->uri);
+    $video_thumb = theme('image_style', array('style_name' => 'thumbnail', 'path' => $youtube_stream->getLocalThumbnailPath()));
+    $commands[] = ajax_command_replace('#video-thumb', '<div id="video-thumb">'.$video_thumb.'</div>');
+    return array('#type' => 'ajax', '#commands' => $commands);
+  }
+
+}
+
 function course_add_item_lesson_submit($form, &$form_state) {
+  // if there are errors, return the form to display the error messages
+  if (form_get_errors()) {
+    $form_state['rebuild'] = TRUE;
+    return $form;
+  }
+
   if (empty($form_state['ajax'])) {
     $course = $form_state['build_info']['args'][0];
   }
   else {
     $course = $form_state['course'];
   }
+
   $node = new stdClass();
   $node->type = 'lesson';
   node_object_prepare($node);
@@ -406,7 +476,7 @@ function course_add_item_lesson_submit($form, &$form_state) {
   $menu_item = menu_get_item('node/'.$first_unit); 
 
   $node->title = $form_state['values']['title'];
-  $node->field_video = $form_state['values']['field_video'];
+  $node->field_video = array(LANGUAGE_NONE => array(array('fid' => $form_state['storage']['media']->fid, 'display' => 1)));
   $node->language = $course->language;
   $node->book['bid'] = $course->nid;
   $node->book['plid'] = $menu_item['page_arguments'][0]->book['mlid'];
