@@ -415,8 +415,8 @@ function course_add_item_lesson_validate($form, &$form_state) {
 
   $youtube_handler = new MediaInternetYouTubeHandler($video_url);
   $media = $youtube_handler->getFileObject($video_url);
-
-  $url = 'http://www.youtube.com/oembed?url=http%3A//youtube.com/watch%3Fv%3D'. $media->filename;
+  $id = substr($media->uri, 12);
+  $url = 'http://www.youtube.com/oembed?url=http%3A//youtube.com/watch%3Fv%3D'. $id;
   $response = drupal_http_request($url, array('method' => 'HEAD'));
   if ($response->code == 401) {
     form_set_error('video_url', t('Embedding has been disabled for this video.'));
