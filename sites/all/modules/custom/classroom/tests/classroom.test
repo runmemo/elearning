@@ -35,25 +35,6 @@ class ClassroomCase extends DrupalWebTestCase {
     $this->user_c = $this->drupalCreateUser(array());
   }
 
-  /**
-   * Calculates number of classrooms for the given course.
-   * 
-   * @param integer $course_nid
-   */
-  function get_course_groups_count($course_nid) {
-    $query = new EntityFieldQuery();
-    $query->entityCondition('entity_type', 'node')
-      ->entityCondition('bundle', 'classroom')
-      ->propertyCondition('status', 1)
-      ->fieldCondition('field_classroom_course', 'target_id', $course_nid)
-      ->count();
-    $result = $query->execute();
-    if (empty($result)) {
-      return FALSE;
-    }
-    return $result;
-  }
-
   function testGroupsFieldExists() {
     $this->assertTrue(field_info_instance('user', 'og_user_node', 'user'), 'Field was added to the user entity.');
   }
@@ -114,30 +95,42 @@ class ClassroomCase extends DrupalWebTestCase {
    * Checks, that new classroom is created once current class gets to it's max size.
    */
   function testClassroomOverflow() {
-    variable_set('classroom_size', 2);
-    
-    $user_a = $this->user_a->uid;
-    $user_b = $this->user_b->uid;
-    $user_c = $this->user_c->uid;
+    variable_set('classroom_size', 3);
     
     $course_nid = $this->course->nid;
-    // Add users to classrooms.
-    classroom_add_user($course_nid, $user_a);
-    classroom_add_user($course_nid, $user_b);
-    classroom_add_user($course_nid, $user_c);
-    
-    // Get users' classrooms.
-    $group_a = classroom_get_user_classroom($user_a, $course_nid);
-    $group_b = classroom_get_user_classroom($user_b, $course_nid);
-    $group_c = classroom_get_user_classroom($user_c, $course_nid);
-    
-    $comparison = $group_a == $group_c;
-    
-    $this->assertEqual($group_a, $group_b, "User 'a' and User 'b' are in the same classroom.");
-    $this->assertFalse($comparison, "User 'c' and User 'a' are in different classrooms.");
-    
-    $this->assertEqual($this->get_course_groups_count($course_nid), 2, 'Number of classrooms for the course equals 2.');
+    $users = array();
+    for ($i = 1; $i<=10; $i++) {
+       $users[] = $this->drupalCreateUser(array());
+    }
+    $assigned = array();
+    foreach ($users as $key => $user) {
+      classroom_add_user($course_nid, $user->uid);
+      $assigned[$key] = classroom_get_user_classroom($user->uid, $course_nid);
+    }
+    debug($assigned);
+    $this->assertEqual($assigned[0], $assigned[2], "User 'a' and User 'b' are in the same classroom.");
+    $this->assertNotEqual($assigned[0], $assigned[3], "User 'c' and User 'a' are in different classrooms.");
+    $this->assertEqual($assigned[3], $assigned[4], "User 'c' and User 'a' are in different classrooms.");
+    $this->assertEqual($assigned[4], $assigned[5], "User 'c' and User 'a' are in different classrooms.");
+    $this->assertNotEqual($assigned[5], $assigned[6], "User 'c' and User 'a' are in different classrooms.");
+  
+    $this->assertEqual(classroom_count_classrooms($course_nid), 4, 'Number of classrooms is correct.');
     
   }
 
+  function testClassRoomCount() {
+    $course_nid = $this->course->nid;
+    // Add user to classroom of a course.
+    classroom_add_user($course_nid, $this->user_a->uid);
+    $classroom_nid = classroom_get_group($course_nid);
+    $members = classroom_members_count($classroom_nid);
+    $this->assertEqual($members, 1);
+    
+    // Add two more users
+    classroom_add_user($course_nid, $this->user_b->uid);
+    classroom_add_user($course_nid, $this->user_c->uid);
+    $members = classroom_members_count($classroom_nid);
+    $this->assertEqual($members, 3);
+  }
+  
 }

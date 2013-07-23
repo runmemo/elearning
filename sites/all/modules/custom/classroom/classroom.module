@@ -40,6 +40,24 @@ function classroom_get_group($course_nid) {
   return $group_id;
 }
 
+  /**
+   * Calculates number of classrooms for the given course.
+   * 
+   * @param integer $course_nid
+   */
+  function classroom_count_classrooms($course_nid) {
+    $query = new EntityFieldQuery();
+    $query->entityCondition('entity_type', 'node')
+      ->entityCondition('bundle', 'classroom')
+      ->propertyCondition('status', 1)
+      ->fieldCondition('field_classroom_course', 'target_id', $course_nid)
+      ->count();
+    $result = $query->execute();
+    if (empty($result)) {
+      return FALSE;
+    }
+    return $result;
+  }
 
 /**
  * Adds user to the course group.
@@ -89,8 +107,9 @@ function classroom_remove_user($course_nid, $uid) {
 function classroom_form_og_ui_admin_settings_alter(&$form, &$form_state, $form_id) {
   $form['classroom_size'] = array(
     '#type' => 'textfield',
+    '#description' => t('Defines the max size of the classroom in the system.'),
     '#title' => t('Classroom size'),
-    '#default_value' => variable_get('classroom_size', 5),
+    '#default_value' => variable_get('classroom_size', 5), // @todo Ilya: where is it saved?
     '#size' => 60,
     '#maxlength' => 60,
     '#required' => TRUE,
@@ -159,7 +178,7 @@ function classroom_get_available_group($course_nid) {
   }
   $default_size = variable_get('classroom_size', 5);
   foreach ($result['node'] as $nid => $node) {
-    $size = classroom_get_group_members_count($nid);
+    $size = classroom_members_count($nid);
     if (!$size || ($size < $default_size)) {
       return $nid;
     }
@@ -173,7 +192,7 @@ function classroom_get_available_group($course_nid) {
  * @param integer $group_nid
  *   Group node ID
  */
-function classroom_get_group_members_count($group_nid) {
+function classroom_members_count($group_nid) {
   $query = new EntityFieldQuery();
   return $query->entityCondition('entity_type', 'user')
       ->propertyCondition('status', 1)
