@@ -40,24 +40,25 @@ function classroom_get_group($course_nid) {
   return $group_id;
 }
 
-  /**
-   * Calculates number of classrooms for the given course.
-   * 
-   * @param integer $course_nid
-   */
-  function classroom_count_classrooms($course_nid) {
-    $query = new EntityFieldQuery();
-    $query->entityCondition('entity_type', 'node')
-      ->entityCondition('bundle', 'classroom')
-      ->propertyCondition('status', 1)
-      ->fieldCondition('field_classroom_course', 'target_id', $course_nid)
-      ->count();
-    $result = $query->execute();
-    if (empty($result)) {
-      return FALSE;
-    }
-    return $result;
+/**
+ * Calculates number of classrooms for the given course.
+ * 
+ * @param integer $course_nid
+ *   Course node ID
+ */
+function classroom_count_classrooms($course_nid) {
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node')
+    ->entityCondition('bundle', 'classroom')
+    ->propertyCondition('status', 1)
+    ->fieldCondition('field_classroom_course', 'target_id', $course_nid)
+    ->count();
+  $result = $query->execute();
+  if (empty($result)) {
+    return FALSE;
   }
+  return $result;
+}
 
 /**
  * Adds user to the course group.
@@ -109,7 +110,7 @@ function classroom_form_og_ui_admin_settings_alter(&$form, &$form_state, $form_i
     '#type' => 'textfield',
     '#description' => t('Defines the max size of the classroom in the system.'),
     '#title' => t('Classroom size'),
-    '#default_value' => variable_get('classroom_size', 5), // @todo Ilya: where is it saved?
+    '#default_value' => variable_get('classroom_size', 5),
     '#size' => 60,
     '#maxlength' => 60,
     '#required' => TRUE,

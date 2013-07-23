@@ -4,8 +4,9 @@
  * @file
  * Elearning Up Down Widget.
  */
+
 /**
- * Plugin decleration.
+ * Plugin declaration.
  */
 $plugin = array(
   'title' => t('Elearning Up and down'),
@@ -17,8 +18,7 @@ $plugin = array(
  * Alter template variables.
  */
 function elearning_widget_alter_template_vars($template_type, &$variables) {
-  global $user;
-  // array with parameters to find all positive votes
+  // Array with parameters to find all positive votes.
   $criteria = array(
     'entity_type' => $variables['type'],
     'entity_id' => $variables['entity_id'],
@@ -27,11 +27,11 @@ function elearning_widget_alter_template_vars($template_type, &$variables) {
     'function' => 'positives'
   );
   $positives = (int) votingapi_select_single_result_value($criteria);
-  // change criteria to find all negative votes
+  // Change criteria to find all negative votes.
   $criteria['function'] = 'negatives';
   $negatives = (int) votingapi_select_single_result_value($criteria);
   $points = $positives + $negatives;
-  //change class in order to fit any possible amount of characters.
+  // Change class in order to fit any possible amount of characters.
   if ($points >= 0 && $points < 10) {
     $current_class = 'current-default';
   } elseif ($points < 0 && $points > -10) {
