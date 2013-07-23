@@ -107,12 +107,12 @@ class ClassroomCase extends DrupalWebTestCase {
       classroom_add_user($course_nid, $user->uid);
       $assigned[$key] = classroom_get_user_classroom($user->uid, $course_nid);
     }
-    debug($assigned);
-    $this->assertEqual($assigned[0], $assigned[2], "User 'a' and User 'b' are in the same classroom.");
-    $this->assertNotEqual($assigned[0], $assigned[3], "User 'c' and User 'a' are in different classrooms.");
-    $this->assertEqual($assigned[3], $assigned[4], "User 'c' and User 'a' are in different classrooms.");
-    $this->assertEqual($assigned[4], $assigned[5], "User 'c' and User 'a' are in different classrooms.");
-    $this->assertNotEqual($assigned[5], $assigned[6], "User 'c' and User 'a' are in different classrooms.");
+
+    $this->assertEqual($assigned[0], $assigned[2], "Users are in the same classroom.");
+    $this->assertNotEqual($assigned[0], $assigned[3], "Users are in different classrooms.");
+    $this->assertEqual($assigned[3], $assigned[4], "Users are in the same classroom.");
+    $this->assertEqual($assigned[4], $assigned[5], "Users are in the same classroom.");
+    $this->assertNotEqual($assigned[5], $assigned[6], "Users are in different classrooms.");
   
     $this->assertEqual(classroom_count_classrooms($course_nid), 4, 'Number of classrooms is correct.');
     
