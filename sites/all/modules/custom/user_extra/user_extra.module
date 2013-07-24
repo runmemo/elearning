@@ -149,14 +149,15 @@ function user_extra_form_alter(&$form, &$form_state, $form_id) {
     if ($key !== FALSE) {
       unset($form['#validate'][$key]);
     }
-    if ($user->uid > 1) {
+    if (!user_access('administer users', $user)) {
       $form['picture']['#access'] = FALSE;
       $form['timezone']['#access'] = FALSE;
       $form['timezone']['#access'] = FALSE;
       $form['locale']['#access'] = FALSE;
     }
+   
     // check if we are not on password recovery page.
-    if(empty($_SESSION['pass_reset_'.$user->uid])) {
+    if(user_extra_hide_profile_password()) {
       $form['account']['current_pass']['#access'] = FALSE;
       $form['account']['pass']['#access'] = FALSE;
     }
@@ -166,6 +167,26 @@ function user_extra_form_alter(&$form, &$form_state, $form_id) {
     drupal_set_title(t('Editing profile'));
     drupal_add_js(array('user_forms' => array('class' => 'ctools-modal-profile-form')), 'setting');
   }
+}
+
+/**
+ * Defines whether password fields should be hidden on user profile edit form.
+ * 
+ * @return boolean
+ *   Returns TRUE if password fields must be hidden.
+ */
+function user_extra_hide_profile_password() {
+   global $user;
+   // If user can administer other users we want to show all fields.
+   if (user_access('administer users', $user)) {
+     return FALSE;
+   }
+   // User is recovering password, we want to show the password.
+   if (!empty($_SESSION['pass_reset_' . $user->uid])) {
+     return FALSE;
+   }
+   // By default we hide the password. 
+   return TRUE;
 }
 
 /**
