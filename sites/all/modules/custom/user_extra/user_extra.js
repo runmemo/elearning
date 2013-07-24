@@ -20,7 +20,6 @@
         $('.login-form-additional-link').click(function() {
           $('.ctools-common-modal-content').removeClass('ctools-modal-login-form').addClass('ctools-modal-register-form');
         });
-        $('.absolute-messages-error').insertBefore('.ctools-modal-content .form-actions');
       }
       function toggle_popup(element, name) {
         $(element).parents('.form-wrapper').find('.form-item-' + name + ' .description').fadeToggle();
