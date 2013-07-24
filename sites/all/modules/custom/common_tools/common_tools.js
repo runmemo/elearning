@@ -11,6 +11,10 @@
           }
         });
       }
+      
+      if($('#modalContent').length >= 1) {
+        $('.absolute-messages-error').insertBefore('.ctools-modal-content .form-actions');
+      }
     }
   };
 
