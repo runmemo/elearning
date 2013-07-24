@@ -45,19 +45,3 @@
     }
   };
 })(jQuery);
-
-(function($) {
-  Drupal.behaviors.course_outline_item_add = {
-    attach: function(context, settings) {
-      console.log('init');
-      $('#course-add-item-lesson').ajaxStart(function(){  
-        console.log('start');
-        $(".form-submit").attr("disabled", "disabled");
-      });
-      $('#course-add-item-lesson').ajaxStop(function(){  
-        console.log('stop');
-        $(".form-submit").removeAttr("disabled");
-      });
-    }
-  };
-})(jQuery);

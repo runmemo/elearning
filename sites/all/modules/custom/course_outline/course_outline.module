@@ -364,7 +364,7 @@ function course_add_item_unit_submit($form, &$form_state) {
 }
 
 function course_add_item_lesson($form, &$form_state, $course = NULL) {
-  
+  drupal_add_js(drupal_get_path('module', 'course_outline') . '/course_add_item.js');
   if (!$course) {
     $course = $form_state['course'];
   }
