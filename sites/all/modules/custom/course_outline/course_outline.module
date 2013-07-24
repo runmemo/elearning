@@ -413,7 +413,6 @@ function course_add_item_lesson_validate($form, &$form_state) {
   }
 
   $youtube_handler = new MediaInternetYouTubeHandler($video_url);
-  $media = $youtube_handler->getFileObject($video_url);
 
   $id = substr($media->uri, 12);
   try {
@@ -424,6 +423,7 @@ function course_add_item_lesson_validate($form, &$form_state) {
     return;
   }
 
+  $media = $youtube_handler->getFileObject($video_url);
   // For new media objects.
   if (empty($media->fid)) {
     // Code borrowed from media_internet_add_submit() media_internet.module.
