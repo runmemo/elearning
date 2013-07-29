@@ -57,7 +57,7 @@ function template_preprocess_course_header(&$vars) {
   if ($vars['question_page'] == TRUE) {
     $vars['return_link'] = l(t('Return to class'), $book_link['href'], array('attributes' => array('class' => array('node-question-return-link'))));
   }
-  else if (isset($active_contexts['announcements_page'])) {
+  else if (isset($active_contexts['announcement_page'])) {
     $vars['return_link'] = l(t('Return to announcements'), 'node/'.$course_node->nid.'/blog', array('attributes' => array('class' => array('node-question-return-link'))));
   }
   else {
