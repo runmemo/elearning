@@ -69,7 +69,7 @@ function course_header_block() {
   if (isset($active_contexts['course_pages'])) { // on course 
     $node = node_load(arg(1));
   }
-  else if (isset($active_contexts['announcements_page'])) {
+  else if (isset($active_contexts['announcement_page'])) {
     $announcements_node = menu_get_object('node');
     $node = $announcements_node->field_course[LANGUAGE_NONE][0]['entity'];
   }

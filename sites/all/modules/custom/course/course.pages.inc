@@ -14,7 +14,7 @@ function template_preprocess_course_header(&$vars) {
   $vars['follow_link'] = '';
 
   // course title
-  if (isset($active_contexts['course_pages']) || isset($active_contexts['announcements_page'])) {
+  if (isset($active_contexts['course_pages']) || isset($active_contexts['announcement_page'])) {
     $attributes = array(
       'class' => 'course-title-link',
       'title' => t('Back to class.')
