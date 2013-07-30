@@ -13,7 +13,7 @@ function newsletter_context_default_contexts() {
   $context = new stdClass();
   $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
   $context->api_version = 3;
-  $context->name = 'annoucement_page';
+  $context->name = 'announcement_page';
   $context->description = '';
   $context->tag = 'Node';
   $context->conditions = array(
@@ -52,7 +52,7 @@ function newsletter_context_default_contexts() {
   // Translatables
   // Included for use with string extractors like potx.
   t('Node');
-  $export['annoucement_page'] = $context;
+  $export['announcement_page'] = $context;
 
   return $export;
 }

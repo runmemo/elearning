@@ -105,11 +105,11 @@ function quick_question_form($form, &$form_state, $options = array()) {
     return;
   }
 
-  // On annoucement page we need intially opened quick_question form.
+  // On announcement page we need intially opened quick_question form.
   $active_contexts = context_active_contexts();
   $collapsed = TRUE;
   $fs_title = t('Ask Question');
-  if(isset($active_contexts['annoucement_page'])) {
+  if(isset($active_contexts['announcement_page'])) {
     $collapsed = FALSE;
     $fs_title = '';
   }

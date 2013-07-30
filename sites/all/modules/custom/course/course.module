@@ -454,6 +454,15 @@ function course_node_update($node) {
   }
 }
 
+/**
+ * Implements hook_node_delete().
+ */
+function course_node_delete($node) {
+  if (course_is_item_node($node)) {
+    course_items_clear_cache($node->book['bid']);
+  }
+}
+
 function course_items_clear_cache($nid) {
   cache_clear_all('course_get_outline_' . $nid, 'cache'); 
 }

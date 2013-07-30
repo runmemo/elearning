@@ -35,6 +35,10 @@ function credit_calculate($course, $account) {
   $credit = .0;
   foreach ($course_items as $nid => $type) {
     $item = node_load($nid);
+    if (!$item) {
+      watchdog('credit', 'Failed to load node for nid: @nid', array('@nid' => $nid));
+      continue;
+    }
     $result = credit_get_item_result($item, $account);
     $weight = credit_get_field_integer_value($item, 'field_course_credit');
     
