@@ -27,6 +27,7 @@ function course_block_view($delta = '') {
   switch ($delta) {
     case 'course_item_links':
       return course_item_links();
+      
     case 'book_header':
       return course_header_block();
   }
@@ -52,7 +53,7 @@ function course_item_links() {
     // Get the course
     $course_item = entity_metadata_wrapper('node', $node);
     $course = $course_item->book->value();
-    $block['content'] .= course_outline_links($course, FALSE);
+    $block['content'] .= course_add_links($course, FALSE);
   }
 
   return $block;

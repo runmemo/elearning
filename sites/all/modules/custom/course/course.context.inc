@@ -46,9 +46,9 @@ function course_context_default_contexts() {
           'region' => 'sidebar_first',
           'weight' => '-10',
         ),
-        'course_outline-course_certificate' => array(
-          'module' => 'course_outline',
-          'delta' => 'course_certificate',
+        'certificate_extra-certificate_link' => array(
+          'module' => 'certificate_extra',
+          'delta' => 'certificate_link',
           'region' => 'sidebar_first',
           'weight' => '-9',
         ),

@@ -15,9 +15,6 @@ function course_outline_block_info() {
     'info' => t('Course Outline'),
       //  'cache' => DRUPAL_CACHE_PER_PAGE,
   );
-  $block['course_certificate'] = array(
-    'info' => t('Course Certificate'),
-  );
   return $block;
 }
 
@@ -28,10 +25,6 @@ function course_outline_theme() {
   return array(
     'menu_link__course_outline_unit' => array(
       'render element' => 'element'
-    ),
-    'course_outline_certifcate' => array(
-      'variables' => array('variables' => NULL),
-      'template' => 'course-outline-certifcate',
     ),
     'course_outline_book_admin_table' => array(
       'render element' => 'form',
@@ -118,38 +111,12 @@ function course_outline_block_view($delta = '') {
   if (!$book) {
     return NULL;
   }
-  $block['subject'] = '';
   $course_node = node_load($book['bid']);
   switch ($delta) {
     case 'course_outline':
       drupal_add_js(drupal_get_path('module', 'course_outline') . '/course_outline.js');
+      $block['subject'] = '';
       $block['content'][] = drupal_get_form('course_outline_block_view_form', $course_node);
-      break;
-    case 'course_certificate' :
-      // Build certificate block.
-      $certificate = array();
-      global $user;
-      if ($course_node) {
-        $grades = course_get_course_grades($course_node);
-        $certificate['grade_ranges'] = course_get_grade_ranges($grades);
-        $certificate['user_credit'] = credit_calculate($course_node, $user);
-        $certificate['points'] = format_plural($certificate['user_credit'], '1 point', '@count points');
-        $certificate['pass_credit'] = course_get_course_pass_score($course_node);
-        if ($certificate['user_credit'] >= $certificate['pass_credit']) {
-          $certificate['class'] = 'certificate-enabled';
-          $certificate['link'] = l(t('Download certificate'), 'node/' . $course_node->nid . '/certificate');
-        }
-        else {
-          $certificate['class'] = 'certificate-disabled';
-          $certificate['link'] = '<span class="certificate-disabled-text">' . t('Certificate unavailable') . '</span>';
-        }
-      }
-
-      $certificate_output = array(
-        '#type' => 'markup',
-        '#markup' => theme('course_outline_certifcate', $certificate),
-      );
-      $block['content'][] = $certificate_output;
       break;
   }
 
@@ -236,285 +203,8 @@ function course_outline_block_view_form($form, &$form_state, $course) {
           'progress' => array('type' => 'throbber'),
         ),
       );
-
-      $form['add_content'] = array(
-        '#markup' => course_outline_links($course),
-      );
-
       return $form;
   }
-}
-
-function course_outline_links($course, $button = TRUE) {
-//  $item_types = course_item_node_types();
-  $item_types = array('unit', 'lesson');
-  $items = array();
-  ctools_include('ajax');
-  ctools_include('modal');
-  // Add CTools' javascript to the page.
-  ctools_modal_add_js();
-  $classes = 'ctools-modal-common-modal-style';
-  if ($button) {
-    $classes .= ' link-button';
-  }
-
-  foreach($item_types as $type) {
-    if (node_access('create', $type)) {
-      $items[] = ctools_modal_text_button('Create '.$type, 'course-add/nojs/'.$type.'/'.$course->nid, t('Add Item'), $classes);
-    }
-  }
-
-  return theme('item_list', array('items' => $items, 'attributes' => array('class' => 'item-add-links')));
-}
-
-/**
- *  Implements hook_menu() for course_outline module.
- */
-function course_outline_menu() {
-  $item_types = array('unit', 'lesson');
-  foreach($item_types as $type) {  
-    $items['course-add/%ctools_js/%/%node'] = array(
-      'title' => 'Add '.$type,
-      'page arguments' => array(1, 2, 3),
-      'page callback' => 'course_add_item',
-      'access callback' => 'node_access',
-      'access arguments' => array('create', $type),
-      'type' => MENU_CALLBACK,
-    );
-  }
-
-  return $items;
-}
-
-function course_add_item($js = NULL, $type = NULL, $course = NULL) {
-
-  if ($type == NULL || $course == NULL) {
-    return 'Error :: No course node or type.';
-  }
-
-  // call type specific add function
-  $function = __FUNCTION__ . '_' . $type;
-  if (!function_exists($function)) {
-    return;
-  }
-
-  if (!$js) {
-    return drupal_get_form($function, $course);
-  }
-  else {
-    // Required includes for ctools to work:
-    ctools_include('modal');
-    ctools_include('ajax');
-    ctools_add_js('ajax-responder');
-  }
-
-  $form_state = array(
-    'ajax' => $js,
-    'course' => $course
-  );
-
-  $output = ctools_modal_form_wrapper($function, $form_state);
-
-  if (!empty($form_state['executed'])) {
-    $output[] = ctools_ajax_command_reload();
-  }
-
-  print ajax_render($output);
-  exit;
-}
-
-function course_add_item_unit($form, &$form_state, $course = NULL) {
-  
-  if (!$course) {
-    $course = $form_state['course'];
-  }
-
-  $form['title'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Unit Title'),
-    '#required' => TRUE
-  );
-
-  $form['actions'] = array('#type' => 'actions');
-  $form['actions']['submit'] = array(
-    '#type' => 'submit',
-    '#value' => t('Save'),
-  );
-
-  return $form;
-}
-
-function course_add_item_unit_submit($form, &$form_state) {
-  if (empty($form_state['ajax'])) {
-    $course = $form_state['build_info']['args'][0];
-  }
-  else {
-    $course = $form_state['course'];
-  }
-
-  $node = new stdClass();
-  $node->type = 'unit';
-  node_object_prepare($node);
-  $node->title = $form_state['values']['title'];
-  $node->language = $course->language;
-  $node->book['bid'] = $course->nid;
-  $node->book['weight'] = 1000;
-  node_save($node);
-
-  // clear outline cache.
-  course_items_clear_cache($course->nid);
-}
-
-function course_add_item_lesson($form, &$form_state, $course = NULL) {
-  drupal_add_js(drupal_get_path('module', 'course_outline') . '/course_add_item.js');
-  if (!$course) {
-    $course = $form_state['course'];
-  }
-
-  $form['fields'] = array(
-    '#type' => 'fieldset',
-    '#prefix' => '<div id="quick-lesson-wrapper">',
-    '#suffix' => '</div>',
-  );
-
-  $form['fields']['title'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Lesson Title'),
-    '#required' => TRUE
-  );
-
-  $form['fields']['video_thumb'] = array(
-    '#markup' => '<div id="video-thumb"></div>',
-  );
-
-  $form['fields']['video_url'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Youtube URL'),
-    '#required' => TRUE,
-    '#ajax' => array(
-      'callback' => 'course_add_item_lesson_submit_js',
-      'wrapper' => 'quick-lesson-wrapper',
-    ),
-  );
-
-  $form['fields']['actions'] = array('#type' => 'actions');
-  $form['fields']['actions']['submit'] = array(
-    '#type' => 'submit',
-    '#value' => t('Save'),
-  );
-  return $form;
-}
-
-
-function course_add_item_lesson_validate($form, &$form_state) {
-
-  unset($form_state['storage']['media']);
-  $video_url = $form_state['values']['video_url'];
-  // Check link is of youtube.
-  if ((!strstr($video_url, 'youtube.com/watch?v=')) && (!strstr($video_url, 'youtu.be/'))) {
-    form_set_error('video_url', t('Please provide a valid YouTube URL.'));
-    return;
-  }
-
-  $youtube_handler = new MediaInternetYouTubeHandler($video_url);
-  try {
-    $media = $youtube_handler->getFileObject($video_url);
-  }
-  catch (Exception $e) {
-    form_set_error('video_url', $e->getMessage());
-    return;
-  }
-
-  // For new media objects.
-  if (empty($media->fid)) {
-    // Code borrowed from media_internet_add_submit() media_internet.module.
-    try {
-      $provider = media_internet_get_provider($video_url);
-      $media = $provider->save();
-    }
-    catch (Exception $e) {
-      form_set_error('video_url', $e->getMessage());
-      return;
-    }
-
-    if (!$media->fid) {
-      form_set_error('video_url', t('The file %file could not be saved. An unknown error has occurred.', array('%file' => $video_url)));
-      return;
-    }
-  }
-
-  $form_state['storage']['media'] = $media;
-
-}
-
-
-function course_add_item_lesson_submit_js($form, &$form_state) {
-  //@todo barinder : Get rid off this validations
-  $video_url = $form_state['values']['video_url'];
-  // Check link is of youtube.
-  if ((!strstr($video_url, 'youtube.com/watch?v=')) && (!strstr($video_url, 'youtu.be/'))) {
-    form_set_error('video_url', t('Please provide a valid YouTube URL.'));
-    return $form['fields'];
-  }
-
-  $youtube_handler = new MediaInternetYouTubeHandler($video_url);
-  try {
-    $media = $youtube_handler->getFileObject($video_url);
-  }
-  catch (Exception $e) {
-    form_set_error('video_url', $e->getMessage());
-    return $form['fields'];
-  }
-
-  // if there are errors, return the form to display the error messages
-  if (form_get_errors()) {
-    $form_state['rebuild'] = TRUE;
-    return $form;
-  }
-
-  $video_thumb = '';
-  if (!empty($form_state['storage']['media'])) {
-    $media = $form_state['storage']['media'];
-    $youtube_stream = new MediaYouTubeStreamWrapper($media->uri);
-    $youtube_stream->setUri($media->uri);
-    $video_thumb = theme('image_style', array('style_name' => 'thumbnail', 'path' => $youtube_stream->getLocalThumbnailPath()));
-  }
-  $commands[] = ajax_command_replace('#video-thumb', '<div id="video-thumb">'.$video_thumb.'</div>');
-  return array('#type' => 'ajax', '#commands' => $commands);
-}
-
-function course_add_item_lesson_submit($form, &$form_state) {
-  // if there are errors, return the form to display the error messages
-  if (form_get_errors()) {
-    $form_state['rebuild'] = TRUE;
-    return $form;
-  }
-
-  if (empty($form_state['ajax'])) {
-    $course = $form_state['build_info']['args'][0];
-  }
-  else {
-    $course = $form_state['course'];
-  }
-
-  $node = new stdClass();
-  $node->type = 'lesson';
-  node_object_prepare($node);
-
-  // get mlid of first unit
-  $course_items = course_get_items($course, TRUE);
-  $first_unit = array_search('unit', $course_items);
-  $menu_item = menu_get_item('node/'.$first_unit); 
-
-  $node->title = $form_state['values']['title'];
-  $node->field_video = array(LANGUAGE_NONE => array(array('fid' => $form_state['storage']['media']->fid, 'display' => 1)));
-  $node->language = $course->language;
-  $node->book['bid'] = $course->nid;
-  $node->book['plid'] = $menu_item['page_arguments'][0]->book['mlid'];
-  node_save($node);
-
-  // clear outline cache.
-  course_items_clear_cache($course->nid);
 }
 
 /**

@@ -432,3 +432,159 @@ function lesson_complete($action, $type) {
   exit;
 }
 
+
+function course_add_item_lesson($form, &$form_state, $course = NULL) {
+  if (!$course) {
+    $course = $form_state['course'];
+  }
+
+  $form['fields'] = array(
+    '#type' => 'fieldset',
+    '#prefix' => '<div id="quick-lesson-wrapper">',
+    '#suffix' => '</div>',
+  );
+
+  $form['fields']['title'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Lesson Title'),
+    '#required' => TRUE
+  );
+
+  $form['fields']['video_thumb'] = array(
+    '#markup' => '<div id="video-thumb"></div>',
+  );
+
+  $form['fields']['video_url'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Youtube URL'),
+    '#required' => TRUE,
+    '#ajax' => array(
+      'callback' => 'lesson_submit_video_url_js',
+      'wrapper' => 'quick-lesson-wrapper',
+    ),
+  );
+
+  $form['fields']['actions']['submit'] = array('#type' => 'actions');
+  $form['fields']['actions']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save'),
+  );
+  // @todo : lesson_form.js causes problems if ajax is used anywhere else, 
+  // enable less watch mode to see effect.
+  drupal_add_js(drupal_get_path('module', 'lesson') . '/lesson_form.js');
+  return $form;
+}
+
+function course_add_item_lesson_validate($form, &$form_state) {
+
+  unset($form_state['storage']['media']);
+  $video_url = $form_state['values']['video_url'];
+  // Check link is of youtube.
+  if ((!strstr($video_url, 'youtube.com/watch?v=')) && (!strstr($video_url, 'youtu.be/'))) {
+    form_set_error('video_url', t('Please provide a valid YouTube URL.'));
+    return;
+  }
+
+  $youtube_handler = new MediaInternetYouTubeHandler($video_url);
+
+  try {
+    $media = $youtube_handler->getFileObject($video_url);
+  } catch (Exception $e) {
+    form_set_error('video_url', $e->getMessage());
+    return;
+  }
+
+  // For new media objects.
+  if (empty($media->fid)) {
+    // Code borrowed from media_internet_add_submit() media_internet.module.
+    try {
+      $provider = media_internet_get_provider($video_url);
+      $media = $provider->save();
+    } catch (Exception $e) {
+      form_set_error('video_url', $e->getMessage());
+      return;
+    }
+
+    if (!$media->fid) {
+      form_set_error('video_url', t('The file %file could not be saved. An unknown error has occurred.', array('%file' => $video_url)));
+      return;
+    }
+  }
+
+  $form_state['storage']['media'] = $media;
+}
+
+function lesson_submit_video_url_js($form, &$form_state) {
+  //@todo barinder : Get rid off this validations
+  $video_url = $form_state['values']['video_url'];
+  // Check link is of youtube.
+  if ((!strstr($video_url, 'youtube.com/watch?v=')) && (!strstr($video_url, 'youtu.be/'))) {
+    form_set_error('video_url', t('Please provide a valid YouTube URL.'));
+    return $form['fields'];
+  }
+
+  $youtube_handler = new MediaInternetYouTubeHandler($video_url);
+  try {
+    $media = $youtube_handler->getFileObject($video_url);
+  } catch (Exception $e) {
+    form_set_error('video_url', $e->getMessage());
+    return $form['fields'];
+  }
+  // if there are errors, return the form to display the error messages
+  if (form_get_errors()) {
+    $form_state['rebuild'] = TRUE;
+    return $form;
+  }
+
+  $video_thumb = '';
+  if (!empty($form_state['storage']['media'])) {
+    $media = $form_state['storage']['media'];
+    $youtube_stream = new MediaYouTubeStreamWrapper($media->uri);
+    $youtube_stream->setUri($media->uri);
+    $video_thumb = theme('image_style', array('style_name' => 'thumbnail', 'path' => $youtube_stream->getLocalThumbnailPath()));
+  }
+  $commands[] = ajax_command_replace('#video-thumb', '<div id="video-thumb">' . $video_thumb . '</div>');
+  return array('#type' => 'ajax', '#commands' => $commands);
+}
+
+function lesson_create($title, $video, $unit) {  
+  $node = new stdClass();
+  $node->type = 'lesson';
+  node_object_prepare($node);
+  $node->title = $title;
+  $node->field_video = array(LANGUAGE_NONE => array(array('fid' => $video, 'display' => 1,), ), );
+  $node->language = $unit->language;
+  $node->book['bid'] = $unit->book['bid'];
+  $node->book['plid'] = $unit->book['mlid'];
+  node_save($node);
+  return $node->nid;
+}
+
+
+function course_add_item_lesson_submit($form, &$form_state) {
+  // If there are errors, return the form to display the error messages.
+  if (form_get_errors()) {
+    $form_state['rebuild'] = TRUE;
+    return $form;
+  }
+
+  if (empty($form_state['ajax'])) {
+    $course = $form_state['build_info']['args'][0];
+  }
+  else {
+    $course = $form_state['course'];
+  }
+  
+  // Get unit to which lesson will be added.
+  $course_items = course_get_items($course, TRUE);
+  $unit_nid = array_search('unit', $course_items);
+  $unit = menu_get_object('node', 1, 'node/' . $unit_nid);
+
+  lesson_create(
+      $form_state['values']['title'], 
+      $form_state['storage']['media']->fid, 
+      $unit);
+  
+  // Clear outline cache.
+  course_items_clear_cache($course->nid);
+}

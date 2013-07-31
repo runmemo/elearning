@@ -1,10 +1,6 @@
 <?php
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+// File contains template for course grade hover pop-up.
 ?>
-
 <div class="outline-certificate-circles">
   <div class="circles-inner">
     <div class="outline-circle"></div>

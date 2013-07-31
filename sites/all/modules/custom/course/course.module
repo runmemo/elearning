@@ -10,10 +10,9 @@ include_once 'course.features.inc';
  * Implements hook_hook_info().
  */
 function course_hook_info() {
-  
+
   $hooks['block_info']['group'] = 'block';
   $hooks['block_view']['group'] = 'block';
-  
 }
 
 /**
@@ -43,6 +42,20 @@ function course_menu() {
     'access arguments' => array('view advanced help index'),
     'weight' => 9,
   );
+
+
+  $item_types = array('unit', 'lesson');
+  foreach ($item_types as $type) {
+    $items['course-add/%ctools_js/%/%node'] = array(
+      'title' => 'Add ' . $type,
+      'page arguments' => array(1, 2, 3),
+      'page callback' => 'course_add_item',
+      'access callback' => 'node_access',
+      'access arguments' => array('create', $type),
+      'type' => MENU_CALLBACK,
+    );
+  }
+
   return $items;
 }
 
@@ -110,7 +123,6 @@ function course_last_visited_node($nid, $uid = NULL) {
   return FALSE;
 }
 
-
 /**
  * Gets the href to the first node of specified type in the book
  * 
@@ -177,7 +189,7 @@ function course_theme() {
 function course_node_view($node, $view_mode) {
   //unset Book Links
   hide($node->content['links']['book']);
-  
+
   // Redirect to fist lesson from unit content type page
   if ($node->type === 'unit' && $view_mode == 'full') {
     $book_link = $node->book;
@@ -192,10 +204,10 @@ function course_node_view($node, $view_mode) {
 
   // add fields from referenced nodes to content
   if ($view_mode == 'full' && $node->type == 'course') {
-    
+
     $provider = field_get_items('node', $node, 'field_provider');
     if ($provider) {
-      
+
       $field_logo = field_view_field('node', $provider[0]['entity'], 'field_logo', array('label' => 'hidden', 'settings' => array('image_style' => 'provider_logo')));
       if (empty($field_logo)) {
         $node->provider['logo'] = '<div class="provider-logo-default"></div>';
@@ -225,7 +237,7 @@ function course_node_view($node, $view_mode) {
       $node->content['form_class_participate'] = drupal_get_form('course_registration_form');
     }
     else {
-     // dvm(book_next($node->book));
+      // dvm(book_next($node->book));
       $next = book_next($node->book);
       $node->content['form_class_participate'] = l('Go to class', $next['href']);
     }
@@ -237,7 +249,7 @@ function course_node_view($node, $view_mode) {
     }
   }
 }
-  
+
 /**
  * Implements hook_views_pre_render().
  */
@@ -261,7 +273,8 @@ function course_views_pre_render(&$view) {
         $path = '';
         if ($last_nid) {
           $path = 'node/' . $last_nid;
-        } else {
+        }
+        else {
           $node = node_load($course->node_registration_nid);
           $next = book_next($node->book);
           $path = $next['link_path'];
@@ -270,7 +283,8 @@ function course_views_pre_render(&$view) {
         if (user_edit_access($account)) {
           $view->result[$id]->continue_link = l(t('Continue'), $path, array('attributes' => array('class' => 'user-course-continue')));
           $view->result[$id]->exit_link = ctools_modal_text_button('', "course-exit/nojs/{$user->uid}/{$course->node_registration_nid}", t('Exit Course'), 'ctools-modal-common-modal-style user-course-exit');
-        } else {
+        }
+        else {
           $view->result[$id]->continue_link = '';
           $view->result[$id]->exit_link = '';
         }
@@ -387,14 +401,14 @@ function course_get_items($course_item, $include_units = FALSE) {
  *   as children of the units with node types.
  */
 function course_get_outline($course_item) {
-  if(empty($course_item->book['bid'])) {
+  if (empty($course_item->book['bid'])) {
     return array();
   }
   // Check if values exist in cache (cache item per book). 
   if ($cached = cache_get('course_get_outline_' . $course_item->book['bid'])) {
     return $cached->data;
   }
- 
+
   // Get items from the course book.
   $tree = menu_tree_all_data($course_item->book['menu_name'], NULL, 3);
   $items = _course_get_tree_items($tree);
@@ -404,7 +418,7 @@ function course_get_outline($course_item) {
       $item = course_get_node_type($nid);
     }
   }
-  
+
   // Set chache.
   cache_set('course_get_outline_' . $course_item->book['bid'], $items, 'cache', 60 * 60);
   return $items;
@@ -464,7 +478,7 @@ function course_node_delete($node) {
 }
 
 function course_items_clear_cache($nid) {
-  cache_clear_all('course_get_outline_' . $nid, 'cache'); 
+  cache_clear_all('course_get_outline_' . $nid, 'cache');
 }
 
 /**
@@ -474,8 +488,8 @@ function course_items_clear_cache($nid) {
 function course_node_insert($node) {
   if ($node->type == 'course' && empty($node->book['bid'])) {
     /**
-      * Code borrowed from book.module book_node_insert().
-    **/
+     * Code borrowed from book.module book_node_insert().
+     * */
     $node->book['bid'] = $node->nid;
     $node->book['nid'] = $node->nid;
     $node->book['menu_name'] = book_menu_name($node->book['bid']);
@@ -493,7 +507,7 @@ function course_form_book_admin_edit_alter(&$form, &$form_state) {
 }
 
 function course_book_admin_submit($form, &$form_state) {
-  course_items_clear_cache($form_state['build_info']['args'][0]->nid); 
+  course_items_clear_cache($form_state['build_info']['args'][0]->nid);
 }
 
 /**
@@ -737,7 +751,7 @@ function course_form_book_outline_form_alter(&$form, &$form_state) {
  */
 function course_form_course_node_form_alter(&$form, &$form_state) {
   global $user;
-  
+
   // if current user is teacher, lock teacher field.
   if (in_array('teacher', array_values($user->roles))) {
     $langcode = field_language('node', $form_state['node'], 'field_teacher');
@@ -756,4 +770,105 @@ function course_form_alter(&$form, &$form_state, $form_id) {
   if ($form_id == 'views_exposed_form') {
     $form['combine']['#attributes']['placeholder'] = t('Enter begining of the course, you are searching for.');
   }
+}
+
+function course_add_links($course, $button = TRUE) {
+//  $item_types = course_item_node_types();
+  $item_types = array('unit', 'lesson');
+  $items = array();
+  ctools_include('ajax');
+  ctools_include('modal');
+  // Add CTools' javascript to the page.
+  ctools_modal_add_js();
+  $classes = 'ctools-modal-common-modal-style';
+  if ($button) {
+    $classes .= ' link-button';
+  }
+
+  foreach ($item_types as $type) {
+    if (node_access('create', $type)) {
+      $items[] = ctools_modal_text_button('Create ' . $type, 'course-add/nojs/' . $type . '/' . $course->nid, t('Add Item'), $classes);
+    }
+  }
+
+  return theme('item_list', array('items' => $items, 'attributes' => array('class' => 'item-add-links')));
+}
+
+function course_add_item($js = NULL, $type = NULL, $course = NULL) {
+
+  if ($type == NULL || $course == NULL) {
+    return 'Error :: No course node or type.';
+  }
+
+  // call type specific add function
+  $function = __FUNCTION__ . '_' . $type;
+  if (!function_exists($function)) {
+    return;
+  }
+
+  if (!$js) {
+    return drupal_get_form($function, $course);
+  }
+  else {
+    // Required includes for ctools to work:
+    ctools_include('modal');
+    ctools_include('ajax');
+    ctools_add_js('ajax-responder');
+  }
+
+  $form_state = array(
+    'ajax' => $js,
+    'course' => $course
+  );
+
+  $output = ctools_modal_form_wrapper($function, $form_state);
+
+  if (!empty($form_state['executed'])) {
+    $output[] = ctools_ajax_command_reload();
+  }
+
+  print ajax_render($output);
+  exit;
+}
+
+function course_add_item_unit($form, &$form_state, $course = NULL) {
+
+  if (!$course) {
+    $course = $form_state['course'];
+  }
+
+  $form['title'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Unit Title'),
+    '#required' => TRUE
+  );
+
+  $form['actions'] = array('#type' => 'actions');
+  $form['actions']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save'),
+  );
+
+  return $form;
+}
+
+function course_add_item_unit_submit($form, &$form_state) {
+  if (empty($form_state['ajax'])) {
+    $course = $form_state['build_info']['args'][0];
+  }
+  else {
+    $course = $form_state['course'];
+  }
+
+  $node = new stdClass();
+  $node->type = 'unit';
+  node_object_prepare($node);
+  $node->title = $form_state['values']['title'];
+  $node->language = $course->language;
+  $node->book['bid'] = $course->nid;
+  $node->book['weight'] = 0; // @todo : find a better number.
+  node_save($node);
+
+  // clear outline cache.
+  course_items_clear_cache($course->nid);
 }

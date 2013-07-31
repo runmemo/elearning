@@ -1,7 +1,68 @@
 <?php
+
 /**
  * @file
  * Code for the Certificate Extra feature.
  */
-
 include_once 'certificate_extra.features.inc';
+
+/**
+ * Implements hook_theme()
+ */
+function certificate_extra_theme() {
+  return array(
+    'course_grades_popup' => array(
+      'variables' => array('variables' => NULL),
+      'template' => 'course-grades-popup',
+    ),
+  );
+}
+
+/**
+ * Implements hook_block_info()
+ */
+function certificate_extra_block_info() {
+  $block['certificate_link'] = array(
+    'info' => t('Certificate link'),
+  );
+  return $block;
+}
+
+function certificate_extra_block_view($delta = '') {
+  switch ($delta) {
+    case 'certificate_link' :
+      $node = menu_get_object();
+      if (!$node || empty($node->book['bid'])) {
+        return;
+      }
+      $course_node = node_load($node->book['bid']);
+      // Build certificate block.
+      $certificate = array();
+      global $user;
+      if ($course_node) {
+        $grades = course_get_course_grades($course_node);
+        $certificate['grade_ranges'] = course_get_grade_ranges($grades);
+        $certificate['user_credit'] = credit_calculate($course_node, $user);
+        $certificate['points'] = format_plural($certificate['user_credit'], '1 point', '@count points');
+        $certificate['pass_credit'] = course_get_course_pass_score($course_node);
+        if ($certificate['user_credit'] >= $certificate['pass_credit']) {
+          $certificate['class'] = 'certificate-enabled';
+          $certificate['link'] = l(t('Download certificate'), 'node/' . $course_node->nid . '/certificate');
+        }
+        else {
+          $certificate['class'] = 'certificate-disabled';
+          $certificate['link'] = '<span class="certificate-disabled-text">' . t('Certificate unavailable') . '</span>';
+        }
+      }
+
+      $certificate_output = array(
+        '#type' => 'markup',
+        '#markup' => theme('course_grades_popup', $certificate),
+      );
+      $block['subject'] = '';
+      $block['content'][] = $certificate_output;
+      drupal_add_js(drupal_get_path('module', 'certificate_extra') . '/certificate_extra.js');
+      break;
+  }
+  return $block;
+}
