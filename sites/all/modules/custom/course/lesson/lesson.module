@@ -446,7 +446,7 @@ function course_add_item_lesson($form, &$form_state, $course = NULL) {
 
   $form['fields']['title'] = array(
     '#type' => 'textfield',
-    '#title' => t('Lesson Title'),
+    '#title' => t('Lesson title'),
     '#required' => TRUE
   );
 

@@ -46,8 +46,8 @@ function course_menu() {
 
   $item_types = array('unit', 'lesson');
   foreach ($item_types as $type) {
-    $items['course-add/%ctools_js/%/%node'] = array(
-      'title' => 'Add ' . $type,
+    $items['course-add/%ctools_js/' . $type .  '/%node'] = array(
+      'title' => t('Add ' . $type),
       'page arguments' => array(1, 2, 3),
       'page callback' => 'course_add_item',
       'access callback' => 'node_access',
@@ -787,10 +787,11 @@ function course_add_links($course, $button = TRUE) {
 
   foreach ($item_types as $type) {
     if (node_access('create', $type)) {
-      $items[] = ctools_modal_text_button('Create ' . $type, 'course-add/nojs/' . $type . '/' . $course->nid, t('Add Item'), $classes);
+     // $items[] = ctools_modal_text_button(t('Add @type', array('@type' => $info->name)), 'course-add/nojs/' . $type . '/' . $course->nid, t('Add Item'), $classes);
+      $items[] = ctools_modal_text_button(t('Add ' . $type), 'course-add/nojs/' . $type . '/' . $course->nid, t('Add Item'), $classes);
     }
   }
-
+  
   return theme('item_list', array('items' => $items, 'attributes' => array('class' => 'item-add-links')));
 }
 
