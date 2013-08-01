@@ -11,10 +11,11 @@ dependencies[] = message_subscribe
 dependencies[] = strongarm
 dependencies[] = flag
 dependencies[] = views
+dependencies[] = htmlmail
 
 features[ctools][] = strongarm:strongarm:1
 features[ctools][] = views:views_default:3.0
-features[features_api][] = api:1
+features[features_api][] = api:2
 features[field_base][] = field_message_comment
 features[field_base][] = field_message_feedback
 features[field_base][] = field_message_newsletter
@@ -42,7 +43,8 @@ features[variable][] = field_bundle_settings_message__answer_feedback_notificati
 features[variable][] = field_bundle_settings_message__course_newsletter_notification
 features[variable][] = field_bundle_settings_message__oqaf_author_comment_notification
 features[variable][] = field_bundle_settings_message__oqaf_reviewer_comment_notification
-
+features[variable][] = mail_system
+features[variable][] = mailsystem_theme
 features[variable][] = message_subscribe_default_notifiers
 features[variable][] = message_subscribe_flag_prefix
 features[views_view][] = notifications

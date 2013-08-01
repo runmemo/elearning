@@ -31,7 +31,7 @@ function newsfeed_strongarm() {
           'message_notify_internal_body' => array(
             'weight' => '1',
             'visible' => FALSE,
-          ),
+        ),
         ),
         'message__message_text__1' => array(
           'message_notify_email_subject' => array(
@@ -45,9 +45,9 @@ function newsfeed_strongarm() {
           'message_notify_internal_body' => array(
             'weight' => '0',
             'visible' => TRUE,
-          ),
         ),
       ),
+    ),
     ),
   );
   $export['field_bundle_settings_message__answer_feedback_notification'] = $strongarm;
@@ -153,6 +153,23 @@ function newsfeed_strongarm() {
     ),
   );
   $export['field_bundle_settings_message__oqaf_reviewer_comment_notification'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'mailsystem_theme';
+  $strongarm->value = 'elearning';
+  $export['mailsystem_theme'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'mail_system';
+  $strongarm->value = array(
+    'default-system' => 'HTMLMailSystem',
+    'htmlmail' => 'HTMLMailSystem',
+  );
+  $export['mail_system'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
