@@ -2525,61 +2525,54 @@ div.quiz-report {
   .view-content {
     clear: both;
     .views-row {
-      float: left;
+      .left();
+      width: 100%;
       margin-bottom: 25px;
     }
   }
   .attachment-before {
-    float: right;
+    .right();
     .add-blog {
       .link();
       .text-orange();
       .bold(14px);
-      float: left;
-      margin-top: 10px;
+      .left();
       .bg-img('ask-question.png');
       .link-image-left(20px);
+      margin-top: 10px;
     }
   }
   .field-group-stats {
+    .left();
     text-align: center;
-    float: left;
-    @media @normal { 
-     .grid-normal-2();
-    }
-    @media @narrow {
-     .grid-narrow-2();
-    }
-    @media @wide {
-      .grid-wide-2();
-    }
+    width: 90px;
     .field-created {
-      margin-top: 5px;
-      .bold();
-      .text-gray();
+      margin-top: 2px;
+      .bold(18px);
+      color: #7b7b7b;
     }
     .field-answers-count {
       background-color: @light-gray;
       .text-blue();
       .bold(13px);
       padding: 7px 0;
-      width: 75px;
-      margin: 15px 0 15px 30px;
+      margin: 15px 0;
       &.zero {
         .gris();
       }
     }
   }
   .field-group-blog {
-    float: left;
-    @media @normal { 
-     .grid-normal-10();
-    }
+    .left();
+    padding-left: 25px;
     @media @narrow {
-     .grid-narrow-10();
+      width: 405px;
+    }
+    @media @normal {
+      width: 585px;
     }
     @media @wide {
-      .grid-wide-10();
+      width: 760px;
     }
     .field-author {
       margin-top: 10px;
@@ -2595,12 +2588,15 @@ div.quiz-report {
         }
       }
     }
+    .field-body {
+      font: normal 14px Arial;
+    }
     .field-author {
       .text-blue();
-      .font-bold();
+      .bold(14px);
+      .left();
       background-color: @light-gray;
       padding: 5px 10px;
-      float: left;
     }
   }
 }
