@@ -111,6 +111,7 @@ function course_outline_block_view($delta = '') {
   if (!$book) {
     return NULL;
   }
+  $block = array();
   $course_node = node_load($book['bid']);
   switch ($delta) {
     case 'course_outline':
