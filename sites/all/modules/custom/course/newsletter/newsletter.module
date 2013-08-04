@@ -43,7 +43,7 @@ function newsletter_form_newsletter_node_form_alter(&$form, &$form_state) {
  * Implements hook_node_insert().
  */
 function newsletter_node_insert($node) {
-  if ($node->type == 'newsletter') {
+  if ($node->type === 'newsletter') {
     newsletter_course_blog_post_notify($node);
   }
 }
@@ -67,7 +67,7 @@ function newsletter_course_blog_post_notify($newsletter) {
     'field_course' => $course->nid,
     'field_message_newsletter' => $newsletter->nid,
   );
-  newsfeed_create_message('course_newsletter_notification', $newsletter->uid, $course, $fields);
+  newsfeed_create_message('newsletter_notification', $newsletter->uid, $course, $fields);
 }
 
 /**

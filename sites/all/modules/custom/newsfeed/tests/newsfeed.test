@@ -12,7 +12,7 @@
 class NewsfeedBaseCase extends DrupalWebTestCase {
 
   function setUp() {
-    parent::setUp('message', 'message_notify', 'message_subscribe', 'flag', 'entityreference', 'newsfeed');
+    parent::setUp('newsfeed', 'flag');
 
     $this->referenced_node = $this->drupalCreateNode();
     $this->receiver = $this->drupalCreateUser();
@@ -199,6 +199,7 @@ class NewsfeedCreateMultipleCase extends NewsfeedBaseCase {
     $this->assertEqual($messages_count, 0, 'Message autor has 0 unread messages.');
     $messages_count = newsfeed_get_unread_messages_count($this->subscriber_2->uid);
     $this->assertEqual($messages_count, 1, 'Subscriber has 1 unread message.');
+    $this->assertMail('key', 'foo', 'Email was sent.');
     // Check updating message status on viewing content.
     newsfeed_update_unread_messages('field_node_ref', $this->subscriber_2->uid, $this->follow_node->nid);
     $messages_count = newsfeed_get_unread_messages_count($this->subscriber_2->uid);
