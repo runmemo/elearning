@@ -4,7 +4,7 @@
  * @file
  * 
  * Test cases for the newsletter module.
- * Dummy test checks module installed correctly.
+ * 
  */
 
 /**
@@ -34,14 +34,14 @@ class NewsLetterBaseCase extends DrupalWebTestCase {
 }
 
 /**
- * Tests checks install of answers_extra module.
+ * Tests checks install of newsletter module.
  */
 class NewsletterCase extends NewsLetterBaseCase {
 
   public static function getInfo() {
     return array(
       'name' => 'Newsletter test',
-      'description' => 'Test to check newsletter module setup',
+      'description' => 'Test to check newsletter module setup and main functions',
       'group' => 'Course',
     );
   }
@@ -49,7 +49,10 @@ class NewsletterCase extends NewsLetterBaseCase {
   function setUp() {
     parent::setUp();
   }
-
+  
+  /**
+   * Tests newsletter creation.
+   */
   function testCreateNewsletter() {
     $info = field_info_instance('node', 'field_course', 'newsletter');
     $this->assertNotNull($info);
@@ -57,25 +60,23 @@ class NewsletterCase extends NewsLetterBaseCase {
     $this->assertNotNull($info);
     $info = field_info_instance('message', 'field_message_newsletter', 'newsletter_notification');
     $this->assertNotNull($info);
-    $course = $this->drupalCreateNode(array('type' => 'course', ));
-    // Create newsletter;
+    $course = $this->drupalCreateNode(array('type' => 'course'));
+    // Create newsletter.
     $newsletter = $this->create_newsletter($course->nid);
     $this->assertTrue($newsletter, 'NewsLetter is created, successfully.');
     
 
   }
   
+  /**
+   * Test newsletter notification process.
+   */
   function testNewsletterNotification() {
-  
-    $course = $this->drupalCreateNode(array('type' => 'course', ));
+    $course = $this->drupalCreateNode(array('type' => 'course'));
     $user = $this->drupalCreateUser();
     $flag = flag_get_flag('follow_content');
-    $flag->flag('flag', $course->nid, $user);
-    $newsletter = $this->create_newsletter($course->nid);
-    $captured_emails = variable_get('drupal_test_email_collector', array());
-    $email = end($captured_emails);
-    debug($email); // @todo Ilya: why email is not sent?
-    // $this->assertMail('key', 'newsletter');
+    $flag->flag('flag', $course->nid, $user, TRUE);
+    $this->create_newsletter($course->nid);
+    $this->assertMail('key', 'newsletter_notification');
   }
 }
-
