@@ -4,18 +4,18 @@
  * @file
  * 
  * Test cases for the answers_extra module.
- * Dummy test checks module installed correctly.
  */
 
 /**
  * Base class for answers_extra tests.
  */
 class AnswersExtraBaseCase extends DrupalWebTestCase {
-
+  protected $visitor;
+  protected $author;
+  protected $node;
   function setUp() {
-    parent::setUp('answers_extra');
+    parent::setUp('answers_extra', 'vud', 'flag');
   }
-
 }
 
 /**
@@ -33,10 +33,36 @@ class AnswersExtraCase extends AnswersExtraBaseCase {
 
   function setUp() {
     parent::setUp();
+    $this->visitor = $this->drupalCreateUser(array('use vote up/down', ));
+    $this->author = $this->drupalCreateUser(array('create question content'));
+   
   }
 
-  function testSetupSuccess() {
-    $this->assertTrue(TRUE, 'Setup of Answers Extra module complete.');
+  function testVotingAccess() {
+   
+    $settings = array(
+      'uid' => $this->author->uid,
+      'type' => 'question',
+    );
+    $this->node = $this->drupalCreateNode($settings);
+    
+    // Open question's page without logging in.
+    $this->drupalGet('node/' . $this->node->nid);
+    $this->assertRaw('vud-widget-inactive');
+    $this->assertRaw('Please login to vote up this item');
+    $this->assertRaw('Please login to vote down this item');
+    // Open question's page as an author of the question.
+    $this->drupalLogin($this->author);
+    $this->drupalGet('node/' . $this->node->nid);
+    $this->assertRaw('vud-widget-inactive');
+    $this->assertRaw('You cannot vote up your own question');
+    $this->assertRaw('You cannot vote down your own question');
+    // Open question's page as a registered visitor.
+    $this->drupalLogin($this->visitor);
+    $this->drupalGet('node/' . $this->node->nid);
+    $this->assertNoRaw('vud-widget-inactive');
+    $this->assertRaw('Vote up!');
+    $this->assertRaw('Vote down!');
   }
 }
 

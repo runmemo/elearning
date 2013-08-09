@@ -10,8 +10,8 @@
 function answers_extra_field_default_field_instances() {
   $field_instances = array();
 
-  // Exported field_instance: 'node-answer-field_rating_widget'
-  $field_instances['node-answer-field_rating_widget'] = array(
+  // Exported field_instance: 'node-answer-field_answer_rating'
+  $field_instances['node-answer-field_answer_rating'] = array(
     'bundle' => 'answer',
     'default_value' => array(
       0 => array(
@@ -37,13 +37,13 @@ function answers_extra_field_default_field_instances() {
       ),
     ),
     'entity_type' => 'node',
-    'field_name' => 'field_rating_widget',
-    'label' => 'Rating Widget',
+    'field_name' => 'field_answer_rating',
+    'label' => 'Answer rating widget',
     'required' => 0,
     'settings' => array(
       'user_register_form' => FALSE,
       'votingapi_tag' => 'vote',
-      'vud_widget' => 'elearning_widget',
+      'vud_widget' => 'updown',
     ),
     'widget' => array(
       'active' => 0,
@@ -54,8 +54,8 @@ function answers_extra_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-question-field_rating_widget'
-  $field_instances['node-question-field_rating_widget'] = array(
+  // Exported field_instance: 'node-question-field_answer_rating'
+  $field_instances['node-question-field_answer_rating'] = array(
     'bundle' => 'question',
     'default_value' => array(
       0 => array(
@@ -81,13 +81,13 @@ function answers_extra_field_default_field_instances() {
       ),
     ),
     'entity_type' => 'node',
-    'field_name' => 'field_rating_widget',
-    'label' => 'Rating Widget',
+    'field_name' => 'field_answer_rating',
+    'label' => 'Question rating widget',
     'required' => 0,
     'settings' => array(
       'user_register_form' => FALSE,
       'votingapi_tag' => 'vote',
-      'vud_widget' => 'elearning_widget',
+      'vud_widget' => 'answers',
     ),
     'widget' => array(
       'active' => 0,
@@ -203,7 +203,8 @@ function answers_extra_field_default_field_instances() {
   
   // Translatables
   // Included for use with string extractors like potx.
-  t('Rating Widget');
+  t('Answer rating widget');
+  t('Question rating widget');
   t('Message Answer');
   t('Message Question');
   return $field_instances;

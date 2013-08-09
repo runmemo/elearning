@@ -2,22 +2,22 @@
 
 /**
  * @file
- * Elearning Up Down Widget.
+ * Answers up and down voting widget.
  */
 
 /**
  * Plugin declaration.
  */
 $plugin = array(
-  'title' => t('Elearning Up and down'),
+  'title' => t('Answers up and down widget'),
   'widget template' => 'widget',
-  'alter template variables' => 'elearning_widget_alter_template_vars',
+  'alter template variables' => 'answers_widget_alter_template_vars',
 );
 
 /**
  * Alter template variables.
  */
-function elearning_widget_alter_template_vars($template_type, &$variables) {
+function answers_widget_alter_template_vars($template_type, &$variables) {
   // Array with parameters to find all positive votes.
   $criteria = array(
     'entity_type' => $variables['type'],

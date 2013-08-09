@@ -58,13 +58,13 @@ function answers_extra_views_default_views() {
   $handler->display->display_options['fields']['nid']['exclude'] = TRUE;
   $handler->display->display_options['fields']['nid']['element_label_colon'] = FALSE;
   /* Field: Content: Rating Widget */
-  $handler->display->display_options['fields']['field_rating_widget']['id'] = 'field_rating_widget';
-  $handler->display->display_options['fields']['field_rating_widget']['table'] = 'field_data_field_rating_widget';
-  $handler->display->display_options['fields']['field_rating_widget']['field'] = 'field_rating_widget';
-  $handler->display->display_options['fields']['field_rating_widget']['label'] = '';
-  $handler->display->display_options['fields']['field_rating_widget']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['field_rating_widget']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['field_rating_widget']['click_sort_column'] = 'vud_widget';
+  $handler->display->display_options['fields']['field_answer_rating']['id'] = 'field_answer_rating';
+  $handler->display->display_options['fields']['field_answer_rating']['table'] = 'field_data_field_answer_rating';
+  $handler->display->display_options['fields']['field_answer_rating']['field'] = 'field_answer_rating';
+  $handler->display->display_options['fields']['field_answer_rating']['label'] = '';
+  $handler->display->display_options['fields']['field_answer_rating']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_answer_rating']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_answer_rating']['click_sort_column'] = 'vud_widget';
   /* Field: Flags: Flag link */
   $handler->display->display_options['fields']['ops']['id'] = 'ops';
   $handler->display->display_options['fields']['ops']['table'] = 'flagging';
@@ -128,7 +128,7 @@ function answers_extra_views_default_views() {
   $handler->display->display_options['fields']['nothing']['label'] = '';
   $handler->display->display_options['fields']['nothing']['alter']['text'] = '<a name="answer-[nid]" /> </a><div  id="answer-[nid]"> <div class="views-answer-main">
   <div class="views-answer-widgets">
-    <div class="views-field-field-rating-widget">[field_rating_widget]</div>
+    <div class="views-field-field-rating-widget">[field_answer_rating]</div>
     <div class="views-field-flag-thumbs-up">[ops]</div>
   </div>
   <div class="views-answer-body">

@@ -90,5 +90,25 @@ function answers_extra_field_default_field_bases() {
     'translatable' => 0,
     'type' => 'entityreference',
   );
+  
+    // Exported field_base: 'field_answer_rating'
+  $field_bases['field_answer_rating'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_answer_rating',
+    'foreign keys' => array(),
+    'indexes' => array(),
+    'locked' => 0,
+    'module' => 'vud_field',
+    'settings' => array(
+      'votingapi_tag' => 'vote',
+      'vud_widget' => 'answers',
+    ),
+    'translatable' => 0,
+    'type' => 'vud_field',
+  );
 
+  return $field_bases;
 }

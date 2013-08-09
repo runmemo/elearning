@@ -1,0 +1,119 @@
+
+.vud-widget-answers {
+  margin: 5px 10px;
+  position: relative;
+  float: left;
+}
+
+.vud-widget-answers .current-points {
+  clear: both;
+  color: #555555;
+  font-size: 22px;
+}
+
+.vud-widget-answers .current-negative {
+  padding: 7px 3px;
+}
+
+.vud-widget-answers .current-medium {
+  padding: 7px 0px;
+}
+
+.vud-widget-answers .current-wide,
+.vud-widget-answers .current-negative-wide {
+  font-size: 15px;
+}
+
+.vud-widget-answers .current-wide {
+  padding: 7px 0px;
+}
+
+.vud-widget-answers .current-negative-wide {
+  padding: 7px 1px;
+}
+
+.vud-widget-answers .current-small {
+  font-size: 11px;
+  padding: 7px 0px;
+}
+
+.vud-widget-answers .current-default {
+  padding: 7px 7px;
+}
+.vud-widget-answers a.vud-link-up span,
+.vud-widget-answers a.vud-link-down span {
+  text-decoration: none;
+  margin-right: 7px;
+}
+
+.vud-widget-answers .up-score .up-current-score,
+.vud-widget-answers .down-score .down-current-score {
+  display: block;
+  font-size: 16px;
+  margin-left: 25px;
+  text-align: right;
+  padding-top: 2px;
+}
+
+.vud-widget-answers .up-score {
+  color: #333;
+}
+.vud-widget-answers .down-score {
+  color: #333;
+}
+
+.vud-widget-answers .up-active,
+.vud-widget-answers .down-active {
+  cursor: pointer;
+}
+
+.vud-widget-answers .vud-link-reset {
+  display: none;
+}
+
+.vud-widget-answers .up-inactive,
+.vud-widget-answers .down-inactive,
+.vud-widget-answers .up-active,
+.vud-widget-answers .down-active {
+  float: left;
+  display: block;
+  width: 26px;
+  height: 13px;
+  font-weight: bold;
+  text-align: center;
+  background: url(arrows.png) 0 0 no-repeat;
+}
+
+.vud-widget-answers.vud-widget-inactive .up-inactive,
+.vud-widget-answers.vud-widget-inactive .up-active,
+.vud-widget-answers.vud-widget-inactive .up-inactive:hover,
+.vud-widget-answers.vud-widget-inactive .up-active:hover {
+  background-position: 0px -72px;
+}
+
+.vud-widget-answers.vud-widget-inactive .down-inactive,
+.vud-widget-answers.vud-widget-inactive .down-active,
+.vud-widget-answers.vud-widget-inactive .down-inactive:hover,
+.vud-widget-answers.vud-widget-inactive .down-active:hover {
+  background-position: 0px -57px;
+}
+
+.vud-widget-answers .up-active {
+  background-position: 0px -42px;
+}
+.vud-widget-answers .down-active {
+  background-position: 0px -14px;
+}
+.vud-widget-answers .up-inactive {
+  background-position: 0px -28px;
+}
+.vud-widget-answers .down-inactive {
+  background-position: 0px 0px;
+}
+.vud-widget-answers .up-inactive:hover {
+  background-position: 0px -42px;
+}
+.vud-widget-answers .down-inactive:hover {
+  background-position: 0px -14px;
+}
+
