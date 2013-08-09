@@ -43,4 +43,4 @@ features[ctools][] = strongarm:strongarm:1
 features[variable][] = pathauto_node_question_pattern 
 features[variable][] = field_bundle_settings_message__question_answer_notification
 
-files[] = tests/answers_extra.test
+files[] = answers_extra.test
