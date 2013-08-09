@@ -2,7 +2,7 @@
 
 /**
  * @file
- * 
+ *
  * Test cases for the answers_extra module.
  */
 
@@ -14,7 +14,7 @@ class AnswersExtraBaseCase extends DrupalWebTestCase {
   protected $author;
   protected $node;
   function setUp() {
-    parent::setUp('answers_extra', 'vud', 'flag');
+    parent::setUp('answers_extra', 'vud');
   }
 }
 
@@ -35,17 +35,17 @@ class AnswersExtraCase extends AnswersExtraBaseCase {
     parent::setUp();
     $this->visitor = $this->drupalCreateUser(array('use vote up/down', ));
     $this->author = $this->drupalCreateUser(array('create question content'));
-   
+
   }
 
   function testVotingAccess() {
-   
+
     $settings = array(
       'uid' => $this->author->uid,
       'type' => 'question',
     );
     $this->node = $this->drupalCreateNode($settings);
-    
+
     // Open question's page without logging in.
     $this->drupalGet('node/' . $this->node->nid);
     $this->assertRaw('vud-widget-inactive');
@@ -63,6 +63,25 @@ class AnswersExtraCase extends AnswersExtraBaseCase {
     $this->assertNoRaw('vud-widget-inactive');
     $this->assertRaw('Vote up!');
     $this->assertRaw('Vote down!');
+
+    module_enable(array('userpoints', ));
+    variable_set('answers_extra_rate_points', 10);
+    // Check that user without points is not able to vote.
+    $this->drupalGet('node/' . $this->node->nid);
+    $this->assertRaw('vud-widget-inactive');
+    $this->assertRaw('You need to have 10 points');
+
+    // Add enough points for user to vote and check whether he can vote.
+    $points_params = array(
+      'uid' => $this->visitor->uid,
+      'points' => 20,
+    );
+    userpoints_userpointsapi($points_params);
+    $this->drupalGet('node/' . $this->node->nid);
+    $this->assertNoRaw('vud-widget-inactive');
+    $this->assertRaw('Vote up!');
+    $this->assertRaw('Vote down!');
   }
+
 }
 

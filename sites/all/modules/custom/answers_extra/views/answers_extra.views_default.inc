@@ -44,12 +44,6 @@ function answers_extra_views_default_views() {
   $handler->display->display_options['relationships']['uid']['id'] = 'uid';
   $handler->display->display_options['relationships']['uid']['table'] = 'node';
   $handler->display->display_options['relationships']['uid']['field'] = 'uid';
-  /* Relationship: Flags: best_answer */
-  $handler->display->display_options['relationships']['flag_content_rel']['id'] = 'flag_content_rel';
-  $handler->display->display_options['relationships']['flag_content_rel']['table'] = 'node';
-  $handler->display->display_options['relationships']['flag_content_rel']['field'] = 'flag_content_rel';
-  $handler->display->display_options['relationships']['flag_content_rel']['required'] = 0;
-  $handler->display->display_options['relationships']['flag_content_rel']['flag'] = 'best_answer';
   /* Field: Content: Nid */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'node';
@@ -133,7 +127,7 @@ function answers_extra_views_default_views() {
   </div>
   <div class="views-answer-body">
     <div class="views-field-body">[body]</div>
-    <div class="node-supplementary-wrapper"> 
+    <div class="node-supplementary-wrapper">
       <div class="views-field-created">[created]</div>
       <div class="views-field-name">[name]</div>
     </div>
@@ -370,7 +364,7 @@ function answers_extra_views_default_views() {
     t('All'),
     t('User Questions'),
   );
-  
+
   $export[$view->name] = $view;
 
   $view = new view();
@@ -550,6 +544,6 @@ function answers_extra_views_default_views() {
   $handler->display->display_options['sorts']['totalcount']['order'] = 'DESC';
   $handler->display->display_options['block_description'] = 'User Answers';
   $export[$view->name] = $view;
-  
+
   return $export;
 }
