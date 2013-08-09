@@ -308,50 +308,6 @@ function open_question_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-open_question_feedback-field_rating_widget'
-  $field_instances['node-open_question_feedback-field_rating_widget'] = array(
-    'bundle' => 'open_question_feedback',
-    'default_value' => array(
-      0 => array(
-        'vud_widget' => 'updown',
-        'votingapi_tag' => 'vote',
-      ),
-    ),
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'hidden',
-        'module' => 'vud_field',
-        'settings' => array(),
-        'type' => 'default',
-        'weight' => 2,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_rating_widget',
-    'label' => 'Rating Widget',
-    'required' => 0,
-    'settings' => array(
-      'user_register_form' => FALSE,
-      'votingapi_tag' => 'vote',
-      'vud_widget' => 'elearning_widget',
-    ),
-    'widget' => array(
-      'active' => 0,
-      'module' => 'vud_field',
-      'settings' => array(),
-      'type' => 'vud_field_default_widget',
-      'weight' => -2,
-    ),
-  );
-
   // Exported field_instance: 'node-open_question-field_course_credit'
   $field_instances['node-open_question-field_course_credit'] = array(
     'bundle' => 'open_question',

@@ -197,24 +197,5 @@ function open_question_field_default_field_bases() {
     'type' => 'fivestar',
   );
 
-  // Exported field_base: 'field_rating_widget'
-  $field_bases['field_rating_widget'] = array(
-    'active' => 1,
-    'cardinality' => 1,
-    'deleted' => 0,
-    'entity_types' => array(),
-    'field_name' => 'field_rating_widget',
-    'foreign keys' => array(),
-    'indexes' => array(),
-    'locked' => 0,
-    'module' => 'vud_field',
-    'settings' => array(
-      'votingapi_tag' => 'vote',
-      'vud_widget' => 'updown',
-    ),
-    'translatable' => 0,
-    'type' => 'vud_field',
-  );
-
   return $field_bases;
 }
