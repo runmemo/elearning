@@ -1,0 +1,28 @@
+From a1e10bd730eee32a8e7d1b430d780b59dc3871b2 Mon Sep 17 00:00:00 2001
+From: bulat <bulat@1555416.no-reply.drupal.org>
+Date: Fri, 9 Aug 2013 19:32:59 +0100
+Subject: [PATCH] Issue #1689338 by core44: programmatically creating nodes
+ with nodereference count field causes undefined property error.
+
+---
+ nodereference_count.module | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/nodereference_count.module b/nodereference_count.module
+index aa92f20..11d57dc 100644
+--- a/nodereference_count.module
++++ b/nodereference_count.module
+@@ -147,6 +147,10 @@ function nodereference_count_field_formatter_view($entity_type, $entity, $field,
+  */
+ function nodereference_count_field_presave($entity_type, $entity, $field, $instance, $langcode, &$items) {
+   if ($field['type'] == 'nodereference_count' && $entity_type == 'node') {
++    if (empty($entity->nid)) {
++      $items[0]['count'] = 0;
++      return;
++    }
+     $items[0]['count'] = nodereference_count_get_count($instance['settings'], $entity->nid);
+   }
+ }
+-- 
+1.8.1.3
+

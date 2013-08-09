@@ -162,6 +162,10 @@ function nodereference_count_field_formatter_view($entity_type, $entity, $field,
  */
 function nodereference_count_field_presave($entity_type, $entity, $field, $instance, $langcode, &$items) {
   if ($field['type'] == 'nodereference_count' && $entity_type == 'node') {
+    if (empty($entity->nid)) {
+      $items[0]['count'] = 0;
+      return;
+    }
     $items[0]['count'] = nodereference_count_get_count($instance['settings'], $entity->nid);
   }
 }
