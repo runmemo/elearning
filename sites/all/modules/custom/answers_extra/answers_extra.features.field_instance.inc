@@ -15,7 +15,7 @@ function answers_extra_field_default_field_instances() {
     'bundle' => 'answer',
     'default_value' => array(
       0 => array(
-        'vud_widget' => 'updown',
+        'vud_widget' => 'answers',
         'votingapi_tag' => 'vote',
       ),
     ),
