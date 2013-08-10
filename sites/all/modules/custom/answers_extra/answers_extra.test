@@ -33,19 +33,47 @@ class AnswersExtraCase extends AnswersExtraBaseCase {
 
   function setUp() {
     parent::setUp();
-    $this->visitor = $this->drupalCreateUser(array('use vote up/down', ));
-    $this->author = $this->drupalCreateUser(array('create question content'));
-
-  }
-
-  function testVotingAccess() {
-
+    $this->visitor = $this->drupalCreateUser(array('use vote up/down', 'edit own question content'));
+    $this->author = $this->drupalCreateUser(array('create question content', 'edit own question content'));
+    // Create a question as author.
     $settings = array(
       'uid' => $this->author->uid,
       'type' => 'question',
     );
     $this->node = $this->drupalCreateNode($settings);
 
+  }
+  
+  function testQuestionAnswerEditAccess() {
+    
+    $edit_page = 'node/' . $this->node->nid . '/edit';
+    
+    // Login as author and check that edit page is accessible.
+    $this->drupalLogin($this->author);
+    $this->drupalGet($edit_page);
+    $this->assertResponse(200);
+    // Login as visitor and check that question edit page is not accessible.
+    $this->drupalLogin($this->visitor);
+    $this->drupalGet($edit_page);
+    $this->assertResponse(403);
+    // Enable userpoints module and check that page is still not accessible.
+    module_enable(array('userpoints', ));
+    variable_set('answers_edit_any_question_points', 10);
+    $this->drupalGet($edit_page);
+    $this->assertResponse(403);
+    // Add enough points for user to edit question.
+    $points_params = array(
+      'uid' => $this->visitor->uid,
+      'points' => 20,
+    );
+    userpoints_userpointsapi($points_params);
+    // Check that edit page is accessible.
+    $this->drupalGet($edit_page);
+    $this->assertResponse(200);
+    
+  }
+
+  function testVotingAccess() {
     // Open question's page without logging in.
     $this->drupalGet('node/' . $this->node->nid);
     $this->assertRaw('vud-widget-inactive');
