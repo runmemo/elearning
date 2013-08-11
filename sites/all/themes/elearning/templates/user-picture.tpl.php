@@ -21,7 +21,7 @@
     }
     ?>
   </div>
-  <?php if (isset($userpoints)): ?>
+  <?php if ($show_points && isset($userpoints)): ?>
     <div class="author-points">
       <?php print $userpoints; ?>
     </div>
