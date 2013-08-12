@@ -35,14 +35,14 @@ function open_question_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'comment_default_mode_open_question';
-  $strongarm->value = 1;
+  $strongarm->value = 0;
   $export['comment_default_mode_open_question'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'comment_default_mode_open_question_answer';
-  $strongarm->value = 1;
+  $strongarm->value = 0;
   $export['comment_default_mode_open_question_answer'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -56,21 +56,21 @@ function open_question_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'comment_default_per_page_open_question';
-  $strongarm->value = '50';
+  $strongarm->value = '10';
   $export['comment_default_per_page_open_question'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'comment_default_per_page_open_question_answer';
-  $strongarm->value = '50';
+  $strongarm->value = '10';
   $export['comment_default_per_page_open_question_answer'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'comment_default_per_page_open_question_feedback';
-  $strongarm->value = '50';
+  $strongarm->value = '10';
   $export['comment_default_per_page_open_question_feedback'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -119,14 +119,14 @@ function open_question_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'comment_preview_open_question';
-  $strongarm->value = '1';
+  $strongarm->value = '0';
   $export['comment_preview_open_question'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'comment_preview_open_question_answer';
-  $strongarm->value = '1';
+  $strongarm->value = '0';
   $export['comment_preview_open_question_answer'] = $strongarm;
 
   $strongarm = new stdClass();

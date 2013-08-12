@@ -12,25 +12,25 @@ class OpenQuestionBaseCase extends DrupalWebTestCase {
   protected $question;
   protected $student_a;
   protected $student_b;
-  
+
    function setUp() {
     $modules = array_merge(array('open_question'), func_get_args());
-    parent::setUp($modules); 
+    parent::setUp($modules);
     $student_permissions = array(
-      'create open_question_answer content', 
+      'create open_question_answer content',
       'create open_question_feedback content',);
     // create open quesiton node
     $this->question = $this->create_oq_question();
     // create student A
-    $this->student_a = $this->drupalCreateUser($student_permissions); 
+    $this->student_a = $this->drupalCreateUser($student_permissions);
     // create answer by user A
     $this->answer_a = $this->create_oq_answer($this->student_a->uid, $this->question->nid);
     // create student B
     $this->student_b = $this->drupalCreateUser($student_permissions);
     // create answer by student B
-    $this->answer_b = $this->create_oq_answer($this->student_b->uid, $this->question->nid);   
+    $this->answer_b = $this->create_oq_answer($this->student_b->uid, $this->question->nid);
   }
-  
+
   /**
    * Creates open question node
    * @return open question node
@@ -43,7 +43,7 @@ class OpenQuestionBaseCase extends DrupalWebTestCase {
     );
     return $this->drupalCreateNode($question_settings);
   }
-  
+
   /**
    * Creates answer using provided values
    * @param integer $uid
@@ -60,7 +60,7 @@ class OpenQuestionBaseCase extends DrupalWebTestCase {
     );
     return $this->drupalCreateNode($answer_settings);
   }
-  
+
   /**
    * Creates feedback using provided values
    * @param integer $uid
@@ -81,7 +81,7 @@ class OpenQuestionBaseCase extends DrupalWebTestCase {
     );
     return $this->drupalCreateNode($feedback_settings);
   }
-  
+
 }
 
 class OpenQuestionCase extends OpenQuestionBaseCase {
@@ -95,95 +95,97 @@ class OpenQuestionCase extends OpenQuestionBaseCase {
   function setUp() {
     parent::setUp();
   }
-      
+  
+  // Tests that context of open question works correctly.
   function testContextIsCorrect() {
-    // load open question page
-    
-    // check if context is correct
-    
+    module_enable(array('quicktabs' ,'context', ));
+    // Load open question page.
+    $this->drupalLogin($this->student_a);
+    $this->drupalGet('node/' . $this->question->nid);
+    // Check if tabs are visible.
+    $this->assertText('My answer');
+    $this->assertText('Review answers');   
   }
-      
+
   function testSubmitAnswer() {
-        
+
     // login as Student A
     // ----------------------------
-    
+
     // load open question page
-    
+
     // submit answer
-    
+
     // check that one new answer was created
-    
+
     // check that asnwer is shown correctly
-    
+
     // edit answer
-    
+
     // check that node is updated
-    
+
     // check that edit is shown
-    
+
     // reload page
-    
+
     // check that answer is shown correctly
-    
+
     // check that open question is flagged as complete
-    
+
   }
-  
+
   /**
    * Checks that points are assigned correctly on feedbacks
    */
   function testFeedbackPoints() {
     // this is test covered in fivestars module
   }
-  
+
   /**
-   * @see open_question_get_feedback_stats($nid)
+   * Tests open_question_get_feedback_stats() function.
    */
   function testOpenQuestionStatsFunction() {
     $answer_a_nid = $this->answer_a->nid;
     $answer_b_nid = $this->answer_b->nid;
-    
+
     $actual_result = open_question_get_feedback_stats($answer_a_nid);
     $this->assertEqual(0.0, $actual_result['average'], 'Average rating for zero feedbacks is zero');
     $this->assertEqual(0, $actual_result['count'], 'Count for zero feedbacks is zero');
-    
-    // create student C
+
+    // Create student C.
     $this->student_c = $this->drupalCreateUser(array());
-    // create student D
+    // Create student D.
     $this->student_d = $this->drupalCreateUser(array());
-    // add several feedbacks with different values to an answer
-    
-    // add feedback from user B
+    // Add several feedbacks with different values to an answer.
+
+    // Add feedback from user B.
     $this->create_oq_feedback($this->student_b->uid, $answer_a_nid, 60);
     $actual_result = open_question_get_feedback_stats($answer_a_nid);
-    //debug($actual_result);
-    
     $this->assertEqual(3, $actual_result['average']);//,'Average rating for 1 feedback is correct');
-    
-    // add feedback from user C 
+
+    // Add feedback from user C.
     $this->create_oq_feedback($this->student_c->uid, $answer_a_nid, 80);
-    // assert that average rating is correct for 2 nodes
+    // Assert that average rating is correct for 2 nodes.
     $expected_result = (60 + 80) / 2 / 100 * 5.0;
     $actual_result = open_question_get_feedback_stats($answer_a_nid);
     $this->assertTrue(abs($expected_result - $actual_result['average']) < 0.1, 'Average rating for 2 feedbacks is correct');
-    
-    // add feedback from user D
+
+    // Add feedback from user D.
     $this->create_oq_feedback($this->student_d->uid, $answer_a_nid, 80);
-     // assert that average rating is correct for 3 nodes
+    // Assert that average rating is correct for 3 nodes.
     $expected_result = (60 + 80 + 80) / 3 / 100 * 5.0;
     $actual_result = open_question_get_feedback_stats($answer_a_nid);
     $this->assertTrue(abs($expected_result - $actual_result['average']) < 0.1, 'Average rating for 3 feedbacks is correct');
     $this->assertEqual(3, $actual_result['count'], 'Count for 3 feedbacks is 3');
-    
-    // now add feedbacks to answer of user B and check that stats is correct
+
+    // Now add feedbacks to answer of user B and check that stats is correct.
     $this->create_oq_feedback($this->student_a->uid, $answer_b_nid, 20);
     $this->create_oq_feedback($this->student_c->uid, $answer_b_nid, 40);
     $expected_result = (20 + 40) / 2 / 100 * 5.0;
     $actual_result = open_question_get_feedback_stats($answer_b_nid);
     $this->assertEqual($expected_result, $actual_result['average'], 'Average rating for 2 feedbacks is correct on user B answer');
-   
-    // now add second question and check that calculations are still correct
+
+    // Now add second question and check that calculations are still correct.
     $question2 = $this->create_oq_question();
     $answer_a2 = $this->create_oq_answer($this->student_a->uid, $question2->nid);
     $this->create_oq_feedback($this->student_b->uid, $answer_a2->nid, 60);
@@ -191,37 +193,37 @@ class OpenQuestionCase extends OpenQuestionBaseCase {
     $expected_result = (60 + 20) / 2 / 100 * 5.0;
     $actual_result = open_question_get_feedback_stats($answer_a2->nid);
     $this->assertEqual($expected_result, $actual_result['average'], 'Average rating for 2 feedbacks on second question for user A is correct');
-   
-    
+
+
   }
- 
+
   /**
-   * @see oqa_is_reviewed($nid, $uid = NULL)
+   * Tests oqa_is_reviewed() function.
    */
   function testOqAnswerIsReviewed() {
     $result = oqa_is_reviewed($this->answer_a->nid, $this->student_b->uid);
     $this->assertFalse($result, 'Student B did not review answer of user A');
-    
+
     $this->create_oq_feedback($this->student_b->uid, $this->answer_a->nid, 20);
     $result = oqa_is_reviewed($this->answer_a->nid, $this->student_b->uid);
     $this->assertTrue($result, 'Student B reviewed answer of user A');
   }
-  
+
   /**
-   * @see open_question_is_answered($nid, $uid = NULL)
+   * Tests open_question_is_answered() function.
    */
   function testOqQuestionIsAnswered() {
-    // create student C who did not answer the questionß
+    // Create student C who did not answer the question.
     $this->student_c = $this->drupalCreateUser(array());
     $result = open_question_is_answered($this->question->nid, $this->student_c->uid);
     $this->assertFalse($result, 'Student C did not answer the question');
-    
-    // student A answered the question, see setUp())
+
+    // Student A answered the question, see setUp().
     $result = open_question_is_answered($this->question->nid, $this->student_a->uid);
     $this->assertTrue($result, 'Student A answered the question');
   }
-  
-  
+
+
 }
 
 /**
@@ -235,7 +237,7 @@ class OpenQuestionAccessTestCase extends OpenQuestionBaseCase {
       'group' => 'Course',
     );
   }
-  
+
   public function setUp() {
     parent::setUp();
   }
@@ -248,13 +250,13 @@ class OpenQuestionAccessTestCase extends OpenQuestionBaseCase {
      );
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
   }
-  
+
   /**
    * Tests whether review view is hidden before user answered the question
    */
   function testReviewListAccess() {
     $this->show_block('open_question', 'oq_other_answers_block', 'content');
-    
+
     $q = $this->create_oq_question();
     // login as Student A
     // ----------------------------
@@ -262,42 +264,42 @@ class OpenQuestionAccessTestCase extends OpenQuestionBaseCase {
     // load open question page
     $this->drupalGet('node/' . $q->nid);
     // Used did not submit his answer, so he does not see answers of others
-    $this->assertRaw('oq-review-no-access'); 
-    
+    $this->assertRaw('oq-review-no-access');
+
     // User A submits his answer, but the list is empty
     $this->create_oq_answer($this->student_a->uid, $q->nid);
     $this->drupalGet('node/' . $q->nid);
-    $this->assertRaw('oq-review-empty-message'); 
+    $this->assertRaw('oq-review-empty-message');
     $this->assertNoRaw('oq-review-list-message');
-    
+
     // User B submits his answer, and view is not empty
     $this->create_oq_answer($this->student_b->uid, $q->nid);
     $this->drupalGet('node/' . $q->nid);
     $this->assertRaw('oq-review-list-message');
     $this->assertNoRaw('oq-review-empty-message');
-    
+
     // submit answer
-    
+
     // login as student B
     // ----------------------------
-    
+
     // open Review tab and check that it does not show the view
-    
+
     // go back to first tab and submit the answer
-    
+
     // open second tab and check that it's showing the view
-    
+
     // check that view contains asnwer of student A once
-    
+
     // check that view does not contain answer of student B
-    
+
     // submit feedback to student's A answer
-    
+
     // check that feedback is submitted and displayed
-    
+
     // login as Student A
     // ----------------------------
-    
+
     // check that feedback is visible once in the view under my answer
   }
 }
@@ -313,7 +315,7 @@ class OpenQuestionUnitTest extends DrupalUnitTestCase {
       'group' => 'Course',
     );
   }
-  
+
   function testOqCreditImplementation() {
     $credit_info = module_invoke('open_question', 'credit_info');
     $bundle_exits = FALSE;
@@ -326,21 +328,21 @@ class OpenQuestionUnitTest extends DrupalUnitTestCase {
     }
     $this->assertTrue($bundle_exits, 'Open question bundle exists in implementation of hook_credit_info.');
   }
-  
+
   /**
    * @see open_question_forms()
    */
   function testOqFormsHook() {
     $nid = 504040;
- 
+
     $form_id = 'oq_review_' . $nid;
     $forms = open_question_forms($form_id, $nid);
     $this->assertTrue(isset($forms[$form_id]), 'Form with provided id is added to forms array.');
     $this->assertTrue(function_exists($forms[$form_id]['callback']), 'Form callback function exists.');
-    
+
     $form_id = 'oq_wrong_' . $nid;
     $forms = open_question_forms($form_id, $nid);
     $this->assertFalse(isset($forms[$form_id]), 'Form with provided id is was not added to forms array.');
   }
-    
+
 }
