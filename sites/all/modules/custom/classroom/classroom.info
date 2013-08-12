@@ -32,4 +32,4 @@ features[variable][] = node_submitted_classroom
 
 features_exclude[dependencies][og_ui] = og_ui
 
-files[] = tests/classroom.test
+files[] = classroom.test

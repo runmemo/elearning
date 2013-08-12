@@ -209,18 +209,20 @@ function classroom_members_count($group_nid) {
  *   Course node ID
  * 
  * @return
- *   Node ID of the group or FALSE
+ *   Group's nid or FALSE if group was not created.
  */
 function classroom_create_group($course_nid) {
   $node = new stdClass();
   $node->type = 'classroom';
+  // @todo: need to improve title if it will be visible to students.
   $node->title = 'Classroom for course #' . $course_nid;
   $node->language = LANGUAGE_NONE;
   $node->options = array();
   $node->promote = 0;
   $node->created = REQUEST_TIME;
   $node->status = 1;
-  $node->uid = 0;
+  // @todo : possibly should be set to the uid of the corresponding course.
+  $node->uid = 0; 
   $node->group_group[LANGUAGE_NONE][0]['value'] = 1;
   $node->field_classroom_course[LANGUAGE_NONE][0]['target_id'] = $course_nid;
   node_save($node);

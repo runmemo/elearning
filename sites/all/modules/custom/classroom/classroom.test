@@ -10,7 +10,8 @@
  * Test case for Classroom module that checks module functions.
  */
 class ClassroomCase extends DrupalWebTestCase {
-
+  protected $course;
+  
   public static function getInfo() {
     return array(
       'name' => 'Classroom Test Case',
@@ -34,9 +35,14 @@ class ClassroomCase extends DrupalWebTestCase {
     $this->user_b = $this->drupalCreateUser(array());
     $this->user_c = $this->drupalCreateUser(array());
   }
-
+  
+  /**
+   * Tests that fields on classroom bundle were created.
+   */
   function testGroupsFieldExists() {
     $this->assertTrue(field_info_instance('user', 'og_user_node', 'user'), 'Field was added to the user entity.');
+    $this->assertTrue(field_info_instance('node', 'field_classroom_course', 'classroom'), 'Field was added to the user entity.');
+    $this->assertTrue(field_info_instance('node', 'group_group', 'classroom'), 'Field was added to the user entity.'); 
   }
 
   /**
@@ -117,8 +123,11 @@ class ClassroomCase extends DrupalWebTestCase {
     $this->assertEqual(classroom_count_classrooms($course_nid), 4, 'Number of classrooms is correct.');
     
   }
-
-  function testClassRoomCount() {
+  
+  /**
+   * Tests classroom_members_count() function.
+   */
+  function testClassroomCount() {
     $course_nid = $this->course->nid;
     // Add user to classroom of a course.
     classroom_add_user($course_nid, $this->user_a->uid);
@@ -131,6 +140,16 @@ class ClassroomCase extends DrupalWebTestCase {
     classroom_add_user($course_nid, $this->user_c->uid);
     $members = classroom_members_count($classroom_nid);
     $this->assertEqual($members, 3);
+  }
+  
+  /**
+   * Tests classroom_create_group() function.
+   */
+  function testClassroomCreate() {
+    $gid = classroom_create_group($this->course->nid);
+    $classroom = entity_metadata_wrapper('node', $gid);
+    $this->assertEqual($classroom->field_classroom_course->raw(), $this->course->nid);
+    $this->assertEqual($classroom->group_group->value, 1);
   }
   
 }
