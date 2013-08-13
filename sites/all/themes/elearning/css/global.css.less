@@ -137,6 +137,17 @@ h2 {
   border-top: 1px dotted #aeaeae;
 }
 
+.ajax-progress-throbber {
+  .throbber {
+    margin: 0;
+    .left();
+    height: 16px;
+    width: 16px;
+    background: none;
+    .bg-img('progress_orange.gif');
+  }
+}
+
 .block-superfish {
   width: auto;
   .right();
@@ -174,18 +185,15 @@ h2 {
             color: white;
           }
         }
-        .ajax-progress.ajax-progress-throbber {
+        .ajax-progress-throbber {
           float: right;
           padding-right: 6px;
           position: relative;
           margin-right: -25px;
           .throbber {
-            background: none;
-            .bg-img('progress_white.gif');
-            .left();
-            height: 16px;
             margin: 0;
-            width: 16px;
+            .left();
+            .bg-img('progress_white.gif');
           }
         }
       }
@@ -2091,16 +2099,9 @@ h2 {
 
 .login-form,
 .register-form {
-  .ajax-progress.ajax-progress-throbber {
-    float: right;
+  .ajax-progress-throbber {
+    .right();
     padding: 12px 6px 0 0;
-    .throbber {
-      .bg-img('progress_orange.gif');
-      .left();
-      height: 16px;
-      margin: 0;
-      width: 16px;
-    }
   }
 }
 
@@ -3007,4 +3008,13 @@ div.quiz-report {
 /** Override default css provided by module to correctly work on modals **/
 .absolute-messages-message {
   display: block;
+}
+
+#lesson-add-form {
+  .ajax-progress-throbber {
+    .right();
+    position:absolute;
+    margin-left: -25px;
+    margin-top: 4px;
+  }
 }
