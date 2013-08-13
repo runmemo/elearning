@@ -183,7 +183,7 @@ class LessonCreationTestCase extends LessonBaseTestCase {
       'video_url' => $sample_video,
     );
     $this->drupalPostAjax(NULL, $edit, 'video_url');
-    $this->assertRaw($video_id . 'jpg');
+    $this->assertRaw($video_id . '.jpg');
     
     // Test form submit.
     $title = $this->randomName(16);
