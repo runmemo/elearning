@@ -149,7 +149,7 @@ class ClassroomCase extends DrupalWebTestCase {
     $gid = classroom_create_group($this->course->nid);
     $classroom = entity_metadata_wrapper('node', $gid);
     $this->assertEqual($classroom->field_classroom_course->raw(), $this->course->nid);
-    $this->assertEqual($classroom->group_group->value, 1);
+    $this->assertEqual($classroom->group_group->value(), 1);
   }
   
 }
