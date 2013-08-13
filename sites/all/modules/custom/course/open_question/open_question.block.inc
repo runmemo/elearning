@@ -42,7 +42,7 @@ function open_question_block_view($delta = '') {
           '#type' => 'markup',
           '#prefix' => '<p class="oq-review-no-access no-access-message">',
           '#suffix' => '</p>',
-          '#markup' => t('You need complete registration to answer this question.'),
+          '#markup' => t('You need to complete registration to answer this question.'),
         );
         return $block;     
       }
