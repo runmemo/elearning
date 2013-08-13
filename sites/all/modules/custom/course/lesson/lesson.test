@@ -3,28 +3,38 @@
 /**
  * @file
  * 
- * Test cases for the lesson module.
- * Dummy test checks module installed correctly.
+ * Test cases for Lesson module.
  */
 
 /**
  * Base class for lesson tests.
  */
-class LessonBaseCase extends DrupalWebTestCase {
-
+class LessonBaseTestCase extends DrupalWebTestCase {
+  protected $teacher;
+  protected $student;
+  protected $lesson;
   function setUp() {
-    parent::setUp('lesson');
+    $modules = array_merge(array('lesson'), func_get_args());
+    parent::setUp($modules);
+     // Create teacher user.
+    $teacher_perms = array(
+      'create lesson content', 
+      'edit own lesson content',);
+    $this->teacher = $this->drupalCreateUser($teacher_perms);
+    // Create student user.
+    $this->student = $this->drupalCreateUser(array('create notes content'));
+    // Create lesson.
+    $this->lesson = $this->create_lesson($this->teacher);
   }
 
   /**
    * Creates lesson node
    * @return lesson node
    */
-  function create_lesson() {
-     // create lesson node
+  function create_lesson($teacher) {
     $lesson_settings = array(
       'type' => 'lesson',
-      'uid' => 1, // admin for now
+      'uid' => $teacher->uid,
     );
     return $this->drupalCreateNode($lesson_settings);
   }
@@ -32,26 +42,161 @@ class LessonBaseCase extends DrupalWebTestCase {
 }
 
 /**
- * Tests checks install of answers_extra module.
+ * Tests for lesson notes functionality.
  */
-class LessonCase extends LessonBaseCase {
+class LessonNotesTestCase extends LessonBaseTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => 'Lesson test',
-      'description' => 'Test to check lesson module setup',
+      'name' => 'Lesson notes test',
+      'description' => 'Tests to check lesson notes functionality',
       'group' => 'Course',
     );
   }
 
   function setUp() {
-    parent::setUp();
+    parent::setUp('context', 'quicktabs');
   }
 
-  function testCreateLesson() {
-    // Create lesson.
-    $lesson = $this->create_lesson();
-    $this->assertTrue($lesson, 'Lesson is created, successfully.');
+  function testLessonStudentNotes() {
+    
+    $this->drupalGet('node/' . $this->lesson->nid);
+    $this->assertText('My notes');
+    $this->assertNoText('Lesson notes');
+    $this->assertRaw('lesson-note-no-access');
+    
+    $this->drupalLogin($this->student);
+    $this->drupalGet('node/' . $this->lesson->nid);
+    $this->assertText('My notes');
+    $this->assertNoText('Lesson notes');
+    $this->assertNoRaw('lesson-note-no-access');
+    
+    $note_text =  $this->randomName(100);
+    $edit = array(
+      'note' => $note_text,
+    );
+    $this->drupalPostAjax(NULL, $edit, array('op' => 'Save'));
+    $this->assertText($note_text);
+    
+    $note_text_alter =  $this->randomName(100);
+    $edit = array(
+      'note' => $note_text_alter,
+    );
+    $this->drupalPostAjax(NULL, array(), array('op' => 'Edit'));
+    $this->drupalPostAjax(NULL, $edit, array('op' => 'Save'));
+    $this->drupalGet('node/' . $this->lesson->nid);
+    $this->assertText($note_text_alter);
+    $this->assertFieldById('edit-edit', 'Edit');
+    
+    // Test that other student does not see notes.
+    $other_student = $this->drupalCreateUser(array('create notes content'));
+    $this->drupalLogin(($other_student));
+    $this->drupalGet('node/' . $this->lesson->nid);
+    $this->assertNoText($note_text_alter); // Student cannot see notes.
+    $this->assertFieldById('edit-save', 'Save'); // Student can see save button.
+    
+    $note_text_other =  $this->randomName(100);
+    $edit = array(
+      'note' => $note_text_other,
+    );
+    $this->drupalPostAjax(NULL, $edit, array('op' => 'Save'));
+    
+    // Check that lesson_student_notes get's different nids for students.
+    $nid1 = lesson_student_note($this->lesson->nid, $this->student->uid);
+    $nid2 = lesson_student_note($this->lesson->nid, $other_student->uid);
+    $this->assertTrue($nid1);
+    $this->assertTrue($nid2);
+    $this->assertNotEqual($nid1, $nid2);
   }
+  
+  /**
+   * Tests teacher notes creation.
+   */
+  function testTeacherNotes() {
+    
+    $this->drupalLogin($this->teacher);
+    $this->drupalGet('node/' . $this->lesson->nid);
+    $this->assertText('Lesson notes');
+    // Save notes.
+    $note_text = $this->randomName(100);
+    $edit = array(
+      'notes[value]' => $note_text,
+    );
+    $this->drupalPostAJAX(NULL, $edit, array('op' => 'Save'), NULL, array(), array(), 'lesson-teacher-notes-form');
+    $this->assertText($note_text);
+    // Edit notes and check that results are saved.
+    $this->assertFieldById('edit-edit', 'Edit');
+    $this->drupalPostAJAX(NULL, array(), array('op' => 'Edit'));
+    $note_text_alter = $this->randomName(100);
+    $edit = array(
+      'notes[value]' => $note_text_alter,
+    );
+    $this->drupalPostAJAX(NULL, $edit, array('op' => 'Save'));
+    $this->assertText($note_text_alter);
+    
+    // Check that student can see notes saved by teacher.
+    $this->drupalLogin($this->student);
+    $this->drupalGet('node/' . $this->lesson->nid);
+    $this->assertText($note_text_alter);
+    $this->assertNoFieldById('edit-edit', 'Edit');
+  }
+  
 }
 
+
+/**
+ * Tests for lesson notes functionality.
+ */
+class LessonCreationTestCase extends LessonBaseTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Lesson creation test',
+      'description' => 'Tests for lesson node creation functionality',
+      'group' => 'Course',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('book', 'media_youtube', 'course');
+    // @todo : remove dependency from course.
+  }
+  
+  function testLessonCreationForm() {
+    $video_id = 'uKYLRUvxSco';
+    $sample_video = 'http://www.youtube.com/watch?v=' . $video_id;
+    $form_path = 'course-add/nojs/lesson/';
+    
+    // Test lesson_create() function.
+    $title = $this->randomName(16);
+    $parent = $this->drupalCreateNode();
+    $parent->book['bid'] = $parent->nid;
+    node_save($parent);
+    $file = lesson_get_youtube_file($sample_video);
+    $saved_file = file_save($file);
+    lesson_create($title, $saved_file, $parent);
+    
+    // Test form ajax callback on url change.
+    $this->drupalLogin($this->teacher);
+    $this->drupalGet($form_path . $parent->nid);
+    $edit = array(
+      'video_url' => $sample_video,
+    );
+    $this->drupalPostAjax(NULL, $edit, 'video_url');
+    $this->assertRaw($video_id . 'jpg');
+    
+    // Test form submit.
+    $title = $this->randomName(16);
+    $edit['title'] = $title;
+    $this->drupalPost($form_path . $parent->nid, $edit, t('Save'));
+    $nodes = node_get_recent(1);
+    $this->assertEqual(count($nodes), 1);
+    foreach ($nodes as $node) {
+      $this->assertEqual($node->title, $title);
+      $file = $node->field_video[LANGUAGE_NONE][0];
+      $this->assertEqual($file['filemime'], 'video/youtube');
+    }
+    
+  }
+  
+}

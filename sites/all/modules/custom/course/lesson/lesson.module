@@ -28,12 +28,12 @@ function lesson_init() {
  */
 function lesson_block_info() {
 
-  $block['lesson_lecturer_notes'] = array(
-    'info' => t('Lesson Notes : Lecturer'),
+  $block['lesson_teacher_notes'] = array(
+    'info' => t('Lesson Notes by Teacher'),
     'cache' => DRUPAL_CACHE_PER_ROLE,
   );
   $block['lesson_student_notes'] = array(
-    'info' => t('Lesson Notes : Student'),
+    'info' => t('Lesson Notes by Student'),
     'cache' => DRUPAL_CACHE_PER_USER,
   );
   return $block;
@@ -45,7 +45,7 @@ function lesson_block_info() {
 function lesson_block_view($delta = '') {
   $content = array();
   switch ($delta) {
-    case 'lesson_lecturer_notes':
+    case 'lesson_teacher_notes':
       //Lesson Node
       $lesson_node = menu_get_object('node');
       // check if there are any notes and user has access to edit it,
@@ -61,8 +61,7 @@ function lesson_block_view($delta = '') {
         '#markup' => '<div id="message-placeholder"></div>',
       );
       // Notes form.
-      $content['lecturer_notes_form'] = drupal_get_form('lecturer_notes', $lesson_node);
-
+      $content['teacher_notes_form'] = drupal_get_form('lesson_teacher_notes_form', $lesson_node);
 
       // Build the block title and contents.
       $block['subject'] = '';
@@ -78,7 +77,7 @@ function lesson_block_view($delta = '') {
         '#markup' => '<div id="message-placeholder"></div>',
       );
       // Notes form.
-      $content['student_notes_form'] = drupal_get_form('student_notes', $lesson_node);
+      $content['student_notes_form'] = drupal_get_form('lesson_student_notes_form', $lesson_node);
 
 
       // Build the block title and contents
@@ -90,7 +89,7 @@ function lesson_block_view($delta = '') {
 }
 
 /**
- * Gets nid of notes by user to lesson.
+ * Gets nid of note by user to lesson.
  *
  * @param integer $nid
  *   Lesson's nid.
@@ -100,7 +99,7 @@ function lesson_block_view($delta = '') {
  * @return integer
  *   Note's nid for provided lesson.
  */
-function lesson_student_notes_created($nid, $uid = NULL) {
+function lesson_student_note($nid, $uid = NULL) {
   if (is_null($uid)) {
     global $user;
     $uid = $user->uid;
@@ -126,29 +125,36 @@ function lesson_student_notes_created($nid, $uid = NULL) {
 /**
  * Form for student notes.
  */
-function student_notes($form, &$form_state) {
+function lesson_student_notes_form($form, &$form_state) {
   //debug($form_state['step']);
   $form = array();
   $form['#prefix'] = '<div id="student-notes-form-wrapper">';
   $form['#suffix'] = '</div>';
 
   $nid = 0;
-  if (empty($form_state['step'])) {  // page is loaded
+  if (empty($form_state['step'])) {  // Page is loaded.
     $lesson = menu_get_object('node');
-    if ($lesson && $lesson->type === 'lesson' && node_access('create', 'notes')) {
+    if (!($lesson && $lesson->type === 'lesson')) {
+      // Form should be shown on lesson pages only.
+      watchdog('lesson', 'Form lesson_student_notes_form was shown on a wrong page.');
+      return $form;
+    }
+    if (user_access('create notes content')) {
       $nid = $lesson->nid;
       $form_state['lesson_nid'] = $nid;
     }
     else { // this is not a lesson page
       $form['message'] = array(
         '#type' => 'markup',
+        '#prefix' => '<div class="no-access-message lesson-note-no-access">',
+        '#suffix' => '</div>',
         '#markup' => t('Please complete your registration by comfirming your e-mail to make notes.'),
       );
       return $form;
     }
 
     // Check whether user already has a note for this lesson.
-    $note_nid = lesson_student_notes_created($nid);
+    $note_nid = lesson_student_note($nid);
     $form_state['note_nid'] = $note_nid;
     if ($note_nid) {
       $mode = 'view';
@@ -167,16 +173,16 @@ function student_notes($form, &$form_state) {
   switch ($mode) {
     case 'edit' :
       // build form for editing
-      $form['edit']['new_note'] = array(
+      $form['edit']['note'] = array(
         '#type' => 'textarea',
         '#default_value' => empty($form_state['note_value']) ? '' : $form_state['note_value'],
       );
       $form['edit']['save'] = array(
         '#type' => 'submit',
-        '#submit' => array('student_notes_submit'),
+        '#submit' => array('lesson_student_notes_form_submit'),
         '#value' => t('Save'),
         '#ajax' => array(
-          'callback' => 'student_notes_submit_js',
+          'callback' => 'lesson_student_notes_form_submit_js',
           'wrapper' => 'student-notes-form-wrapper',
           'progress' => array('message' => ''),
         ),
@@ -198,9 +204,9 @@ function student_notes($form, &$form_state) {
       $form['view']['edit'] = array(
         '#type' => 'submit',
         '#value' => t('Edit'),
-        '#submit' => array('student_notes_submit'),
+        '#submit' => array('lesson_student_notes_form_submit'),
         '#ajax' => array(
-          'callback' => 'student_notes_submit_js',
+          'callback' => 'lesson_student_notes_form_submit_js',
           'wrapper' => 'student-notes-form-wrapper',
           'progress' => array('message' => ''),
         ),
@@ -224,9 +230,9 @@ function student_notes($form, &$form_state) {
 }
 
 /**
- * Implements form_submit() hook for student_notes form.
+ * Implements form_submit() hook for lesson_student_notes_form form.
  */
-function student_notes_submit($form, &$form_state) {
+function lesson_student_notes_form_submit($form, &$form_state) {
 
   $nid = $form_state['lesson_nid'];
   global $user;
@@ -240,7 +246,7 @@ function student_notes_submit($form, &$form_state) {
       node_object_prepare($node);
       $node->title = 'Student note nid#' . $nid . '# uid#' . $user->uid;
       $node->language = LANGUAGE_NONE;
-      $node->body[$node->language][0]['value'] = $form_state['values']['new_note'];
+      $node->body[$node->language][0]['value'] = $form_state['values']['note'];
       $node->body[$node->language][0]['format'] = 'filtered_html';
       $node->field_lesson[LANGUAGE_NONE][0]['target_id'] = $nid;
 
@@ -249,10 +255,10 @@ function student_notes_submit($form, &$form_state) {
     }
     else { // User changed existing note.
       $node = node_load($form_state['note_nid']);
-      $node->body[$node->language][0]['value'] = $form_state['values']['new_note'];
+      $node->body[$node->language][0]['value'] = $form_state['values']['note'];
       node_save($node);
     }
-    $form_state['note_value'] = $form_state['values']['new_note'];
+    $form_state['note_value'] = $form_state['values']['note'];
     $form_state['step'] = 'view';
   }
   // User clicked Edit button in view mode.
@@ -266,21 +272,21 @@ function student_notes_submit($form, &$form_state) {
 /**
  * Callback for student notes submit.
  */
-function student_notes_submit_js($form, $form_state) {
+function lesson_student_notes_form_submit_js($form, $form_state) {
   return $form;
 }
 
 /**
- * Callback function : Defines form for lecturer notes for lesson page.
+ * Callback function : Defines form for teacher notes for lesson page.
  */
-function lecturer_notes($form, &$form_state) {
+function lesson_teacher_notes_form($form, &$form_state) {
   $lesson_node = node_load($form_state['build_info']['args'][0]->nid); // To get rid off old values stored.
   //check if its a lesson node and user has right to update(edit) it.
   //Get default Values
   $items = field_get_items('node', $lesson_node, 'field_notes');
   $notes = field_view_value('node', $lesson_node, 'field_notes', $items[0]);
 
-  $form['#prefix'] = '<div id="lecturer-notes-wrapper">';
+  $form['#prefix'] = '<div id="teacher-notes-wrapper">';
   $form['#suffix'] = '</div>';
 
   if (!($lesson_node->type == 'lesson' && node_access('update', $lesson_node))) {
@@ -321,10 +327,10 @@ function lecturer_notes($form, &$form_state) {
 
       $form['edit']['submit'] = array(
         '#type' => 'submit',
-        '#submit' => array('lecturer_notes_submit'),
+        '#submit' => array('lesson_teacher_notes_form_submit'),
         '#ajax' => array(
-          'callback' => 'lecturer_notes_submit_callback',
-          'wrapper' => 'lecturer-notes-wrapper',
+          'callback' => 'lesson_teacher_notes_form_submit_js',
+          'wrapper' => 'teacher-notes-wrapper',
         ),
         '#value' => t('Save'),
       );
@@ -339,8 +345,8 @@ function lecturer_notes($form, &$form_state) {
       $form['view']['edit'] = array(
         '#type' => 'submit',
         '#ajax' => array(
-          'callback' => 'lecturer_notes_submit_callback',
-          'wrapper' => 'lecturer-notes-wrapper',
+          'callback' => 'lesson_teacher_notes_form_submit_js',
+          'wrapper' => 'teacher-notes-wrapper',
         ),
         '#value' => t('Edit'),
       );
@@ -349,9 +355,9 @@ function lecturer_notes($form, &$form_state) {
 }
 
 /**
- * Callback function : Ajax callback function for lecturer_notes form.
+ * Callback function : Ajax callback function for teacher_notes form.
  */
-function lecturer_notes_submit($form, &$form_state) {
+function lesson_teacher_notes_form_submit($form, &$form_state) {
   $lesson_node = $form_state['build_info']['args'][0];
   if ($form_state['triggering_element']['#value'] == t('Save')) {
     //validations
@@ -374,9 +380,9 @@ function lecturer_notes_submit($form, &$form_state) {
 }
 
 /**
- * Callback for lecturer notes submit
+ * Callback for teacher notes submit
  */
-function lecturer_notes_submit_callback($form, $form_state) {
+function lesson_teacher_notes_form_submit_js($form, $form_state) {
   return $form;
 }
 
@@ -412,6 +418,15 @@ function lesson_menu() {
     'type' => MENU_CALLBACK,
   );
 
+  $items['course-add/%ctools_js/lesson/%node'] = array(
+     'title' => t('Add lesson'),
+     'page arguments' => array(1, 2, 3),
+     'page callback' => 'course_add_item',
+     'access callback' => 'node_access',
+     'access arguments' => array('create', 'lesson'),
+     'type' => MENU_CALLBACK,
+  );
+  
   return $items;
 }
 
@@ -516,10 +531,10 @@ function lesson_valid_url($url) {
   return FALSE;
 }
 
-function lesson_get_youtube_media($url) {
+function lesson_get_youtube_file($url) {
   $youtube_handler = new MediaInternetYouTubeHandler($url);
-  $media = $youtube_handler->getFileObject($url);
-  return $media;
+  $file = $youtube_handler->getFileObject($url);
+  return $file;
 }
 
 function lesson_submit_video_url_js($form, $form_state) {
@@ -532,12 +547,12 @@ function lesson_submit_video_url_js($form, $form_state) {
   }
   else {
     try {
-      $media = lesson_get_youtube_media($video_url);
+      $media_file = lesson_get_youtube_file($video_url);
       // Get Thumbnail for a video.
-      $youtube_stream = new MediaYouTubeStreamWrapper($media->uri);
-      $youtube_stream->setUri($media->uri);
+      $youtube_stream = new MediaYouTubeStreamWrapper($media_file->uri);
+      $youtube_stream->setUri($media_file->uri);
       $form['fields']['video_thumb']['#markup'] =
-          theme('image_style', array(
+        theme('image_style', array(
         'style_name' => 'thumbnail',
         'path' => $youtube_stream->getLocalThumbnailPath()));
     } 
@@ -550,6 +565,9 @@ function lesson_submit_video_url_js($form, $form_state) {
   return $form['fields']['video_thumb'];
 }
 
+/**
+ * Validate function for lesson_add_form form.
+ */
 function lesson_add_form_validate($form, &$form_state) {
   $video_url = $form_state['values']['video_url'];
   if (!lesson_valid_url($video_url)) {
@@ -557,13 +575,16 @@ function lesson_add_form_validate($form, &$form_state) {
   }
   try {
     // Save media object of video.
-    $media = lesson_get_youtube_media($video_url);
-    $form_state['storage']['media'] = $media;
+    $media_file = lesson_get_youtube_file($video_url);
+    $form_state['storage']['media_file'] = $media_file;
   } catch (Exception $e) {
     form_error($form['fields']['video_url'], $e->getMessage());
   }
 }
 
+/**
+ * Sumbit function for lesson_add_form form.
+ */
 function lesson_add_form_submit($form, &$form_state) {
   if (empty($form_state['ajax'])) {
     $course = $form_state['build_info']['args'][0];
@@ -578,10 +599,10 @@ function lesson_add_form_submit($form, &$form_state) {
   $unit = menu_get_object('node', 1, 'node/' . $unit_nid);
 
   $title = $form_state['values']['title'];
-  $media = $form_state['storage']['media'];
-
-  lesson_create($title, $media->fid, $unit);
-
+  $file = $form_state['storage']['media_file'];
+  $saved_file = file_save($file);
+  $nid = lesson_create($title, $saved_file, $unit);
+  
   // Clear outline cache.
   course_items_clear_cache($course->nid);
 }
@@ -590,21 +611,22 @@ function lesson_add_form_submit($form, &$form_state) {
  * Adds new lesson node to the unit.
  *
  * @param string $title
- * @param integer $video
+ * 
+ * @param object $video contains attibutes of file object.
  *
- * @param object $unit unit to which lesson will be added.
+ * @param object $parent unit to which lesson will be added.
  *
  * @return integer
  */
-function lesson_create($title, $video, $unit) {
+function lesson_create($title, $video, $parent) {
   $node = new stdClass();
   $node->type = 'lesson';
   node_object_prepare($node);
   $node->title = $title;
-  $node->field_video = array(LANGUAGE_NONE => array(array('fid' => $video, 'display' => 1,),),);
-  $node->language = $unit->language;
-  $node->book['bid'] = $unit->book['bid'];
-  $node->book['plid'] = $unit->book['mlid'];
+  $node->field_video = array(LANGUAGE_NONE => array(array('fid' => $video->fid, 'display' => 1,),),);
+  $node->language = $parent->language;
+  $node->book['bid'] = $parent->book['bid'];
+  $node->book['plid'] = $parent->book['mlid'];
   node_save($node);
   return $node->nid;
 }

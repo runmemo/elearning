@@ -40,9 +40,9 @@ function open_question_block_view($delta = '') {
         // User does not have rights to see the form.
         $block['content'] = array (
           '#type' => 'markup',
-          '#prefix' => '<p class="oq-review-no-access">',
+          '#prefix' => '<p class="oq-review-no-access no-access-message">',
           '#suffix' => '</p>',
-          '#markup' => t('You need to register to answer this question.'),
+          '#markup' => t('You need complete registration to answer this question.'),
         );
         return $block;     
       }
@@ -69,7 +69,7 @@ function open_question_block_view($delta = '') {
       else {
         $block['content']['message'] = array(
          '#type' => 'markup',
-         '#prefix' => '<p class="oq-review-no-access">',
+         '#prefix' => '<p class="oq-review-no-access no-access-message">',
          '#suffix' => '</p>',
          '#markup' => t('You need to answer question before you can review answers of other students.'),
         );

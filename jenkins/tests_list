@@ -14,7 +14,8 @@ QuizExtraCase
 AbuseContentCase
 AnswersExtraCase
 CertificateExtraCase
-LessonCase
+LessonNotesTestCase
+LessonCreationTestCase
 NewsLetterCase
 FrontPageCase
 InlineCommentExtraCase
