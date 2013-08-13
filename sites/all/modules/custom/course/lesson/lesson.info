@@ -49,4 +49,4 @@ features[user_permission][] = delete own notes content
 features[user_permission][] = edit own notes content
 features[user_permission][] = create lesson content
 
-files[] = tests/lesson.test
+files[] = lesson.test
