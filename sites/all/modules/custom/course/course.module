@@ -45,7 +45,7 @@ function course_menu() {
   
   $items['course-add/%ctools_js/unit/%node'] = array(
      'title' => t('Add unit'),
-     'page arguments' => array(1, 2, 3),
+     'page arguments' => array(1, 'unit', 3),
      'page callback' => 'course_add_item',
      'access callback' => 'node_access',
      'access arguments' => array('create', 'unit'),
@@ -783,24 +783,33 @@ function course_add_links($course, $button = TRUE) {
 
   foreach ($item_types as $type) {
     if (node_access('create', $type)) {
+      switch ($type) {
+        case 'lesson':
+            $course_items = course_get_items($course, TRUE);
+            $parent = array_search('unit', $course_items);    
+            break;
+        case 'unit':
+          $parent = $course->nid;
+            break;
+      }
      // $items[] = ctools_modal_text_button(t('Add @type', array('@type' => $info->name)), 'course-add/nojs/' . $type . '/' . $course->nid, t('Add Item'), $classes);
-      $items[] = ctools_modal_text_button(t('Add ' . $type), 'course-add/nojs/' . $type . '/' . $course->nid, t('Add Item'), $classes);
+      $items[] = ctools_modal_text_button(t('Add ' . $type), 'course-add/nojs/' . $type . '/' . $parent, t('Add Item'), $classes);
     }
   }
   
   return theme('item_list', array('items' => $items, 'attributes' => array('class' => 'item-add-links')));
 }
 
-function course_add_item($js, $type, $course) {
+function course_add_item($js, $type, $parent) {
 
   // call type specific add function
-  $function = $type . '_add_form';
-  if (!function_exists($function)) {
+  $form_name = $type . '_add_form';
+  if (!function_exists($form_name)) {
     return;
   }
-
+ 
   if (!$js) {
-    return drupal_get_form($function, $course);
+    return drupal_get_form($form_name, $parent);
   }
   else {
     // Required includes for ctools to work:
@@ -811,10 +820,10 @@ function course_add_item($js, $type, $course) {
 
   $form_state = array(
     'ajax' => $js,
-    'course' => $course
+    'parent' => $parent
   );
 
-  $output = ctools_modal_form_wrapper($function, $form_state);
+  $output = ctools_modal_form_wrapper($form_name, $form_state);
 
   if (!empty($form_state['executed'])) {
     $output[] = ctools_ajax_command_reload();

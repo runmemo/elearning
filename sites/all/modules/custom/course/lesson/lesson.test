@@ -148,7 +148,8 @@ class LessonNotesTestCase extends LessonBaseTestCase {
  * Tests for lesson notes functionality.
  */
 class LessonCreationTestCase extends LessonBaseTestCase {
-
+  protected $video_id;
+  protected $parent;
   public static function getInfo() {
     return array(
       'name' => 'Lesson creation test',
@@ -160,41 +161,54 @@ class LessonCreationTestCase extends LessonBaseTestCase {
   function setUp() {
     parent::setUp('book', 'media_youtube', 'course');
     // @todo : remove dependency from course.
+    $this->video_id = 'uKYLRUvxSco';
+    
+    $this->parent = $this->drupalCreateNode();
+    $this->parent->book['bid'] = $this->parent->nid;
+    node_save($this->parent);
+  }
+  
+  function sampleVideoUrl() {
+    return 'http://www.youtube.com/watch?v=' . $this->video_id;
+  }
+  
+  /**
+   * Tests lesson_create() function.
+   */
+  function testLessonCreateFunction() {
+    
+    $title = $this->randomName(16);
+    $file = lesson_get_youtube_file($this->sampleVideoUrl());
+    $saved_file = file_save($file);
+    lesson_create($title, $saved_file, $this->parent);
   }
   
   function testLessonCreationForm() {
-    $video_id = 'uKYLRUvxSco';
-    $sample_video = 'http://www.youtube.com/watch?v=' . $video_id;
+   
     $form_path = 'course-add/nojs/lesson/';
-    
-    // Test lesson_create() function.
-    $title = $this->randomName(16);
-    $parent = $this->drupalCreateNode();
-    $parent->book['bid'] = $parent->nid;
-    node_save($parent);
-    $file = lesson_get_youtube_file($sample_video);
-    $saved_file = file_save($file);
-    lesson_create($title, $saved_file, $parent);
     
     // Test form ajax callback on url change.
     $this->drupalLogin($this->teacher);
-    $this->drupalGet($form_path . $parent->nid);
+    
+    // Test ajax video thumbnail preload.
+    $this->drupalGet($form_path . $this->parent->nid);
     $edit = array(
-      'video_url' => $sample_video,
+      'video_url' => $this->sampleVideoUrl(),
     );
     $this->drupalPostAjax(NULL, $edit, 'video_url');
-    $this->assertRaw($video_id . '.jpg');
+    $this->assertRaw($this->video_id . '.jpg');
     
     // Test form submit.
     $title = $this->randomName(16);
     $edit['title'] = $title;
-    $this->drupalPost($form_path . $parent->nid, $edit, t('Save'));
+    $this->drupalPost($form_path . $this->parent->nid, $edit, t('Save'));
     $nodes = node_get_recent(1);
     $this->assertEqual(count($nodes), 1);
     foreach ($nodes as $node) {
       $this->assertEqual($node->title, $title);
       $file = $node->field_video[LANGUAGE_NONE][0];
       $this->assertEqual($file['filemime'], 'video/youtube');
+      $this->assertEqual($node->book['bid'], $this->parent->book['nid']);
     }
     
   }

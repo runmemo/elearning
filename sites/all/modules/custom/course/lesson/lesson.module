@@ -420,7 +420,7 @@ function lesson_menu() {
 
   $items['course-add/%ctools_js/lesson/%node'] = array(
      'title' => t('Add lesson'),
-     'page arguments' => array(1, 2, 3),
+     'page arguments' => array(1, 'lesson', 3),
      'page callback' => 'course_add_item',
      'access callback' => 'node_access',
      'access arguments' => array('create', 'lesson'),
@@ -450,11 +450,11 @@ function lesson_complete($action, $type) {
 /**
  * Form for creation of new lessons.
  */
-function lesson_add_form($form, &$form_state, $course = NULL) {
-  if (!$course) {
-    $course = $form_state['course'];
+function lesson_add_form($form, &$form_state, $parent) {
+  if (!$parent) {
+    $parent = $form_state['parent'];
   }
-
+  
   $form['fields'] = array(
     '#type' => 'fieldset',
     '#prefix' => '<div id="quick-lesson-wrapper">',
@@ -538,8 +538,6 @@ function lesson_get_youtube_file($url) {
 }
 
 function lesson_submit_video_url_js($form, $form_state) {
-  // If there are errors, return the form to display the error messages
-
   $video_url = $form_state['values']['video_url'];
   // Check that url has correct YouTube format.
   if (!lesson_valid_url($video_url)) {
@@ -587,24 +585,15 @@ function lesson_add_form_validate($form, &$form_state) {
  */
 function lesson_add_form_submit($form, &$form_state) {
   if (empty($form_state['ajax'])) {
-    $course = $form_state['build_info']['args'][0];
+    $parent = $form_state['build_info']['args'][0]; 
   }
   else {
-    $course = $form_state['course'];
+    $parent = $form_state['parent'];
   }
-
-  // Get unit to which lesson will be added.
-  $course_items = course_get_items($course, TRUE);
-  $unit_nid = array_search('unit', $course_items);
-  $unit = menu_get_object('node', 1, 'node/' . $unit_nid);
-
   $title = $form_state['values']['title'];
   $file = $form_state['storage']['media_file'];
   $saved_file = file_save($file);
-  $nid = lesson_create($title, $saved_file, $unit);
-  
-  // Clear outline cache.
-  course_items_clear_cache($course->nid);
+  lesson_create($title, $saved_file, $parent);
 }
 
 /**
@@ -619,6 +608,7 @@ function lesson_add_form_submit($form, &$form_state) {
  * @return integer
  */
 function lesson_create($title, $video, $parent) {
+ // debug($parent);
   $node = new stdClass();
   $node->type = 'lesson';
   node_object_prepare($node);
@@ -628,5 +618,7 @@ function lesson_create($title, $video, $parent) {
   $node->book['bid'] = $parent->book['bid'];
   $node->book['plid'] = $parent->book['mlid'];
   node_save($node);
+  // Clear outline cache.
+  course_items_clear_cache($parent->book['bid']);
   return $node->nid;
 }
