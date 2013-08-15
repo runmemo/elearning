@@ -28,6 +28,15 @@ function course_workflow_user_default_permissions() {
     ),
     'module' => 'course_workflow',
   );
+  
+    // Exported permission: access own unpublished course.
+  $permissions['publish any course'] = array(
+    'name' => 'publish any course',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'course_workflow',
+  );
 
   return $permissions;
 }

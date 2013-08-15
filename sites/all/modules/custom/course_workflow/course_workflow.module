@@ -14,13 +14,10 @@ define('COURSE_ACCESS_ALL', 1);
  *  Lock stage field on course add page for teacher.
  */
 function course_workflow_form_course_node_form_alter(&$form, &$form_stage) {
-  global $user;
-  
-  // If current user is teacher, lock stage field.
-  if (in_array('teacher', array_values($user->roles))) {
+  // Disable stage field for users who don't have permissions to change stage.
+  if (!user_access('publish any course')) {
     $form['field_stage']['#disabled'] = TRUE;
   }
-  
 }
 
 
@@ -36,6 +33,10 @@ function course_workflow_permission() {
     'access own unpublished course' => array(
       'title' => t('Access own unpublished course'),
       'description' => t('May view own courses even though they are not published.'),
+    ),
+    'publish any course' => array(
+      'title' => t('Publish any course'),
+      'description'=> t('Can publish any course that was submited.'),
     ),
   );
 }
