@@ -33,9 +33,9 @@ class BestAnswerExtraBaseCase extends DrupalWebTestCase {
     $this->question_b = $this->create_question($this->user_b->uid);
 
     // Create answers to questions.
-    $this->answer_1 = $this->create_answer($this->user_a->uid, $this->question_a->nid);
-    $this->answer_2 = $this->create_answer($this->user_b->uid, $this->question_a->nid);
-    $this->answer_3 = $this->create_answer($this->user_b->uid, $this->question_b->nid);
+    $this->answer_by_A_to_A = $this->create_answer($this->user_a->uid, $this->question_a->nid);
+    $this->answer_by_B_to_A = $this->create_answer($this->user_b->uid, $this->question_a->nid);
+    $this->answer_by_B_to_B = $this->create_answer($this->user_b->uid, $this->question_b->nid);
   }
 
   /**
@@ -74,56 +74,6 @@ class BestAnswerExtraBaseCase extends DrupalWebTestCase {
     );
     return $this->drupalCreateNode($answer_settings);
   }
-
-  /**
-   * Returns the user points.
-   *
-   * @param $uid
-   *   User uid for which the points should be selected.
-   * @param $points
-   *   Optionaly define which transaction should be loaded by specifying the
-   *   points.
-   * @param $sum
-   *   If TRUE, calculate the sum of all matching transaction rows.
-   * 
-   * @return
-   *   Amount of points according to the arguments.
-   */
-  function getPoints($uid, $points = NULL, $sum = FALSE) {
-    $query = db_select('userpoints', 'p');
-    if ($sum) {
-      $query->addExpression('SUM(points)');
-    } else {
-      $query->addField('p', 'points');
-    }
-    $query->condition('uid', $uid);
-    if ($points) {
-      $query->condition('points', $points);
-    }
-    return (int) $query->execute()->fetchField();
-  }
-
-  /**
-   * Determines, whether node is flagged with 'best_answer' flag or not.
-   * 
-   * @param integer $nid
-   *   Node ID
-   * @param integer $uid
-   *   User ID
-   *  
-   * @return boolean
-   *   TRUE or FALSE
-   */
-  function nodeIsFlagged($nid, $uid) {
-    $query = new EntityFieldQuery();
-    $query->entityCondition('entity_type', 'flagging')
-      ->entityCondition('entity_id', $nid)
-      ->entityCondition('uid', $uid);
-    $result = $query->execute();
-
-    return !empty($result) ? TRUE : FALSE;
-  }
-
 }
 
 /**
@@ -145,18 +95,18 @@ class BestAnswerExtraCase extends BestAnswerExtraBaseCase {
   }
 
   /**
-   * Test case for setting best answer when answer author is question author.
+   * Test case for setting best answer when user is a question author.
    */
   function testUserPointsAuthorSetsBest() {
-    // Check that when user A checks his own answer on his question he gets 0 points.
-    $points_before = $this->getPoints($this->user_a->uid, NULL, TRUE);
-    flag('flag', 'best_answer', $this->answer_1->nid, $this->user_a);
-    $points_after = $this->getPoints($this->user_a->uid, NULL, TRUE);
+    // Check that when user A checks his own answer on his question he gets 0 points.   
+    $points_before = userpoints_get_current_points($this->user_a->uid);
+    flag('flag', 'best_answer', $this->answer_by_A_to_A->nid, $this->user_a);
+    $points_after = userpoints_get_current_points($this->user_a->uid);
     $this->assertEqual($points_before, $points_after, "Question author hasn't received points for selecting his own answer as best.");
     // Check that when user A un-selects his own answer on his question he does not loose points (change = 0).
-    $points_before = $this->getPoints($this->user_a->uid, NULL, TRUE);
-    flag('unflag', 'best_answer', $this->answer_1->nid, $this->user_a);
-    $points_after = $this->getPoints($this->user_a->uid, NULL, TRUE);
+    $points_before = userpoints_get_current_points($this->user_a->uid);
+    flag('unflag', 'best_answer', $this->answer_by_A_to_A->nid, $this->user_a);
+    $points_after = userpoints_get_current_points($this->user_a->uid);
     $this->assertEqual($points_before, $points_after, "Points haven't been deducted from question author for unselecting his own answer as best.");
   }
 
@@ -164,10 +114,10 @@ class BestAnswerExtraCase extends BestAnswerExtraBaseCase {
    * Test case for access to flag link.
    */
   function testBestAnswerFlagAccess() {
-    flag('flag', 'best_answer', $this->answer_2->nid, $this->user_a);
+    flag('flag', 'best_answer', $this->answer_by_B_to_A->nid, $this->user_a);
     $vars = array(
       'flag' => flag_get_flag('best_answer'),
-      'entity_id' => $this->answer_2->nid,
+      'entity_id' => $this->answer_by_B_to_A->nid,
       'user' => $this->user_b,
       'link_href' => TRUE,
     );
@@ -179,7 +129,7 @@ class BestAnswerExtraCase extends BestAnswerExtraBaseCase {
     // Check that user A cannot select best answer on B's question.
     $vars = array(
       'flag' => flag_get_flag('best_answer'),
-      'entity_id' => $this->answer_3->nid,
+      'entity_id' => $this->answer_by_B_to_B->nid,
       'user' => $this->user_a,
       'link_href' => TRUE,
     );
@@ -192,15 +142,17 @@ class BestAnswerExtraCase extends BestAnswerExtraBaseCase {
    */
   function testUpdateBestAnswer() {
     // Check that when user A selects B's answer 1 on A's question B gets Points > 0.
-    $points_before = $this->getPoints($this->user_b->uid, NULL, TRUE);
-    flag('flag', 'best_answer', $this->answer_2->nid, $this->user_a);
-    $points_after = $this->getPoints($this->user_b->uid, NULL, TRUE);
+    $points_before = userpoints_get_current_points($this->user_b->uid);
+    flag('flag', 'best_answer', $this->answer_by_B_to_A->nid, $this->user_a);
+    $points_after = userpoints_get_current_points($this->user_b->uid);
     $this->assertEqual($points_before + 15, $points_after, "Answer author has received points after question author selected his answer as best.");
     // Check that when user selects answer 2, answer 1 gets unselected and accumilated change of poings for user B is 0.
-    flag('flag', 'best_answer', $this->answer_1->nid, $this->user_a);
-    $points_after = $this->getPoints($this->user_b->uid, NULL, TRUE);
-    $this->assertEqual(0, $points_after, "After selecting new answer as best, author of previous best answer looses points.");
-    $is_flagged = $this->nodeIsFlagged($this->answer_2->nid, $this->user_a->uid);
+    flag('flag', 'best_answer', $this->answer_by_A_to_A->nid, $this->user_a);
+    $points_after = userpoints_get_current_points($this->user_b->uid);
+    $this->assertEqual($points_before, $points_after, "After selecting new answer as best, author of previous best answer looses points.");
+    // Check that flag on the answer by user B was removed.
+    $flag = flag_get_flag('best_answer');
+    $is_flagged = $flag->is_flagged($this->answer_by_B_to_A->nid, $this->user_a->uid);
     $this->assertFalse($is_flagged, "After selecting new answer as best, previous answer is unselected.");
   }
 
