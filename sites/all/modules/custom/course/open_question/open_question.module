@@ -132,14 +132,13 @@ function open_question_answer_form($form, &$form_state, $answered) {
   switch ($mode) {
     case 'edit' :
       // Build form for editing.
-      $form['edit']['new_answer'] = array(
+      $form['edit']['answer'] = array(
         '#type' => 'text_format',
         '#format' => 'filtered_html',
         '#default_value' => empty($form_state['answer_value']) ? '' : $form_state['answer_value'],
       );
       $form['edit']['save'] = array(
         '#type' => 'submit',
-        '#submit' => array('open_question_answer_submit'),
         '#value' => t('Save'),
         '#ajax' => array(
           'callback' => 'open_question_answer_submit_js',
@@ -167,7 +166,6 @@ function open_question_answer_form($form, &$form_state, $answered) {
         $answer_text = $answer->body[LANGUAGE_NONE][0]['value'];
         $form_state['answer_value'] = $answer_text;
       }
-
       // Build form for viewing of saved answer.
       $form['view']['answer'] = array(
         '#type' => 'markup',
@@ -178,9 +176,8 @@ function open_question_answer_form($form, &$form_state, $answered) {
       $form['view']['edit'] = array(
         '#type' => 'submit',
         '#value' => t('Edit'),
-        '#submit' => array('open_question_answer_submit'),
         '#ajax' => array(
-          'callback' => 'open_question_answer_submit_js',
+          'callback' => 'open_question_answer_edit_js',
           'wrapper' => 'oq-answer-form-wrapper',
           'progress' => array('message' => ''),
         ),
@@ -202,7 +199,7 @@ function open_question_answer_form($form, &$form_state, $answered) {
 /**
  * Implements submit function for the open question answer form.
  */
-function open_question_answer_submit($form, &$form_state) {
+function open_question_answer_form_submit($form, &$form_state) {
 
   $oq_nid = $form_state['question_nid'];
   
@@ -217,22 +214,18 @@ function open_question_answer_submit($form, &$form_state) {
       node_object_prepare($node);
       $node->title = 'OQ anwer nid#' . $oq_nid . '# uid#' . $user->uid;
       $node->language = LANGUAGE_NONE;
-      $node->body[$node->language][0]['value'] = $form_state['values']['new_answer']['value'];
+      $node->body[$node->language][0]['value'] = $form_state['values']['answer']['value'];
       $node->body[$node->language][0]['format'] = 'filtered_html';
       $node->field_open_question[LANGUAGE_NONE][0]['target_id'] = $oq_nid;
-   
       node_save($node);
       $form_state['answer_nid'] = $node->nid;
-      $oq = node_load($oq_nid);
-      // Question is now answered by user.
-      rules_invoke_event('open_question_answered', $user, $oq);
     }
     else { // User changed existing answer.
       $node = node_load($form_state['answer_nid']);
-      $node->body[$node->language][0]['value'] = $form_state['values']['new_answer']['value'];
+      $node->body[$node->language][0]['value'] = $form_state['values']['answer']['value'];
       node_save($node);
     }   
-    $form_state['answer_value'] = $form_state['values']['new_answer']['value'];
+    $form_state['answer_value'] = $form_state['values']['answer']['value'];
     $form_state['step'] = 'view';
   }
   // User clicked Edit button in view mode.
@@ -243,10 +236,15 @@ function open_question_answer_submit($form, &$form_state) {
   $form_state['rebuild'] = TRUE;
 }
 
+function open_question_answer_edit_js($form, $form_state) {
+  return $form;
+}
+
 /**
  * Callback for open question answer submit.
  */
 function open_question_answer_submit_js($form, &$form_state) {
+  return $form;
   $commands[] = ajax_command_replace('#block-open-question-oq-other-answers-block .content', render(open_question_review_list_view($form_state['question_nid'])));
   $commands[] = ajax_command_replace('#oq-answer-form-wrapper',  render($form));
   return array('#type' => 'ajax', '#commands' => $commands);

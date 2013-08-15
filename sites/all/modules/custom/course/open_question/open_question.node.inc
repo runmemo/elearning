@@ -46,8 +46,20 @@ function open_question_node_view($node, $view_mode, $langcode) {
  * Implements hook_node_insert().
  */
 function open_question_node_insert($node) {
-  if ($node->type == 'open_question_feedback') {
-    open_question_new_feedback_notify($node);
+  switch ($node->type) {
+    case 'open_question_feedback': 
+      open_question_new_feedback_notify($node);
+      break;
+    
+    case 'open_question_answer':
+      // Question is now answered by user.
+      if (module_exists('rules')) {
+        $asnwer = entity_metadata_wrapper('node', $node);
+        $open_question = $asnwer->field_open_question->value();
+        $user = user_load($node->uid);
+        rules_invoke_event('open_question_answered', $user, $open_question);
+      }
+      break;
   }
 }
 
