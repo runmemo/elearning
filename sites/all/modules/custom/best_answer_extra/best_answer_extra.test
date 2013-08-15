@@ -1,0 +1,159 @@
+<?php
+
+/**
+ * @file
+ * 
+ * best_answer_extra.test contains test case for Best Answer Extra module
+ */
+
+/**
+ * Base class for best answer extra tests, contains only helper functions.
+ */
+class BestAnswerExtraBaseCase extends DrupalWebTestCase {
+
+  function setUp() {
+    // Enable necessary modules.
+    parent::setUp('rules', 'userpoints', 'userpoints_rules', 'flag', 'answers', 'aup', 'best_answer_extra');
+
+    // Remove unnecessary field.
+    field_delete_field('field_answer_count');
+
+    // Create users.
+    $user_permissions = array(
+      'create answer content',
+      'create question content',
+      'flag best_answer',
+      'unflag best_answer'
+    );
+    $this->user_a = $this->drupalCreateUser($user_permissions);
+    $this->user_b = $this->drupalCreateUser($user_permissions);
+
+    // Create questions.
+    $this->question_a = $this->create_question($this->user_a->uid);
+    $this->question_b = $this->create_question($this->user_b->uid);
+
+    // Create answers to questions.
+    $this->answer_by_A_to_A = $this->create_answer($this->user_a->uid, $this->question_a->nid);
+    $this->answer_by_B_to_A = $this->create_answer($this->user_b->uid, $this->question_a->nid);
+    $this->answer_by_B_to_B = $this->create_answer($this->user_b->uid, $this->question_b->nid);
+  }
+
+  /**
+   * Creates question node.
+   * 
+   * @param integer $uid
+   *   Node author ID
+   * 
+   * @return question node
+   */
+  function create_question($uid) {
+    $question_settings = array(
+      'type' => 'question',
+      'uid' => $uid,
+    );
+    return $this->drupalCreateNode($question_settings);
+  }
+
+  /**
+   * Creates answer using provided values.
+   * 
+   * @param integer $uid
+   *   Node author ID
+   * @param integer $question_nid
+   *   Corresponding question ID
+   * 
+   * @return object answer node
+   */
+  function create_answer($uid, $question_nid) {
+    $field_question = array();
+    $field_question[LANGUAGE_NONE][0]['nid'] = $question_nid;
+    $answer_settings = array(
+      'type' => 'answer',
+      'uid' => $uid,
+      'field_answer_question' => $field_question,
+    );
+    return $this->drupalCreateNode($answer_settings);
+  }
+}
+
+/**
+ * Test case for best answer extra module that checks that 
+ * user points are assigned correctly and user have appropriate access.
+ */
+class BestAnswerExtraCase extends BestAnswerExtraBaseCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Best Answer Extra Test Case',
+      'description' => 'Tests that Best Answer Extra module functions work correctly.',
+      'group' => 'Answers',
+    );
+  }
+
+  function setUp() {
+    parent::setUp();
+  }
+
+  /**
+   * Test case for setting best answer when user is a question author.
+   */
+  function testUserPointsAuthorSetsBest() {
+    // Check that when user A checks his own answer on his question he gets 0 points.   
+    $points_before = userpoints_get_current_points($this->user_a->uid);
+    flag('flag', 'best_answer', $this->answer_by_A_to_A->nid, $this->user_a);
+    $points_after = userpoints_get_current_points($this->user_a->uid);
+    $this->assertEqual($points_before, $points_after, "Question author hasn't received points for selecting his own answer as best.");
+    // Check that when user A un-selects his own answer on his question he does not loose points (change = 0).
+    $points_before = userpoints_get_current_points($this->user_a->uid);
+    flag('unflag', 'best_answer', $this->answer_by_A_to_A->nid, $this->user_a);
+    $points_after = userpoints_get_current_points($this->user_a->uid);
+    $this->assertEqual($points_before, $points_after, "Points haven't been deducted from question author for unselecting his own answer as best.");
+  }
+
+  /**
+   * Test case for access to flag link.
+   */
+  function testBestAnswerFlagAccess() {
+    flag('flag', 'best_answer', $this->answer_by_B_to_A->nid, $this->user_a);
+    $vars = array(
+      'flag' => flag_get_flag('best_answer'),
+      'entity_id' => $this->answer_by_B_to_A->nid,
+      'user' => $this->user_b,
+      'link_href' => TRUE,
+    );
+    best_answer_extra_preprocess_flag($vars);
+    // Check that B sees that answer 1 was selected as best.
+    $this->assertEqual($vars['flag_classes_array'][0], 'best-answer-marked', "Other user can see, that answer was selected as best.");
+    // Check that user B cannot unselect answer 2 as best.
+    $this->assertFalse($vars['link_href'], "Best answer flag is not availabe for user, which is not question author.");
+    // Check that user A cannot select best answer on B's question.
+    $vars = array(
+      'flag' => flag_get_flag('best_answer'),
+      'entity_id' => $this->answer_by_B_to_B->nid,
+      'user' => $this->user_a,
+      'link_href' => TRUE,
+    );
+    best_answer_extra_preprocess_flag($vars);
+    $this->assertFalse($vars['link_href'], "Best answer flag is not availabe for user, which is not question author.");
+  }
+
+  /**
+   * Test case for updating best answer.
+   */
+  function testUpdateBestAnswer() {
+    // Check that when user A selects B's answer 1 on A's question B gets Points > 0.
+    $points_before = userpoints_get_current_points($this->user_b->uid);
+    flag('flag', 'best_answer', $this->answer_by_B_to_A->nid, $this->user_a);
+    $points_after = userpoints_get_current_points($this->user_b->uid);
+    $this->assertEqual($points_before + 15, $points_after, "Answer author has received points after question author selected his answer as best.");
+    // Check that when user selects answer 2, answer 1 gets unselected and accumilated change of poings for user B is 0.
+    flag('flag', 'best_answer', $this->answer_by_A_to_A->nid, $this->user_a);
+    $points_after = userpoints_get_current_points($this->user_b->uid);
+    $this->assertEqual($points_before, $points_after, "After selecting new answer as best, author of previous best answer looses points.");
+    // Check that flag on the answer by user B was removed.
+    $flag = flag_get_flag('best_answer');
+    $is_flagged = $flag->is_flagged($this->answer_by_B_to_A->nid, $this->user_a->uid);
+    $this->assertFalse($is_flagged, "After selecting new answer as best, previous answer is unselected.");
+  }
+
+}

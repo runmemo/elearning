@@ -11,4 +11,4 @@ features[features_api][] = api:1
 features[rules_config][] = rules_flag_answers_best_answer
 features[rules_config][] = rules_unflag_answers_best_answer
 
-files[] = tests/best_answer_extra.test
+files[] = best_answer_extra.test
