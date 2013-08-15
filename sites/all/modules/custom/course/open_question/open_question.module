@@ -244,9 +244,8 @@ function open_question_answer_edit_js($form, $form_state) {
  * Callback for open question answer submit.
  */
 function open_question_answer_submit_js($form, &$form_state) {
-  return $form;
-  $commands[] = ajax_command_replace('#block-open-question-oq-other-answers-block .content', render(open_question_review_list_view($form_state['question_nid'])));
   $commands[] = ajax_command_replace('#oq-answer-form-wrapper',  render($form));
+  $commands[] = ajax_command_replace('#block-open-question-oq-other-answers-block .content', render(open_question_review_list_view($form_state['question_nid'])));
   return array('#type' => 'ajax', '#commands' => $commands);
 }
 

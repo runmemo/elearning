@@ -1,0 +1,16 @@
+diff --git a/modules/simpletest/drupal_web_test_case.php b/modules/simpletest/drupal_web_test_case.php
+index 0853c7d..eb1c7e4 100644
+--- a/modules/simpletest/drupal_web_test_case.php
++++ b/modules/simpletest/drupal_web_test_case.php
+@@ -2211,6 +2211,11 @@ class DrupalWebTestCase extends DrupalTestCase {
+             elseif (in_array($command['selector'], array('head', 'body'))) {
+               $wrapperNode = $xpath->query('//' . $command['selector'])->item(0);
+             }
++            elseif (strncmp($command['selector'], '#', 1) == 0)
++            {
++              $selector = substr($command['selector'], 1);
++              $wrapperNode = $xpath->query('//*[@id="' . $selector . '"]')->item(0);
++            }
+             if ($wrapperNode) {
+               // ajax.js adds an enclosing DIV to work around a Safari bug.
+               $newDom = new DOMDocument();

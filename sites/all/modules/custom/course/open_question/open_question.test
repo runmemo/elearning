@@ -326,7 +326,6 @@ class OpenQuestionUITestCase extends OpenQuestionBaseCase {
 
   function testSubmitAnswer() {
     // Login as Student A.
-    // ----------------------------
     $this->drupalLogin($this->student_a);
     // load open question page
     $this->drupalGet('node/' . $this->question->nid);
@@ -335,9 +334,14 @@ class OpenQuestionUITestCase extends OpenQuestionBaseCase {
     $edit = array(
       'answer[value]' => $answer,
     );
-    $this->drupalPostAJAX(NULL, $edit, array('op' => t('Save')));
+    
+    $this->assertRaw('oq-review-no-access'); // Student does not have access to review.
+    $this->drupalPostAJAX(NULL, $edit, array('op' => t('Save'))); //, NULL, NULL, NULL, NULL, $ajax_settings
     // check that one new answer was created
     $this->assertText($answer);
+    // @todo : following asswert will work after 
+    // https://drupal.org/node/2066101 is resolved.
+    // $this->assertRaw('view-open-questions-review-list');
     $this->verbose($this->drupalGetContent());
     // @todo assert
     // Check that asnwer is shown correctly
