@@ -307,15 +307,16 @@ function course_registration_form($form, &$form_state) {
       '#submit' => array('course_goto_class_submit'),
       '#value' => t('Go to class'),
     );
-    return $form; // no need to show the button for registered user
   }
-  
-  // @todo : get the node id or url of the first lesson    
-  $form['submit'] = array(
-    '#type' => 'submit',
-    '#value' => t('Enroll')
-  );
- 
+  else 
+  { // @todo : get the node id or url of the first lesson    
+    $form['submit'] = array(
+      '#type' => 'submit',
+      '#value' => t('Enroll'),
+
+    );
+  }
+  $form['submit']['#attributes']['class'][] = 'registration-form-submit';
   return $form;
 }
 

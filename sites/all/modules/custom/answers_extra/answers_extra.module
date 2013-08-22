@@ -155,6 +155,7 @@ function quick_answer($form, &$form_state) {
     ),
     '#value' => t('Add answer'),
   );
+  $form['#attributes']['class'][] = 'quick-answer-form';
   return $form;
 }
 

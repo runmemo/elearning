@@ -291,7 +291,10 @@ function course_outline_preprocess_tree(&$tree, $current_nid) {
           continue;
         }
         $node = menu_get_object('node', 1, $item['#original_link']['link_path']);
-
+        if (!$node) {
+          continue; // User possibly does not have access to see the node.
+        } 
+          
         $completed = $flag->is_flagged($node->nid, $user->uid);
         $item['#attributes']['class'][] = 'outline-item';
         unset($item['#attributes']['class']['leaf']);
