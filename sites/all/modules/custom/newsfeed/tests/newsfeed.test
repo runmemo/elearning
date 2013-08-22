@@ -111,7 +111,6 @@ class NewsfeedCreateSingleCase extends NewsfeedBaseCase {
     newsfeed_update_unread_messages('field_node_ref', $this->receiver->uid, $this->referenced_node->nid);
     $receiver_messages_count = newsfeed_get_unread_messages_count($this->receiver->uid);
     $this->assertEqual($receiver_messages_count, 0, 'Receiver has no unread messages after update.');
-    $this->assertTrue(isset($_SESSION['unread_messages_count']), 'Messages count has been updated.');
   }
 
 }
@@ -204,7 +203,6 @@ class NewsfeedCreateMultipleCase extends NewsfeedBaseCase {
     newsfeed_update_unread_messages('field_node_ref', $this->subscriber_2->uid, $this->follow_node->nid);
     $messages_count = newsfeed_get_unread_messages_count($this->subscriber_2->uid);
     $this->assertEqual($messages_count, 0, 'Subscriber has no unread messages after update.');
-    $this->assertTrue(isset($_SESSION['unread_messages_count']), 'Messages count has been updated.');
   }
 
 }

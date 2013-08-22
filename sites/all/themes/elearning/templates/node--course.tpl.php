@@ -16,41 +16,36 @@
 ?>
 <article<?php print $attributes; ?>>
   <div<?php print $content_attributes; ?>>
-    <div class="node-course-header">
-      <div class="node-course-header-left grid-10 omega">
+    <div class="course-header">
+      <div class="course-header-left">
         <?php if (isset($provider['logo'])) print $provider['logo']; ?>
-        <div class ="node-course-provider-name">
+      </div>
+      <div class ="course-header-right">
           <h1 class="title course-title" id="page-title"><?php print $node->title; ?></h1>
-          <?php if (isset($provider['name']) || isset($provider['extra'])) : ?>
-            <div class="provider-name-extra grid-4 omega">
-              <div class="provider-name">
-                <?php if (isset($provider['name'])) print $provider['name']; ?>
-              </div>
-              <?php if (isset($provider['extra'])) print $provider['extra']; ?>
-            </div>
-          <?php endif; ?>
-        </div>
+          <div class="provider-name">
+            <?php if (isset($provider['name'])) print $provider['name']; ?>
+          </div>
       </div>
       <div class="social-share grid-4 omega"></div>
     </div>
-    <div class="node-course-basic-info">
-      <div class="node-course-teacher-parameters">
+    <div class="article-section article-middle">
+      <div class="left">
         <h2><?php print $teacher['teacher_name'] ?></h2>
-        <div class="node-course-teacher-button">
+        <div class="node-course-register-button">
           <div class="teacher-avatar">
             <?php print $teacher['avatar']; ?>
           </div>
           <?php print render($content['form_class_participate']); ?>
         </div>
-        <div class="node-course-paramenters">
+        <div class="node-fields">
           <?php if (isset($content['field_duration'])) print render($content['field_duration']); ?>
           <?php if (isset($content['field_course_load'])) print render($content['field_course_load']); ?>
         </div>
       </div>
       <?php if (isset($content['field_video'])) print render($content['field_video']); ?>
     </div>
-    <div class="node-course-description-students">
-      <div class="node-course-description grid-10 omega">
+    <div class="article-section">
+      <div class="left grid-10">
         <?php if (isset($content['body'])) print render($content['body']); ?>
         <?php if (isset($content['field_course_content'])) print render($content['field_course_content']); ?>
       </div>

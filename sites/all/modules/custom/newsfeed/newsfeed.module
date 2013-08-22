@@ -50,8 +50,8 @@ function newsfeed_ctools_plugin_directory($owner, $plugin_type) {
  */
 function newsfeed_block_info() {
   // Block for displaying notifications count.
-  $block['user_notifications_count'] = array(
-    'info' => t('User notifications count'),
+  $block['newsfeed_notifications_count'] = array(
+    'info' => t('Newsfeed notifications count'),
     'cache' => DRUPAL_NO_CACHE,
   );
   return $block;
@@ -61,7 +61,7 @@ function newsfeed_block_info() {
  * Implements hook_block_view().
  */
 function newsfeed_block_view($delta = '') {
-  if ($delta == 'user_notifications_count') {
+  if ($delta == 'newsfeed_notifications_count') {
     return newsfeed_notifications_block();
   }
 }
@@ -77,13 +77,19 @@ function newsfeed_notifications_block() {
   if (!$user->uid) {
     return;
   }
-  $_SESSION['unread_messages_count'] = newsfeed_get_unread_messages_count($user->uid);
-  $title = $_SESSION['unread_messages_count'] == 0 ? t('You have no unread notifications') : t('Notifications');
-  $class = $_SESSION['unread_messages_count'] > 99 ? 'link-font-small' : 'link-font-default';
+  $unread_messages = newsfeed_get_unread_messages_count($user->uid);
+  $title = $unread_messages == 0 ? t('You have no unread notifications') : t('Notifications');
+  $class = $unread_messages > 99 ? 'newsfeed-link-font-small' : 'newsfeed-link-font-default';
+  $class .= ' newsfeed-link';
+  $class .= ' js-newsfeed-unread-count';
   $block = array('subject' => '');
   $block['content'] = array(
     '#type' => 'markup',
-    '#markup' => '<div class="newsfeed-link-border"></div>' . l('<span id="js-newsfeed-unread-count" class="link-inner">' . $_SESSION['unread_messages_count'] . '</span>', 'notifications', array('attributes' => array('title' => $title, 'class' => array($class)), 'html' => TRUE)) . '<div class="newsfeed-link-border"></div>',
+    '#markup' => 
+      '<div class="newsfeed-link-border"></div>' . 
+        l($unread_messages ,
+          'notifications', array('attributes' => array('title' => $title, 'class' => array($class)), 'html' => TRUE)) . 
+      '<div class="newsfeed-link-border"></div>',
   );
   return $block;
 }
@@ -101,6 +107,8 @@ function newsfeed_get_unread_messages_count($uid) {
   if (!$uid) {
     return FALSE;
   }
+  
+  // @todo : possibly need to cache this on per user basis. 
   $query = db_select('message_user', 'mu');
   $query->leftJoin('flagging', 'f', 'mu.mid = f.entity_id');
   $query->condition('mu.uid', $uid);
@@ -273,7 +281,6 @@ function newsfeed_update_unread_messages($field, $uid, $nid) {
     foreach ($unread_messages as $mid) {
       flag('flag', 'message_read', $mid);
     }
-    $_SESSION['unread_messages_count'] = isset($_SESSION['unread_messages_count']) ? $_SESSION['unread_messages_count'] - count($unread_messages) : newsfeed_get_unread_messages_count($uid);
   }
 }
 

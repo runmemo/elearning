@@ -10,11 +10,11 @@
   bindFlagUpdate();
   function bindFlagUpdate() {
     $(document).bind('flagGlobalAfterLinkUpdate', function(event, data) {
-      var count = parseInt($('#js-newsfeed-unread-count').text(), 10);
+      var count = parseInt($('.js-newsfeed-unread-count').text(), 10);
       if (data.flagName === 'message_read' && data.flagStatus == 'flagged' && count > 0) {
         count--;
       }
-      $('#js-newsfeed-unread-count').text(count);
+      $('.js-newsfeed-unread-count').text(count);
       $(document).unbind();
       bindFlagUpdate();
       return false;
