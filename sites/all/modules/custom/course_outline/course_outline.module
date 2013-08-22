@@ -290,13 +290,14 @@ function course_outline_preprocess_tree(&$tree, $current_nid) {
         if (!isset($item['#below'])) {
           continue;
         }
+        $item['#attributes']['class'][] = 'outline-item';
         $node = menu_get_object('node', 1, $item['#original_link']['link_path']);
         if (!$node) {
+          $item['#attributes']['class'][] = 'outline-item-hidden';
           continue; // User possibly does not have access to see the node.
         } 
           
         $completed = $flag->is_flagged($node->nid, $user->uid);
-        $item['#attributes']['class'][] = 'outline-item';
         unset($item['#attributes']['class']['leaf']);
         $item['#attributes']['class'][] = $completed ? 'outline-item-is-complete' : 'outline-item-is-incomplete';
         if ($node->nid == $current_nid) {
