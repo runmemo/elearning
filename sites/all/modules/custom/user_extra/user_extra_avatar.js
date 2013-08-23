@@ -31,23 +31,17 @@
       $('#edit-file').change(function() {
         $('.upload-form-main-submit').trigger('mousedown');
       });
-      // When hovering on inputs for uploading files or deletion, add class to
-      // links, which are in front of them.
-      $('input#edit-file').hover(
-        function() {
-          $('.upload-link').addClass('active');
-        },
-        function() {
-          $('.upload-link').removeClass('active');
-        });
-
-      $('input#edit-delete').hover(
-        function() {
-          $('.remove-link').addClass('active');
-        },
-        function() {
-          $('.remove-link').removeClass('active');
-        });
+     
+      // Open file browser on link click.
+      $('.upload-link').click(function() {
+        $('input[type=file]').click();
+        return false;
+      });
+      // Remove photo on link click.
+      $('.remove-link').click(function() {
+        $('#edit-delete').mousedown();
+        return false;
+      });
     }
   };
 })(jQuery);

@@ -286,8 +286,7 @@ function profile_pic_update_form($form, &$form_state) {
   $form['file'] = array(
     '#type' => 'file',
     '#size' => 23,
-    '#prefix' => '<div class="upload-form-links-wrapper"><div class="upload-form-upload-wrapper"><a class="upload-link">' . t('Upload photo') . '</a>',
-    '#suffix' => '</div>'
+    '#prefix' => '<div class="left"><a class="upload-link">' . t('Upload photo') . '</a>',
   );
   $form['delete'] = array(
     '#type' => 'submit',
@@ -297,8 +296,7 @@ function profile_pic_update_form($form, &$form_state) {
       'progress' => array('type' => 'throbber'),
     ),
     '#value' => t('Remove photo'),
-    '#prefix' => '<div class="upload-form-remove-wrapper"><a class="remove-link">' . t('Remove photo') . '</a>',
-    '#suffix' => '</div>',
+    '#prefix' => '<a class="remove-link">' . t('Remove photo') . '</a>',
   );
   $form['message_placeholder'] = array(
     '#markup' => '',
