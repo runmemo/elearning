@@ -15,7 +15,6 @@ AbuseContentCase
 AnswersExtraCase
 CertificateExtraCase
 LessonNotesTestCase
-LessonCreationTestCase
 NewsLetterCase
 FrontPageCase
 InlineCommentExtraCase
