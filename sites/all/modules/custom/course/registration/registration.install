@@ -71,6 +71,19 @@ function registration_schema() {
      
   );
 
-
   return $schema;
+}
+
+function registration_update_7001() {
+  // Delete registrations where associated node was deleted.
+  $query = db_select('registration', 'r');
+  $query->leftJoin('node', 'n', 'r.nid=n.nid');
+  $query->isNull('n.nid');
+  $query->fields('r', array('registration_id', 'nid'));
+  $result = $query->execute();
+  while ($record =  $result->fetchAssoc()) {
+    $r = registration_load($record['registration_id']);
+    registration_delete($r);
+  }
+  
 }

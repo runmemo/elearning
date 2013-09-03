@@ -100,5 +100,42 @@ class CourseRegistrationTestCase extends DrupalWebTestCase {
       
       
   }
+  
+  function testNodeDelete() {
+
+    $uid = $this->testUser->uid;
+    $nid = $this->course->nid;
+
+    $rid = registration_register($uid, $nid);
+    node_delete($nid);
+    $rid2 = course_registration_id($uid, $nid);
+    $this->assertFalse($rid2);
+    $this->assertNotEqual($rid, $rid2);
+  }
+   
+  /**
+   * Tests that registrations related to deleted user are also deleted.
+   */
+  function testUserDelete() {
+    $uid = $this->testUser->uid;
+    $nid = $this->course->nid;
+
+    $rid = registration_register($uid, $nid);
+    user_delete($nid);
+    $rid2 = course_registration_id($uid, $nid);
+    $this->assertFalse($rid2);
+    $this->assertNotEqual($rid, $rid2);
+  }
+  
+  function testUpdate_7001() {
+    $uid = $this->testUser->uid;
+    $nid = $this->course->nid;
+    $rid = registration_register($uid, $nid);
+    node_delete($nid);
+    registration_update_7001();
+    $rid2 = course_registration_id($uid, $nid);
+    $this->assertFalse($rid2);
+    $this->assertNotEqual($rid, $rid2);
+  }
 
 }

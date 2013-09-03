@@ -105,3 +105,36 @@ function registration_cancel($uid, $nid) {
 
   return TRUE;
 }
+
+
+function registration_node_registrations($nid) {
+  // get id of top 1 registration
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'registration')
+      ->propertyCondition('nid', $nid);
+  $result = $query->execute();
+  if (isset($result['registration'])) {
+    $rids = array_keys($result['registration']);
+    return $rids;
+  }
+  else 
+  {
+    return FALSE;
+  }
+}
+
+function registration_user_registrations($uid) {
+  // get id of top 1 registration
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'registration')
+      ->propertyCondition('uid', $uid);
+  $result = $query->execute();
+  if (isset($result['registration'])) {
+    $rids = array_keys($result['registration']);
+    return $rids;
+  }
+  else 
+  {
+    return FALSE;
+  }
+}

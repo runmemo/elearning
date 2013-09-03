@@ -609,3 +609,32 @@ class RegistrationController extends EntityAPIController {
 
 }
 
+/**
+ * Implements hook_node_delete()
+ */
+function registration_node_delete($node) {
+  if ($node->type === 'course') {
+    $rids = registration_node_registrations($node->nid);
+    if (!$rids) {
+      return;
+    }
+    $registrations = registration_load_multiple($rids);
+    foreach ($registrations as $registration) {
+      registration_delete($registration);
+    }
+  }
+}
+
+/**
+ * Implements hook_user_delete()
+ */
+function registration_user_delete($account) {
+  $rids = registration_user_registrations($account->uid);
+  if (!$rids) {
+    return;
+  }
+  $registrations = registration_load_multiple($rids);
+  foreach ($registrations as $registration) {
+    registration_delete($registration);
+  }
+}
