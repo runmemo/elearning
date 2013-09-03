@@ -33,7 +33,7 @@ class RegistrationUIController extends EntityDefaultUIController {
     $items['registration/%registration'] = array(
       'title callback' => 'registrations_page_title',
       'title arguments' => array(1),
-      'page callback' => 'registrations_page_view',
+      'page callback' => 'registration_page_view',
       'page arguments' => array(1),
       'access arguments' => array('view registrations'),
       'type' => MENU_CALLBACK,

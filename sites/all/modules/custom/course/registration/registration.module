@@ -196,7 +196,7 @@ function registration_page_title(Registration $registration) {
 function registration_page_view($registration, $view_mode = 'full') {
   $controller = entity_get_controller('registration');
   $content = $controller->view(array($registration->registration_id => $registration));
-  drupal_set_title($registration->name);
+  drupal_set_title('Registration: ' . $registration->registration_id);
   return $content;
 }
 
@@ -523,13 +523,20 @@ function registration_entity_property_info_alter(&$info) {
     'description' => t("The date the node was most recently updated."),
   );
   $properties['uid'] = array(
-    'label' => t("Student"),
+    'label' => t('Student'),
     'type' => 'user',
-    'description' => t("User registered to course."),
-    'setter callback' => 'entity_property_verbatim_set',
-    'setter permission' => 'administer example_task entities',
+    'description' => t('User registered to course.'),
+    'setter permission' => 'administer registration entities',
     'required' => TRUE,
     'schema field' => 'uid',
+  );
+  $properties['nid'] = array(
+    'label' => t('Course'),
+    'type' => 'node',
+    'description' => t("Course associated with registration."),
+    'setter permission' => 'administer registration entities',
+    'required' => TRUE,
+    'schema field' => 'nid',
   );
 }
 
@@ -543,7 +550,7 @@ class Registration extends Entity {
   }
 
   protected function defaultLabel() {
-    return $this->name;
+    return $this->registration_id;
   }
 
   protected function defaultUri() {
@@ -595,10 +602,8 @@ class RegistrationController extends EntityAPIController {
    */
   public function buildContent($entity, $view_mode = 'full', $langcode = NULL, $content = array()) {
     $content = parent::buildContent($entity, $view_mode, $langcode, $content);
-    $content['registration_sample_data'] = array(
-      '#markup' => theme('registration_sample_data', array('registration_sample_data' => check_plain($entity->data['sample_data']), 'registration' => $entity)),
-    );
-
+    $content['user'] = user_load($entity->uid);
+    $content['node'] = node_load($entity->nid);
     return $content;
   }
 
