@@ -1,0 +1,54 @@
+
+.section-content {
+  box-shadow: none;
+}
+/* Home page - Courusel */
+.view-front-page-slider {
+  display: block;
+}
+
+.view-front-page-slider .views-field-field-image img {
+    padding-bottom: 3px;
+    width: 100%!important;
+    height: auto!important;
+}
+
+.views-slideshow-cycle-main-frame-row {
+  width: 100%!important;
+}
+
+.block-views-front-page-slider-block {
+  width: 100%!important;
+}
+
+.view-front-page-slider .views-field-body {
+    position: absolute;
+    bottom: 0px;
+    top: auto;
+    width: 100%;
+    display: block;
+    text-align: right;
+    color: rgb(15, 56, 76);
+}
+
+
+
+/* Home page - features */
+
+.view-product-feature-title {
+  font-size: 1.8em;
+}
+
+.view-product-feature-icon {
+  display: none;
+}
+
+
+/* Demo request page */
+.webform-action-call .field-name-field-phone-number {
+  font-size:2em;
+}
+
+.webform .form-text {
+  height: 2.4em; 
+}

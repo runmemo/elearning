@@ -1,0 +1,197 @@
+/* Home page */
+
+.front .title {
+  display: none;
+}
+
+
+.view-front-page-slider {
+    display: none;
+}
+
+
+/* Product details page */
+
+.page-product-details .title ,
+.node-type-webform .title
+{
+  display:block;
+  line-height: 95px;
+  color: rgb(15, 56, 76);
+  width: 100%;
+   margin-bottom: 35px;
+}
+
+.page-product-details .title:after,
+.node-type-webform .title:after {
+   position: absolute;
+  display:block;
+  clear:both;
+  content: "";
+  background-color: rgb(202,60,14);
+  background-image: -webkit-gradient(linear, 25% 0%, 0% 0%, from(rgb(202,60,14)), to(rgb(255, 66, 00)));
+  background-image: -moz-linear-gradient(center right, rgb(202,60,14) 25%, rgb(255, 66, 00) 80%);
+  width: 100%;
+  height: 7px;
+ 
+}
+
+.page-product-details .region-content h1.title {
+  display: none;
+}
+
+
+.view-shopfront-product-features ul {
+  list-style-type: none;
+}
+
+
+.page-product-details .ui-tabs-nav {
+  border-radius: 0;
+}
+
+
+.view-product-feature-icon {
+  display: none;
+}
+
+.view-product-feature-title {
+  float: left;
+  clear: right;
+  font-size: 2.5em;
+  color: #CE4619;
+}
+
+.view-product-feature-body {
+  clear:both;
+}
+
+.view-shopfront-documents {
+  margin-top:42px;
+}
+
+.view-documents-preview {
+  width: 30%;
+  margin-right: auto;
+  margin-left: auto;
+  
+  box-shadow: 1px 1px 1px #DDD;
+  border-style: solid;
+  border-width: 1px;
+  border-color: rgb(228,228,228);
+}
+
+.view-documents-link {
+   margin-top: 30px;
+   text-align: center;
+}
+
+.view-documents-link a:link,
+.view-documents-link a:visited {
+  text-decoration: none;
+  color:rgb(216,41,11);
+  font-size: 1.2em;
+  font-weight: bolder;
+}
+
+.view-documents-link {
+  width: 50%;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.webform-action-call {
+  background-color: rgb(247, 247, 247);
+  
+}
+
+.webform-action-call .field-name-field-image {
+  padding:0 40px;
+}
+
+.webform-action-call .field-name-field-phone-number {
+  color: rgb(255, 40, 12);
+  font-size: 3em;
+  text-align: center;
+  line-height: 4em;
+  font-weight: bolder;
+}
+
+.field-name-field-call-invitation{
+  color: rgb(59, 59, 59);
+  text-align: center;
+  font-size: 2em;
+  padding-top:1em;
+  line-height: 3em;
+}
+
+
+/* Demo request page */
+.webform-moto {
+  margin-top: 20px;
+  background-color: rgb(247, 247, 247);
+  text-align: center;
+  color: rgb(15, 56, 76);
+  font-size: 1.4em;
+  padding:45px 20px 45px 20px;
+}
+
+.webform {
+   padding-top: 47px;
+  background-color: rgb(247, 247, 247);
+}
+
+.node-type-webform .messages {
+  display: none;
+}
+
+.webform .field-name-body {
+  color: rgb(59, 59, 59);
+  text-align: center;
+
+  margin-bottom: 27px;
+  margin-left: 32px;
+  margin-right: 32px;
+  font-weight: bolder;
+  
+}
+
+.webform form {
+   padding: 42px;
+   margin-bottom: 30px;
+}
+
+.webform .form-text {
+  height: 3.4em;
+  font-size: 1.4em;
+  width: 100%;
+  font-weight: bolder;
+  color:rgb(216,41,11);
+ 
+  margin-bottom: 25px;
+  padding-left: 30px;
+}
+
+.webform .form-text::-webkit-input-placeholder { /* WebKit browsers */
+    color: rgb(137, 137, 137);
+}
+.webform .form-text:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+     color: rgb(137, 137, 137);
+}
+.webform .form-text::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color: rgb(137, 137, 137);
+}
+.webform input:-ms-input-placeholder { /* Internet Explorer 10+ */
+     color: rgb(137, 137, 137);
+}
+
+
+
+.webform .form-submit {
+  margin-bottom: 16px;
+  height: 40px;
+}
+
+.webform label {
+  display: none;
+}

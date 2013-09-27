@@ -1,0 +1,32 @@
+<?php
+/**
+ * @file
+ * Code for the Shopfront Product Features feature.
+ */
+
+include_once 'shopfront.features.inc';
+
+
+function shopfront_block_info() {
+  $blocks['shopfront_page_title'] = array(
+    'info' => 'Page title',
+    'cache' => DRUPAL_CACHE_PER_PAGE,
+  );
+  return $blocks;
+}
+
+function shopfront_block_view($delta) {
+  switch ($delta) {
+    case 'shopfront_page_title':
+      $block['subject'] = 'Page title';
+      $block['content'] = array (
+        '#type' => 'markup',
+        '#markup' => drupal_get_title(),
+        '#prefix' => '<h1 id="pagetitle" class="title">',
+        '#suffix' => '</h1>',
+      );
+     
+      break;
+  }
+   return $block;
+}

@@ -1,0 +1,109 @@
+
+#zone-branding #region-branding .branding-data img {
+  max-height: 31px;
+  max-width: none;
+}
+.logo-img {
+  position: relative;
+  margin-left: -30px;
+  top: 8px;
+  z-index: 1;
+}
+
+.absolute-messages-message {
+  z-index: 101;
+}
+
+/* Home page */
+
+/* Home page - Courusel */
+
+.view-front-page-slider {
+    margin: 45px 0;
+    padding: 0;
+}
+
+.view-front-page-slider {
+  margin-bottom: 0px;
+}
+
+.view-front-page-slider .views-field-body p {
+  line-height: 95px; 
+  padding: 0;
+  margin-bottom: 0px;
+  padding-right: 40px;
+}
+
+/* Home page - list of features */
+.front .view-shopfront-product-features  {
+  margin-top: 50px;
+
+}
+.front .view-shopfront-product-features .views-row {
+  margin-bottom: 68px;
+  display: block;
+}
+
+.view-shopfront-product-features .column-1 {
+    clear: left;
+    float: left;
+}
+
+.view-shopfront-product-features .column-2 {
+    clear: right;
+    float: right;
+}
+
+.view-product-feature-icon {
+  display: block;
+  float: left;
+  margin-right: 10px;
+
+}
+
+.view-product-feature-icon img {
+  margin-bottom: -10px;
+}
+
+.view-product-feature-body {
+  float: none;
+  clear: both;
+  border-top: 1px dotted #AEAEAE;
+  padding-top:15px;
+}
+
+.view-product-feature-title {
+  float: left;
+  clear: right;
+  font-size: 2em;
+  color: #CE4619;
+  vertical-align: central;
+  height: 50px;
+}
+.view-product-feature-title span{
+  padding-bottom: 10px;
+}
+
+
+/* Product features page */
+    
+.page-product-details .ui-tabs-panel {
+    border-right: 1px dotted #AEAEAE;
+}
+
+.page-product-details .view-product-features ul,
+.page-product-details .view-product-features .item-list ul li {
+  margin: 0;
+}
+
+.view-documents-link {
+  width: 100%;
+}
+
+.view-documents-preview {
+  width: 100%;
+}
+
+
+
+
