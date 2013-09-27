@@ -7,7 +7,7 @@
 /**
  * Implements hook_field_default_field_instances().
  */
-function shopfront_features_field_default_field_instances() {
+function shopfront_field_default_field_instances() {
   $field_instances = array();
 
   // Exported field_instance: 'node-product_feature-body'
