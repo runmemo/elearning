@@ -249,7 +249,7 @@ function shopfront_views_default_views() {
   $handler->display->display_options['fields']['field_preview']['click_sort_column'] = 'fid';
   $handler->display->display_options['fields']['field_preview']['settings'] = array(
     'image_style' => '',
-    'image_link' => 'file',
+    'image_link' => '',
   );
   /* Поле: Содержимое: Message */
   $handler->display->display_options['fields']['field_message']['id'] = 'field_message';

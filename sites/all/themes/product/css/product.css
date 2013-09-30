@@ -110,7 +110,10 @@
 
 .webform-action-call .field-name-field-image {
   padding:0 40px;
+  width: 50%;
+  margin: auto;
 }
+
 
 .webform-action-call .field-name-field-phone-number {
   color: rgb(255, 40, 12);

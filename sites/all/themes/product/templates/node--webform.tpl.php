@@ -14,7 +14,6 @@
  * All variables available in node.tpl.php
  */
 ?>
-<div class ='we are here'> </div>
 <article<?php print $attributes; ?>>
   <div<?php print $content_attributes; ?>>
     <div class='webform grid-10 alpha'>

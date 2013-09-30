@@ -11,3 +11,14 @@
 .webform .form-submit {
   margin-right: 15%; 
 }
+
+.node-webform .field-name-field-image {
+  width: 60%;
+}
+
+/* Features page */
+
+.view-documents-preview {
+    width: 60%;
+}
+
