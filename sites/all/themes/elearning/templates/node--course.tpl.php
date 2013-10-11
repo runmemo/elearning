@@ -26,7 +26,9 @@
             <?php if (isset($provider['name'])) print $provider['name']; ?>
           </div>
       </div>
-      <div class="social-share grid-4 omega"></div>
+      <div class="social-share grid-4 omega">
+         <?php if (isset($content['field_social_buttons'])) print render($content['field_social_buttons']); ?>
+      </div>
     </div>
     <div class="article-section article-middle">
       <div class="left">
