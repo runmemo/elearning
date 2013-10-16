@@ -151,3 +151,15 @@ function elearning_process_advanced_help_popup(&$variables) {
   }
   $variables['styles'] = drupal_get_css($css);
 }
+
+/**
+ * Implements hook_preprocess_webform_form().
+ */
+function elearning_preprocess_webform_form(&$variables) {
+  // Moving element titles to placeholders. 
+  foreach ($variables['form']['submitted'] as $key => &$element) {
+      if (!empty($element['#type']) && in_array($element['#type'], array('textfield', 'webform_email'))) {
+          $element['#attributes']["placeholder"] = t($element["#title"]);
+      }
+  }
+}

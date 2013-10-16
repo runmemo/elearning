@@ -22,12 +22,7 @@
     </div>
     <div class='grid-6 webform-sidebar-second omega'>
       <div class='webform-action-call'>
-        <?php print drupal_render($content['field_call_invitation']); ?>
         <?php print drupal_render($content['field_image']); ?>
-        <?php print drupal_render($content['field_phone_number']); ?>
-      </div>
-      <div class='webform-moto'>
-        <?php print drupal_render($content['field_moto']); ?>
       </div>
     </div>
   </div>

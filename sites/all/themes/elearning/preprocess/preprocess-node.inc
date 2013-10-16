@@ -86,3 +86,8 @@ function elearning_alpha_preprocess_node_newsletter(&$vars) {
   $vars['author'] = render($name).' '.render($surname);
   $vars['created_formatted'] = date('d/m/Y', $vars['created']);
 }
+
+function elearning_alpha_preprocess_node_webform(&$vars) {
+  $webform_css = drupal_get_path('theme', 'elearning') . '/css/webform.css';
+  drupal_add_css($webform_css, array('group' => CSS_THEME, 'type' => 'file'));
+}
